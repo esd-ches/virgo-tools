@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.3"?>
+<plugin>
+  
+ <extension
+       point="org.eclipse.ui.exportWizards">
+    <wizard
+          category="org.eclipse.virgo.ide.export"
+          class="org.eclipse.virgo.ide.export.BundleExportWizard"
+          icon="icons/full/obj16/osgi_obj.gif"
+          id="org.eclipse.virgo.ide.wizard.export.bundle"
+          name="Bundle Project">
+       <description>
+          Export an OSGi bundle project into a JAR file on the local file system.
+       </description>
+    </wizard>
+    <category
+          id="org.eclipse.virgo.ide.export"
+          name="EclipseRT">
+    </category>
+    <wizard
+          category="org.eclipse.virgo.ide.export"
+          class="org.eclipse.virgo.ide.export.ParExportWizard"
+          icon="icons/full/obj16/par_obj.gif"
+          id="org.eclipse.virgo.ide.wizard.export.par"
+          name="PAR Project">
+       <description>
+          Export a Virgo PAR project into a JAR file on the local file system.
+       </description>
+    </wizard>
+ </extension>
+	
+</plugin>

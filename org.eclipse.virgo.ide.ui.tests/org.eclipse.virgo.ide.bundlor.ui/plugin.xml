@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<!--
+/*******************************************************************************
+ * Copyright (c) 2007, 2009 SpringSource
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     SpringSource - initial API and implementation
+ *******************************************************************************/
+-->
+<plugin>
+	
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IResource"
+             adaptable="true"
+             id="org.eclipse.virgo.ide.bundlor.ui.runBundlorOnTemplate">
+        <enablement>
+	        <adapt type="org.eclipse.core.resources.IResource" >
+             		<test forcePluginActivation="true"
+            			property="org.eclipse.wst.common.project.facet.core.projectFacet"
+            			value="org.eclipse.virgo.server.bundle:1.0"/>
+	        </adapt>
+        </enablement>
+        <menu
+               label="Spring Tools"
+               id="org.springframework.ide.eclipse.ui.tools">
+            <separator
+               name="group1">
+            </separator>
+         </menu> 
+         <action
+               class="org.eclipse.virgo.ide.bundlor.ui.internal.actions.RunBundlorActionDelegate"
+               definitionId="org.eclipse.virgo.ide.bundlor.ui.commands.runBundlorOnTemplate"
+               enablesFor="+"
+               icon="icons/full/obj16/osgi_obj.gif"
+               id="org.eclipse.virgo.ide.bundlor.ui.actions.runBundlorOnTemplate"
+               label="%runBundlorActionLabel"
+               menubarPath="org.springframework.ide.eclipse.ui.tools/group2">
+         </action>
+      </objectContribution>
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IResource"
+             adaptable="true"
+             id="org.eclipse.virgo.ide.bundlor.ui.disableAutomaticRunBundlorOnTemplate">
+        <enablement>
+	        <and>
+	        	<adapt type="org.eclipse.core.resources.IResource" >
+             		<test forcePluginActivation="true"
+            			property="org.eclipse.wst.common.project.facet.core.projectFacet"
+            			value="org.eclipse.virgo.server.bundle:1.0"/>
+            		<test forcePluginActivation="true"
+            			property="org.eclipse.virgo.ide.bundlor.isBundlorEnabled" />
+	        	</adapt>
+	        </and>
+        </enablement>
+        <action
+               class="org.eclipse.virgo.ide.bundlor.ui.internal.actions.AutomaticRunBundlorActionDelegate"
+               enablesFor="+"
+               id="org.eclipse.virgo.ide.bundlor.ui.actions.disableAutomaticRunBundlorOnTemplate"
+               label="%automaticRunBundlorActionLabel.disable"
+               menubarPath="org.springframework.ide.eclipse.ui.tools/group2">
+         </action>
+      </objectContribution>
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IResource"
+             adaptable="true"
+             id="org.eclipse.virgo.ide.bundlor.ui.enableAutomaticRunBundlorOnTemplate">
+        <enablement>
+	        <and>
+	        	<adapt type="org.eclipse.core.resources.IResource" >
+             		<test forcePluginActivation="true"
+            			property="org.eclipse.wst.common.project.facet.core.projectFacet"
+            			value="org.eclipse.virgo.server.bundle:1.0"/>
+            		<not>
+            			<test forcePluginActivation="true"
+            				property="org.eclipse.virgo.ide.bundlor.isBundlorEnabled" />
+            		</not>
+	        	</adapt>
+	        </and>
+        </enablement>
+        <action
+               class="org.eclipse.virgo.ide.bundlor.ui.internal.actions.AutomaticRunBundlorActionDelegate"
+               enablesFor="+"
+               id="org.eclipse.virgo.ide.bundlor.ui.actions.enableAutomaticRunBundlorOnTemplate"
+               label="%automaticRunBundlorActionLabel.enable"
+               menubarPath="org.springframework.ide.eclipse.ui.tools/group2">
+         </action>
+      </objectContribution>
+    </extension>
+
+	<extension point="org.eclipse.ui.commands">
+	    <category
+            name="SpringSource dm Server Tools"
+            description=""
+            id="org.eclipse.virgo.ide.bundlor.ui.commands">
+        </category>
+	
+		<command
+			id="org.eclipse.virgo.ide.bundlor.ui.commands.runBundlorOnTemplate"
+			name="%runBundlorActionLabel"
+			categoryId="org.eclipse.virgo.ide.bundlor.ui.commands" />
+	</extension>
+
+	<extension point="org.eclipse.ui.bindings">
+		<key sequence="M1+M2+M3+B"
+			commandId="org.eclipse.virgo.ide.bundlor.ui.commands.runBundlorOnTemplate"
+			schemeId="org.eclipse.ui.defaultAcceleratorConfiguration" />
+	</extension>
+	
+ 	<extension point="org.eclipse.core.expressions.propertyTesters">
+		<propertyTester
+			class="org.eclipse.virgo.ide.bundlor.ui.internal.actions.BundlorStatePropertyTester"
+			id="org.eclipse.virgo.ide.bundlor.ui.bundlorStatePropertyTester"
+			namespace="org.eclipse.virgo.ide.bundlor"
+			properties="isBundlorEnabled" 
+			type="java.lang.Object" />
+	</extension>
+	
+	<extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            id="org.eclipse.virgo.ide.bundlor.ui.internal.properties.bundlorPreferencePage"
+            name="%bundlorConfigurationPage.name"
+            class="org.eclipse.virgo.ide.bundlor.ui.internal.properties.BundlorPreferencePage"
+            category="org.springframework.ide.eclipse.ui.projectPropertyPage"
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject">
+         <filter
+               name="nature"
+               value="org.eclipse.virgo.ide.facet.core.bundlenature">
+         </filter>
+      </page>
+   </extension>
+	
+</plugin>

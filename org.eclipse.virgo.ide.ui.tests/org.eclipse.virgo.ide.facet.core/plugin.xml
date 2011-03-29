@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.3"?>
+<!--
+/*******************************************************************************
+ * Copyright (c) 2007, 2010 SpringSource
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     SpringSource - initial API and implementation
+ *******************************************************************************/
+-->
+<plugin>
+	
+	<extension point="org.eclipse.wst.common.project.facet.core.facets">
+		<category id="org.eclipse.virgo.server.category">
+			<label>%facetCategory.label</label>
+			<description>%facetCategory.description</description>
+		</category>
+		
+		<project-facet id="org.eclipse.virgo.server.bundle">
+			<label>%facetBundle.label</label>
+			<description>%facetBundle.description</description>
+			<member 
+				category="org.eclipse.virgo.server.category">
+			</member>
+		</project-facet>
+		
+		<project-facet-version facet="org.eclipse.virgo.server.bundle"
+			version="1.0">
+			<constraint>
+				<and>
+					<conflicts facet="org.eclipse.virgo.server.par" version="1.0"/>
+				</and>
+			</constraint>
+			
+		</project-facet-version>
+		
+		<action facet="org.eclipse.virgo.server.bundle" version="1.0" type="install">
+			<delegate
+				class="org.eclipse.virgo.ide.facet.core.BundleFacetInstallDelegate" />
+		</action>
+
+		<action facet="org.eclipse.virgo.server.bundle" version="1.0" type="uninstall">
+			<delegate
+				class="org.eclipse.virgo.ide.facet.core.BundleFacetUninstallDelegate" />
+		</action>
+
+		<project-facet id="org.eclipse.virgo.server.par">
+			<label>%facetPar.label</label>
+			<description>%facetPar.description</description>
+			<member 
+				category="org.eclipse.virgo.server.category">
+			</member>
+		</project-facet>
+		
+		<project-facet-version facet="org.eclipse.virgo.server.par"
+			version="1.0">
+			<constraint>
+				<and>
+					<conflicts group="modules" />
+					<conflicts facet="jst.java" version="5.0"/>
+					<conflicts facet="org.eclipse.virgo.server.bundle" version="1.0"/>
+				</and>
+			</constraint>
+		</project-facet-version>
+		
+		<action facet="org.eclipse.virgo.server.par" version="1.0" type="install">
+			<delegate
+				class="org.eclipse.virgo.ide.facet.core.ParFacetInstallDelegate" />
+		</action>
+		
+		<project-facet id="org.eclipse.virgo.server.plan">
+			<label>%facetPlan.label</label>
+			<description>%facetPlan.description</description>
+			<member 
+				category="org.eclipse.virgo.server.category">
+			</member>
+		</project-facet>
+		
+		<project-facet-version facet="org.eclipse.virgo.server.plan"
+			version="2.0">
+		</project-facet-version>
+		
+		<action facet="org.eclipse.virgo.server.plan" version="2.0" type="install">
+			<delegate
+				class="org.eclipse.virgo.ide.facet.core.PlanFacetInstallDelegate" />
+		</action>
+
+		<action facet="org.eclipse.virgo.server.plan" version="2.0" type="uninstall">
+			<delegate
+				class="org.eclipse.virgo.ide.facet.core.PlanFacetInstallDelegate" />
+		</action>
+		
+	</extension>
+	
+ 	<extension
+         id="bundlenature"
+         name="%bundleNature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run class="org.eclipse.virgo.ide.facet.core.ServerNature"/>
+      </runtime>
+      <requires-nature id="org.springframework.ide.eclipse.core.springnature"/>
+      <content-type id="org.eclipse.virgo.ide.facet.core.bundleContentType" />
+    </extension>
+
+ 	<extension
+         id="parnature"
+         name="%parNature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run class="org.eclipse.virgo.ide.facet.core.ServerNature"/>
+      </runtime>
+      <requires-nature id="org.springframework.ide.eclipse.core.springnature"/>
+      <content-type id="org.eclipse.virgo.ide.facet.core.parContentType" />
+    </extension>
+
+ 	<extension
+         id="plannature"
+         name="%planNature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run class="org.eclipse.virgo.ide.facet.core.ServerNature"/>
+      </runtime>
+      <requires-nature id="org.springframework.ide.eclipse.core.springnature"/>
+      <content-type id="org.eclipse.virgo.ide.facet.core.planContentType" />
+    </extension>
+
+    <extension
+        point="org.eclipse.core.runtime.contentTypes">
+      <content-type
+           default-charset="UTF-8"
+           file-extensions="MF"
+           file-names="MANIFEST"
+           id="org.eclipse.virgo.ide.facet.core.bundleContentType"
+           name="SpringSource Bundle Content Type"
+           priority="high">
+      </content-type>
+    </extension>
+
+    <extension
+        point="org.eclipse.core.runtime.contentTypes">
+      <content-type
+           default-charset="UTF-8"
+           file-extensions="MF"
+           file-names="MANIFEST"
+           id="org.eclipse.virgo.ide.facet.core.parContentType"
+           name="SpringSource PAR Content Type"
+           priority="high">
+      </content-type>
+    </extension>
+  
+    <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.core.runtime.xml"
+            default-charset="UTF-8"
+            file-extensions="plan"
+            id="org.eclipse.virgo.ide.facet.core.planContentType"
+            name="SpringSource Plan Content Type"
+            priority="high">
+      </content-type>
+    </extension>
+    
+</plugin>

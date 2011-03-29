@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.3"?>
+<!--
+/*******************************************************************************
+ * Copyright (c) 2007, 2010 SpringSource
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     SpringSource - initial API and implementation
+ *******************************************************************************/
+-->
+<plugin>
+
+	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+		<launchConfigurationTypeImage 
+			icon="icons/full/obj16/springsource_obj.png"
+			configTypeID="com.springsource.server.launchconfig" 
+			id="com.springsource.server.launchimage">
+		</launchConfigurationTypeImage>
+		<launchConfigurationTypeImage 
+			icon="icons/full/obj16/virgo_obj.png"
+			configTypeID="org.eclipse.virgo.server.launchconfig.virgo" 
+			id="org.eclipse.virgo.server.launchimage.virgo">
+		</launchConfigurationTypeImage>
+	</extension>
+
+	<extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+		<launchConfigurationTabGroup
+			id="com.springsource.server.launchconfigTabGroup" 
+			type="com.springsource.server.launchconfig"
+			class="org.eclipse.virgo.ide.runtime.internal.ui.ServerLaunchConfigurationTabGroup">
+		</launchConfigurationTabGroup>
+		<launchConfigurationTabGroup
+			id="org.eclipse.virgo.server.launchconfigTabGroup.virgo" 
+			type="org.eclipse.virgo.server.launchconfig.virgo"
+			class="org.eclipse.virgo.ide.runtime.internal.ui.VirgoLaunchConfigurationTabGroup">
+		</launchConfigurationTabGroup>
+	</extension>
+
+	<extension point="org.eclipse.wst.server.ui.serverImages">
+		<image 
+			id="com.springsource.server.runtime.10" 
+			icon="icons/full/obj16/springsource_obj.png"
+			typeIds="com.springsource.server.runtime.10" />
+		<image 
+			id="com.springsource.server.10" 
+			icon="icons/full/obj16/springsource_obj.png"
+			typeIds="com.springsource.server.10" />
+		<image 
+			id="com.springsource.server.runtime.20" 
+			icon="icons/full/obj16/springsource_obj.png"
+			typeIds="com.springsource.server.runtime.20" />
+		<image 
+			id="com.springsource.server.20" 
+			icon="icons/full/obj16/springsource_obj.png"
+			typeIds="com.springsource.server.20" />
+		<image 
+			id="org.eclipse.virgo.server.runtime.virgo" 
+			icon="icons/full/obj16/virgo_obj.png"
+			typeIds="org.eclipse.virgo.server.runtime.virgo" />
+		<image 
+			id="org.eclipse.virgo.server.virgo" 
+			icon="icons/full/obj16/virgo_obj.png"
+			typeIds="org.eclipse.virgo.server.virgo" />
+		<image 
+			id="com.springsource.server" 
+			icon="icons/full/obj16/springsource_obj.png"
+			typeIds="com.springsource.server" />
+		<image 
+			id="org.eclipse.virgo.server.bundle" 
+			icon="icons/full/obj16/osgi_obj.gif"
+			typeIds="org.eclipse.virgo.server.bundle" />
+		<image 
+			id="org.eclipsevirgo.server.par" 
+			icon="icons/full/obj16/par_obj.gif"
+			typeIds="org.eclipse.virgo.server.par" />
+		<image 
+			id="org.eclipse.virgo.server.plan" 
+			icon="icons/full/obj16/plan_obj.gif"
+			typeIds="org.eclipse.virgo.server.plan" />
+	</extension>
+
+	<extension point="org.eclipse.wst.common.project.facet.ui.images">
+		<image 
+			runtime-component-type="com.springsource.server"
+			path="icons/full/obj16/springsource_obj.png" />
+		<image 
+			runtime-component-type="org.eclipse.virgo.server.virgo"
+			path="icons/full/obj16/virgo_obj.png" />
+	</extension>
+
+	<extension point="org.eclipse.wst.server.ui.wizardFragments">
+		<fragment 
+			id="com.springsource.server.runtime.10" 
+			typeIds="com.springsource.server.runtime.10"
+			class="org.eclipse.virgo.ide.runtime.internal.ui.ServerRuntimeWizardFragment" />
+		<fragment 
+			id="com.springsource.server.runtime.20" 
+			typeIds="com.springsource.server.runtime.20"
+			class="org.eclipse.virgo.ide.runtime.internal.ui.ServerRuntimeWizardFragment" />
+		<fragment 
+			id="org.eclipse.virgo.server.runtime.virgo" 
+			typeIds="org.eclipse.virgo.server.runtime.virgo"
+			class="org.eclipse.virgo.ide.runtime.internal.ui.VirgoServerRuntimeWizardFragment" />
+	</extension>
+
+	<extension point="org.eclipse.wst.common.project.facet.ui.images">
+		<image 
+			facet="org.eclipse.virgo.server.bundle" 
+			path="icons/full/obj16/osgi_obj.gif" />
+		<image 
+			category="org.eclipse.virgo.server.category" 
+			path="icons/full/obj16/virgo_obj.png" />
+		<image 
+			facet="org.eclipse.virgo.server.par" 
+			path="icons/full/obj16/par_obj.gif" />
+		<image 
+			facet="org.eclipse.virgo.server.plan" 
+			path="icons/full/obj16/plan_obj.gif" />
+	</extension>
+	
+	<extension point="org.eclipse.wst.server.ui.editorPageSections">
+       <!--
+       <section
+         id="com.springsource.server.ide.server.ui.configuration.editor.port"
+         order="0"
+         insertionId="org.eclipse.wst.server.editor.overview.right"
+         typeIds="com.springsource.server.*"
+         class="com.springsource.server.ide.runtime.internal.ui.editor.ServerPortEditorSection">
+      </section>
+      -->
+      <section
+         id="org.eclipse.virgo.ide.server.ui.configuration.editor.port"
+         order="0"
+         insertionId="org.eclipse.wst.server.editor.overview.right"
+         typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo"
+         class="org.eclipse.virgo.ide.runtime.internal.ui.editor.ServerDeployEditorSection">
+      </section>
+      <section
+         id="org.eclipse.virgo.ide.server.ui.configuration.editor.taillogfiles"
+         order="20"
+         insertionId="org.eclipse.wst.server.editor.overview.right"
+         typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo"
+         class="org.eclipse.virgo.ide.runtime.internal.ui.editor.StartupEditorSection">
+      </section>
+      <section
+         id="org.eclipse.virgo.ide.server.ui.configuration.editor.artefactorder"
+         order="10"
+         insertionId="org.eclipse.wst.server.editor.overview.right"
+         typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo"
+         class="org.eclipse.virgo.ide.runtime.internal.ui.editor.ArtefactOrderEditorSection">
+      </section>
+      <section
+         id="org.eclipse.virgo.ide.server.ui.configuration.editor.staticresources"
+         order="15"
+         insertionId="org.eclipse.wst.server.editor.overview.left"
+         typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo"
+         class="org.eclipse.virgo.ide.runtime.internal.ui.editor.StaticResourcesEditorSection">
+      </section>
+   </extension>
+   
+   <extension point="org.eclipse.ui.popupMenus">
+    <objectContribution
+      adaptable="true"
+      id="org.eclipse.jst.server.tomcat.ui.serveractions"
+      objectClass="org.eclipse.wst.server.ui.internal.view.servers.ModuleServer">
+      <visibility>
+        <and>
+          <objectState name="serverType" value="com.springsource.server.*,org.eclipse.virgo.server.virgo"/>
+          <or>
+          	<objectState name="moduleType" value="jst.web"/>
+          	<objectState name="moduleType" value="org.eclipse.virgo.server.bundle"/>
+          	<objectState name="moduleType" value="org.eclipse.virgo.server.par"/>
+          </or>
+        </and>
+      </visibility>
+      <!--
+      <enablement>
+        <and>
+        	<or>
+	          <test forcePluginActivation="true"
+	            property="org.eclipse.wst.server.ui.moduleType"
+	            value="jst.web"/>
+	          <test forcePluginActivation="true"
+	            property="org.eclipse.wst.server.ui.moduleType"
+	            value="com.springsource.server.bundle"/>
+	          <test forcePluginActivation="true"
+	            property="org.eclipse.wst.server.ui.moduleType"
+	            value="com.springsource.server.par"/>
+            </or>
+          <test forcePluginActivation="true"
+            property="org.eclipse.wst.server.ui.serverType"
+            value="com.springsource.server.*"/>
+        </and>
+      </enablement>
+      -->
+      <action
+        class="org.eclipse.virgo.ide.runtime.internal.ui.actions.OpenManifestAction"
+        enablesFor="1"
+        id="org.eclipse.virgo.ide.server.ui.openManifestAction"
+        label="Open MANIFEST.MF">
+      </action>
+      <action
+        class="org.eclipse.virgo.ide.runtime.internal.ui.actions.RedeployBundleAction"
+        enablesFor="1"
+        id="org.eclipse.virgo.ide.server.ui.redeployAction"
+        label="Redeploy">
+      </action>
+    </objectContribution>
+  </extension>
+  
+  <extension point="org.eclipse.wst.server.ui.editorPages">
+      <page
+         id="org.eclipse.virgo.ide.server.ui.configuration.editor.repository"
+         order="20"
+         name="Repository"
+         typeIds="com.springsource.server.10,com.springsource.server.20"
+         class="org.eclipse.virgo.ide.runtime.internal.ui.editor.RepositoryBrowserEditorPage">
+      </page>
+      <page
+         id="com.springsource.server.virgo.ide.server.ui.configuration.editor.repository"
+         order="20"
+         name="Repository"
+         typeIds="org.eclipse.virgo.server.virgo"
+         class="org.eclipse.virgo.ide.runtime.internal.ui.editor.VirgoRepositoryBrowserEditorPage">
+      </page>
+      <page
+         id="org.eclipse.virgo.ide.server.ui.configuration.editor.bundleInformation"
+         order="30"
+         name="Bundle Overview"
+         typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo"
+         class="org.eclipse.virgo.ide.runtime.internal.ui.overview.BundleInformationEditorPage">
+      </page>
+      <page
+         id="org.eclipse.virgo.ide.server.ui.configuration.editor.bundleDependency"
+         order="40"
+         name="Bundle Dependency Graph"
+         typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo"
+         class="org.eclipse.virgo.ide.runtime.internal.ui.dependencies.BundleDependencyEditorPage">
+      </page>
+      <page
+         id="org.eclipse.virgo.ide.server.ui.configuration.editor.serverConsole"
+         order="50"
+         name="Server Console"
+         typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo"
+         class="org.eclipse.virgo.ide.runtime.internal.ui.console.ServerConsoleEditorPage">
+      </page>
+   </extension>
+
+<!-- Commented out until we get the complete reaseon from dm Server  
+   <extension
+        point="org.eclipse.ui.decorators">
+     <decorator
+           class="com.springsource.server.ide.runtime.internal.ui.ServerDeploymentDecorator"
+           id="com.springsource.server.ide.runtime.ui.deploymentDecorator"
+           label="dm Server Deployment Decorator"
+           lightweight="true"
+           state="true">
+        <enablement>
+           <objectClass
+                 name="org.eclipse.wst.server.ui.internal.view.servers.ModuleServer">
+           </objectClass>
+        </enablement>
+     </decorator>
+  </extension>
+-->
+	 <extension point="org.eclipse.ui.preferencePages">
+		<page 
+			id="org.eclipse.virgo.ide.runtime.ui.preferencePage" 
+			name="Repository Browser"
+			class="org.eclipse.virgo.ide.runtime.internal.ui.properties.RuntimePreferencePage"
+			category="org.springframework.ide.eclipse.ui.preferencePage">
+		</page>
+	</extension>
+	
+</plugin>

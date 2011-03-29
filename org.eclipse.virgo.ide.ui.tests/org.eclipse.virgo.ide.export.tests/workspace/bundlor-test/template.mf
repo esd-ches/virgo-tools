@@ -1,0 +1,7 @@
+Manifest-Version: 1.0
+Bundle-Name: Bundlor_test Bundle
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: com.springsource.bundlor
+Bundle-Version: 1.0.0
+Spring-Context: META-INF/spring/*.xml
+Import-Template: org.springframework.*;version="[2.5.6.A,2.6.0)"

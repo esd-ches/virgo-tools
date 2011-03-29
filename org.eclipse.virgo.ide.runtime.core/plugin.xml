@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.3"?>
+<!--
+/*******************************************************************************
+ * Copyright (c) 2007, 2010 SpringSource
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     SpringSource - initial API and implementation
+ *******************************************************************************/
+-->
+<plugin>
+	
+	<extension point="org.eclipse.wst.server.core.runtimeTypes">
+		<runtimeType id="com.springsource.server.runtime.10"
+			version="1.0" 
+			name="%runtime10TypeName" 
+			description="%runtime10TypeDescription"
+			vendor="%runtimeTypeVendor" 
+			class="org.eclipse.virgo.ide.runtime.internal.core.ServerRuntime">
+			<moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5" />
+			<moduleType types="org.eclipse.virgo.server.bundle" versions="1.0"/>
+			<moduleType types="org.eclipse.virgo.server.par" versions="1.0"/>
+		</runtimeType>
+		<runtimeType id="com.springsource.server.runtime.20"
+			version="2.0" 
+			name="%runtime20TypeName" 
+			description="%runtime20TypeDescription"
+			vendor="%runtimeTypeVendor" 
+			class="org.eclipse.virgo.ide.runtime.internal.core.ServerRuntime">
+			<moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5" />
+			<moduleType types="org.eclipse.virgo.server.bundle" versions="1.0"/>
+			<moduleType types="org.eclipse.virgo.server.par" versions="1.0"/>
+			<moduleType types="org.eclipse.virgo.server.plan" versions="2.0"/>
+		</runtimeType>
+		<runtimeType id="org.eclipse.virgo.server.runtime.virgo"
+			version="2.1" 
+			name="%runtimeVirgoTypeName" 
+			description="%runtimeVirgoDescription"
+			vendor="%runtimeVirgoTypeVendor" 
+			class="org.eclipse.virgo.ide.runtime.internal.core.VirgoServerRuntime">
+			<moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5" />
+			<moduleType types="org.eclipse.virgo.server.bundle" versions="1.0"/>
+			<moduleType types="org.eclipse.virgo.server.par" versions="1.0"/>
+			<moduleType types="org.eclipse.virgo.server.plan" versions="2.0"/>
+		</runtimeType>
+	</extension>
+	
+	<extension point="org.eclipse.wst.server.core.serverTypes">
+		<serverType id="com.springsource.server.10" 
+			name="%server10ServerType"
+			description="%server10ServerDescription" 
+			supportsRemoteHosts="false"
+			runtime="true" 
+			startTimeout="300000" 
+			stopTimeout="300000" 
+			initialState="stopped"
+			hasConfiguration="true" 
+			launchConfigId="com.springsource.server.launchconfig"
+			runtimeTypeId="com.springsource.server.runtime.10" 
+			class="org.eclipse.virgo.ide.runtime.internal.core.Server"
+			behaviourClass="org.eclipse.virgo.ide.runtime.internal.core.ServerBehaviour">
+		</serverType>
+		<serverType id="com.springsource.server.20" 
+			name="%server20ServerType"
+			description="%server20ServerDescription" 
+			supportsRemoteHosts="false"
+			runtime="true" 
+			startTimeout="300000" 
+			stopTimeout="300000" 
+			initialState="stopped"
+			hasConfiguration="true" 
+			launchConfigId="com.springsource.server.launchconfig"
+			runtimeTypeId="com.springsource.server.runtime.20" 
+			class="org.eclipse.virgo.ide.runtime.internal.core.Server"
+			behaviourClass="org.eclipse.virgo.ide.runtime.internal.core.ServerBehaviour">
+		</serverType>
+		<serverType id="org.eclipse.virgo.server.virgo" 
+			name="%serverVirgoServerType"
+			description="%serverVirgoServerDescription" 
+			supportsRemoteHosts="false"
+			runtime="true" 
+			startTimeout="300000" 
+			stopTimeout="300000" 
+			initialState="stopped"
+			hasConfiguration="true" 
+			launchConfigId="org.eclipse.virgo.server.launchconfig.virgo"
+			runtimeTypeId="org.eclipse.virgo.server.runtime.virgo" 
+			class="org.eclipse.virgo.ide.runtime.internal.core.VirgoServer"
+			behaviourClass="org.eclipse.virgo.ide.runtime.internal.core.VirgoServerBehaviour">
+		</serverType>
+	</extension>
+	
+	<extension point="org.eclipse.debug.core.launchConfigurationTypes">
+		<launchConfigurationType
+			delegate="org.eclipse.virgo.ide.runtime.internal.core.ServerLaunchConfigurationDelegate"
+			delegateDescription="%launchDelegate.description" 
+			delegateName="%launchDelegate.name"
+			id="com.springsource.server.launchconfig" 
+			modes="run, debug, profile"
+			name="%launch.label" 
+			public="true"
+			sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
+			sourcePathComputerId="org.eclipse.virgo.server.serverSourceLocator">
+		</launchConfigurationType>
+		<launchConfigurationType
+			delegate="org.eclipse.virgo.ide.runtime.internal.core.ServerLaunchConfigurationDelegate"
+			delegateDescription="%launchDelegateVirgo.description" 
+			delegateName="%launchDelegateVirgo.name"
+			id="org.eclipse.virgo.server.launchconfig.virgo" 
+			modes="run, debug, profile"
+			name="%launchVirgo.label" 
+			public="true"
+			sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
+			sourcePathComputerId="org.eclipse.virgo.server.serverSourceLocator">
+		</launchConfigurationType>
+	</extension>
+	
+	<extension point="org.eclipse.wst.common.project.facet.core.runtimes">
+		<runtime-component-type id="com.springsource.server" />
+		<runtime-component-type id="org.eclipse.virgo.server.virgo" />
+		<runtime-component-version type="com.springsource.server"
+			version="1.0" />
+		<runtime-component-version type="com.springsource.server"
+			version="2.0" />
+		<runtime-component-version type="org.eclipse.virgo.server.virgo"
+			version="2.1" />
+		
+		<adapter>
+			<runtime-component id="com.springsource.server" />
+			<factory
+				class="org.eclipse.jst.server.core.internal.RuntimeClasspathProvider$Factory" />
+			<type class="org.eclipse.jst.common.project.facet.core.IClasspathProvider" />
+		</adapter>
+		
+		<adapter>
+			<runtime-component id="com.springsource.server" />
+			<factory
+				class="org.eclipse.wst.server.ui.FacetRuntimeComponentLabelProvider" />
+			<type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider" />
+		</adapter>
+		
+		<adapter>
+			<runtime-component id="org.eclipse.virgo.server.virgo" />
+			<factory
+				class="org.eclipse.jst.server.core.internal.RuntimeClasspathProvider$Factory" />
+			<type class="org.eclipse.jst.common.project.facet.core.IClasspathProvider" />
+		</adapter>
+		
+		<adapter>
+			<runtime-component id="org.eclipse.virgo.server.virgo" />
+			<factory
+				class="org.eclipse.wst.server.ui.FacetRuntimeComponentLabelProvider" />
+			<type class="org.eclipse.wst.common.project.facet.ui.IRuntimeComponentLabelProvider" />
+		</adapter>
+		
+		<supported>
+			<runtime-component id="com.springsource.server"
+				version="1.0" />
+			<facet id="jst.web" version="2.2,2.3,2.4,2.5" />
+			<facet id="jst.utility" version="1.0" />
+			<facet id="org.eclipse.virgo.server.bundle" version="1.0"/>
+			<facet id="org.eclipse.virgo.server.par" version="1.0"/>
+		</supported>
+		<supported>
+			<runtime-component id="com.springsource.server"
+				version="2.0" />
+			<facet id="jst.web" version="2.2,2.3,2.4,2.5" />
+			<facet id="jst.utility" version="1.0" />
+			<facet id="org.eclipse.virgo.server.bundle" version="1.0"/>
+			<facet id="org.eclipse.virgo.server.par" version="1.0"/>
+			<facet id="org.eclipse.virgo.server.plan" version="2.0"/>
+		</supported>
+		<supported>
+			<runtime-component id="org.eclipse.virgo.server.virgo"
+				version="2.1" />
+			<facet id="jst.web" version="2.2,2.3,2.4,2.5" />
+			<facet id="jst.utility" version="1.0" />
+			<facet id="org.eclipse.virgo.server.bundle" version="1.0"/>
+			<facet id="org.eclipse.virgo.server.par" version="1.0"/>
+			<facet id="org.eclipse.virgo.server.plan" version="2.0"/>
+		</supported>
+	</extension>
+	
+	<extension point="org.eclipse.jst.server.core.runtimeFacetMappings">
+		<runtimeFacetMapping 
+			runtimeTypeId="com.springsource.server.runtime.10"
+			runtime-component="com.springsource.server" version="1.0" />
+		<runtimeFacetMapping 
+			runtimeTypeId="com.springsource.server.runtime.20"
+			runtime-component="com.springsource.server" version="2.0" />
+		<runtimeFacetMapping 
+			runtimeTypeId="org.eclipse.virgo.server.runtime.virgo"
+			runtime-component="org.eclipse.virgo.server.virgo" version="2.1" />
+	</extension>
+	
+	<extension point="org.eclipse.wst.server.core.publishTasks">
+		<publishTask id="com.springsource.server.publishTask"
+			typeIds="com.springsource.server.10" 
+			class="org.eclipse.virgo.ide.runtime.internal.core.ServerPublishTask" />
+		<publishTask id="com.springsource.server.publishTask"
+			typeIds="com.springsource.server.20" 
+			class="org.eclipse.virgo.ide.runtime.internal.core.ServerPublishTask" />
+		<publishTask id="com.springsource.server.publishTask"
+			typeIds="org.eclipse.virgo.server.virgo" 
+			class="org.eclipse.virgo.ide.runtime.internal.core.ServerPublishTask" />
+	</extension>
+ 
+ 	<extension
+    	   point="org.eclipse.debug.core.sourcePathComputers">
+    	<sourcePathComputer
+        	class="org.eclipse.virgo.ide.runtime.internal.core.ServerSourcePathComputerDelegate"
+            id="org.eclipse.virgo.server.serverSourceLocator">
+        </sourcePathComputer>
+ 	</extension>
+ 	
+ 	<extension point="org.eclipse.wst.server.core.launchableAdapters">
+        <launchableAdapter
+            class="org.eclipse.virgo.ide.runtime.internal.core.ServerLaunchableAdapterDelegate"
+            id="org.eclipse.virgo.server.web"/>
+    </extension>
+    
+    <extension point="org.eclipse.jst.server.core.runtimeClasspathProviders">
+         <runtimeClasspathProvider
+             id="org.eclipse.virgo.ide.server.core.runtime.classpath"
+             runtimeTypeIds="com.springsource.server.runtime.*"
+             class="org.eclipse.virgo.ide.runtime.internal.core.ServerRuntimeClasspathProvider"/>
+    </extension>
+   
+   <extension
+		point="org.eclipse.hyades.trace.ui.launchConfigMechanismAssociator">
+		 
+		<association			
+			launchConfigID="com.springsource.server.launchconfig">
+ 		  	
+			<mechanism mechanismID="org.eclipse.tptp.trace.ui.jvmpiMechanism"> 
+			    <configuration
+					launchDelegate="org.eclipse.tptp.trace.ui.internal.launcher.deleg.application.PIAttachLauncherDelegate"
+					configurationId="org.eclipse.tptp.trace.ui.jvmpiConfiguration"
+					associatedAgent="org.eclipse.tptp.trace.ui.jvmpiAgent"
+					filter="org.eclipse.tptp.platform.profile.server.core.internal.PICollectorFiltration">					
+				</configuration>			
+		  	</mechanism> 
+		  	
+		  	<mechanism mechanismID="org.eclipse.tptp.trace.jvmti.jvmtiMechanism"> 
+			    <configuration
+					launchDelegate="org.eclipse.tptp.platform.jvmti.client.internal.launcher.TIAttachLauncherDelegate"
+					configurationId="org.eclipse.tptp.trace.jvmti.tiConfiguration"
+					associatedAgent="org.eclipse.tptp.platform.jvmti.TIAgent"	
+					filter="org.eclipse.tptp.platform.profile.server.core.internal.TICollectorFiltration">							
+				</configuration>			
+		  	</mechanism> 
+
+   <!-- 
+		  	
+			<mechanism mechanismID="org.eclipse.tptp.trace.ui.jvmpiMechanism">
+			    <configuration
+					launchDelegate="org.eclipse.tptp.platform.integration.pde.internal.delegators.PIEquinoxLauncherDelegate"
+					configurationId="org.eclipse.tptp.trace.ui.jvmpiExtendedConfiguration"
+					associatedAgent="org.eclipse.tptp.trace.ui.jvmpiAgent"
+					filter="org.eclipse.tptp.trace.ui.internal.launcher.application.PICollectorFiltration">					
+				</configuration>			
+		  	</mechanism>
+	-->
+		
+		</association>
+	
+	</extension>
+	
+	
+</plugin>

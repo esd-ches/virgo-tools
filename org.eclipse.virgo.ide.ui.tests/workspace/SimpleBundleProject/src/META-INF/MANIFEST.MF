@@ -1,0 +1,36 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Test Bundle foo
+Bundle-Description: A test bundle to see how the AP works
+Bundle-SymbolicName: FooProject
+Bundle-Version: 1.0.0.2
+Bundle-Vendor: Bar
+Export-Package: com.foo
+Import-Package: com.bea.jvm,
+ com.google.common.base,
+ com.google.common.collect,
+ com.springsource.json.parser,
+ com.springsource.json.writer,
+ com.springsource.platform.common.env,
+ com.springsource.platform.common.math,
+ com.springsource.platform.concurrent.core,
+ com.springsource.platform.concurrent.core.config,
+ com.springsource.platform.concurrent.core.queue,
+ com.springsource.platform.config.core,
+ com.springsource.platform.control.core,
+ com.springsource.platform.control.core.config,
+ com.springsource.platform.deployer.app.spring,
+ com.springsource.platform.deployer.core,
+ com.springsource.platform.ffdc.core,
+ com.springsource.platform.io.core.fs,
+ org.springframework.aop.config
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Import-Bundle: com.springsource.org.aopalliance,
+ com.springsource.org.apache.commons.io;version="[1.1.1.1,2.2.2.2)",
+ com.springsource.org.apache.commons.logging,
+ com.springsource.org.apache.batik.css,
+ com.springsource.antlr,
+ com.springsource.org.apache.velocity,
+ org.springframework.aop
+Import-Library: org.springframework.spring
+Bundle-ClassPath: lib/foo.jar
