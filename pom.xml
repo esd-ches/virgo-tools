@@ -51,6 +51,20 @@
 	</repository>
  </repositories>
 
+ <pluginRepositories>
+   <pluginRepository>
+     <!-- need maven-findbugs-2.3.2-SNAPSHOT, see
+          http://jira.codehaus.org/browse/MFINDBUGS-122
+          remove this when this version is released -->
+     <id>codehaus.snapshots</id>
+     <url>http://snapshots.repository.codehaus.org/</url>
+   </pluginRepository>
+   <pluginRepository>
+     <id>sonatype.snapshots</id>
+     <url>https://repository.sonatype.org/content/repositories/snapshots/</url>
+   </pluginRepository>
+ </pluginRepositories>
+
  <build>
    <plugins>
      <plugin>
@@ -76,7 +90,7 @@
 		  <version>${tycho-version}</version>
 		  <configuration>
 			<resolver>p2</resolver>
-			<pomDependencies>ignore</pomDependencies>
+			<pomDependencies>consider</pomDependencies>
 			<ignoreTychoRepositories>true</ignoreTychoRepositories>
 		  </configuration>
 		</plugin>
