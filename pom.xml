@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.eclipse.virgo.ide</groupId>
+  <artifactId>org.eclipse.virgo.ide</artifactId>
+  <version>1.1.3-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <modules>
+    <module>org.eclipse.virgo.ide</module>
+    <module>org.eclipse.virgo.ide.bundlor.core</module>
+    <module>org.eclipse.virgo.ide.bundlor.jdt.core</module>
+    <module>org.eclipse.virgo.ide.bundlor.ui</module>
+    <module>org.eclipse.virgo.ide.eclipse</module>
+    <module>org.eclipse.virgo.ide.eclipse.feature</module>
+    <module>org.eclipse.virgo.ide.export</module>
+    <module>org.eclipse.virgo.ide.export.tests</module>
+    <module>org.eclipse.virgo.ide.facet.core</module>
+    <module>org.eclipse.virgo.ide.feature</module>
+    <module>org.eclipse.virgo.ide.jdt.core</module>
+    <module>org.eclipse.virgo.ide.jdt.ui</module>
+    <module>org.eclipse.virgo.ide.manifest.core</module>
+    <module>org.eclipse.virgo.ide.par</module>
+    <module>org.eclipse.virgo.ide.par.edit</module>
+    <module>org.eclipse.virgo.ide.runtime.core</module>
+    <module>org.eclipse.virgo.ide.runtime.ui</module>
+    <module>org.eclipse.virgo.ide.tests</module>
+    <module>org.eclipse.virgo.ide.tests.util</module>
+    <module>org.eclipse.virgo.ide.ui</module>
+    <module>org.eclipse.virgo.ide.ui.tests</module>
+  </modules>
+
+  <properties>
+	<tycho-version>0.11.0-SNAPSHOT</tycho-version>
+  </properties>
+
+ <repositories>
+	<repository>
+	  <id>springide</id>
+	  <layout>p2</layout>
+	  <url>http://dist.springframework.org/snapshot/IDE/nightly/</url>
+	</repository>
+	<repository>
+	  <id>helios</id>
+	  <layout>p2</layout>
+	  <url>http://download.eclipse.org/releases/helios/</url>
+	</repository>
+	<repository>
+	  <id>virgo</id>
+	  <url>http://build.eclipse.org/rt/virgo/maven/bundles/snapshot</url>
+	</repository>
+ </repositories>
+
+ <build>
+   <plugins>
+     <plugin>
+       <groupId>org.sonatype.tycho</groupId>
+       <artifactId>tycho-maven-plugin</artifactId>
+       <version>${tycho-version}</version>
+       <extensions>true</extensions>
+     </plugin>
+   </plugins>
+	<pluginManagement>
+	  <plugins>
+		<plugin>
+		  <groupId>org.sonatype.tycho</groupId>
+		  <artifactId>maven-osgi-compiler-plugin</artifactId>
+		  <version>${tycho-version}</version>
+		  <configuration>
+			<encoding>UTF-8</encoding>
+		  </configuration>
+		</plugin>
+		<plugin>
+		  <groupId>org.sonatype.tycho</groupId>
+		  <artifactId>target-platform-configuration</artifactId>
+		  <version>${tycho-version}</version>
+		  <configuration>
+			<resolver>p2</resolver>
+			<pomDependencies>ignore</pomDependencies>
+			<ignoreTychoRepositories>true</ignoreTychoRepositories>
+		  </configuration>
+		</plugin>
+	  </plugins>
+	</pluginManagement>
+ </build>
+
+
+
+</project>
