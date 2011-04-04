@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+	<description url="http://www.eclipse.org/virgo">
+		IDE components for the Virgo server.
+	</description>
+
+	<!-- Core features -->
+	<feature
+		url="features/org.eclipse.virgo.ide.feature_0.0.0.jar"
+		id="org.eclipse.virgo.ide.feature" version="0.0.0">
+		<category name="Core / Virgo IDE" />
+	</feature>
+
+	<!-- Resources features -->
+<!--	<feature
+		url="features/org.eclipse.virgo.ide.feature.source_0.0.0.jar"
+		id="org.eclipse.virgo.ide.feature.source" version="0.0.0">
+		<category name="Resources / Virgo IDE" />
+	</feature>
+-->
+	<category-def name="Core / Virgo IDE" label="Core / Virgo IDE" />
+	<category-def name="Resources / Virgo IDE" label="Resources / Virgo IDE" />
+	
+</site>
