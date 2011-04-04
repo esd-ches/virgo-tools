@@ -33,7 +33,6 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.virgo.util.math,
  org.eclipse.virgo.util.io,
  org.eclipse.virgo.util.parser.manifest,
- com.springsource.slf4j.api,
  org.eclipse.virgo.repository,
  org.eclipse.virgo.medic
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
