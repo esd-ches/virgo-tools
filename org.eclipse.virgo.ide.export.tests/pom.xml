@@ -10,5 +10,5 @@
   <groupId>org.eclipse.virgo.ide</groupId>
   <artifactId>org.eclipse.virgo.ide.export.tests</artifactId>
   <version>0.0.0</version>
-  <packaging>eclipse-test-plugin</packaging>
+  <packaging>eclipse-plugin</packaging>
 </project>

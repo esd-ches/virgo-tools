@@ -36,6 +36,11 @@
 
  <repositories>
 	<repository>
+		<id>bundles</id>
+		<layout>p2</layout>
+		<url>file://${basedir}/../required-bundles/repo</url>
+	</repository>
+	<repository>
 	  <id>springide</id>
 	  <layout>p2</layout>
 	  <url>http://dist.springframework.org/snapshot/IDE/nightly/</url>
@@ -46,9 +51,19 @@
 	  <url>http://download.eclipse.org/releases/helios/</url>
 	</repository>
 	<repository>
+	  <id>swtbot</id>
+	  <layout>p2</layout>
+	  <url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</url>
+	</repository>
+	<repository>
+	  <id>m2eclipse</id>
+	  <layout>p2</layout>
+	  <url>http://m2eclipse.sonatype.org/sites/m2e/</url>
+	</repository>
+<!--	<repository>
 	  <id>virgo</id>
 	  <url>http://build.eclipse.org/rt/virgo/maven/bundles/snapshot</url>
-	</repository>
+	</repository> -->
  </repositories>
 
  <pluginRepositories>
@@ -90,7 +105,7 @@
 		  <version>${tycho-version}</version>
 		  <configuration>
 			<resolver>p2</resolver>
-			<pomDependencies>consider</pomDependencies>
+			<pomDependencies>ignore</pomDependencies>
 			<ignoreTychoRepositories>true</ignoreTychoRepositories>
 		  </configuration>
 		</plugin>
