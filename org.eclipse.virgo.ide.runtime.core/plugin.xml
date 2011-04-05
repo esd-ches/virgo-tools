@@ -229,7 +229,7 @@
              runtimeTypeIds="com.springsource.server.runtime.*"
              class="org.eclipse.virgo.ide.runtime.internal.core.ServerRuntimeClasspathProvider"/>
     </extension>
-   
+<!--   
    <extension
 		point="org.eclipse.hyades.trace.ui.launchConfigMechanismAssociator">
 		 
@@ -254,8 +254,6 @@
 				</configuration>			
 		  	</mechanism> 
 
-   <!-- 
-		  	
 			<mechanism mechanismID="org.eclipse.tptp.trace.ui.jvmpiMechanism">
 			    <configuration
 					launchDelegate="org.eclipse.tptp.platform.integration.pde.internal.delegators.PIEquinoxLauncherDelegate"
@@ -264,11 +262,10 @@
 					filter="org.eclipse.tptp.trace.ui.internal.launcher.application.PICollectorFiltration">					
 				</configuration>			
 		  	</mechanism>
-	-->
 		
 		</association>
 	
 	</extension>
-	
+-->
 	
 </plugin>
