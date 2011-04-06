@@ -2,7 +2,7 @@
 
 WORKSPACE=`pwd`
 
-ECLIPSE_HOME=/Users/mlippert/Entwicklung/vmware/ide/sts260-64/sts-2.6.0.RELEASE
+ECLIPSE_HOME=$HOME/.m2/repository/org/sonatype/tycho/tycho-p2-runtime/0.10.0/eclipse
 LAUNCHER_JAR=`ls $ECLIPSE_HOME/plugins/org.eclipse.equinox.launcher_*`
 
 rm $WORKSPACE/repo/content.jar $WORKSPACE/repo/artifacts.jar
