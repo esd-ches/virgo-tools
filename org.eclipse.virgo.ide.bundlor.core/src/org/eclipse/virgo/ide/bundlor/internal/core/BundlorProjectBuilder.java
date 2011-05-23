@@ -53,27 +53,6 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.osgi.util.ManifestElement;
 import org.eclipse.pde.internal.core.text.bundle.ManifestHeader;
-import org.eclipse.virgo.ide.bundlor.internal.core.asm.ExtensibleAsmTypeArtefactAnalyser;
-import org.eclipse.virgo.ide.bundlor.internal.core.maven.MavenPropertiesSourceFactory;
-import org.eclipse.virgo.ide.bundlor.jdt.core.AstTypeArtifactAnalyser;
-import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
-import org.eclipse.virgo.ide.facet.core.FacetUtils;
-import org.eclipse.virgo.ide.manifest.core.BundleManifestUtils;
-import org.eclipse.virgo.ide.manifest.core.editor.model.SpringBundleModel;
-import org.eclipse.virgo.ide.manifest.core.editor.model.SpringBundleModelFactory;
-import org.eclipse.virgo.ide.module.core.ServerModuleDelegate;
-import org.osgi.framework.BundleException;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.ide.eclipse.core.SpringCore;
-import org.springframework.ide.eclipse.core.SpringCorePreferences;
-import org.springframework.ide.eclipse.core.SpringCoreUtils;
-import org.springframework.ide.eclipse.core.internal.project.SpringProjectContributionManager.ResourceDeltaVisitor;
-import org.springframework.ide.eclipse.core.internal.project.SpringProjectContributionManager.ResourceTreeVisitor;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
-import org.springframework.ide.eclipse.core.project.IProjectContributor;
-import org.springframework.util.StringUtils;
-
 import org.eclipse.virgo.bundlor.ClassPath;
 import org.eclipse.virgo.bundlor.ClassPathEntry;
 import org.eclipse.virgo.bundlor.EntryScannerListener;
@@ -85,6 +64,14 @@ import org.eclipse.virgo.bundlor.support.partialmanifest.ReadablePartialManifest
 import org.eclipse.virgo.bundlor.support.properties.FileSystemPropertiesSource;
 import org.eclipse.virgo.bundlor.support.properties.PropertiesSource;
 import org.eclipse.virgo.bundlor.util.SimpleManifestContents;
+import org.eclipse.virgo.ide.bundlor.internal.core.asm.ExtensibleAsmTypeArtefactAnalyser;
+import org.eclipse.virgo.ide.bundlor.jdt.core.AstTypeArtifactAnalyser;
+import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
+import org.eclipse.virgo.ide.facet.core.FacetUtils;
+import org.eclipse.virgo.ide.manifest.core.BundleManifestUtils;
+import org.eclipse.virgo.ide.manifest.core.editor.model.SpringBundleModel;
+import org.eclipse.virgo.ide.manifest.core.editor.model.SpringBundleModelFactory;
+import org.eclipse.virgo.ide.module.core.ServerModuleDelegate;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifestFactory;
 import org.eclipse.virgo.util.osgi.manifest.ExportedPackage;
@@ -92,6 +79,17 @@ import org.eclipse.virgo.util.osgi.manifest.ImportedPackage;
 import org.eclipse.virgo.util.parser.manifest.ManifestContents;
 import org.eclipse.virgo.util.parser.manifest.ManifestParser;
 import org.eclipse.virgo.util.parser.manifest.RecoveringManifestParser;
+import org.osgi.framework.BundleException;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
+import org.springframework.ide.eclipse.core.SpringCore;
+import org.springframework.ide.eclipse.core.SpringCorePreferences;
+import org.springframework.ide.eclipse.core.SpringCoreUtils;
+import org.springframework.ide.eclipse.core.internal.project.SpringProjectContributionManager.ResourceDeltaVisitor;
+import org.springframework.ide.eclipse.core.internal.project.SpringProjectContributionManager.ResourceTreeVisitor;
+import org.springframework.ide.eclipse.core.java.JdtUtils;
+import org.springframework.ide.eclipse.core.project.IProjectContributor;
+import org.springframework.util.StringUtils;
 
 /**
  * {@link IncrementalProjectBuilder} that runs on a bundle project and generates the MANIFEST.MF based on actual
@@ -355,10 +353,6 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 			}
 		}
 
-		// Check if the project has a pom.xml in the root of the project file structure
-		if (MavenPropertiesSourceFactory.shouldCreate(getProject())) {
-			propertiesSources.add(MavenPropertiesSourceFactory.createPropertiesSource(getProject()));
-		}
 		return propertiesSources;
 	}
 
