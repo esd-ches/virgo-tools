@@ -29,7 +29,7 @@ import org.osgi.framework.BundleContext;
 public class ServerCorePlugin extends AbstractUIPlugin {
 	
 	public static final String CONNECTOR_BUNDLE_NAME = 
-		"org.eclipse.virgo.ide.management.remote-1.0.0.RELEASE.jar";
+		"org.eclipse.virgo.ide.management.remote_1.0.0.RELEASE.jar";
 
 	/** The bundle symbolic name */
 	public static final String PLUGIN_ID = "org.eclipse.virgo.ide.runtime.core";
