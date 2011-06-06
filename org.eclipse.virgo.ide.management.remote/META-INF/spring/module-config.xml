@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="standardBundleAdmin" class="org.eclipse.virgo.ide.management.remote.StandardBundleAdmin">
+		<constructor-arg ref="platformAdmin" />
+		<constructor-arg ref="packageAdmin" />
+		<constructor-arg ref="bundleContext" /> 
+	</bean> 
+  
+	<bean class="org.springframework.jmx.export.MBeanExporter"
+		destroy-method="destroy">
+		<property name="assembler">
+			<bean id="assembler"
+				class="org.springframework.jmx.export.assembler.MetadataMBeanInfoAssembler">
+				<property name="attributeSource" ref="jmxAttributeSource" />
+			</bean>
+		</property>
+		<property name="namingStrategy">
+			<bean id="namingStrategy"
+				class="org.springframework.jmx.export.naming.MetadataNamingStrategy">
+				<property name="attributeSource" ref="jmxAttributeSource" />
+			</bean>
+		</property>
+		<property name="autodetect" value="true" />
+	</bean>
+
+	<bean id="jmxAttributeSource"
+		class="org.springframework.jmx.export.annotation.AnnotationJmxAttributeSource" />
+
+</beans> 
