@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2011 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,9 +11,6 @@
 package org.eclipse.virgo.ide.ui.editors;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.pde.core.plugin.IPlugin;
-import org.eclipse.pde.internal.ui.PDEPlugin;
 import org.eclipse.pde.internal.ui.PDEUIMessages;
 import org.eclipse.pde.internal.ui.editor.FormEntryAdapter;
 import org.eclipse.pde.internal.ui.editor.FormLayoutFactory;
@@ -21,20 +18,17 @@ import org.eclipse.pde.internal.ui.editor.PDEFormPage;
 import org.eclipse.pde.internal.ui.parts.FormEntry;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.forms.events.HyperlinkEvent;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.virgo.ide.manifest.core.IHeaderConstants;
 
-
 /**
  * @author Christian Dupuis
  * @author Leo Dos Santos
+ * @author Martin Lippert
  */
 public class ParGeneralInfoSection extends AbstractPdeGeneralInfoSection {
-
-	private FormEntry fClassEntry;
 
 	public ParGeneralInfoSection(PDEFormPage page, Composite parent) {
 		super(page, parent);
@@ -42,7 +36,6 @@ public class ParGeneralInfoSection extends AbstractPdeGeneralInfoSection {
 
 	@Override
 	protected void createSpecificControls(Composite parent, FormToolkit toolkit, IActionBars actionBars) {
-		createClassEntry(parent, toolkit, actionBars);
 	}
 
 	@Override
@@ -54,7 +47,7 @@ public class ParGeneralInfoSection extends AbstractPdeGeneralInfoSection {
 
 		section.setDescription(getSectionDescription());
 		Composite client = toolkit.createComposite(section);
-		client.setLayout(FormLayoutFactory.createSectionClientTableWrapLayout(false, 3));
+		client.setLayout(FormLayoutFactory.createSectionClientTableWrapLayout(false, 2));
 		section.setClient(client);
 
 		IActionBars actionBars = getPage().getPDEEditor().getEditorSite().getActionBars();
@@ -144,49 +137,6 @@ public class ParGeneralInfoSection extends AbstractPdeGeneralInfoSection {
 		// return validateProviderEntry();
 		// }
 		// };
-	}
-
-	private void createClassEntry(Composite client, FormToolkit toolkit, IActionBars actionBars) {
-		boolean isEditable = isEditable();
-		fClassEntry = new FormEntry(client, toolkit, PDEUIMessages.GeneralInfoSection_class,
-				PDEUIMessages.GeneralInfoSection_browse, // 
-				isEditable());
-		fClassEntry.setFormEntryListener(new FormEntryAdapter(this, actionBars) {
-			@Override
-			public void textValueChanged(FormEntry entry) {
-				try {
-					((IPlugin) getPluginBase()).setClassName(entry.getValue());
-				}
-				catch (CoreException e) {
-					PDEPlugin.logException(e);
-				}
-			}
-
-			@Override
-			public void linkActivated(HyperlinkEvent e) {
-				// String value = fClassEntry.getValue();
-				// IProject project =
-				// getPage().getPDEEditor().getCommonProject();
-				// value = PDEJavaHelperUI.createClass(value, project,
-				// createJavaAttributeValue(), false);
-				// if (value != null) {
-				// fClassEntry.setValue(value);
-				// }
-			}
-
-			@Override
-			public void browseButtonSelected(FormEntry entry) {
-				// doOpenSelectionDialog(entry.getValue());
-			}
-		});
-		fClassEntry.setEditable(isEditable);
-
-		if (isEditable) {
-			// fTypeFieldAssistDisposer =
-			// PDEJavaHelperUI.addTypeFieldAssistToText(fClassEntry.getText(),
-			// getProject(),
-			// IJavaSearchConstants.CLASS);
-		}
 	}
 
 	@Override
