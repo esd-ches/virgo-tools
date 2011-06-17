@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009, 2011 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -16,6 +16,7 @@ import org.eclipse.jst.common.project.facet.JavaProjectFacetCreationDataModelPro
 
 /**
  * @author Christian Dupuis
+ * @author Martin Lippert
  * @since 1.1.3
  */
 public class BundleFacetInstallDataModelProvider extends
