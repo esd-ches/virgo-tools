@@ -11,7 +11,11 @@
 package org.eclipse.virgo.ide.ui.wizards;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.resources.IFile;
@@ -56,7 +60,6 @@ import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
 import org.springframework.ide.eclipse.core.SpringCore;
 import org.springframework.ide.eclipse.core.SpringCoreUtils;
-
 
 /**
  * @author Christian Dupuis
@@ -103,12 +106,22 @@ public class NewBundleProjectWizard extends NewElementWizard implements INewWiza
 				IFacetedProject fProject = ProjectFacetsManager.create(project.getProject(), true, monitor);
 
 				// WST 3.0 only
-				// fProject.createWorkingCopy().addProjectFacet(
-				// ProjectFacetsManager.getProjectFacet("jst.java").
-				// getLatestVersion());
-				// fProject.createWorkingCopy().addProjectFacet(
-				// ProjectFacetsManager.getProjectFacet(FacetCorePlugin.
-				// BUNDLE_FACET_ID).getLatestVersion());
+
+				if (model.getBooleanProperty(BundleFacetInstallDataModelProvider.ENABLE_WEB_BUNDLE)) {
+					fProject.installProjectFacet(ProjectFacetsManager.getProjectFacet("jst.java").getDefaultVersion(),
+							null, monitor);
+					fProject.installProjectFacet(ProjectFacetsManager.getProjectFacet(FacetCorePlugin.WEB_FACET_ID)
+							.getDefaultVersion(), null, monitor);
+
+					// wanna uninstall JavaScript facet, but it doesn't seem to
+					// be there yet
+					// fProject.uninstallProjectFacet(ProjectFacetsManager
+					// .getProjectFacet(FacetCorePlugin.WEB_JS_FACET_ID).getDefaultVersion(),
+					// null, monitor);
+
+					removeFromClasspath(project, "org.eclipse.jst.j2ee.internal.web.container", monitor);
+					removeFromClasspath(project, "org.eclipse.jst.j2ee.internal.module.container", monitor);
+				}
 
 				fProject.installProjectFacet(ProjectFacetsManager.getProjectFacet(FacetCorePlugin.BUNDLE_FACET_ID)
 						.getDefaultVersion(), null, monitor);
@@ -134,6 +147,23 @@ public class NewBundleProjectWizard extends NewElementWizard implements INewWiza
 		catch (InterruptedException e) {
 			SpringCore.log(e);
 		}
+	}
+
+	protected void removeFromClasspath(IJavaProject javaProject, String entryPath, IProgressMonitor monitor)
+			throws CoreException {
+		List<IClasspathEntry> rawClasspath = new ArrayList<IClasspathEntry>();
+		rawClasspath.addAll(Arrays.asList(javaProject.getRawClasspath()));
+
+		Iterator<IClasspathEntry> iter = rawClasspath.iterator();
+		while (iter.hasNext()) {
+			IClasspathEntry entry = iter.next();
+			if (entry.getPath() != null && entry.getPath().toString() != null
+					&& entry.getPath().toString().equals(entryPath)) {
+				iter.remove();
+			}
+		}
+
+		javaProject.setRawClasspath(rawClasspath.toArray(new IClasspathEntry[0]), monitor);
 	}
 
 	protected void addToClasspath(IJavaProject javaProject, IClasspathEntry entry, IProgressMonitor monitor)
@@ -268,11 +298,9 @@ public class NewBundleProjectWizard extends NewElementWizard implements INewWiza
 			getContainer().run(true, true, oper);
 		}
 		catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

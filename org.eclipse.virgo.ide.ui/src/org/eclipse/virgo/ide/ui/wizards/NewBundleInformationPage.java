@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009, 2011 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -30,10 +30,15 @@ import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 
 /**
  * @author Christian Dupuis
+ * @author Martin Lippert
  */
 public class NewBundleInformationPage extends RuntimeConfigurationPage {
 
 	private Button moduleType;
+
+	private Button enableClasspathContainer;
+
+	private final IDataModel model;
 
 	private final SelectionListener moduleTypeListener = new SelectionListener() {
 
@@ -65,10 +70,6 @@ public class NewBundleInformationPage extends RuntimeConfigurationPage {
 		}
 
 	};
-
-	private Button enableClasspathContainer;
-
-	private final IDataModel model;
 
 	protected NewBundleInformationPage(String pageName, IProjectProvider provider, AbstractFieldData data,
 			IDataModel model) {
@@ -172,5 +173,6 @@ public class NewBundleInformationPage extends RuntimeConfigurationPage {
 		super.performPageFinish();
 		model.setBooleanProperty(BundleFacetInstallDataModelProvider.ENABLE_SERVER_CLASSPATH_CONTAINER,
 				enableClasspathContainer.getSelection());
+		model.setBooleanProperty(BundleFacetInstallDataModelProvider.ENABLE_WEB_BUNDLE, moduleType.getSelection());
 	}
 }
