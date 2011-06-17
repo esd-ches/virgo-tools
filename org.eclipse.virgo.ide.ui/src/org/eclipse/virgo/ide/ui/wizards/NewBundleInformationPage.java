@@ -11,63 +11,57 @@
 package org.eclipse.virgo.ide.ui.wizards;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
-import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.IWizardPage;
 import org.eclipse.pde.internal.ui.wizards.IProjectProvider;
 import org.eclipse.pde.internal.ui.wizards.plugin.AbstractFieldData;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.virgo.ide.eclipse.wizards.RuntimeConfigurationPage;
 import org.eclipse.virgo.ide.facet.core.BundleFacetInstallDataModelProvider;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.ui.ServerIdeUiPlugin;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 
-
 /**
  * @author Christian Dupuis
  */
 public class NewBundleInformationPage extends RuntimeConfigurationPage {
 
-	private Combo moduleCombo;
+	private Button moduleType;
 
-	private int selectionIndex = 0;
+	private final SelectionListener moduleTypeListener = new SelectionListener() {
 
-	private final ModifyListener comboListener = new ModifyListener() {
-
-		public void modifyText(ModifyEvent e) {
-			if (moduleCombo.getSelectionIndex() != selectionIndex) {
-				NewBundleProjectWizard wizard = (NewBundleProjectWizard) getWizard();
-				AbstractPropertiesPage page;
-				if (moduleCombo.getSelectionIndex() == 0) {
-					page = (AbstractPropertiesPage) wizard.getPage(NullPropertiesPage.ID_PAGE);
-					if (page != null) {
-						wizard.setPropertiesPage(page);
-					}
-					else {
-						wizard.setPropertiesPage(new NullPropertiesPage());
-					}
+		public void widgetSelected(SelectionEvent e) {
+			NewBundleProjectWizard wizard = (NewBundleProjectWizard) getWizard();
+			AbstractPropertiesPage page;
+			if (!moduleType.getSelection()) {
+				page = (AbstractPropertiesPage) wizard.getPage(NullPropertiesPage.ID_PAGE);
+				if (page != null) {
+					wizard.setPropertiesPage(page);
 				}
-				else if (moduleCombo.getSelectionIndex() == 1) {
-					page = (AbstractPropertiesPage) wizard.getPage(WebModulePropertiesPage.ID_PAGE);
-					if (page != null) {
-						wizard.setPropertiesPage(page);
-					}
-					else {
-						wizard.setPropertiesPage(new WebModulePropertiesPage());
-					}
+				else {
+					wizard.setPropertiesPage(new NullPropertiesPage());
 				}
-				selectionIndex = moduleCombo.getSelectionIndex();
+			}
+			else {
+				page = (AbstractPropertiesPage) wizard.getPage(WebModulePropertiesPage.ID_PAGE);
+				if (page != null) {
+					wizard.setPropertiesPage(page);
+				}
+				else {
+					wizard.setPropertiesPage(new WebModulePropertiesPage());
+				}
 			}
 			validatePage();
+		}
+
+		public void widgetDefaultSelected(SelectionEvent e) {
 		}
 
 	};
@@ -89,14 +83,10 @@ public class NewBundleInformationPage extends RuntimeConfigurationPage {
 		propertiesGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		propertiesGroup.setText("Additional Properties");
 
-		Label label = new Label(propertiesGroup, SWT.NONE);
-		label.setText("Module Type");
-
-		moduleCombo = new Combo(propertiesGroup, SWT.READ_ONLY);
-		moduleCombo.setItems(new String[] { "None", "Web" });
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).span(2, 1).applyTo(moduleCombo);
-		moduleCombo.select(selectionIndex);
-		moduleCombo.addModifyListener(comboListener);
+		moduleType = new Button(propertiesGroup, SWT.CHECK);
+		moduleType.setText("Web Application Bundle");
+		moduleType.setSelection(false);
+		moduleType.addSelectionListener(moduleTypeListener);
 
 		Group classpathGroup = new Group(container, SWT.NONE);
 		classpathGroup.setLayout(new GridLayout(1, false));
