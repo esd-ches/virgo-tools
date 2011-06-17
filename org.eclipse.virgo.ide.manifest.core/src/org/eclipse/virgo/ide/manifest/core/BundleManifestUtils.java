@@ -245,9 +245,6 @@ public class BundleManifestUtils {
 		if (StringUtils.hasText(providerName)) {
 			dictonary.put(Constants.BUNDLE_DESCRIPTION, providerName);
 		}
-		if (StringUtils.hasLength(serverModule)) {
-			dictonary.put(BundleManifestCorePlugin.MODULE_TYPE_MANIFEST_HEADER, serverModule);
-		}
 
 		for (Map.Entry<String, String> entry : properties.entrySet()) {
 			if (StringUtils.hasLength(entry.getValue()) && StringUtils.hasLength(entry.getKey())) {
