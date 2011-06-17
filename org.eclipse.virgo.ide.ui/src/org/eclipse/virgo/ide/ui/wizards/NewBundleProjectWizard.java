@@ -112,7 +112,7 @@ public class NewBundleProjectWizard extends NewElementWizard implements INewWiza
 					fProject.installProjectFacet(ProjectFacetsManager.getProjectFacet("jst.java").getDefaultVersion(),
 							null, monitor);
 					fProject.installProjectFacet(ProjectFacetsManager.getProjectFacet(FacetCorePlugin.WEB_FACET_ID)
-							.getDefaultVersion(), null, monitor);
+							.getVersion("2.5"), null, monitor);
 
 					// wanna uninstall JavaScript facet, but it doesn't seem to
 					// be there yet
