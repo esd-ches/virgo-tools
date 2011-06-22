@@ -23,7 +23,7 @@
 
 	<pack200>${java.home}/bin</pack200>
 
-	<tycho-version>0.10.0</tycho-version>
+	<tycho-version>0.12.0</tycho-version>
 	<skip-source-check>true</skip-source-check>
   </properties>
 
@@ -65,7 +65,7 @@
       </activation>
       <properties>
 		<pack200>/shared/common/jdk-1.5.0-22.x86_64/bin</pack200>
-		<archive-dir>/home/data/httpd/download.eclipse.org/virgo/snapshot/IDE/archive</archive-dir>
+		<archive-dir>/home/data/httpd/download.eclipse.org/virgo/snapshot/IDE/drops</archive-dir>
 		<site-dir>/home/data/httpd/download.eclipse.org/virgo/snapshot/IDE</site-dir>
 		<skip-promote>false</skip-promote>
       </properties>
@@ -103,11 +103,13 @@
 	  <layout>p2</layout>
 	  <url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</url>
 	</repository>
+	<!--
 	<repository>
 	  <id>m2eclipse</id>
 	  <layout>p2</layout>
 	  <url>http://m2eclipse.sonatype.org/sites/m2e/</url>
 	</repository>
+	-->
 	<!--	
 	<repository>
 	  <id>virgo</id>
@@ -133,13 +135,13 @@
   <build>
 	<plugins>
       <plugin>
-		<groupId>org.sonatype.tycho</groupId>
+		<groupId>org.eclipse.tycho</groupId>
 		<artifactId>tycho-maven-plugin</artifactId>
 		<version>${tycho-version}</version>
 		<extensions>true</extensions>
       </plugin>
 	  <plugin>
-		<groupId>org.sonatype.tycho</groupId>
+		<groupId>org.eclipse.tycho</groupId>
 		<artifactId>target-platform-configuration</artifactId>
 		<version>${tycho-version}</version>
 		<configuration>
@@ -189,8 +191,8 @@
     <pluginManagement>
       <plugins>
 		<plugin>
-		  <groupId>org.sonatype.tycho</groupId>
-		  <artifactId>maven-osgi-compiler-plugin</artifactId>
+		  <groupId>org.eclipse.tycho</groupId>
+		  <artifactId>tycho-compiler-plugin</artifactId>
 		  <version>${tycho-version}</version>
 		  <configuration>
 			<encoding>UTF-8</encoding>
@@ -200,8 +202,8 @@
           <!-- TODO remove workaround when
                https://issues.sonatype.org/browse/TYCHO-473
                is fixed -->
-          <groupId>org.sonatype.tycho</groupId>
-          <artifactId>maven-osgi-source-plugin</artifactId>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-source-plugin</artifactId>
           <version>${tycho-version}</version>
           <executions>
             <execution>
@@ -214,8 +216,8 @@
           </executions>
         </plugin>
         <plugin>
-          <groupId>org.sonatype.tycho</groupId>
-          <artifactId>maven-osgi-packaging-plugin</artifactId>
+          <groupId>org.eclipse.tycho</groupId>
+          <artifactId>tycho-packaging-plugin</artifactId>
           <version>${tycho-version}</version>
           <configuration>
             <format>yyyyMMddHHmm-'${p2.qualifier}'</format>
