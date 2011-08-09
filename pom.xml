@@ -21,7 +21,7 @@
 	<skip-sign>true</skip-sign>
 	<skip-promote>true</skip-promote>
 
-	<pack200>${java.home}/bin</pack200>
+	<pack200>"${java.home}/bin"</pack200>
 
 	<tycho-version>0.12.0</tycho-version>
 	<skip-source-check>true</skip-source-check>
