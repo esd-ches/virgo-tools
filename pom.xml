@@ -76,7 +76,7 @@
 	<repository>
 	  <id>bundles</id>
 	  <layout>p2</layout>
-	  <url>file://${basedir}/../required-bundles/repo</url>
+	  <url>file:${basedir}/../required-bundles/repo</url>
 	</repository>
 	<repository>
 	  <id>springide</id>
