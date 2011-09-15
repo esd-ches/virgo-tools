@@ -81,7 +81,7 @@
 	<repository>
 	  <id>springide</id>
 	  <layout>p2</layout>
-	  <url>http://dist.springframework.org/snapshot/IDE/nightly/</url>
+	  <url>http://dist.springsource.com/release/TOOLS/update/2.7.1.RELEASE/e3.6/</url>
 	</repository>
 	<repository>
 	  <id>helios</id>
