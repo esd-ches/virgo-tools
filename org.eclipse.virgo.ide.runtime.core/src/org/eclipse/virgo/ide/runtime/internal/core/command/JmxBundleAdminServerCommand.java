@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009, 2011 SpringSource, a divison of VMware, Inc. and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
+ *     SAP AG - moving to Eclipse Libra project and enhancements
  *******************************************************************************/
 package org.eclipse.virgo.ide.runtime.internal.core.command;
 
@@ -19,25 +20,26 @@ import javax.management.InstanceNotFoundException;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
-import org.eclipse.virgo.ide.management.remote.Bundle;
+import org.eclipse.libra.framework.editor.core.model.IBundle;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 
 
 /**
  * @author Christian Dupuis
+ * @author Kaloyan Raev
  */
 public class JmxBundleAdminServerCommand extends AbstractJmxServerCommand implements
-		IServerCommand<Map<Long, Bundle>> {
+		IServerCommand<Map<Long, IBundle>> {
 
 	public JmxBundleAdminServerCommand(IServerBehaviour serverBehaviour) {
 		super(serverBehaviour);
 	}
 
 	@SuppressWarnings("unchecked")
-	public Map<Long, Bundle> execute() throws IOException, TimeoutException {
+	public Map<Long, IBundle> execute() throws IOException, TimeoutException {
 
-		return (Map<Long, Bundle>) execute(new JmxServerCommandTemplate() {
+		return (Map<Long, IBundle>) execute(new JmxServerCommandTemplate() {
 
 			public Object invokeOperation(MBeanServerConnection connection) throws Exception {
 				ObjectName name = ObjectName

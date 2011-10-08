@@ -48,7 +48,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.tptp.platform.execution;bundle-version="[4.4.0,5.0.0)";resolution:=optional,
  org.eclipse.tptp.platform.profile.server.core;resolution:=optional,
  org.eclipse.tptp.platform.integration.pde;resolution:=optional
-Import-Package: org.apache.commons.logging;version="[1.1.1,2.0.0)"
+Import-Package: org.apache.commons.logging;version="[1.1.1,2.0.0)",
+ org.eclipse.libra.framework.editor.core;version="[0.1.0,2.0.0)",
+ org.eclipse.libra.framework.editor.core.model;version="[0.1.0,2.0.0)
 Export-Package: org.eclipse.virgo.ide.bundlerepository.domain,
  org.eclipse.virgo.ide.management.remote,
  org.eclipse.virgo.ide.runtime.core,

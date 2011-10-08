@@ -232,21 +232,21 @@
          order="30"
          name="Bundle Overview"
          typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo"
-         class="org.eclipse.virgo.ide.runtime.internal.ui.overview.BundleInformationEditorPage">
+         class="org.eclipse.libra.framework.editor.ui.overview.BundleInformationEditorPage">
       </page>
       <page
          id="org.eclipse.virgo.ide.server.ui.configuration.editor.bundleDependency"
          order="40"
          name="Bundle Dependency Graph"
          typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo"
-         class="org.eclipse.virgo.ide.runtime.internal.ui.dependencies.BundleDependencyEditorPage">
+         class="org.eclipse.libra.framework.editor.ui.dependencies.BundleDependencyEditorPage">
       </page>
       <page
          id="org.eclipse.virgo.ide.server.ui.configuration.editor.serverConsole"
          order="50"
          name="Server Console"
          typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo"
-         class="org.eclipse.virgo.ide.runtime.internal.ui.console.ServerConsoleEditorPage">
+         class="org.eclipse.libra.framework.editor.ui.console.ServerConsoleEditorPage">
       </page>
    </extension>
 

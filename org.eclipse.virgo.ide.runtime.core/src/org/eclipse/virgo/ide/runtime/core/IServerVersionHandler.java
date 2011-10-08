@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009, 2011 SpringSource, a divison of VMware, Inc. and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
+ *     SAP AG - moving to Eclipse Libra project and enhancements
  *******************************************************************************/
 package org.eclipse.virgo.ide.runtime.core;
 
@@ -17,7 +18,7 @@ import java.util.Map;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
-import org.eclipse.virgo.ide.management.remote.Bundle;
+import org.eclipse.libra.framework.editor.core.model.IBundle;
 import org.eclipse.virgo.ide.runtime.internal.core.DeploymentIdentity;
 import org.eclipse.virgo.ide.runtime.internal.core.command.IServerCommand;
 import org.eclipse.wst.server.core.IModule;
@@ -28,6 +29,7 @@ import org.eclipse.wst.server.core.model.IModuleFile;
 /**
  * Interface that encapsulates different dm server settings that are depending on the version.
  * @author Christian Dupuis
+ * @author Kaloyan Raev
  * @since 1.0.0
  */
 public interface IServerVersionHandler {
@@ -151,7 +153,7 @@ public interface IServerVersionHandler {
 	/**
 	 * Returns the server bundle admin command. 
 	 */
-	IServerCommand<Map<Long, Bundle>> getServerBundleAdminCommand(IServerBehaviour serverBehaviour);
+	IServerCommand<Map<Long, IBundle>> getServerBundleAdminCommand(IServerBehaviour serverBehaviour);
 
 	/**
 	 * Returns the server bundle execute command. 

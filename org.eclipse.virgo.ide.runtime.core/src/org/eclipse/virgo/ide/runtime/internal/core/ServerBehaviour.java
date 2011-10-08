@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009, 2011 SpringSource, a divison of VMware, Inc. and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
+ *     SAP AG - moving to Eclipse Libra project and enhancements
  *******************************************************************************/
 package org.eclipse.virgo.ide.runtime.internal.core;
 
@@ -42,6 +43,9 @@ import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.libra.framework.editor.core.IOSGiFrameworkAdmin;
+import org.eclipse.libra.framework.editor.core.IOSGiFrameworkConsole;
+import org.eclipse.libra.framework.editor.core.model.IBundle;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IOConsoleOutputStream;
@@ -52,6 +56,7 @@ import org.eclipse.virgo.ide.runtime.core.IServerDeployer;
 import org.eclipse.virgo.ide.runtime.core.IServerRuntime;
 import org.eclipse.virgo.ide.runtime.core.IServerVersionHandler;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
+import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.IModuleResource;
@@ -60,15 +65,14 @@ import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 import org.springframework.ide.eclipse.core.SpringCoreUtils;
 import org.springframework.ide.eclipse.core.java.JdtUtils;
 
-import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
-
 /**
  * Default dm server behavior.
  * @author Christian Dupuis
+ * @author Kaloyan Raev
  * @since 1.0.0
  */
 @SuppressWarnings("restriction")
-public class ServerBehaviour extends ServerBehaviourDelegate implements IServerBehaviour {
+public class ServerBehaviour extends ServerBehaviourDelegate implements IServerBehaviour, IOSGiFrameworkAdmin, IOSGiFrameworkConsole {
 
 	private final static String WEB_CONTEXT_PATH_MANIFEST_HEADER = "Web-ContextPath";
 
@@ -566,6 +570,40 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 		public void stopTailing() {
 			this.tailing = false;
 		}
+	}
+
+	public Map<Long, IBundle> getBundles() throws CoreException {
+		try {
+			return getVersionHandler().getServerBundleAdminCommand(this).execute();
+		} catch (IOException e) {
+		} catch (TimeoutException e) {
+		}
+		return Collections.emptyMap();
+	}
+
+	public void startBundle(long bundleId) throws CoreException {
+		executeCommand("start " + bundleId);
+	}
+
+	public void stopBundle(long bundleId) throws CoreException {
+		executeCommand("stop " + bundleId);
+	}
+
+	public void refreshBundle(long bundleId) throws CoreException {
+		executeCommand("refresh " + bundleId);
+	}
+
+	public void updateBundle(long bundleId) throws CoreException {
+		executeCommand("update " + bundleId);
+	}
+
+	public String executeCommand(String command) throws CoreException {
+		try {
+			return getVersionHandler().getServerBundleAdminExecuteCommand(this, command).execute();
+		} catch (IOException e) {
+		} catch (TimeoutException e) {
+		}
+		return "<error>";
 	}
 
 }

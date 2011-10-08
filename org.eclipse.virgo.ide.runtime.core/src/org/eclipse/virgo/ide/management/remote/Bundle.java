@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009, 2011 SpringSource, a divison of VMware, Inc. and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
+ *     SAP AG - moving to Eclipse Libra project and enhancements
  *******************************************************************************/
 package org.eclipse.virgo.ide.management.remote;
 
@@ -16,21 +17,26 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.eclipse.libra.framework.editor.core.model.IBundle;
+import org.eclipse.libra.framework.editor.core.model.IPackageExport;
+import org.eclipse.libra.framework.editor.core.model.IPackageImport;
+import org.eclipse.libra.framework.editor.core.model.IServiceReference;
 import org.springframework.util.ObjectUtils;
 
 
 /**
  * @author Christian Dupuis
+ * @author Kaloyan Raev
  */
-public class Bundle implements Serializable {
+public class Bundle implements IBundle, Serializable {
 
 	private static final long serialVersionUID = 228698327431610457L;
 
-	private final Set<PackageExport> exports = new HashSet<PackageExport>();
+	private final Set<IPackageExport> exports = new HashSet<IPackageExport>();
 
 	private final String id;
 
-	private final Set<PackageImport> imports = new HashSet<PackageImport>();
+	private final Set<IPackageImport> imports = new HashSet<IPackageImport>();
 
 	private final String state;
 
@@ -42,9 +48,9 @@ public class Bundle implements Serializable {
 
 	private final Map<String, String> headers = new HashMap<String, String>();
 
-	private final Set<ServiceReference> registeredServices = new HashSet<ServiceReference>();
+	private final Set<IServiceReference> registeredServices = new HashSet<IServiceReference>();
 
-	private final Set<ServiceReference> servicesInUse = new HashSet<ServiceReference>();
+	private final Set<IServiceReference> servicesInUse = new HashSet<IServiceReference>();
 
 	public Bundle(String id, String symbolicName, String version, String state, String location) {
 		this.symbolicName = symbolicName;
@@ -58,7 +64,7 @@ public class Bundle implements Serializable {
 		return headers;
 	}
 
-	public Set<PackageExport> getPackageExports() {
+	public Set<IPackageExport> getPackageExports() {
 		return exports;
 	}
 
@@ -66,7 +72,7 @@ public class Bundle implements Serializable {
 		return id;
 	}
 
-	public Set<PackageImport> getPackageImports() {
+	public Set<IPackageImport> getPackageImports() {
 		return imports;
 	}
 
@@ -90,11 +96,11 @@ public class Bundle implements Serializable {
 		this.imports.add(pi);
 	}
 
-	public void addRegisteredService(ServiceReference pi) {
+	public void addRegisteredService(IServiceReference pi) {
 		this.registeredServices.add(pi);
 	}
 
-	public void addUsingService(ServiceReference pi) {
+	public void addUsingService(IServiceReference pi) {
 		this.servicesInUse.add(pi);
 	}
 
@@ -106,11 +112,11 @@ public class Bundle implements Serializable {
 		return location;
 	}
 
-	public Set<ServiceReference> getRegisteredServices() {
+	public Set<IServiceReference> getRegisteredServices() {
 		return registeredServices;
 	}
 
-	public Set<ServiceReference> getServicesInUse() {
+	public Set<IServiceReference> getServicesInUse() {
 		return servicesInUse;
 	}
 
