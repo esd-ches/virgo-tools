@@ -572,7 +572,7 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 		}
 	}
 
-	public Map<Long, IBundle> getBundles() throws CoreException {
+	public Map<Long, IBundle> getBundles(IProgressMonitor monitor) throws CoreException {
 		try {
 			return getVersionHandler().getServerBundleAdminCommand(this).execute();
 		} catch (IOException e) {
