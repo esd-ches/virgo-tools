@@ -32,7 +32,8 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.virgo.ide.export.BundleExportUtils;
 import org.eclipse.virgo.ide.tests.util.VirgoIdeTestCase;
 import org.eclipse.virgo.ide.tests.util.VirgoIdeTestUtil;
-
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * @author Terry Hon
@@ -40,7 +41,8 @@ import org.eclipse.virgo.ide.tests.util.VirgoIdeTestUtil;
  * @author Steffen Pingel
  */
 public class BundleExportTestCase extends VirgoIdeTestCase {
-	
+
+	@Test
 	public void testExportOperation() throws InvocationTargetException, InterruptedException, IOException, CoreException {
 		IPath jarLocation = Path.fromOSString(VirgoIdeTestUtil.getWorkspaceRoot().getLocation().toFile().getCanonicalPath()).append("bundlor-test-1.0.0.jar");
 		IJavaProject javaProject = JavaCore.create(createPredefinedProject("bundlor-test"));
@@ -48,7 +50,7 @@ public class BundleExportTestCase extends VirgoIdeTestCase {
 		IJarExportRunnable op = BundleExportUtils.createExportOperation(javaProject, jarLocation, Display.getDefault().getActiveShell(), new ArrayList<IStatus>());
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().run(true, true, op);
 		IStatus status = op.getStatus();
-		assertTrue("Expects status is OK", status.isOK());
+		Assert.assertTrue("Expects status is OK", status.isOK());
 		
 		File file = new File(jarLocation.toOSString());
 		FileInputStream fileStream = new FileInputStream(file);
@@ -65,11 +67,11 @@ public class BundleExportTestCase extends VirgoIdeTestCase {
 		String[] sortedFileNames = fileNames.toArray(new String[fileNames.size()]);
 		Arrays.sort(sortedFileNames);
 		
-		assertTrue("Expects 4 entries", sortedFileNames.length == 4);
-		assertEquals("Expects 1st entry to be META-INF/MANIFEST.MF", "META-INF/MANIFEST.MF", sortedFileNames[0]);
-		assertEquals("Expects 2nd entry to be META-INF/spring/module-context.xml", "META-INF/spring/module-context.xml", sortedFileNames[1]);
-		assertEquals("Expects 3rd entry to be com/springsource/Foo.class", "com/springsource/Foo.class", sortedFileNames[2]);
-		assertEquals("Expects 4th entry to be com/springsource/bar/Bar.class", "com/springsource/bar/Bar.class", sortedFileNames[3]);
+		Assert.assertTrue("Expects 4 entries", sortedFileNames.length == 4);
+		Assert.assertEquals("Expects 1st entry to be META-INF/MANIFEST.MF", "META-INF/MANIFEST.MF", sortedFileNames[0]);
+		Assert.assertEquals("Expects 2nd entry to be META-INF/spring/module-context.xml", "META-INF/spring/module-context.xml", sortedFileNames[1]);
+		Assert.assertEquals("Expects 3rd entry to be com/springsource/Foo.class", "com/springsource/Foo.class", sortedFileNames[2]);
+		Assert.assertEquals("Expects 4th entry to be com/springsource/bar/Bar.class", "com/springsource/bar/Bar.class", sortedFileNames[3]);
 		
 		fileStream.close();
 		stream.close();

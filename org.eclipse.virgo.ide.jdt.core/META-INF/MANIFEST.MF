@@ -29,8 +29,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.virgo.ide.runtime.core,
  org.eclipse.virgo.ide.manifest.core,
  org.springframework.ide.eclipse.beans.core;bundle-version="2.3.0",
- org.springframework.beans;bundle-version="[3.0.4.RELEASE,3.1.0)",
- org.springframework.core;bundle-version="[3.0.4.RELEASE,3.1.0)",
+ org.springframework.beans;bundle-version="3.0.4",
+ org.springframework.core;bundle-version="3.0.4",
  org.eclipse.virgo.ide.par,
  org.eclipse.virgo.util.osgi
 Import-Package: org.apache.commons.logging;version="[1.1.1,2.0.0)"

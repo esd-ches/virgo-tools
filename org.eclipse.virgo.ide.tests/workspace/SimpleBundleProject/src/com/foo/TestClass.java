@@ -8,24 +8,17 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.virgo.ide.ui.tests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
-import org.eclipse.virgo.ide.ui.editors.BundleManifestEditorTest;
-import org.eclipse.virgo.ide.ui.editors.ParManifestEditorTest;
+package com.foo;
 
 /**
- * @author Steffen Pingel
+ * @author Christian Dupuis
+ * @author Leo Dos Santos
  */
-public class AllServerIdeUiTests {
+public class TestClass {
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Test for org.eclipse.virgo.ide.ui.tests");
-		suite.addTestSuite(ParManifestEditorTest.class);
-		suite.addTestSuite(BundleManifestEditorTest.class);
-		return suite;
+	public TestClass() {
+		System.out.println("Instantiated");
 	}
-
+	
 }

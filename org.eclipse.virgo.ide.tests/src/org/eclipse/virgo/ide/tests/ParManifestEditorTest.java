@@ -8,47 +8,48 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.virgo.ide.ui.editors;
+package org.eclipse.virgo.ide.tests;
+
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
-
-import junit.framework.TestCase;
 
 import org.eclipse.core.filesystem.EFS;
 import org.eclipse.core.filesystem.IFileStore;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.pde.internal.ui.editor.plugin.MissingResourcePage;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.FileStoreEditorInput;
 import org.eclipse.virgo.ide.tests.util.VirgoIdeTestUtil;
 import org.eclipse.virgo.ide.ui.editors.ParManifestEditor;
-import org.eclipse.virgo.ide.ui.tests.ServerIdeUiTestPlugin;
-
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * @author Steffen Pingel
  */
-public class ParManifestEditorTest extends TestCase {
+public class ParManifestEditorTest {
 
 	private IWorkbenchPage activePage;
 
-	@Override
-	protected void setUp() throws Exception {
+	@Before
+	public void setUp() throws Exception {
 		activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 		activePage.closeAllEditors(false);
 		assertEquals(0, activePage.getEditorReferences().length);
 	}
 
-	@Override
-	protected void tearDown() throws Exception {
+	@After
+	public void tearDown() throws Exception {
 		activePage.closeAllEditors(false);
 	}
 
+	@Test
 	public void testCreateSystemFileContextsFromDotSettings() throws Exception {
-		File source = VirgoIdeTestUtil.getFilePath(ServerIdeUiTestPlugin.PLUGIN_ID,
+		File source = VirgoIdeTestUtil.getFilePath(VirgoIdeTestsPlugin.PLUGIN_ID,
 				"/testdata/par/.settings/org.eclipse.virgo.ide.runtime.core.par.xml");
 		IPath path = new Path(source.getAbsolutePath());
 		IFileStore file = EFS.getLocalFileSystem().getStore(path);
@@ -62,8 +63,9 @@ public class ParManifestEditorTest extends TestCase {
 		assertEquals(3, parEditor.getParts().length);
 	}
 
+	@Test
 	public void testCreateSystemFileContextsFromParXml() throws Exception {
-		File source = VirgoIdeTestUtil.getFilePath(ServerIdeUiTestPlugin.PLUGIN_ID, "/testdata/par/par.xml");
+		File source = VirgoIdeTestUtil.getFilePath(VirgoIdeTestsPlugin.PLUGIN_ID, "/testdata/par/par.xml");
 		IPath path = new Path(source.getAbsolutePath());
 		IFileStore file = EFS.getLocalFileSystem().getStore(path);
 		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
@@ -75,7 +77,7 @@ public class ParManifestEditorTest extends TestCase {
 		assertEquals(ParManifestEditor.class, editor.getClass());
 		ParManifestEditor parEditor = (ParManifestEditor) editor;
 		assertEquals(1, parEditor.getParts().length);
-		assertEquals(MissingResourcePage.class, parEditor.getParts()[0].getClass());
+		assertEquals("MissingResourcePage", parEditor.getParts()[0].getClass().getSimpleName());
 	}
 
 }

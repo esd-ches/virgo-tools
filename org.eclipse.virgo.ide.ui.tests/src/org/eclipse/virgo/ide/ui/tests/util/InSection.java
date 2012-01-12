@@ -8,7 +8,7 @@
  * Contributors:
  *     SpringSource - initial API and implementation
  *******************************************************************************/
-package org.eclipse.virgo.ide.tests.util;
+package org.eclipse.virgo.ide.ui.tests.util;
 
 import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.withMnemonic;
 

@@ -25,10 +25,10 @@ import junit.framework.TestSuite;
 /**
  * @author Leo Dos Santos
  */
-public class AllSwtbotDrivenTests {
+public class AllVirgoIdeUiTests {
 
 	public static Test suite() {
-		TestSuite suite = new TestSuite(AllSwtbotDrivenTests.class.getName());
+		TestSuite suite = new TestSuite(AllVirgoIdeUiTests.class.getName());
 		suite.addTestSuite(BundleLibrarySectionUiTest.class);
 		suite.addTestSuite(BundleImportLibrarySectionUiTest.class);
 		suite.addTestSuite(BundleImportPackageSectionUiTest.class);

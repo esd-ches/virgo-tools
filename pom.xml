@@ -103,13 +103,6 @@
 	  <layout>p2</layout>
 	  <url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</url>
 	</repository>
-	<!--
-	<repository>
-	  <id>m2eclipse</id>
-	  <layout>p2</layout>
-	  <url>http://m2eclipse.sonatype.org/sites/m2e/</url>
-	</repository>
-	-->
 	<!--	
 	<repository>
 	  <id>virgo</id>
@@ -117,20 +110,6 @@
 	</repository> 
 	-->
   </repositories>
-
-  <pluginRepositories>
-	<pluginRepository>
-      <!-- need maven-findbugs-2.3.2-SNAPSHOT, see
-           http://jira.codehaus.org/browse/MFINDBUGS-122
-           remove this when this version is released -->
-      <id>codehaus.snapshots</id>
-      <url>http://snapshots.repository.codehaus.org/</url>
-	</pluginRepository>
-	<pluginRepository>
-      <id>sonatype.snapshots</id>
-      <url>https://repository.sonatype.org/content/repositories/snapshots/</url>
-	</pluginRepository>
-  </pluginRepositories>
 
   <build>
 	<plugins>
@@ -274,6 +253,17 @@
             </execution>
           </executions>
         </plugin>
+		<plugin>
+		  <groupId>org.eclipse.tycho</groupId>
+		  <artifactId>tycho-surefire-plugin</artifactId>
+		  <version>${tycho-version}</version>
+		  <configuration>
+			<useUIHarness>true</useUIHarness>
+			<useUIThread>true</useUIThread>
+			<forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
+			<argLine>-Xmx1024m -XX:MaxPermSize=256m -Djava.io.tmpdir=${project.build.directory}</argLine>
+		  </configuration>
+		</plugin>		
       </plugins>
     </pluginManagement>
   </build>

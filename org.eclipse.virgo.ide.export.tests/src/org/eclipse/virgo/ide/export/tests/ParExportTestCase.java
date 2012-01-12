@@ -30,7 +30,7 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.virgo.ide.export.ParExportWizard;
 import org.eclipse.virgo.ide.tests.util.VirgoIdeTestCase;
 import org.eclipse.virgo.ide.tests.util.VirgoIdeTestUtil;
-
+import org.junit.Assert;
 
 /**
  * @author Terry Hon
@@ -47,7 +47,7 @@ public class ParExportTestCase extends VirgoIdeTestCase {
 		VirgoIdeTestUtil.getWorkspace().build(IncrementalProjectBuilder.FULL_BUILD, null);
 
 		boolean status = ParExportWizard.exportPar(project, parLocation, PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Display.getDefault().getActiveShell());
-		assertTrue("Expects status is OK", status);
+		Assert.assertTrue("Expects status is OK", status);
 		
 		File file = new File(parLocation.toOSString());
 		FileInputStream fileStream = new FileInputStream(file);
@@ -63,10 +63,10 @@ public class ParExportTestCase extends VirgoIdeTestCase {
 		
 		String[] sortedFileNames = fileNames.toArray(new String[fileNames.size()]);
 		Arrays.sort(sortedFileNames);
-		
-		assertTrue("Expects 2 entries", sortedFileNames.length == 2);
-		assertEquals("Expects 1st entry to be META-INF/MANIFEST.MF", "META-INF/MANIFEST.MF", sortedFileNames[0]);
-		assertEquals("Expects 2nd entry to be com.springsource.bundlor-1.0.0.jar", "com.springsource.bundlor-1.0.0.jar", sortedFileNames[1]);
+
+		Assert.assertTrue("Expects 2 entries", sortedFileNames.length == 2);
+		Assert.assertEquals("Expects 1st entry to be META-INF/MANIFEST.MF", "META-INF/MANIFEST.MF", sortedFileNames[0]);
+		Assert.assertEquals("Expects 2nd entry to be com.springsource.bundlor-1.0.0.jar", "com.springsource.bundlor-1.0.0.jar", sortedFileNames[1]);
 		
 		fileStream.close();
 		stream.close();

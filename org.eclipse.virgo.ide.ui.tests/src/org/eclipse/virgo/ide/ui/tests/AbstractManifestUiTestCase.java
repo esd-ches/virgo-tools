@@ -29,10 +29,10 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
-import org.eclipse.virgo.ide.tests.util.VirgoIdeTestBot;
 import org.eclipse.virgo.ide.tests.util.VirgoIdeTestUtil;
 import org.eclipse.virgo.ide.ui.editors.BundleManifestEditor;
 import org.eclipse.virgo.ide.ui.editors.ParManifestEditor;
+import org.eclipse.virgo.ide.ui.tests.util.VirgoIdeTestBot;
 
 
 /**

@@ -10,17 +10,11 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.tests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
 /**
- * @author Christian Dupuis
+ * @author Steffen Pingel
  */
-public class AllDmServerToolsPerformanceTests {
+public class VirgoIdeTestsPlugin {
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite("Performance Tests for the dm Server Tools");
-		return suite;
-	}
+	public static String PLUGIN_ID = "org.eclipse.virgo.ide.tests";
 
 }

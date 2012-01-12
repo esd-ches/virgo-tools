@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
+import org.junit.After;
 
 /**
  * Derived from AbstractBeansCoreTestCase
@@ -49,8 +50,9 @@ public abstract class VirgoIdeTestCase extends TestCase {
 		return VirgoIdeTestUtil.getSourceWorkspacePath(getBundleName());
 	}
 
+	@After
 	@Override
-	protected void tearDown() throws Exception {
+	public void tearDown() throws Exception {
 		VirgoIdeTestUtil.cleanUpProjects();
 		super.tearDown();
 	}
