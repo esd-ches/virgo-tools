@@ -103,6 +103,11 @@
 	  <layout>p2</layout>
 	  <url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</url>
 	</repository>
+	<repository>
+      <id>libra-nightly</id>
+      <layout>p2</layout>
+      <url>http://download.eclipse.org/libra/milestones/</url>
+    </repository>
 	<!--	
 	<repository>
 	  <id>virgo</id>
