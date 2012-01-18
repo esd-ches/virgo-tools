@@ -22,6 +22,7 @@
 	<skip-promote>true</skip-promote>
 
 	<pack200>"${java.home}/bin"</pack200>
+	<test.osvmargs></test.osvmargs>
 
 	<tycho-version>0.13.0</tycho-version>
 	<skip-source-check>true</skip-source-check>
@@ -68,6 +69,18 @@
 		<archive-dir>/home/data/httpd/download.eclipse.org/virgo/snapshot/IDE/drops</archive-dir>
 		<site-dir>/home/data/httpd/download.eclipse.org/virgo/snapshot/IDE</site-dir>
 		<skip-promote>false</skip-promote>
+      </properties>
+    </profile>
+	<profile>
+      <id>osx</id>
+      <activation>
+        <property>
+          <name>java.vendor.url</name>
+          <value>http://www.apple.com/</value>
+        </property>
+      </activation>
+      <properties>
+        <test.osvmargs>-Dosgi.ws=cocoa -XstartOnFirstThread</test.osvmargs>
       </properties>
     </profile>
   </profiles>
@@ -266,7 +279,7 @@
 			<useUIHarness>true</useUIHarness>
 			<useUIThread>true</useUIThread>
 			<forkedProcessTimeoutInSeconds>1800</forkedProcessTimeoutInSeconds>
-			<argLine>-Xmx1024m -XX:MaxPermSize=256m -Djava.io.tmpdir=${project.build.directory}</argLine>
+			<argLine>-Xmx1024m -XX:MaxPermSize=256m -Djava.io.tmpdir=${project.build.directory} ${test.osvmargs}</argLine>
 		  </configuration>
 		</plugin>		
       </plugins>
