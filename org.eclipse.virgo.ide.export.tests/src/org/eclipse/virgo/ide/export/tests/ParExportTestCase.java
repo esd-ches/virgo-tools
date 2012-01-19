@@ -32,8 +32,6 @@ import org.eclipse.virgo.ide.tests.util.VirgoIdeTestCase;
 import org.eclipse.virgo.ide.tests.util.VirgoIdeTestUtil;
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.ide.eclipse.uaa.IUaa;
-import org.springframework.ide.eclipse.uaa.UaaPlugin;
 
 /**
  * @author Terry Hon
