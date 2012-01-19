@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.ui.tests;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 import org.eclipse.virgo.ide.ui.editors.BundleImportLibrarySectionUiTest;
 import org.eclipse.virgo.ide.ui.editors.BundleImportPackageSectionUiTest;
 import org.eclipse.virgo.ide.ui.editors.BundleImportSectionUiTest;
@@ -17,15 +20,17 @@ import org.eclipse.virgo.ide.ui.editors.BundleLibrarySectionUiTest;
 import org.eclipse.virgo.ide.ui.editors.ParDependenciesSectionUiTest;
 import org.eclipse.virgo.ide.ui.wizards.NewBundleProjectWizardUiTest;
 import org.eclipse.virgo.ide.ui.wizards.NewParProjectWizardUiTest;
-
-import junit.framework.Test;
-import junit.framework.TestSuite;
-
+import org.springframework.ide.eclipse.uaa.IUaa;
+import org.springframework.ide.eclipse.uaa.UaaPlugin;
 
 /**
  * @author Leo Dos Santos
  */
 public class AllVirgoIdeUiTests {
+
+	static {
+		UaaPlugin.getUAA().setPrivacyLevel(IUaa.LIMITED_DATA);
+	}
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite(AllVirgoIdeUiTests.class.getName());

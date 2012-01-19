@@ -33,7 +33,10 @@ import org.eclipse.virgo.ide.export.BundleExportUtils;
 import org.eclipse.virgo.ide.tests.util.VirgoIdeTestCase;
 import org.eclipse.virgo.ide.tests.util.VirgoIdeTestUtil;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.ide.eclipse.uaa.IUaa;
+import org.springframework.ide.eclipse.uaa.UaaPlugin;
 
 /**
  * @author Terry Hon
@@ -41,6 +44,11 @@ import org.junit.Test;
  * @author Steffen Pingel
  */
 public class BundleExportTestCase extends VirgoIdeTestCase {
+
+	@BeforeClass
+	public static void setUpEnvironment() {
+		UaaPlugin.getUAA().setPrivacyLevel(IUaa.LIMITED_DATA);
+	}
 
 	@Test
 	public void testExportOperation() throws InvocationTargetException, InterruptedException, IOException, CoreException {

@@ -31,6 +31,9 @@ import org.eclipse.virgo.ide.export.ParExportWizard;
 import org.eclipse.virgo.ide.tests.util.VirgoIdeTestCase;
 import org.eclipse.virgo.ide.tests.util.VirgoIdeTestUtil;
 import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.springframework.ide.eclipse.uaa.IUaa;
+import org.springframework.ide.eclipse.uaa.UaaPlugin;
 
 /**
  * @author Terry Hon
@@ -39,6 +42,11 @@ import org.junit.Assert;
  */
 public class ParExportTestCase extends VirgoIdeTestCase {
 	
+	@BeforeClass
+	public static void setUpEnvironment() {
+		UaaPlugin.getUAA().setPrivacyLevel(IUaa.LIMITED_DATA);
+	}
+
 	public void testExportOperation() throws InvocationTargetException, InterruptedException, IOException, CoreException {
 		IPath parLocation = Path.fromOSString(VirgoIdeTestUtil.getWorkspaceRoot().getLocation().toFile().getCanonicalPath()).append("test-1.0.0.par");
 		createPredefinedProject("bundlor-test");

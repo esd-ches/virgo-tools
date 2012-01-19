@@ -26,12 +26,20 @@ import org.eclipse.virgo.ide.tests.util.VirgoIdeTestUtil;
 import org.eclipse.virgo.ide.ui.editors.ParManifestEditor;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.springframework.ide.eclipse.uaa.IUaa;
+import org.springframework.ide.eclipse.uaa.UaaPlugin;
 
 /**
  * @author Steffen Pingel
  */
 public class ParManifestEditorTest {
+
+	@BeforeClass
+	public static void setUpEnvironment() {
+		UaaPlugin.getUAA().setPrivacyLevel(IUaa.LIMITED_DATA);
+	}
 
 	private IWorkbenchPage activePage;
 
