@@ -29,6 +29,10 @@ import org.junit.After;
  */
 public abstract class VirgoIdeTestCase extends TestCase {
 
+	static {
+		UaaPlugin.getUAA().setPrivacyLevel(IUaa.LIMITED_DATA);
+	}
+
 	protected IProject createPredefinedProject(final String projectName) throws CoreException, IOException {
 		return VirgoIdeTestUtil.createPredefinedProject(projectName, getBundleName());
 	}

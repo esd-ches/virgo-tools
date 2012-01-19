@@ -45,11 +45,6 @@ import org.springframework.ide.eclipse.uaa.UaaPlugin;
  */
 public class BundleExportTestCase extends VirgoIdeTestCase {
 
-	@BeforeClass
-	public static void setUpEnvironment() {
-		UaaPlugin.getUAA().setPrivacyLevel(IUaa.LIMITED_DATA);
-	}
-
 	@Test
 	public void testExportOperation() throws InvocationTargetException, InterruptedException, IOException, CoreException {
 		IPath jarLocation = Path.fromOSString(VirgoIdeTestUtil.getWorkspaceRoot().getLocation().toFile().getCanonicalPath()).append("bundlor-test-1.0.0.jar");
