@@ -22,6 +22,15 @@
           <useUIThread>false</useUIThread>
           <testSuite>org.eclipse.virgo.ide.ui.tests</testSuite>
           <testClass>org.eclipse.virgo.ide.ui.tests.AllVirgoIdeUiTests</testClass>
+          <product>org.eclipse.sdk.ide</product>
+          <application>org.eclipse.ui.ide.workbench</application>
+          <dependencies>
+            <dependency>
+              <type>p2-installable-unit</type>
+              <artifactId>org.eclipse.sdk.ide</artifactId>
+              <version>0.0.0</version>
+            </dependency>
+           </dependencies>
         </configuration>
       </plugin>
     </plugins>
