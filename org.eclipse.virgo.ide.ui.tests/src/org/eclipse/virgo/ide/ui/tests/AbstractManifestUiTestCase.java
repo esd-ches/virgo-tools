@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009 - 2012 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -34,7 +34,6 @@ import org.eclipse.virgo.ide.ui.editors.BundleManifestEditor;
 import org.eclipse.virgo.ide.ui.editors.ParManifestEditor;
 import org.eclipse.virgo.ide.ui.tests.util.VirgoIdeTestBot;
 
-
 /**
  * @author Leo Dos Santos
  */
@@ -58,31 +57,27 @@ public class AbstractManifestUiTestCase extends SWTBotTestCase {
 
 	private ManifestEditor openManifestEditor(IProject project, String path) {
 		final IFile file = project.getFile(path);
-		ManifestEditor manifest = null;
-		if (file.exists()) {
-			manifest = UIThreadRunnable.syncExec(new Result<ManifestEditor>() {
-				public ManifestEditor run() {
-					IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-					if (window != null) {
-						IWorkbenchPage page = window.getActivePage();
-						if (page != null) {
-							try {
-								IEditorPart editor = IDE.openEditor(page, file);
-								if (editor instanceof ManifestEditor) {
-									return ((ManifestEditor) editor);
-								}
-							}
-							catch (PartInitException e) {
-								fail("Could not open a manifest editor.");
-							}
+		assertTrue(file.exists());
 
-						}
+		return UIThreadRunnable.syncExec(new Result<ManifestEditor>() {
+			public ManifestEditor run() {
+				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+				assertNotNull("Expected active workbench window", window);
+				IWorkbenchPage page = window.getActivePage();
+				assertNotNull("Expected active workbench page", page);
+
+				try {
+					IEditorPart editor = IDE.openEditor(page, file);
+					if (editor instanceof ManifestEditor) {
+						return ((ManifestEditor) editor);
 					}
-					return null;
 				}
-			});
-		}
-		return manifest;
+				catch (PartInitException e) {
+					fail("Could not open a manifest editor.");
+				}
+				return null;
+			}
+		});
 	}
 
 	protected ParManifestEditor openParManifestFile(String path) throws CoreException, IOException {
