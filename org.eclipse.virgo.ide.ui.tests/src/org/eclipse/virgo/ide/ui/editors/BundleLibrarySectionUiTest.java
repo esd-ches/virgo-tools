@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009 - 2012 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,10 +15,7 @@ import org.eclipse.swtbot.swt.finder.results.VoidResult;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
-import org.eclipse.virgo.ide.ui.editors.BundleManifestEditor;
-import org.eclipse.virgo.ide.ui.editors.BundleRuntimePage;
 import org.eclipse.virgo.ide.ui.tests.AbstractManifestUiTestCase;
-
 
 /**
  * @author Leo Dos Santos
@@ -34,7 +31,7 @@ public class BundleLibrarySectionUiTest extends AbstractManifestUiTestCase {
 				manifest.setActivePage(BundleRuntimePage.PAGE_ID);
 			}
 		});
-		bot.flatButtonInSection("New...", SECTION_LABEL).click();
+		bot.buttonInSection("New...", SECTION_LABEL).click();
 
 		SWTBotShell newDialog = bot.shell("New Library");
 		assertTrue(newDialog.isOpen());
@@ -48,7 +45,7 @@ public class BundleLibrarySectionUiTest extends AbstractManifestUiTestCase {
 				manifest.setActivePage(BundleRuntimePage.PAGE_ID);
 			}
 		});
-		bot.flatButtonInSection("Add...", SECTION_LABEL).click();
+		bot.buttonInSection("Add...", SECTION_LABEL).click();
 
 		SWTBotShell addDialog = bot.shell("JAR Selection");
 		assertTrue(addDialog.isOpen());
@@ -63,7 +60,7 @@ public class BundleLibrarySectionUiTest extends AbstractManifestUiTestCase {
 			}
 		});
 
-		SWTBotButton button = bot.flatButtonInSection("Remove", SECTION_LABEL);
+		SWTBotButton button = bot.buttonInSection("Remove", SECTION_LABEL);
 		assertFalse(button.isEnabled());
 
 		SWTBotTable table = bot.tableInSection(SECTION_LABEL);

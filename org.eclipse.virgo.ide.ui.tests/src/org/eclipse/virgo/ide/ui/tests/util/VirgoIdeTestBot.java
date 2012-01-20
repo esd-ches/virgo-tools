@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2007, 2010 SpringSource
+ * Copyright (c) 2007 - 2012 SpringSource
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,13 +33,21 @@ import org.hamcrest.Matcher;
  */
 public class VirgoIdeTestBot extends SWTWorkbenchBot {
 
+	@SuppressWarnings("unchecked")
+	public SWTBotButton buttonInSection(String mnemonicText, String inSection) {
+		Matcher<Widget> matcher = allOf(widgetOfType(Button.class), withMnemonic(mnemonicText),
+				InSection.inSection(inSection));
+		return new SWTBotButton((Button) widget(matcher, 0), matcher);
+	}
+
 	public SWTBotButton flatButton(String mnemonicText) {
 		return flatButton(mnemonicText, 0);
 	}
 
 	@SuppressWarnings("unchecked")
 	public SWTBotButton flatButton(String mnemonicText, int index) {
-		Matcher<Widget> matcher = allOf(widgetOfType(Button.class), withMnemonic(mnemonicText), withStyle(SWT.FLAT, "SWT.FLAT"));
+		Matcher<Widget> matcher = allOf(widgetOfType(Button.class), withMnemonic(mnemonicText),
+				withStyle(SWT.FLAT, "SWT.FLAT"));
 		return new SWTBotButton((Button) widget(matcher, index), matcher);
 	}
 
@@ -49,8 +57,8 @@ public class VirgoIdeTestBot extends SWTWorkbenchBot {
 
 	@SuppressWarnings("unchecked")
 	public SWTBotButton flatButtonInSection(String mnemonicText, String inSection, int index) {
-		Matcher<Widget> matcher = allOf(widgetOfType(Button.class), withMnemonic(mnemonicText), InSection.inSection(inSection),
-				withStyle(SWT.FLAT, "SWT.FLAT"));
+		Matcher<Widget> matcher = allOf(widgetOfType(Button.class), withMnemonic(mnemonicText),
+				InSection.inSection(inSection), withStyle(SWT.FLAT, "SWT.FLAT"));
 		return new SWTBotButton((Button) widget(matcher, index), matcher);
 	}
 
@@ -66,8 +74,8 @@ public class VirgoIdeTestBot extends SWTWorkbenchBot {
 
 	@SuppressWarnings("unchecked")
 	public SWTBotRadio radioInSection(String mnemonicText, String inSection) {
-		Matcher<Widget> matcher = allOf(widgetOfType(Button.class), withMnemonic(mnemonicText), InSection.inSection(inSection),
-				withStyle(SWT.RADIO, "SWT.RADIO"));
+		Matcher<Widget> matcher = allOf(widgetOfType(Button.class), withMnemonic(mnemonicText),
+				InSection.inSection(inSection), withStyle(SWT.RADIO, "SWT.RADIO"));
 		return new SWTBotRadio((Button) widget(matcher, 0), matcher);
 	}
 
