@@ -38,7 +38,6 @@ import org.eclipse.virgo.ide.par.util.ParAdapterFactory;
  * Note that most of the adapters are shared among multiple instances.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
- * @author Christian Dupuis
  * @generated
  */
 public class ParItemProviderAdapterFactory extends ParAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
@@ -176,7 +175,7 @@ public class ParItemProviderAdapterFactory extends ParAdapterFactory implements 
 	public Object adapt(Object object, Object type) {
 		if (isFactoryForType(type)) {
 			Object adapter = super.adapt(object, type);
-			if (!(type instanceof Class) || (((Class<?>)type).isInstance(adapter))) {
+			if (!(type instanceof Class<?>) || (((Class<?>)type).isInstance(adapter))) {
 				return adapter;
 			}
 		}

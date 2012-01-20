@@ -16,14 +16,14 @@ import org.eclipse.emf.ecore.EObject;
  * <!-- begin-user-doc -->
  * A representation of the model object '<em><b>Bundle</b></em>'.
  * <!-- end-user-doc -->
+ *
  * <p>
  * The following features are supported:
  * <ul>
- * <li>
- * {@link org.eclipse.virgo.ide.par.Bundle#getSymbolicName <em>Symbolic Name</em>}</li>
+ *   <li>{@link org.eclipse.virgo.ide.par.Bundle#getSymbolicName <em>Symbolic Name</em>}</li>
  * </ul>
  * </p>
- * @author Christian Dupuis
+ *
  * @see org.eclipse.virgo.ide.par.ParPackage#getBundle()
  * @model
  * @generated

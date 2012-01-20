@@ -18,7 +18,6 @@ import org.eclipse.emf.common.util.ResourceLocator;
  * This is the central singleton for the Par edit plugin.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
- * @author Christian Dupuis
  * @generated
  */
 public final class ParEditPlugin extends EMFPlugin {

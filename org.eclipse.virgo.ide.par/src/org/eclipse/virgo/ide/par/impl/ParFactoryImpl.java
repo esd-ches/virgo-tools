@@ -15,6 +15,7 @@ import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
 import org.eclipse.emf.ecore.impl.EFactoryImpl;
 import org.eclipse.emf.ecore.plugin.EcorePlugin;
+import org.eclipse.virgo.ide.par.*;
 import org.eclipse.virgo.ide.par.Bundle;
 import org.eclipse.virgo.ide.par.Par;
 import org.eclipse.virgo.ide.par.ParFactory;
@@ -25,7 +26,6 @@ import org.eclipse.virgo.ide.par.ParPackage;
  * <!-- begin-user-doc -->
  * An implementation of the model <b>Factory</b>.
  * <!-- end-user-doc -->
- * @author Christian Dupuis
  * @generated
  */
 public class ParFactoryImpl extends EFactoryImpl implements ParFactory {
@@ -37,7 +37,7 @@ public class ParFactoryImpl extends EFactoryImpl implements ParFactory {
 	 */
 	public static ParFactory init() {
 		try {
-			ParFactory theParFactory = (ParFactory)EPackage.Registry.INSTANCE.getEFactory("http:///com/springsource/server/ide/par.ecore"); 
+			ParFactory theParFactory = (ParFactory)EPackage.Registry.INSTANCE.getEFactory("http://eclipse.org/virgo/par.ecore"); 
 			if (theParFactory != null) {
 				return theParFactory;
 			}

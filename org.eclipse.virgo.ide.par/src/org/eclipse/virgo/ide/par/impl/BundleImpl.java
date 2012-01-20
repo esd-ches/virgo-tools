@@ -27,11 +27,10 @@ import org.eclipse.virgo.ide.par.ParPackage;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>
- * {@link org.eclipse.virgo.ide.par.impl.BundleImpl#getSymbolicName <em>Symbolic Name</em>}</li>
+ *   <li>{@link org.eclipse.virgo.ide.par.impl.BundleImpl#getSymbolicName <em>Symbolic Name</em>}</li>
  * </ul>
  * </p>
- * @author Christian Dupuis
+ *
  * @generated
  */
 public class BundleImpl extends EObjectImpl implements Bundle {

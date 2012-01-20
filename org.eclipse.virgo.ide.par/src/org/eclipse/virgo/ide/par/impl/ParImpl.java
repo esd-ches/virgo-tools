@@ -31,11 +31,10 @@ import org.eclipse.virgo.ide.par.ParPackage;
  * <p>
  * The following features are implemented:
  * <ul>
- * <li>
- * {@link org.eclipse.virgo.ide.par.impl.ParImpl#getBundle <em>Bundle</em>}</li>
+ *   <li>{@link org.eclipse.virgo.ide.par.impl.ParImpl#getBundle <em>Bundle</em>}</li>
  * </ul>
  * </p>
- * @author Christian Dupuis
+ *
  * @generated
  */
 public class ParImpl extends EObjectImpl implements Par {

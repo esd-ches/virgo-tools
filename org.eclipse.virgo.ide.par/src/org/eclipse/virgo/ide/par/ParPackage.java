@@ -26,7 +26,6 @@ import org.eclipse.emf.ecore.EReference;
  * <li>and each data type</li>
  * </ul>
  * <!-- end-user-doc -->
- * @author Christian Dupuis
  * @see org.eclipse.virgo.ide.par.ParFactory
  * @model kind="package"
  * @generated
@@ -46,7 +45,7 @@ public interface ParPackage extends EPackage {
 	 * <!-- end-user-doc -->
 	 * @generated
 	 */
-	String eNS_URI = "http:///com/springsource/server/ide/par.ecore";
+	String eNS_URI = "http://eclipse.org/virgo/par.ecore";
 
 	/**
 	 * The package namespace name.

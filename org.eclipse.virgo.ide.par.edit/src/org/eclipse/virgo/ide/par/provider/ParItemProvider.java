@@ -35,7 +35,6 @@ import org.eclipse.virgo.ide.par.ParPackage;
  * This is the item provider adapter for a {@link org.eclipse.virgo.ide.par.Par} object.
  * <!-- begin-user-doc -->
  * <!-- end-user-doc -->
- * @author Christian Dupuis
  * @generated
  */
 public class ParItemProvider

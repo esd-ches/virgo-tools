@@ -24,7 +24,6 @@ import org.eclipse.virgo.ide.par.*;
  * The <b>Adapter Factory</b> for the model.
  * It provides an adapter <code>createXXX</code> method for each class of the model.
  * <!-- end-user-doc -->
- * @author Christian Dupuis
  * @see org.eclipse.virgo.ide.par.ParPackage
  * @generated
  */
@@ -69,7 +68,7 @@ public class ParAdapterFactory extends AdapterFactoryImpl {
 	}
 
 	/**
-	 * The switch the delegates to the <code>createXXX</code> methods.
+	 * The switch that delegates to the <code>createXXX</code> methods.
 	 * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
 	 * @generated

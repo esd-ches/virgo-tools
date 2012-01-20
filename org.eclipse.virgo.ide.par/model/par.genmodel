@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <genmodel:GenModel xmi:version="2.0"
     xmlns:xmi="http://www.omg.org/XMI" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
-    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/com.springsource.server.ide.par/src"
-    modelPluginID="com.springsource.server.ide.par" modelName="Par" importerID="org.eclipse.emf.importer.java"
+    xmlns:genmodel="http://www.eclipse.org/emf/2002/GenModel" modelDirectory="/org.eclipse.virgo.ide.par/src"
+    modelPluginID="org.eclipse.virgo.ide.par" modelName="Par" importerID="org.eclipse.emf.importer.java"
     complianceLevel="6.0" copyrightFields="false">
   <foreignModel>@model</foreignModel>
-  <genPackages prefix="Par" basePackage="com.springsource.server.ide" disposableProviderFactory="true"
+  <genPackages prefix="Par" basePackage="org.eclipse.virgo.ide" disposableProviderFactory="true"
       ecorePackage="par.ecore#/">
     <genClasses ecoreClass="par.ecore#//Par">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference par.ecore#//Par/project"/>
