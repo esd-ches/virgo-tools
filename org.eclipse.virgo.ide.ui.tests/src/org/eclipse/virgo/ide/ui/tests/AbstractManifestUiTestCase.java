@@ -22,6 +22,7 @@ import org.eclipse.swtbot.swt.finder.SWTBotTestCase;
 import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.results.Result;
+import org.eclipse.swtbot.swt.finder.utils.SWTUtils;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -95,6 +96,7 @@ public class AbstractManifestUiTestCase extends SWTBotTestCase {
 		catch (WidgetNotFoundException e) {
 			// ignore
 		}
+		assertFalse("SWTBot tests can not run in the UI thread.", SWTUtils.isUIThread());
 
 		// trigger artefact repo initialization
 		ServerCorePlugin.getArtefactRepositoryManager().getArtefactRepository();

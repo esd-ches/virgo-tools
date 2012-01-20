@@ -31,7 +31,7 @@ public class BundleLibrarySectionUiTest extends AbstractManifestUiTestCase {
 				manifest.setActivePage(BundleRuntimePage.PAGE_ID);
 			}
 		});
-		bot.buttonInSection("New...", SECTION_LABEL).click();
+		bot.flatButtonInSection("New...", SECTION_LABEL).click();
 
 		SWTBotShell newDialog = bot.shell("New Library");
 		assertTrue(newDialog.isOpen());
@@ -45,7 +45,7 @@ public class BundleLibrarySectionUiTest extends AbstractManifestUiTestCase {
 				manifest.setActivePage(BundleRuntimePage.PAGE_ID);
 			}
 		});
-		bot.buttonInSection("Add...", SECTION_LABEL).click();
+		bot.flatButtonInSection("Add...", SECTION_LABEL).click();
 
 		SWTBotShell addDialog = bot.shell("JAR Selection");
 		assertTrue(addDialog.isOpen());
@@ -60,7 +60,7 @@ public class BundleLibrarySectionUiTest extends AbstractManifestUiTestCase {
 			}
 		});
 
-		SWTBotButton button = bot.buttonInSection("Remove", SECTION_LABEL);
+		SWTBotButton button = bot.flatButtonInSection("Remove", SECTION_LABEL);
 		assertFalse(button.isEnabled());
 
 		SWTBotTable table = bot.tableInSection(SECTION_LABEL);
