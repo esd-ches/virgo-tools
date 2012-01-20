@@ -15,6 +15,7 @@ import org.eclipse.swtbot.swt.finder.results.VoidResult;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
+import org.eclipse.virgo.ide.tests.util.VirgoIdeTestUtil;
 import org.eclipse.virgo.ide.ui.tests.AbstractManifestUiTestCase;
 
 /**
@@ -26,6 +27,7 @@ public class BundleLibrarySectionUiTest extends AbstractManifestUiTestCase {
 
 	public void testNewButton() throws Exception {
 		final BundleManifestEditor manifest = openBundleManifestFile("src/META-INF/MANIFEST.MF");
+		VirgoIdeTestUtil.waitForEditor(manifest);
 		UIThreadRunnable.syncExec(new VoidResult() {
 			public void run() {
 				manifest.setActivePage(BundleRuntimePage.PAGE_ID);
@@ -40,6 +42,7 @@ public class BundleLibrarySectionUiTest extends AbstractManifestUiTestCase {
 
 	public void testAddButton() throws Exception {
 		final BundleManifestEditor manifest = openBundleManifestFile("src/META-INF/MANIFEST.MF");
+		VirgoIdeTestUtil.waitForEditor(manifest);
 		UIThreadRunnable.syncExec(new VoidResult() {
 			public void run() {
 				manifest.setActivePage(BundleRuntimePage.PAGE_ID);
@@ -54,6 +57,7 @@ public class BundleLibrarySectionUiTest extends AbstractManifestUiTestCase {
 
 	public void testRemoveButton() throws Exception {
 		final BundleManifestEditor manifest = openBundleManifestFile("src/META-INF/MANIFEST.MF");
+		VirgoIdeTestUtil.waitForEditor(manifest);
 		UIThreadRunnable.syncExec(new VoidResult() {
 			public void run() {
 				manifest.setActivePage(BundleRuntimePage.PAGE_ID);

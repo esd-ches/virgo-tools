@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009 - 2012 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,6 +15,7 @@ import static org.eclipse.swtbot.swt.finder.waits.Conditions.shellCloses;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
@@ -30,7 +31,10 @@ public class NewBundleProjectWizardUiTest extends AbstractManifestUiTestCase {
 	private static String PROJECT_NAME = "BundleProject";
 
 	public void testProjectCreation() {
-		bot.menu("File").menu("New").menu("Project...").click();
+		SWTBotMenu fileMenu = bot.menu("File");
+		SWTBotMenu newMenu = fileMenu.menu("New");
+		SWTBotMenu projectMenu = newMenu.menu("Project...");
+		projectMenu.click();
 		SWTBotShell wizard = bot.shell("New Project");
 		wizard.activate();
 		bot.tree().expandNode("EclipseRT").select("Bundle Project");
