@@ -27,7 +27,6 @@ public class BundleLibrarySectionUiTest extends AbstractManifestUiTestCase {
 
 	public void testNewButton() throws Exception {
 		final BundleManifestEditor manifest = openBundleManifestFile("src/META-INF/MANIFEST.MF");
-		VirgoIdeTestUtil.waitForEditor(manifest);
 		UIThreadRunnable.syncExec(new VoidResult() {
 			public void run() {
 				manifest.setActivePage(BundleRuntimePage.PAGE_ID);
@@ -42,7 +41,6 @@ public class BundleLibrarySectionUiTest extends AbstractManifestUiTestCase {
 
 	public void testAddButton() throws Exception {
 		final BundleManifestEditor manifest = openBundleManifestFile("src/META-INF/MANIFEST.MF");
-		VirgoIdeTestUtil.waitForEditor(manifest);
 		UIThreadRunnable.syncExec(new VoidResult() {
 			public void run() {
 				manifest.setActivePage(BundleRuntimePage.PAGE_ID);
@@ -57,7 +55,6 @@ public class BundleLibrarySectionUiTest extends AbstractManifestUiTestCase {
 
 	public void testRemoveButton() throws Exception {
 		final BundleManifestEditor manifest = openBundleManifestFile("src/META-INF/MANIFEST.MF");
-		VirgoIdeTestUtil.waitForEditor(manifest);
 		UIThreadRunnable.syncExec(new VoidResult() {
 			public void run() {
 				manifest.setActivePage(BundleRuntimePage.PAGE_ID);

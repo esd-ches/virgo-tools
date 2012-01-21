@@ -15,7 +15,6 @@ import static org.eclipse.swtbot.swt.finder.waits.Conditions.shellCloses;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotMenu;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
@@ -31,10 +30,7 @@ public class NewParProjectWizardUiTest extends AbstractManifestUiTestCase {
 	private static String PROJECT_NAME = "ParProject";
 
 	public void testProjectCreation() {
-		SWTBotMenu fileMenu = bot.menu("File");
-		SWTBotMenu newMenu = fileMenu.menu("New");
-		SWTBotMenu projectMenu = newMenu.menu("Project...");
-		projectMenu.click();
+		bot.menu("File").menu("New").menu("Project...").click();
 		SWTBotShell wizard = bot.shell("New Project");
 		wizard.activate();
 		bot.tree().expandNode("EclipseRT").select("PAR Project");
