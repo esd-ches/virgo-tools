@@ -15,7 +15,7 @@
     
   <extension point="org.eclipse.emf.edit.itemProviderAdapterFactories">
     <factory 
-       uri = "http:///com/springsource/server/ide/par.ecore" 
+       uri = "http://eclipse.org/virgo/par.ecore" 
        class = "org.eclipse.virgo.ide.par.provider.ParItemProviderAdapterFactory" 
        supportedTypes = 
          "org.eclipse.emf.edit.provider.IEditingDomainItemProvider
