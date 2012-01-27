@@ -20,6 +20,7 @@ import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.sourcelookup.ISourceContainer;
 import org.eclipse.debug.core.sourcelookup.ISourcePathComputerDelegate;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
@@ -27,7 +28,6 @@ import org.eclipse.virgo.ide.module.core.ServerModuleDelegate;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
 
 
 /**
@@ -75,7 +75,7 @@ public class ServerSourcePathComputerDelegate implements ISourcePathComputerDele
 
 	private void addRuntimeClasspathForJavaProject(List<IRuntimeClasspathEntry> runtimeClasspath,
 			IModule module) {
-		IJavaProject javaProject = JdtUtils.getJavaProject(module.getProject());
+		IJavaProject javaProject = JavaCore.create(module.getProject());
 		runtimeClasspath.add(JavaRuntime.newDefaultProjectClasspathEntry(javaProject));
 	}
 

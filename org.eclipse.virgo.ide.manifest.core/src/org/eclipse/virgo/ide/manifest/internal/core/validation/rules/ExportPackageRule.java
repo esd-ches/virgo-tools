@@ -14,6 +14,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.osgi.util.ManifestElement;
 import org.eclipse.pde.internal.core.util.VersionUtil;
@@ -22,7 +23,6 @@ import org.eclipse.virgo.ide.manifest.internal.core.model.BundleManifestHeader;
 import org.eclipse.virgo.ide.manifest.internal.core.model.BundleManifestHeaderElement;
 import org.eclipse.virgo.ide.manifest.internal.core.validation.BundleManifestValidationContext;
 import org.osgi.framework.Constants;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
 
 
 /**
@@ -39,8 +39,8 @@ public class ExportPackageRule extends AbstractBundleManifestHeaderRule {
 			BundleManifestValidationContext context) {
 		boolean found = false;
 		try {
-			IPackageFragmentRoot[] roots = JdtUtils.getJavaProject(
-					context.getRootElement().getElementResource()).getPackageFragmentRoots();
+			IPackageFragmentRoot[] roots = JavaCore.create(
+					context.getRootElement().getElementResource().getProject()).getPackageFragmentRoots();
 
 			for (IPackageFragmentRoot root : roots) {
 				int kind = root.getKind();

@@ -31,21 +31,25 @@ import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.ui.internal.misc.StatusUtil;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
+import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestUtils;
 import org.eclipse.virgo.ide.manifest.core.IBundleManifestChangeListener;
 import org.eclipse.virgo.ide.manifest.core.IBundleManifestManager;
 import org.eclipse.virgo.ide.manifest.core.IBundleManifestMangerWorkingCopy;
 import org.eclipse.virgo.ide.par.Bundle;
 import org.eclipse.virgo.ide.par.Par;
-import org.springframework.ide.eclipse.core.SpringCore;
-import org.springframework.ide.eclipse.core.SpringCoreUtils;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
-
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.virgo.util.osgi.manifest.ExportedPackage;
+import org.springframework.ide.eclipse.core.SpringCoreUtils;
+import org.springframework.ide.eclipse.core.java.JdtUtils;
 
 /**
  * Default {@link IBundleManifestManager} implementation used to manage the life-cycle of the
@@ -361,14 +365,14 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 						if ((FacetUtils.isBundleProject(resource) || SpringCoreUtils
 								.hasProjectFacet(resource, FacetCorePlugin.WEB_FACET_ID))) {
 							if (SpringCoreUtils.isManifest(resource)) {
-								updateBundleManifest(JdtUtils.getJavaProject(resource), false);
+								updateBundleManifest(JavaCore.create(resource.getProject()), false);
 							}
 							else if (isTestManifest(resource)) {
-								updateBundleManifest(JdtUtils.getJavaProject(resource), true);
+								updateBundleManifest(JavaCore.create(resource.getProject()), true);
 							}
-							else if (JdtUtils.isClassPathFile(resource)) {
-								updateBundleManifest(JdtUtils.getJavaProject(resource), false);
-								updateBundleManifest(JdtUtils.getJavaProject(resource), true);
+							else if (resource.getName().equals(".classpath") && resource.getParent() instanceof IProject) {
+								updateBundleManifest(JavaCore.create(resource.getProject()), false);
+								updateBundleManifest(JavaCore.create(resource.getProject()), true);
 							}
 						}
 
@@ -401,7 +405,7 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 			}
 
 			private void updateBundleManifestForResource(IResource resource) {
-				IJavaProject javaProject = JdtUtils.getJavaProject(resource);
+				IJavaProject javaProject = JavaCore.create(resource.getProject());
 				BundleManifest bundleManifest = getBundleManifest(javaProject);
 				BundleManifest testBundleManifest = getTestBundleManifest(javaProject);
 				bundleManifestChanged(bundleManifest, bundleManifest, testBundleManifest,
@@ -414,10 +418,10 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 
 			protected boolean resourceRemoved(IResource resource) {
 				if (SpringCoreUtils.isManifest(resource)) {
-					updateBundleManifest(JdtUtils.getJavaProject(resource), false);
+					updateBundleManifest(JavaCore.create(resource.getProject()), false);
 				}
 				else if (isTestManifest(resource)) {
-					updateBundleManifest(JdtUtils.getJavaProject(resource), true);
+					updateBundleManifest(JavaCore.create(resource.getProject()), true);
 				}
 				return true;
 			}
@@ -440,7 +444,7 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 							delta.accept(getVisitor(eventType), VISITOR_FLAGS);
 						}
 						catch (CoreException e) {
-							SpringCore.log("Error while traversing resource change delta", e);
+							StatusManager.getManager().handle(new Status(IStatus.ERROR, BundleManifestCorePlugin.PLUGIN_ID, "Error while traversing resource change delta", e));
 						}
 					}
 					break;
@@ -456,7 +460,7 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 							delta.accept(getVisitor(eventType), VISITOR_FLAGS);
 						}
 						catch (CoreException e) {
-							SpringCore.log("Error while traversing resource change delta", e);
+							StatusManager.getManager().handle(new Status(IStatus.ERROR, BundleManifestCorePlugin.PLUGIN_ID, "Error while traversing resource change delta", e));
 						}
 					}
 					break;

@@ -13,6 +13,7 @@ package org.eclipse.virgo.ide.runtime.internal.ui.actions;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -25,7 +26,6 @@ import org.eclipse.virgo.ide.manifest.core.BundleManifestUtils;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
 import org.springframework.ide.eclipse.core.SpringCoreUtils;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
 import org.springframework.ide.eclipse.ui.SpringUIUtils;
 
 
@@ -46,13 +46,13 @@ public class OpenManifestAction implements IObjectActionDelegate {
 	public void run(IAction action) {
 		IProject project = selectedModule.getProject();
 		if (FacetUtils.isBundleProject(project)) {
-			openResource(BundleManifestUtils.locateManifest(JdtUtils.getJavaProject(project), false));
+			openResource(BundleManifestUtils.locateManifest(JavaCore.create(project), false));
 		}
 		else if (FacetUtils.isParProject(project)) {
 			openResource(project.findMember(BundleManifestCorePlugin.MANIFEST_FILE_LOCATION));
 		}
 		else if (SpringCoreUtils.hasProjectFacet(project, FacetCorePlugin.WEB_FACET_ID)) {
-			openResource(BundleManifestUtils.locateManifest(JdtUtils.getJavaProject(project), false));
+			openResource(BundleManifestUtils.locateManifest(JavaCore.create(project), false));
 		}
 	}
 

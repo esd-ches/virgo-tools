@@ -27,6 +27,7 @@ import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.virgo.ide.par.Bundle;
 import org.eclipse.virgo.ide.par.Par;
 import org.eclipse.virgo.ide.par.ParPackage;
@@ -45,7 +46,13 @@ public class FacetUtils {
 	 * Checks if a given {@link IResource} has the bundle facet.
 	 */
 	public static boolean isBundleProject(IResource resource) {
-		return JdtUtils.isJavaProject(resource) && hasProjectFacet(resource, FacetCorePlugin.BUNDLE_FACET_ID);
+		boolean b;
+		try {
+			b = resource.getProject().hasNature(JavaCore.NATURE_ID) && hasProjectFacet(resource, FacetCorePlugin.BUNDLE_FACET_ID);
+			return b;
+		} catch (CoreException e) {
+			return false;
+		}
 	}
 
 	/**

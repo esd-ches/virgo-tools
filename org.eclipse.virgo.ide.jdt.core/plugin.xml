@@ -23,44 +23,11 @@
      
     <extension
          id="dependencyproblemmarker"
-         name="SpringSource Bundle Dependency Problem"
+         name="%extension.name"
          point="org.eclipse.core.resources.markers">
       		<super
             	type="org.eclipse.core.resources.problemmarker">
       		</super>
     		<persistent	value="true" />
     </extension>
-      
-    <extension
-         point="org.springframework.ide.eclipse.beans.core.beansconfiglocators">
-           <beansConfigLocator 
-           		id="springOsgiBeansConfigLocator"
-           		name="Auto detection for Spring DM-enabled Projects"
-           		description="Detects Spring configuration files in Spring DM projects by looking at the default META-INF/spring/*.xml location and the Spring-Context manifest header."
-                class="org.eclipse.virgo.ide.beans.core.internal.locate.SpringOsgiBeansConfigLocator">
-           </beansConfigLocator>
-           <beansConfigLocator 
-           		id="blueprintBeansConfigLocator"
-           		name="Auto detection for OSGi Blueprint-enabled Projects"
-           		description="Detects OSGi Blueprint configuration files in projects by looking at the default OSGI-INF/blueprint/*.xml location and the Bundle-Blueprint manifest header."
-                class="org.eclipse.virgo.ide.beans.core.internal.locate.BlueprintBeansConfigLocator">
-           </beansConfigLocator>
-    </extension>
-      
-    <extension
-            point="org.springframework.ide.eclipse.beans.core.postprocessors">
-         <postprocessor
-               class="org.eclipse.virgo.ide.beans.core.internal.locate.SpringOsgiBeansConfigPostProcessor">
-         </postprocessor>
-    </extension>
-
-	<extension point="org.eclipse.core.expressions.propertyTesters">
-		<propertyTester
-			class="org.eclipse.virgo.ide.jdt.core.ServerClasspathContainerPropertyTester"
-			id="org.eclipse.virgo.ide.jdt.core.serverClasspathContainerPropertyTester"
-			namespace="org.eclipse.virgo.ide.jdt.serverclasspathcontainer"
-			properties="isEnabled" 
-			type="java.lang.Object" />
-	</extension>
-	
 </plugin>

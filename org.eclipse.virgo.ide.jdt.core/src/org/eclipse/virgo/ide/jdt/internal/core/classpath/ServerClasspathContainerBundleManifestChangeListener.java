@@ -16,6 +16,7 @@ import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.manifest.core.IBundleManifestChangeListener;
 import org.eclipse.virgo.ide.manifest.internal.core.BundleManifestManager;
@@ -55,8 +56,7 @@ public class ServerClasspathContainerBundleManifestChangeListener implements
 		for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
 			if (FacetUtils.isBundleProject(project)
 					&& Arrays.asList(ServerUtils.getTargettedRuntimes(project)).contains(runtime)) {
-				ServerClasspathContainerUpdateJob.scheduleClasspathContainerUpdateJob(JdtUtils
-						.getJavaProject(project), BundleManifestManager.IMPORTS_CHANGED);
+				ServerClasspathContainerUpdateJob.scheduleClasspathContainerUpdateJob(JavaCore.create(project), BundleManifestManager.IMPORTS_CHANGED);
 			}
 		}
 	}

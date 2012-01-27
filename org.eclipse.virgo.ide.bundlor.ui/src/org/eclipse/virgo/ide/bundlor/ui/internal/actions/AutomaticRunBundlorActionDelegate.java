@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
@@ -38,7 +39,6 @@ import org.eclipse.virgo.ide.bundlor.ui.BundlorUiPlugin;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.springframework.ide.eclipse.core.SpringCore;
 import org.springframework.ide.eclipse.core.SpringCoreUtils;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
 import org.springframework.ide.eclipse.ui.SpringUIUtils;
 
 
@@ -57,7 +57,7 @@ public class AutomaticRunBundlorActionDelegate implements IObjectActionDelegate 
 		while (iter.hasNext()) {
 			IProject project = iter.next();
 			if (FacetUtils.isBundleProject(project)) {
-				projects.add(JdtUtils.getJavaProject(project));
+				projects.add(JavaCore.create(project));
 			}
 		}
 		IRunnableWithProgress op = new WorkspaceModifyOperation() {

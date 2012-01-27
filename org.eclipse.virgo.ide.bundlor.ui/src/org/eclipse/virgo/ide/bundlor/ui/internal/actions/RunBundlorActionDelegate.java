@@ -19,6 +19,7 @@ import java.util.Set;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -27,7 +28,6 @@ import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.virgo.ide.bundlor.ui.BundlorUiPlugin;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
 import org.springframework.ide.eclipse.ui.SpringUIUtils;
 
 
@@ -46,7 +46,7 @@ public class RunBundlorActionDelegate implements IObjectActionDelegate {
 		while (iter.hasNext()) {
 			IProject project = iter.next();
 			if (FacetUtils.isBundleProject(project)) {
-				projects.add(JdtUtils.getJavaProject(project));
+				projects.add(JavaCore.create(project));
 			}
 		}
 

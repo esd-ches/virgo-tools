@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.ui.ISharedImages;
 import org.eclipse.jdt.ui.JavaUI;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -64,8 +65,6 @@ import org.eclipse.virgo.ide.ui.ServerIdeUiPlugin;
 import org.eclipse.virgo.ide.ui.StatusHandler;
 import org.springframework.ide.eclipse.beans.ui.graph.BeansGraphImages;
 import org.springframework.ide.eclipse.core.SpringCoreUtils;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
-
 
 /**
  * @author Christian Dupuis
@@ -211,8 +210,8 @@ public class BundleOverviewPage extends PDEFormPage implements IHyperlinkListene
 					}
 				};
 				try {
-					PlatformUI.getWorkbench().getProgressService().runInUI(PDEPlugin.getActiveWorkbenchWindow(), op,
-							PDEPlugin.getWorkspace().getRoot());
+					PlatformUI.getWorkbench().getProgressService()
+							.runInUI(PDEPlugin.getActiveWorkbenchWindow(), op, PDEPlugin.getWorkspace().getRoot());
 				}
 				catch (InvocationTargetException e1) {
 				}
@@ -291,13 +290,13 @@ public class BundleOverviewPage extends PDEFormPage implements IHyperlinkListene
 		else if (e.getHref().equals("refreshdependencies")) {
 			IRunnableWithProgress op = new WorkspaceModifyOperation() {
 				protected void execute(IProgressMonitor monitor) throws CoreException, InterruptedException {
-					ServerClasspathContainerUpdateJob.scheduleClasspathContainerUpdateJob(JdtUtils
-							.getJavaProject(resource), BundleManifestManager.IMPORTS_CHANGED);
+					ServerClasspathContainerUpdateJob.scheduleClasspathContainerUpdateJob(
+							JavaCore.create(resource.getProject()), BundleManifestManager.IMPORTS_CHANGED);
 				}
 			};
 			try {
-				PlatformUI.getWorkbench().getProgressService().runInUI(PDEPlugin.getActiveWorkbenchWindow(), op,
-						PDEPlugin.getWorkspace().getRoot());
+				PlatformUI.getWorkbench().getProgressService()
+						.runInUI(PDEPlugin.getActiveWorkbenchWindow(), op, PDEPlugin.getWorkspace().getRoot());
 			}
 			catch (InvocationTargetException e1) {
 			}
@@ -305,7 +304,7 @@ public class BundleOverviewPage extends PDEFormPage implements IHyperlinkListene
 			}
 		}
 		else if (e.getHref().equals("generate")) {
-			BundlorUiPlugin.runBundlorOnProject(JdtUtils.getJavaProject(resource));
+			BundlorUiPlugin.runBundlorOnProject(JavaCore.create(resource.getProject()));
 		}
 		else if (e.getHref().equals("exportbundle")) {
 			Display.getDefault().asyncExec(new Runnable() {
@@ -313,8 +312,8 @@ public class BundleOverviewPage extends PDEFormPage implements IHyperlinkListene
 				public void run() {
 					BundleExportWizard wizard = new BundleExportWizard();
 					WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), wizard);
-					wizard.init(PlatformUI.getWorkbench(), new StructuredSelection(new Object[] { JdtUtils
-							.getJavaProject(resource) }));
+					wizard.init(PlatformUI.getWorkbench(),
+							new StructuredSelection(new Object[] { JavaCore.create(resource.getProject()) }));
 					dialog.open();
 				}
 			});

@@ -19,12 +19,12 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestUtils;
 import org.eclipse.virgo.ide.manifest.internal.core.model.BundleManifest;
 import org.eclipse.virgo.ide.manifest.internal.core.model.BundleManifestHeader;
 import org.springframework.ide.eclipse.core.SpringCoreUtils;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
 import org.springframework.ide.eclipse.core.model.IModelElement;
 import org.springframework.ide.eclipse.core.model.IResourceModelElement;
 import org.springframework.ide.eclipse.core.model.validation.AbstractValidator;
@@ -50,7 +50,7 @@ public class BundleManifestValidator extends AbstractValidator {
 	 * {@inheritDoc}
 	 */
 	public Set<IResource> getAffectedResources(IResource resource, int kind, int deltaKind) throws CoreException {
-		IJavaProject javaProject = JdtUtils.getJavaProject(resource);
+		IJavaProject javaProject = JavaCore.create(resource.getProject());
 		IResource bundleManifest = BundleManifestUtils.locateManifest(javaProject, false);
 		Set<IResource> resources = new LinkedHashSet<IResource>();
 		if ((FacetUtils.isBundleProject(resource) && resource.equals(bundleManifest))

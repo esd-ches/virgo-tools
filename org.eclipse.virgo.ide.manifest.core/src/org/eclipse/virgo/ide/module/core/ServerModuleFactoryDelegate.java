@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
@@ -80,20 +81,25 @@ public class ServerModuleFactoryDelegate extends ProjectModuleFactoryDelegate {
 
 			// Collect output locations if java project
 			final Set<IPath> outputLocations = new HashSet<IPath>();
-			if (JdtUtils.isJavaProject(project)) {
-				IJavaProject je = JdtUtils.getJavaProject(project);
-				try {
-					outputLocations.add(je.getOutputLocation());
-					for (IClasspathEntry entry : je.getRawClasspath()) {
-						if (entry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
-							if (entry.getOutputLocation() != null) {
-								outputLocations.add(entry.getOutputLocation());
+			try {
+				if (project.hasNature(JavaCore.NATURE_ID)) {
+					IJavaProject je = JavaCore.create(project);
+					try {
+						outputLocations.add(je.getOutputLocation());
+						for (IClasspathEntry entry : je.getRawClasspath()) {
+							if (entry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+								if (entry.getOutputLocation() != null) {
+									outputLocations.add(entry.getOutputLocation());
+								}
 							}
 						}
 					}
+					catch (JavaModelException e) {
+						//safe to ignore
+					}
 				}
-				catch (JavaModelException e) {
-				}
+			} catch (CoreException e) {
+				//safe to ignore
 			}
 
 			try {

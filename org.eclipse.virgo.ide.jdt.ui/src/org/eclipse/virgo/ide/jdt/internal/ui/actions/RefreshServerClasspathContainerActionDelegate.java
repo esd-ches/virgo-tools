@@ -18,6 +18,7 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -26,7 +27,6 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.jdt.internal.core.classpath.ServerClasspathContainerUpdateJob;
 import org.eclipse.virgo.ide.manifest.internal.core.BundleManifestManager;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
 
 
 /**
@@ -44,11 +44,11 @@ public class RefreshServerClasspathContainerActionDelegate implements IObjectAct
 		while (iter.hasNext()) {
 			IProject project = iter.next();
 			if (FacetUtils.isBundleProject(project)) {
-				projects.add(JdtUtils.getJavaProject(project));
+				projects.add(JavaCore.create(project));
 			}
 			else if (FacetUtils.isParProject(project)) {
 				for (IProject bundle : FacetUtils.getBundleProjects(project)) {
-					projects.add(JdtUtils.getJavaProject(bundle));
+					projects.add(JavaCore.create(bundle));
 				}
 			}
 		}

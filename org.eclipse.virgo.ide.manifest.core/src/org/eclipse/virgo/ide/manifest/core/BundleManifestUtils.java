@@ -38,6 +38,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
@@ -317,7 +318,7 @@ public class BundleManifestUtils {
 
 	public static IFile getFirstPossibleManifestFile(final IProject project, boolean isTestManifest) {
 		try {
-			if (JdtUtils.isJavaProject(project)) {
+			if (project.hasNature(JavaCore.NATURE_ID)) {
 
 				List<IClasspathEntry> entries = new ArrayList<IClasspathEntry>(ServerModuleDelegate
 						.getSourceClasspathEntries(project, isTestManifest));

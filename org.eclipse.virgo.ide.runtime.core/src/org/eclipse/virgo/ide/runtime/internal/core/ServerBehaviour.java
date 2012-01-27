@@ -39,6 +39,7 @@ import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfigurationWorkingCopy;
 import org.eclipse.debug.core.model.IProcess;
 import org.eclipse.debug.internal.ui.views.console.ProcessConsole;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.IVMInstall;
@@ -57,13 +58,12 @@ import org.eclipse.virgo.ide.runtime.core.IServerRuntime;
 import org.eclipse.virgo.ide.runtime.core.IServerVersionHandler;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
+import org.eclipse.wst.common.project.facet.core.FacetedProjectFramework;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.IModuleResource;
 import org.eclipse.wst.server.core.model.IModuleResourceDelta;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
-import org.springframework.ide.eclipse.core.SpringCoreUtils;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
 
 /**
  * Default dm server behavior.
@@ -348,15 +348,15 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 		try {
 			// check pre condition; only dynamic web projects and java projects are allowed
 			IProject project = module.getProject();
-			if (!SpringCoreUtils.hasProjectFacet(project, FacetCorePlugin.WEB_FACET_ID)
-					|| !JdtUtils.isJavaProject(project)) {
+			if (!(FacetedProjectFramework.hasProjectFacet(project, FacetCorePlugin.WEB_FACET_ID)
+					|| project.hasNature(JavaCore.NATURE_ID))) {
 				return null;
 			}
 
 			String contextPath = null;
 
 			BundleManifest bundleManifest = BundleManifestCorePlugin.getBundleManifestManager().getBundleManifest(
-					JdtUtils.getJavaProject(project));
+					JavaCore.create(project));
 			if (bundleManifest != null) {
 				Dictionary<String, String> manifest = bundleManifest.toDictionary();
 				if (manifest != null && manifest.get(WEB_CONTEXT_PATH_MANIFEST_HEADER) != null) {

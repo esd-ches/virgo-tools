@@ -214,7 +214,7 @@ public class ClasspathUtils {
 					if (!javaProject.getProject().equals(project)
 							&& FacetUtils.isBundleProject(project)) {
 
-						IJavaProject jp = JdtUtils.getJavaProject(project);
+						IJavaProject jp = JavaCore.create(project);
 						BundleManifest manifest = BundleManifestCorePlugin
 								.getBundleManifestManager().getBundleManifest(jp);
 

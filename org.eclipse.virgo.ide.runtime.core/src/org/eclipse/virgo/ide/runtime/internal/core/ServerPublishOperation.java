@@ -34,6 +34,8 @@ import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
 import org.eclipse.virgo.ide.module.core.ServerModuleDelegate;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
+import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
+import org.eclipse.virgo.util.osgi.manifest.BundleManifestFactory;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
@@ -47,14 +49,9 @@ import org.eclipse.wst.sse.core.StructuredModelManager;
 import org.eclipse.wst.sse.core.internal.provisional.IStructuredModel;
 import org.eclipse.wst.xml.core.internal.document.DOMModelImpl;
 import org.eclipse.wst.xml.core.internal.provisional.document.IDOMDocument;
-import org.springframework.ide.eclipse.beans.core.internal.model.namespaces.DelegatingNamespaceHandlerResolver;
-import org.springframework.ide.eclipse.beans.core.namespaces.NamespaceUtils;
 import org.springframework.ide.eclipse.core.java.JdtUtils;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
-
-import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
-import org.eclipse.virgo.util.osgi.manifest.BundleManifestFactory;
 
 /**
  * {@link PublishOperation} extension that deals with deploy, clean and refresh of dm Server modules.
@@ -119,35 +116,35 @@ public class ServerPublishOperation extends PublishOperation {
 	/**
 	 * Checks if the given <code>file</code> is a root node that is a known Spring namespace.
 	 */
-	private boolean checkIfSpringConfigurationFile(IFile file) {
-		IStructuredModel model = null;
-		try {
-			model = StructuredModelManager.getModelManager().getExistingModelForRead(file);
-			if (model == null) {
-				model = StructuredModelManager.getModelManager().getModelForRead(file);
-			}
-			if (model != null) {
-				IDOMDocument document = ((DOMModelImpl) model).getDocument();
-				if (document != null && document.getDocumentElement() != null) {
-					String namespaceUri = document.getDocumentElement().getNamespaceURI();
-					if (NamespaceUtils.DEFAULT_NAMESPACE_URI.equals(namespaceUri)
-							|| new DelegatingNamespaceHandlerResolver(JdtUtils.getClassLoader(file.getProject(), null),
-									null).resolve(namespaceUri) != null) {
-						return false;
-					}
-				}
-			}
-		}
-		catch (Exception e) {
-		}
-		finally {
-			if (model != null) {
-				model.releaseFromRead();
-			}
-			model = null;
-		}
-		return true;
-	}
+//	private boolean checkIfSpringConfigurationFile(IFile file) {
+//		IStructuredModel model = null;
+//		try {
+//			model = StructuredModelManager.getModelManager().getExistingModelForRead(file);
+//			if (model == null) {
+//				model = StructuredModelManager.getModelManager().getModelForRead(file);
+//			}
+//			if (model != null) {
+//				IDOMDocument document = ((DOMModelImpl) model).getDocument();
+//				if (document != null && document.getDocumentElement() != null) {
+//					String namespaceUri = document.getDocumentElement().getNamespaceURI();
+//					if (NamespaceUtils.DEFAULT_NAMESPACE_URI.equals(namespaceUri)
+//							|| new DelegatingNamespaceHandlerResolver(JdtUtils.getClassLoader(file.getProject(), null),
+//									null).resolve(namespaceUri) != null) {
+//						return false;
+//					}
+//				}
+//			}
+//		}
+//		catch (Exception e) {
+//		}
+//		finally {
+//			if (model != null) {
+//				model.releaseFromRead();
+//			}
+//			model = null;
+//		}
+//		return true;
+//	}
 
 	/**
 	 * Check if resource delta only contains static resources
@@ -167,14 +164,6 @@ public class ServerPublishOperation extends PublishOperation {
 			}
 			String name = delta.getModuleResource().getName();
 
-			// make that configurable
-			if (name.endsWith(".xml")) {
-				IFile file = (IFile) delta.getModuleResource().getAdapter(IFile.class);
-				// check for spring context xml files first but exclude
-				if (!checkIfSpringConfigurationFile(file)) {
-					return false;
-				}
-			}
 			boolean isStatic = false;
 			// Check the configuration options for static resources
 			AntPathMatcher matcher = new AntPathMatcher();

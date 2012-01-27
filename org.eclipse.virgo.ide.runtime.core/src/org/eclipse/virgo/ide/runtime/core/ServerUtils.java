@@ -44,13 +44,12 @@ import org.eclipse.virgo.ide.runtime.internal.core.ServerRuntimeUtils;
 import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocator;
 import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocator10;
 import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocator20;
+import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.util.PublishUtil;
 import org.osgi.framework.Constants;
 import org.springframework.ide.eclipse.core.SpringCore;
 import org.springframework.ide.eclipse.core.java.JdtUtils;
-
-import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 
 /**
  * @author Christian Dupuis
@@ -223,7 +222,7 @@ public class ServerUtils {
 	 * Returns the {@link JavaVersion} of the given {@link IJavaProject}
 	 */
 	public static JavaVersion getJavaVersion(IProject project) {
-		IJavaProject javaProject = JdtUtils.getJavaProject(project);
+		IJavaProject javaProject = JavaCore.create(project);
 		if (javaProject != null) {
 
 			// first check the manifest for that

@@ -10,6 +10,12 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.manifest.internal.core.validation.rules;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCoreMessages;
 import org.eclipse.virgo.ide.manifest.internal.core.model.BundleManifestHeader;
@@ -36,11 +42,21 @@ public class BundleActivatorRule extends AbstractBundleManifestHeaderRule {
 	protected void validateHeader(BundleManifestHeader header,
 			BundleManifestValidationContext context) {
 		String activatorClass = header.getValue();
-		if (JdtUtils.getJavaType(context.getRootElement().getElementResource().getProject(),
-				activatorClass) == null) {
+		//TODO -- not sure if this logic is ok, it is much simpler than old logic, but assuming that the class needs to be in the same bundle as Manifest
+		IProject project = context.getRootElement().getElementResource().getProject();
+		IJavaProject javaProject = JavaCore.create(project);
+		IType findType;
+		try {
+			findType = javaProject.findType(activatorClass, new NullProgressMonitor());
+			if (findType == null) {
+				context.error("ILLEGAL_ACTIVATOR_CLASS", NLS.bind(
+						BundleManifestCoreMessages.BundleErrorReporter_NoExist, activatorClass), header
+						.getLineNumber() + 1);
+			}
+		} catch (JavaModelException e) {
 			context.error("ILLEGAL_ACTIVATOR_CLASS", NLS.bind(
-					BundleManifestCoreMessages.BundleErrorReporter_NoExist, activatorClass), header
-					.getLineNumber() + 1);
+			                              					BundleManifestCoreMessages.BundleErrorReporter_NoExist, activatorClass), header
+			                              					.getLineNumber() + 1);
 		}
 	}
 

@@ -30,16 +30,22 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IClasspathAttribute;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.ui.internal.misc.StatusUtil;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
 import org.eclipse.virgo.ide.par.Bundle;
 import org.eclipse.virgo.ide.par.Par;
+import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.IModuleFile;
@@ -49,16 +55,12 @@ import org.eclipse.wst.server.core.model.ModuleDelegate;
 import org.eclipse.wst.server.core.util.ModuleFile;
 import org.eclipse.wst.server.core.util.ModuleFolder;
 import org.eclipse.wst.server.core.util.ProjectModule;
-import org.springframework.ide.eclipse.core.SpringCore;
 import org.springframework.ide.eclipse.core.SpringCoreUtils;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
 import org.springframework.util.ObjectUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
-import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 
 /**
  * {@link ProjectModule} extension that knows how to handle par and bundle projects.
@@ -109,7 +111,7 @@ public class ServerModuleDelegate extends ProjectModule {
 				resources.add(folder);
 			}
 			else {
-				SpringCore.log("Cannot find META-INF/MANIFEST.MF in project [" + getProject().getName() + "]", null);
+				StatusManager.getManager().handle(new Status(IStatus.ERROR, BundleManifestCorePlugin.PLUGIN_ID, "Cannot find META-INF/MANIFEST.MF in project [" + getProject().getName() + "]"));
 			}
 
 			// Find linked or nested jars and add them to the deployment
@@ -220,7 +222,7 @@ public class ServerModuleDelegate extends ProjectModule {
 			CoreException {
 		Set<IModuleResource> resources = new LinkedHashSet<IModuleResource>();
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		IJavaProject javaProject = JdtUtils.getJavaProject(project);
+		IJavaProject javaProject = JavaCore.create(project);
 
 		// Add default output location
 		IResource defaultBinFolder = root.findMember(javaProject.getOutputLocation());
@@ -459,7 +461,7 @@ public class ServerModuleDelegate extends ProjectModule {
 	}
 
 	public static Set<IClasspathEntry> getSourceClasspathEntries(IProject project, boolean onlyTestFolders) {
-		IJavaProject javaProject = JdtUtils.getJavaProject(project);
+		IJavaProject javaProject = JavaCore.create(project);
 		if (javaProject == null) {
 			return Collections.emptySet();
 		}
@@ -512,7 +514,7 @@ public class ServerModuleDelegate extends ProjectModule {
 								|| FacetUtils.hasProjectFacet(candidate, FacetCorePlugin.WEB_FACET_ID)) {
 
 							BundleManifest manifest = BundleManifestCorePlugin.getBundleManifestManager()
-									.getBundleManifest(JdtUtils.getJavaProject(candidate));
+									.getBundleManifest(JavaCore.create(candidate));
 
 							if ((manifest != null && manifest.getBundleSymbolicName() != null && manifest.
 									getBundleSymbolicName().getSymbolicName() != null && manifest.getBundleSymbolicName().

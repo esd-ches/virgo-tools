@@ -12,11 +12,11 @@ package org.eclipse.virgo.ide.manifest.internal.core.validation.rules;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestUtils;
 import org.eclipse.virgo.ide.manifest.internal.core.validation.BundleManifestValidationContext;
 import org.osgi.framework.Version;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
 
 
 /**
@@ -34,7 +34,7 @@ public abstract class AbstractBundleManifestHeaderRule extends AbstractManifestH
 	@Override
 	protected boolean supportsContext(BundleManifestValidationContext context) {
 		IResource resource = context.getRootElement().getElementResource();
-		IJavaProject javaProject = JdtUtils.getJavaProject(resource);
+		IJavaProject javaProject = JavaCore.create(resource.getProject());
 		
 		return FacetUtils.isBundleProject(context.getRootElement().getElementResource())
 				&& (resource.equals(BundleManifestUtils.locateManifest(javaProject, false)) || resource

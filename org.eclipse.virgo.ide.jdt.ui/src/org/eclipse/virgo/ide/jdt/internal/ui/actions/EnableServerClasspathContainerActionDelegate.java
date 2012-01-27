@@ -51,11 +51,11 @@ public class EnableServerClasspathContainerActionDelegate implements IObjectActi
 		while (iter.hasNext()) {
 			IProject project = iter.next();
 			if (FacetUtils.isBundleProject(project)) {
-				projects.add(JdtUtils.getJavaProject(project));
+				projects.add(JavaCore.create(project));
 			}
 			else if (FacetUtils.isParProject(project)) {
 				for (IProject bundle : FacetUtils.getBundleProjects(project)) {
-					projects.add(JdtUtils.getJavaProject(bundle));
+					projects.add(JavaCore.create(bundle));
 				}
 			}
 		}

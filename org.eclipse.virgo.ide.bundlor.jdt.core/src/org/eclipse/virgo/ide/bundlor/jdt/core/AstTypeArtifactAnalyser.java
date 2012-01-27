@@ -33,6 +33,7 @@ import org.eclipse.virgo.bundlor.support.partialmanifest.PartialManifest;
  */
 public class AstTypeArtifactAnalyser implements ArtifactAnalyzer {
 
+	private static final String JAVA_EXT = ".java"; //$NON-NLS-1$
 	private final IJavaProject javaProject;
 
 	public AstTypeArtifactAnalyser(IJavaProject javaProject) {
@@ -60,7 +61,7 @@ public class AstTypeArtifactAnalyser implements ArtifactAnalyzer {
 	public boolean canAnalyse(String name) {
 		// For now only accept source files
 		// TODO does it work with .class files as well?
-		return name.endsWith(".java");
+		return name.endsWith(JAVA_EXT);
 	}
 
 	/**

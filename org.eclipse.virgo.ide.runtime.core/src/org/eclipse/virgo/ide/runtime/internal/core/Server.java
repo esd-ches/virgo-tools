@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.SubProgressMonitor;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jst.server.core.FacetUtil;
 import org.eclipse.jst.server.core.IWebModule;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
@@ -37,6 +38,7 @@ import org.eclipse.virgo.ide.runtime.core.IServerConfiguration;
 import org.eclipse.virgo.ide.runtime.core.IServerVersionHandler;
 import org.eclipse.virgo.ide.runtime.core.IServerWorkingCopy;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
+import org.eclipse.wst.common.project.facet.core.FacetedProjectFramework;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
@@ -44,7 +46,6 @@ import org.eclipse.wst.common.project.facet.core.runtime.RuntimeManager;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.model.ServerDelegate;
-import org.springframework.ide.eclipse.core.SpringCoreUtils;
 
 
 /**
@@ -92,11 +93,17 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 				}
 
 				// Check that shared war is only deployed as WAR
-				if (SpringCoreUtils.hasProjectFacet(project, FacetCorePlugin.WEB_FACET_ID)
-						&& FacetUtils.isBundleProject(project)
-						&& FacetCorePlugin.BUNDLE_FACET_ID.equals(module.getModuleType().getId())) {
+				try {
+					if (project.hasNature(JavaCore.NATURE_ID)
+							&& FacetedProjectFramework.hasProjectFacet(project, FacetCorePlugin.WEB_FACET_ID)
+							&& FacetUtils.isBundleProject(project)
+							&& FacetCorePlugin.BUNDLE_FACET_ID.equals(module.getModuleType().getId())) {
+						return new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, 0,
+								"Shared WAR deploy only as jst.web modules", null);
+					}
+				} catch (CoreException e) {
 					return new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, 0,
-							"Shared WAR deploy only as jst.web modules", null);
+										"Core Exception when resolving project: ", e);
 				}
 
 				if (getVersionHandler() == null) {

@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.concurrent.TimeoutException;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
@@ -27,13 +28,11 @@ import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.core.IServerDeployer;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.virgo.ide.runtime.internal.core.command.IServerCommand;
+import org.eclipse.virgo.ide.runtime.internal.core.utils.StatusUtil;
+import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.IModuleFile;
-import org.springframework.ide.eclipse.core.SpringCore;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
-
-import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 
 /**
  * Deployer helper that hides the JMX-based communication with a running dm Server.
@@ -113,7 +112,7 @@ public class DefaultServerDeployer implements IServerDeployer {
 					if (state != IServer.PUBLISH_STATE_NONE) {
 						if (FacetUtils.isBundleProject(child.getProject())) {
 							BundleManifest manifest = BundleManifestCorePlugin.getBundleManifestManager()
-									.getBundleManifest(JdtUtils.getJavaProject(child.getProject()));
+									.getBundleManifest(JavaCore.create(child.getProject()));
 							if (manifest != null && manifest.getBundleSymbolicName() != null) {
 								bundleSymbolicNames.add(manifest.getBundleSymbolicName().getSymbolicName());
 							}
@@ -170,7 +169,7 @@ public class DefaultServerDeployer implements IServerDeployer {
 	public void refresh(IModule parModule, IModule... modules) {
 		for (IModule module : modules) {
 			BundleManifest manifest = BundleManifestCorePlugin.getBundleManifestManager().getBundleManifest(
-					JdtUtils.getJavaProject(module.getProject()));
+					JavaCore.create(module.getProject()));
 			if (manifest != null && manifest.getBundleSymbolicName() != null) {
 				executeDeployerCommand(getServerRefreshCommand(parModule, manifest.getBundleSymbolicName()
 						.getSymbolicName()));
@@ -192,7 +191,7 @@ public class DefaultServerDeployer implements IServerDeployer {
 					if (FacetUtils.isBundleProject(f.getProject())
 							|| FacetUtils.hasProjectFacet(f.getProject(), FacetCorePlugin.WEB_FACET_ID)) {
 						BundleManifest manifest = BundleManifestCorePlugin.getBundleManifestManager()
-								.getBundleManifest(JdtUtils.getJavaProject(f.getProject()));
+								.getBundleManifest(JavaCore.create(f.getProject()));
 						String symbolicName = null;
 						if (manifest != null && manifest.getBundleSymbolicName() != null) {
 							symbolicName = manifest.getBundleSymbolicName().getSymbolicName();
@@ -243,10 +242,10 @@ public class DefaultServerDeployer implements IServerDeployer {
 			return (T) serverCommand.execute();
 		}
 		catch (IOException e) {
-			SpringCore.log("Failed execution of deployer command " + serverCommand, e);
+			StatusUtil.error("Failed execution of deployer command " + serverCommand, e);
 		}
 		catch (TimeoutException e) {
-			SpringCore.log("Failed execution of deployer command " + serverCommand, e);
+			StatusUtil.error("Failed execution of deployer command " + serverCommand, e);
 		}
 		return null;
 	}

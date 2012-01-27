@@ -303,7 +303,7 @@ public class VirgoServerBehaviour extends ServerBehaviour implements IServerBeha
 //			String contextPath = null;
 //
 //			BundleManifest bundleManifest = BundleManifestCorePlugin.getBundleManifestManager().getBundleManifest(
-//					JdtUtils.getJavaProject(project));
+//					JavaCore.create(project));
 //			if (bundleManifest != null) {
 //				Dictionary<String, String> manifest = bundleManifest.toDictionary();
 //				if (manifest != null && manifest.get(WEB_CONTEXT_PATH_MANIFEST_HEADER) != null) {

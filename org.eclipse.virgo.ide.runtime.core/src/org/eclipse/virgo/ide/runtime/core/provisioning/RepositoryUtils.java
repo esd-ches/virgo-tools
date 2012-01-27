@@ -22,6 +22,7 @@ import java.util.TreeSet;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
@@ -547,7 +548,7 @@ public class RepositoryUtils {
 		for (IProject p : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
 			if (FacetUtils.isBundleProject(p) && !p.equals(project)) {
 				BundleManifest manifest = BundleManifestCorePlugin.getBundleManifestManager()
-						.getBundleManifest(JdtUtils.getJavaProject(p));
+						.getBundleManifest(JavaCore.create(project));
 				addImportBundleProposalsFromManifest(bundles, manifest, value);
 			}
 		}
@@ -599,7 +600,7 @@ public class RepositoryUtils {
 		for (IProject p : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
 			if (FacetUtils.isBundleProject(p) && !p.equals(project)) {
 				BundleManifest manifest = BundleManifestCorePlugin.getBundleManifestManager()
-						.getBundleManifest(JdtUtils.getJavaProject(p));
+						.getBundleManifest(JavaCore.create(project));
 				addImportPackageProposalsFromManifest(value, packages, manifest);
 			}
 		}

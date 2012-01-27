@@ -392,10 +392,10 @@ public class ServerClasspathContainer implements IClasspathContainer {
 	 */
 	private void addWorkspaceBundle(Set<String> workspaceBundles, IProject project) {
 		if (project.isAccessible() && FacetUtils.isBundleProject(project)) {
-			String manifestFolder = BundleManifestUtils.locateManifestFolder(JdtUtils.getJavaProject(project));
+			String manifestFolder = BundleManifestUtils.locateManifestFolder(JavaCore.create(project));
 			if (manifestFolder != null) {
 				workspaceBundles.add(manifestFolder);
-				manifestLocationsByProject.put(manifestFolder, JdtUtils.getJavaProject(project));
+				manifestLocationsByProject.put(manifestFolder, JavaCore.create(project));
 			}
 		}
 	}

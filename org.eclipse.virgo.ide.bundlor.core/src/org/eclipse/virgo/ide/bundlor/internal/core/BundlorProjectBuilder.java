@@ -101,6 +101,8 @@ import org.springframework.util.StringUtils;
 @SuppressWarnings("restriction")
 public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 
+	private final static String CLASS_FILE_EXTENSION = ".class";
+	
 	/** Deleted sources from a source directory */
 	private Set<IResource> deletedSourceResources = new HashSet<IResource>();
 
@@ -198,7 +200,7 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 
 		IncrementalPartialManifestManager manifestManager = BundlorCorePlugin.getDefault().getManifestManager();
 
-		IJavaProject javaProject = JdtUtils.getJavaProject(getProject());
+		IJavaProject javaProject = JavaCore.create(getProject());
 
 		// No incremental manifest model has been recorded or the build is a full build
 		final boolean isFullBuild = !manifestManager.hasPartialManifest(javaProject)
@@ -382,7 +384,7 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 
 	private void doGetAffectedResources(IResource resource, int kind, int deltaKind) throws CoreException {
 
-		IJavaProject project = JdtUtils.getJavaProject(getProject());
+		IJavaProject project = JavaCore.create(getProject());
 		if (project == null) {
 			return;
 		}
@@ -396,7 +398,7 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 				resource.getProject(), true);
 
 		// Java source files
-		if (!scanByteCode && resource.getName().endsWith(JdtUtils.JAVA_FILE_EXTENSION)) {
+		if (!scanByteCode && resource.getName().endsWith("java")) { //$NON-NLS-1$
 			IJavaElement element = JavaCore.create(resource);
 			if (element != null && element.getJavaProject().isOnClasspath(element)) {
 				IPackageFragmentRoot root = (IPackageFragmentRoot) element
@@ -432,7 +434,7 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 			}
 		}
 		// Java byte code
-		else if (scanByteCode && resource.getName().endsWith(JdtUtils.CLASS_FILE_EXTENSION)) {
+		else if (scanByteCode && resource.getName().endsWith(CLASS_FILE_EXTENSION)) {
 			IPath classFilePath = resource.getFullPath();
 
 			// Check default output folders
@@ -440,7 +442,7 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 			if (defaultOutputLocation.isPrefixOf(classFilePath)) {
 				// Ok we know that the file is a class in the default output location; let's get the class name
 				String className = classFilePath.removeFirstSegments(defaultOutputLocation.segmentCount()).toString();
-				className = className.substring(0, className.length() - JdtUtils.CLASS_FILE_EXTENSION.length());
+				className = className.substring(0, className.length() - CLASS_FILE_EXTENSION.length());
 
 				int ix = className.indexOf('$');
 				if (ix > 0) {
