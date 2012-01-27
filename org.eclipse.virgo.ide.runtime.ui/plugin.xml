@@ -66,6 +66,14 @@
 			icon="icons/full/obj16/virgo_obj.png"
 			typeIds="org.eclipse.virgo.server.virgo" />
 		<image 
+			id="org.eclipse.virgo.server.runtime.virgo.35" 
+			icon="icons/full/obj16/virgo_obj.png"
+			typeIds="org.eclipse.virgo.server.runtime.virgo.35" />
+		<image 
+			id="org.eclipse.virgo.server.virgo.35" 
+			icon="icons/full/obj16/virgo_obj.png"
+			typeIds="org.eclipse.virgo.server.virgo.35" />
+		<image 
 			id="com.springsource.server" 
 			icon="icons/full/obj16/springsource_obj.png"
 			typeIds="com.springsource.server" />
@@ -105,6 +113,11 @@
 			id="org.eclipse.virgo.server.runtime.virgo" 
 			typeIds="org.eclipse.virgo.server.runtime.virgo"
 			class="org.eclipse.virgo.ide.runtime.internal.ui.VirgoServerRuntimeWizardFragment" />
+		  <fragment
+		        class="org.eclipse.virgo.ide.runtime.internal.ui.VirgoServerRuntimeWizardFragment"
+		        id="org.eclipse.virgo.server.runtime.virgo.35"
+		        typeIds="org.eclipse.virgo.server.runtime.virgo.35">
+		  </fragment>
 	</extension>
 
 	<extension point="org.eclipse.wst.common.project.facet.ui.images">
@@ -136,28 +149,28 @@
          id="org.eclipse.virgo.ide.server.ui.configuration.editor.port"
          order="0"
          insertionId="org.eclipse.wst.server.editor.overview.right"
-         typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo"
+         typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo,org.eclipse.virgo.server.virgo.35"
          class="org.eclipse.virgo.ide.runtime.internal.ui.editor.ServerDeployEditorSection">
       </section>
       <section
          id="org.eclipse.virgo.ide.server.ui.configuration.editor.taillogfiles"
          order="20"
          insertionId="org.eclipse.wst.server.editor.overview.right"
-         typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo"
+         typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo,org.eclipse.virgo.server.virgo.35"
          class="org.eclipse.virgo.ide.runtime.internal.ui.editor.StartupEditorSection">
       </section>
       <section
          id="org.eclipse.virgo.ide.server.ui.configuration.editor.artefactorder"
          order="10"
          insertionId="org.eclipse.wst.server.editor.overview.right"
-         typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo"
+         typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo,org.eclipse.virgo.server.virgo,35"
          class="org.eclipse.virgo.ide.runtime.internal.ui.editor.ArtefactOrderEditorSection">
       </section>
       <section
          id="org.eclipse.virgo.ide.server.ui.configuration.editor.staticresources"
          order="15"
          insertionId="org.eclipse.wst.server.editor.overview.left"
-         typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo"
+         typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo,org.eclipse.virgo.server.virgo.35"
          class="org.eclipse.virgo.ide.runtime.internal.ui.editor.StaticResourcesEditorSection">
       </section>
    </extension>
@@ -169,7 +182,7 @@
       objectClass="org.eclipse.wst.server.ui.internal.view.servers.ModuleServer">
       <visibility>
         <and>
-          <objectState name="serverType" value="com.springsource.server.*,org.eclipse.virgo.server.virgo"/>
+          <objectState name="serverType" value="com.springsource.server.*,org.eclipse.virgo.server.virgo,org.eclipse.virgo.server.virgo.*"/>
           <or>
           	<objectState name="moduleType" value="jst.web"/>
           	<objectState name="moduleType" value="org.eclipse.virgo.server.bundle"/>
@@ -224,28 +237,28 @@
          id="com.springsource.server.virgo.ide.server.ui.configuration.editor.repository"
          order="20"
          name="Repository"
-         typeIds="org.eclipse.virgo.server.virgo"
+         typeIds="org.eclipse.virgo.server.virgo,org.eclipse.virgo.server.virgo.35"
          class="org.eclipse.virgo.ide.runtime.internal.ui.editor.VirgoRepositoryBrowserEditorPage">
       </page>
       <page
          id="org.eclipse.virgo.ide.server.ui.configuration.editor.bundleInformation"
          order="30"
          name="Bundle Overview"
-         typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo"
+         typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo,org.eclipse.virgo.server.virgo.35"
          class="org.eclipse.libra.framework.editor.ui.overview.BundleInformationEditorPage">
       </page>
       <page
          id="org.eclipse.virgo.ide.server.ui.configuration.editor.bundleDependency"
          order="40"
          name="Bundle Dependency Graph"
-         typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo"
+         typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo,org.eclipse.virgo.server.virgo.35"
          class="org.eclipse.libra.framework.editor.ui.dependencies.BundleDependencyEditorPage">
       </page>
       <page
          id="org.eclipse.virgo.ide.server.ui.configuration.editor.serverConsole"
          order="50"
          name="Server Console"
-         typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo"
+         typeIds="com.springsource.server.10,com.springsource.server.20,org.eclipse.virgo.server.virgo,org.eclipse.virgo.server.virgo.35"
          class="org.eclipse.libra.framework.editor.ui.console.ServerConsoleEditorPage">
       </page>
    </extension>
