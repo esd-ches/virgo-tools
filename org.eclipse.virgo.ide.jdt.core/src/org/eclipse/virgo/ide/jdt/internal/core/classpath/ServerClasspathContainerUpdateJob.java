@@ -26,10 +26,11 @@ import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.osgi.util.NLS;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.ide.jdt.core.JdtCorePlugin;
 import org.eclipse.virgo.ide.jdt.internal.core.util.ClasspathUtils;
 import org.eclipse.virgo.ide.manifest.core.IBundleManifestChangeListener.Type;
-import org.springframework.ide.eclipse.core.SpringCore;
 
 /**
  * {@link WorkspaceJob} that triggers the class path container refresh.
@@ -192,11 +193,11 @@ public class ServerClasspathContainerUpdateJob extends WorkspaceJob {
 
 		@Override
 		public void running(IJobChangeEvent event) {
-			ServerClasspathContainerUpdateJob job = (ServerClasspathContainerUpdateJob) event
-					.getJob();
-			logInfo("Updating classpath of: "
-					+ job.javaProject.getProject().getName() + ". Queue size: "
-					+ SCHEDULED_JOBS.size());
+			ServerClasspathContainerUpdateJob job = (ServerClasspathContainerUpdateJob) event.getJob();
+			StatusManager.getManager()
+					.handle(new Status(IStatus.INFO, JdtCorePlugin.PLUGIN_ID, NLS
+									.bind(	Messages.ServerClasspathContainerUpdateJob_UpdatingClasspathMessage,
+											new String[] { job.javaProject.getProject().getName() })));
 		}
 
 		@Override
@@ -217,14 +218,5 @@ public class ServerClasspathContainerUpdateJob extends WorkspaceJob {
 				}
 			}
 		}
-	}
-
-	private static void logInfo(String message) {
-		log(Status.INFO, message);
-	}
-
-	private static void log(int level, String message) {
-		SpringCore.log(new Status(level,
-				"com.springsource.server.ide.jdt.core", message));
 	}
 }

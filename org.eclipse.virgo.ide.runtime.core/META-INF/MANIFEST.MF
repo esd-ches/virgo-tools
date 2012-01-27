@@ -46,9 +46,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.tptp.platform.integration.pde;resolution:=optional,
  org.eclipse.virgo.util.io;bundle-version="2.2.0",
  org.eclipse.virgo.bundlor,
- org.springframework.core,
- org.springframework.ide.eclipse.core,
- org.springframework.ide.eclipse.beans.core
+ org.springframework.core
 Import-Package: org.apache.commons.logging;version="[1.1.1,2.0.0)",
  org.eclipse.libra.framework.editor.core;version="[0.1.0,2.0.0)",
  org.eclipse.libra.framework.editor.core.model;version="[0.1.0,2.0.0)

@@ -27,7 +27,7 @@ import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.virgo.ide.runtime.internal.core.Server;
-import org.springframework.ide.eclipse.core.SpringCore;
+import org.eclipse.virgo.ide.runtime.internal.core.utils.StatusUtil;
 
 
 /**
@@ -61,7 +61,7 @@ public abstract class AbstractJmxServerCommand {
 		Server server = ServerUtils.getServer(serverBehaviour);
 
 		if (serverBehaviour.getMBeanServerIp() == null) {
-			throw new IOException("MBean server not open for connection");
+			throw new IOException(Messages.AbstractJmxServerCommand_MBeanNotOpenMessage);
 		}
 		String connectorUrl = String.format(JMX_CONNECTOR_URL, serverBehaviour.getMBeanServerIp(),
 				server.getMBeanServerPort());
@@ -84,7 +84,7 @@ public abstract class AbstractJmxServerCommand {
 							connector.close();
 						}
 						catch (IOException e) {
-							SpringCore.log(e);
+							StatusUtil.error(e);
 						}
 					}
 				}

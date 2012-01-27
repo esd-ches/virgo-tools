@@ -24,12 +24,12 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.text.IDocument;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.ide.jdt.core.JdtCorePlugin;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestUtils;
 import org.eclipse.virgo.ide.manifest.internal.core.model.BundleManifest;
 import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocationException;
 import org.eclipse.virgo.kernel.osgi.provisioning.tools.ImportDescriptor;
-import org.springframework.ide.eclipse.core.SpringCore;
 
  
 /**
@@ -184,7 +184,9 @@ public class MarkerUtils {
 				marker.setAttributes(attributes);
 			}
 			catch (CoreException e) {
-				SpringCore.log(e);
+				//TODO Should we rethrow this?
+				StatusManager.getManager()
+				.handle(new Status(IStatus.ERROR, JdtCorePlugin.PLUGIN_ID, "Couldn't create problem markers", e));
 			}
 		}
 

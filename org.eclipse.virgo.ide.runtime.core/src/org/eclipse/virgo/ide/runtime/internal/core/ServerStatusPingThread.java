@@ -12,7 +12,7 @@ package org.eclipse.virgo.ide.runtime.internal.core;
 
 import java.io.IOException;
 
-import org.springframework.ide.eclipse.core.SpringCore;
+import org.eclipse.virgo.ide.runtime.internal.core.utils.StatusUtil;
 
 /**
  * Ping thread the tries to connect to the dm server and listens to the recovery
@@ -75,7 +75,7 @@ public class ServerStatusPingThread {
 				sleep();
 			}
 			catch (Exception e) {
-				SpringCore.log("Server startup ping failed", e);
+				StatusUtil.error("Server startup ping failed", e);
 				// pinging failed
 				if (!stop) {
 					sleep();

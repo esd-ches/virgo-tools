@@ -41,6 +41,7 @@ import org.eclipse.virgo.ide.runtime.internal.core.Server;
 import org.eclipse.virgo.ide.runtime.internal.core.ServerBehaviour;
 import org.eclipse.virgo.ide.runtime.internal.core.ServerRuntime;
 import org.eclipse.virgo.ide.runtime.internal.core.ServerRuntimeUtils;
+import org.eclipse.virgo.ide.runtime.internal.core.utils.StatusUtil;
 import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocator;
 import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocator10;
 import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocator20;
@@ -48,8 +49,6 @@ import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.util.PublishUtil;
 import org.osgi.framework.Constants;
-import org.springframework.ide.eclipse.core.SpringCore;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
 
 /**
  * @author Christian Dupuis
@@ -139,7 +138,7 @@ public class ServerUtils {
 					getCacheDirectoryPath(), getJavaVersion(project));
 		}
 		catch (IOException e) {
-			SpringCore.log(e);
+			StatusUtil.error("An IO Exception occurred.", e);
 		}
 		return null;
 	}
@@ -156,7 +155,7 @@ public class ServerUtils {
 					getCacheDirectoryPath(), null);
 		}
 		catch (IOException e) {
-			SpringCore.log(e);
+			StatusUtil.error(e);
 		}
 		return null;
 	}
@@ -269,7 +268,7 @@ public class ServerUtils {
 				}
 			}
 			catch (Exception e) {
-				SpringCore.log(e);
+				StatusUtil.error(e);
 			}
 		}
 		return null;

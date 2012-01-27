@@ -30,21 +30,13 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.internal.misc.StatusUtil;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
 import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.Constants;
-import org.osgi.framework.ServiceReference;
-import org.osgi.framework.Version;
-import org.springframework.ide.eclipse.core.SpringCore;
-
-import com.springsource.json.parser.AntlrJSONParser;
-import com.springsource.json.parser.JSONParser;
-import com.springsource.json.parser.ListNode;
-import com.springsource.json.parser.Node;
-import com.springsource.json.parser.ScalarNode;
-import com.springsource.json.parser.ScalarNodeType;
 import org.eclipse.virgo.kernel.artifact.bundle.BundleBridge;
 import org.eclipse.virgo.kernel.artifact.library.LibraryBridge;
 import org.eclipse.virgo.kernel.repository.BundleDefinition;
@@ -73,6 +65,17 @@ import org.eclipse.virgo.util.osgi.manifest.Resolution;
 import org.eclipse.virgo.util.osgi.manifest.parse.DummyParserLogger;
 import org.eclipse.virgo.util.osgi.manifest.parse.HeaderDeclaration;
 import org.eclipse.virgo.util.osgi.manifest.parse.HeaderParserFactory;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.Constants;
+import org.osgi.framework.ServiceReference;
+import org.osgi.framework.Version;
+
+import com.springsource.json.parser.AntlrJSONParser;
+import com.springsource.json.parser.JSONParser;
+import com.springsource.json.parser.ListNode;
+import com.springsource.json.parser.Node;
+import com.springsource.json.parser.ScalarNode;
+import com.springsource.json.parser.ScalarNodeType;
 
 /**
  * A helper class for locating a bundle's dependencies.
@@ -508,9 +511,10 @@ public final class DependencyLocator10 implements IDependencyLocator {
 				this.mainRepository = createBundleRepository("dep-loc-main", Arrays.asList(searchPaths), mainCache,
 						serverHomePath);
 			}
-			catch (RepositoryCreationException rce) {
-				SpringCore.log("Error creating repository index path [" + mainCache + "], server [" + serverHomePath
-						+ "]", rce);
+			catch (RepositoryCreationException e) {
+				StatusManager.getManager().handle(new Status(IStatus.ERROR, BundleManifestCorePlugin.PLUGIN_ID, "Error creating repository index path [" + sysCache + "], server [" + serverHomePath
+					                     						+ "]", e));
+				//TODO Why not just rethrow the RCE?
 				throw new IOException("A failure occurred during repository creation");
 			}
 
@@ -518,9 +522,10 @@ public final class DependencyLocator10 implements IDependencyLocator {
 				this.systemPackageRepository = createBundleRepository("dep-loc-sys", Arrays.asList(LIB_SEARCH_PATH),
 						sysCache, serverHomePath);
 			}
-			catch (RepositoryCreationException rce) {
-				SpringCore.log("Error creating repository index path [" + sysCache + "], server [" + serverHomePath
-						+ "]", rce);
+			catch (RepositoryCreationException e) {
+				StatusManager.getManager().handle(new Status(IStatus.ERROR, BundleManifestCorePlugin.PLUGIN_ID, "Error creating repository index path [" + sysCache + "], server [" + serverHomePath
+				                     						+ "]", e));
+				//TODO Why not just rethrow the RCE?
 				throw new IOException("A failure occurred during repository creation");
 			}
 

@@ -54,13 +54,8 @@ import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.virgo.ide.runtime.internal.core.provisioning.IArtefactRepositoryLoader;
 import org.eclipse.virgo.ide.runtime.internal.core.provisioning.JsonArtefactRepositoryLoader;
+import org.eclipse.virgo.ide.runtime.internal.core.utils.StatusUtil;
 import org.eclipse.virgo.ide.runtime.internal.core.utils.WebDownloadUtils;
-import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.util.PublishUtil;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.Version;
-import org.springframework.ide.eclipse.core.SpringCore;
-
 import org.eclipse.virgo.kernel.repository.BundleDefinition;
 import org.eclipse.virgo.kernel.repository.BundleRepository;
 import org.eclipse.virgo.kernel.repository.LibraryDefinition;
@@ -68,6 +63,10 @@ import org.eclipse.virgo.repository.ArtifactDescriptor;
 import org.eclipse.virgo.util.osgi.VersionRange;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.virgo.util.osgi.manifest.ExportedPackage;
+import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.util.PublishUtil;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.Version;
 
 /**
  * Manages instances of {@link ArtefactRepository} to represent the current contents of the SpringSource Enterprise
@@ -506,7 +505,7 @@ public class ArtefactRepositoryManager {
 				zipInputStream.close();
 			}
 			catch (IOException e) {
-				SpringCore.log(e);
+				StatusUtil.error(e);
 			}
 			finally {
 				try {
@@ -515,7 +514,7 @@ public class ArtefactRepositoryManager {
 					}
 				}
 				catch (IOException e) {
-					SpringCore.log(e);
+					StatusUtil.error(e);
 				}
 			}
 		}
@@ -567,7 +566,7 @@ public class ArtefactRepositoryManager {
 				}
 			}
 			catch (Exception e) {
-				SpringCore.log(e);
+				StatusUtil.error(e);
 				initialized = true;
 				artefactRepository = new ArtefactRepository();
 			}
@@ -644,13 +643,13 @@ public class ArtefactRepositoryManager {
 				}
 			}
 			catch (FileNotFoundException e) {
-				SpringCore.log(e);
+				StatusUtil.error(e);
 			}
 			catch (IOException e) {
-				SpringCore.log(e);
+				StatusUtil.error(e);
 			}
 			catch (CoreException e) {
-				SpringCore.log(e);
+				StatusUtil.error(e);
 			}
 
 			return Status.OK_STATUS;

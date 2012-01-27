@@ -10,9 +10,8 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.runtime.core.provisioning;
 
-import org.eclipse.wst.server.core.IRuntime;
-
 import org.eclipse.virgo.kernel.repository.BundleRepository;
+import org.eclipse.wst.server.core.IRuntime;
 
 /**
  * Implementation of this interface get notified if a {@link BundleRepository} stored in the

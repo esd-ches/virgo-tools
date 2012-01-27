@@ -25,6 +25,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
@@ -47,6 +49,7 @@ import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.actions.WorkspaceModifyOperation;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.ide.facet.core.BundleFacetInstallDataModelProvider;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestUtils;
@@ -143,10 +146,13 @@ public class NewBundleProjectWizard extends NewElementWizard implements INewWiza
 			getContainer().run(true, true, oper);
 		}
 		catch (InvocationTargetException e) {
-			SpringCore.log(e);
+			StatusManager.getManager().handle(
+					new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Failure opening project facets.", e));
 		}
 		catch (InterruptedException e) {
-			SpringCore.log(e);
+			StatusManager.getManager().handle(
+					new Status(IStatus.WARNING, ServerIdeUiPlugin.PLUGIN_ID,
+							"Interruption while opening project facets.", e));
 		}
 	}
 

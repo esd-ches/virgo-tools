@@ -22,6 +22,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
@@ -45,6 +47,7 @@ import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
 import org.eclipse.ui.dialogs.WizardNewProjectReferencePage;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.part.ISetSelectionTarget;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.ide.eclipse.wizards.AbstractNewParProjectWizard;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestUtils;
@@ -130,10 +133,14 @@ public class NewParProjectWizard extends AbstractNewParProjectWizard implements 
 			getContainer().run(true, true, oper);
 		}
 		catch (InvocationTargetException e) {
-			SpringCore.log(e);
+			StatusManager.getManager()
+					.handle(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID,
+							"Exception while adding project facets.", e));
 		}
 		catch (InterruptedException e) {
-			SpringCore.log(e);
+			StatusManager.getManager().handle(
+					new Status(IStatus.WARNING, ServerIdeUiPlugin.PLUGIN_ID,
+							"Interruption while adding project facets.", e));
 		}
 	}
 

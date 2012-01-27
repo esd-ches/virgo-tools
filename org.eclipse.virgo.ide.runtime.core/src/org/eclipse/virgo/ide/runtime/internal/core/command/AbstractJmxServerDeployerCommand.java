@@ -21,8 +21,8 @@ import javax.management.ObjectName;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
+import org.eclipse.virgo.ide.runtime.internal.core.utils.StatusUtil;
 import org.eclipse.wst.server.core.IModule;
-import org.springframework.ide.eclipse.core.SpringCore;
 import org.springframework.util.ClassUtils;
 
 
@@ -120,7 +120,7 @@ public abstract class AbstractJmxServerDeployerCommand<T> extends AbstractJmxSer
 			}
 		}
 		catch (URISyntaxException e) {
-			SpringCore.log(e);
+			StatusUtil.error(e);
 		}
 		return null;
 	}

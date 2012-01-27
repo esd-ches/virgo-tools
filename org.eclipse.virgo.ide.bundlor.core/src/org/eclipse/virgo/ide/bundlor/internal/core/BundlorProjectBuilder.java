@@ -12,7 +12,6 @@ package org.eclipse.virgo.ide.bundlor.internal.core;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -43,8 +42,10 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
@@ -53,6 +54,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.osgi.util.ManifestElement;
 import org.eclipse.pde.internal.core.text.bundle.ManifestHeader;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.bundlor.ClassPath;
 import org.eclipse.virgo.bundlor.ClassPathEntry;
 import org.eclipse.virgo.bundlor.EntryScannerListener;
@@ -82,12 +84,10 @@ import org.eclipse.virgo.util.parser.manifest.RecoveringManifestParser;
 import org.osgi.framework.BundleException;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.ide.eclipse.core.SpringCore;
 import org.springframework.ide.eclipse.core.SpringCorePreferences;
 import org.springframework.ide.eclipse.core.SpringCoreUtils;
 import org.springframework.ide.eclipse.core.internal.project.SpringProjectContributionManager.ResourceDeltaVisitor;
 import org.springframework.ide.eclipse.core.internal.project.SpringProjectContributionManager.ResourceTreeVisitor;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
 import org.springframework.ide.eclipse.core.project.IProjectContributor;
 import org.springframework.util.StringUtils;
 
@@ -368,11 +368,8 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 			try {
 				manifest = parser.parse(new FileReader(templateResource.getRawLocation().toString()));
 			}
-			catch (FileNotFoundException e) {
-				SpringCore.log(e);
-			}
 			catch (IOException e) {
-				SpringCore.log(e);
+				StatusManager.getManager().handle(new Status(IStatus.ERROR, BundlorCorePlugin.PLUGIN_ID, "An IO Exception occurred.", e));
 			}
 			return manifest;
 		}
