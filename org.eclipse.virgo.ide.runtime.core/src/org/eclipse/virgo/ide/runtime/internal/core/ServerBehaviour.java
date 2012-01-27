@@ -348,8 +348,8 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 		try {
 			// check pre condition; only dynamic web projects and java projects are allowed
 			IProject project = module.getProject();
-			if (!(FacetedProjectFramework.hasProjectFacet(project, FacetCorePlugin.WEB_FACET_ID)
-					|| project.hasNature(JavaCore.NATURE_ID))) {
+			if (!FacetedProjectFramework.hasProjectFacet(project, FacetCorePlugin.WEB_FACET_ID)
+					|| !project.hasNature(JavaCore.NATURE_ID)) {
 				return null;
 			}
 
