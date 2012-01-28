@@ -193,11 +193,14 @@ public class ServerClasspathContainerUpdateJob extends WorkspaceJob {
 
 		@Override
 		public void running(IJobChangeEvent event) {
-			ServerClasspathContainerUpdateJob job = (ServerClasspathContainerUpdateJob) event.getJob();
-			StatusManager.getManager()
-					.handle(new Status(IStatus.INFO, JdtCorePlugin.PLUGIN_ID, NLS
-									.bind(	Messages.ServerClasspathContainerUpdateJob_UpdatingClasspathMessage,
-											new String[] { job.javaProject.getProject().getName() })));
+			ServerClasspathContainerUpdateJob job = (ServerClasspathContainerUpdateJob) event
+					.getJob();
+			StatusManager
+					.getManager()
+					.handle(new Status(IStatus.INFO, JdtCorePlugin.PLUGIN_ID,
+							"Updating classpath of: "
+									+ job.javaProject.getProject().getName()
+									+ ". Queue size: " + SCHEDULED_JOBS.size()));
 		}
 
 		@Override

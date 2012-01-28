@@ -512,7 +512,7 @@ public final class DependencyLocator10 implements IDependencyLocator {
 						serverHomePath);
 			}
 			catch (RepositoryCreationException e) {
-				StatusManager.getManager().handle(new Status(IStatus.ERROR, BundleManifestCorePlugin.PLUGIN_ID, "Error creating repository index path [" + sysCache + "], server [" + serverHomePath
+				StatusManager.getManager().handle(new Status(IStatus.ERROR, BundleManifestCorePlugin.PLUGIN_ID, "Error creating repository index path [" + mainCache + "], server [" + serverHomePath
 					                     						+ "]", e));
 				//TODO Why not just rethrow the RCE?
 				throw new IOException("A failure occurred during repository creation");

@@ -28,11 +28,11 @@ import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.core.IServerDeployer;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.virgo.ide.runtime.internal.core.command.IServerCommand;
+import org.eclipse.virgo.ide.runtime.internal.core.utils.StatusUtil;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.IModuleFile;
-import org.springframework.ide.eclipse.core.SpringCore;
 
 /**
  * Deployer helper that hides the JMX-based communication with a running dm Server.
@@ -242,10 +242,10 @@ public class DefaultServerDeployer implements IServerDeployer {
 			return (T) serverCommand.execute();
 		}
 		catch (IOException e) {
-			SpringCore.log("Failed execution of deployer command " + serverCommand, e);
+			StatusUtil.error("Failed execution of deployer command " + serverCommand, e);
 		}
 		catch (TimeoutException e) {
-			SpringCore.log("Failed execution of deployer command " + serverCommand, e);
+			StatusUtil.error("Failed execution of deployer command " + serverCommand, e);
 		}
 		return null;
 	}
