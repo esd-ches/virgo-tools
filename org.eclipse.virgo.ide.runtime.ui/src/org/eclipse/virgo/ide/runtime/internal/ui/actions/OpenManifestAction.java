@@ -13,6 +13,7 @@ package org.eclipse.virgo.ide.runtime.internal.ui.actions;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -23,14 +24,15 @@ import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestUtils;
+import org.eclipse.wst.common.project.facet.core.FacetedProjectFramework;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
-import org.springframework.ide.eclipse.core.SpringCoreUtils;
 import org.springframework.ide.eclipse.ui.SpringUIUtils;
 
-
 /**
- * Action implementation that opens a MANIFEST.MF or par.xml file of the selected module.
+ * Action implementation that opens a MANIFEST.MF or par.xml file of the
+ * selected module.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
@@ -47,12 +49,17 @@ public class OpenManifestAction implements IObjectActionDelegate {
 		IProject project = selectedModule.getProject();
 		if (FacetUtils.isBundleProject(project)) {
 			openResource(BundleManifestUtils.locateManifest(JavaCore.create(project), false));
-		}
-		else if (FacetUtils.isParProject(project)) {
+		} else if (FacetUtils.isParProject(project)) {
 			openResource(project.findMember(BundleManifestCorePlugin.MANIFEST_FILE_LOCATION));
-		}
-		else if (SpringCoreUtils.hasProjectFacet(project, FacetCorePlugin.WEB_FACET_ID)) {
-			openResource(BundleManifestUtils.locateManifest(JavaCore.create(project), false));
+		} else {
+			try {
+				if (project.hasNature(JavaCore.NATURE_ID) && FacetedProjectFramework.hasProjectFacet(project, FacetCorePlugin.WEB_FACET_ID)) {
+					openResource(BundleManifestUtils.locateManifest(JavaCore.create(project), false));
+				}
+			} catch (CoreException e) {
+				//Unexpected
+				throw new RuntimeException(e);
+			}
 		}
 	}
 

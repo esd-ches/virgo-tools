@@ -33,7 +33,6 @@ import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.jdt.core.JdtCorePlugin;
 import org.eclipse.virgo.ide.jdt.internal.core.classpath.ServerClasspathContainer;
 import org.eclipse.virgo.ide.jdt.internal.core.util.ClasspathUtils;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
 
 
 /**

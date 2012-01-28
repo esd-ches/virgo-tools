@@ -13,7 +13,6 @@ package org.eclipse.virgo.ide.manifest.core;
 import java.util.Set;
 
 import org.eclipse.jdt.core.IJavaProject;
-
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 
 /**

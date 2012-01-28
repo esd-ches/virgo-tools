@@ -23,7 +23,6 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.internal.core.utils.StatusUtil;
 import org.eclipse.wst.server.core.IModule;
-import org.springframework.util.ClassUtils;
 
 
 /**
@@ -51,7 +50,7 @@ public abstract class AbstractJmxServerDeployerCommand<T> extends AbstractJmxSer
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder("[");
-		builder.append(ClassUtils.getShortName(getClass())).append(" -> ").append(getMBeanName())
+		builder.append(getClass().getSimpleName()).append(" -> ").append(getMBeanName())
 				.append(".").append(getOperationName()).append("(").append(
 						Arrays.deepToString(getOperationArguments())).append(")").append("]");
 		return builder.toString();

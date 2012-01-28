@@ -14,11 +14,10 @@ import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.virgo.ide.manifest.internal.core.BundleManifestManager;
 import org.eclipse.virgo.kernel.osgi.provisioning.tools.NoOpEventLogger;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-
 import org.eclipse.virgo.medic.eventlog.EventLogger;
 import org.eclipse.virgo.util.osgi.ServiceRegistrationTracker;
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
 
 /**
  * Activator for the manifest.core plugin.

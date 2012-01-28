@@ -35,7 +35,6 @@ import org.eclipse.virgo.ide.manifest.core.BundleManifestUtils;
 import org.eclipse.virgo.ide.manifest.core.IBundleManifestChangeListener;
 import org.eclipse.virgo.ide.manifest.internal.core.BundleManifestManager;
 import org.springframework.ide.eclipse.core.SpringCorePreferences;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
 
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.virgo.util.osgi.manifest.ImportedPackage;

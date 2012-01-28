@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.libra.framework.editor.core.model.IServiceReference;
-import org.springframework.util.ObjectUtils;
+import org.eclipse.virgo.util.common.ObjectUtils;
 
 /**
  * @author Christian Dupuis

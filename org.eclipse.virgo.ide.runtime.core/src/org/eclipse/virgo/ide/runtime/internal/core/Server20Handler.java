@@ -34,12 +34,12 @@ import org.eclipse.virgo.ide.runtime.internal.core.command.IServerCommand;
 import org.eclipse.virgo.ide.runtime.internal.core.command.JmxServer20DeployCommand;
 import org.eclipse.virgo.ide.runtime.internal.core.command.JmxServer20UndeployCommand;
 import org.eclipse.virgo.ide.runtime.internal.core.command.JmxServer20UpdateCommand;
+import org.eclipse.virgo.util.common.StringUtils;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.IModuleFile;
 import org.osgi.framework.Version;
-import org.springframework.util.StringUtils;
 
 
 /**

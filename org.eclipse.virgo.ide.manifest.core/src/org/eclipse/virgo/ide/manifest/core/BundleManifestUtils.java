@@ -47,13 +47,11 @@ import org.eclipse.osgi.util.ManifestElement;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.manifest.internal.core.model.BundleManifestHeader;
 import org.eclipse.virgo.ide.module.core.ServerModuleDelegate;
-import org.osgi.framework.Constants;
-import org.springframework.ide.eclipse.core.SpringCoreUtils;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
-import org.springframework.util.StringUtils;
-
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifestFactory;
+import org.eclipse.wst.common.project.facet.core.FacetedProjectFramework;
+import org.osgi.framework.Constants;
+import org.springframework.util.StringUtils;
 
 /**
  * Helper methods to located and load {@link BundleManifest} instances.
@@ -105,7 +103,7 @@ public class BundleManifestUtils {
 				}
 			}
 
-			if (SpringCoreUtils.hasProjectFacet(javaProject.getProject(), FacetCorePlugin.WEB_FACET_ID)) {
+			if (FacetedProjectFramework.hasProjectFacet(javaProject.getProject(), FacetCorePlugin.WEB_FACET_ID)) {
 				WebArtifactEdit webArtifact = WebArtifactEdit.getWebArtifactEditForRead(javaProject.getProject());
 				if (webArtifact != null) {
 					IPath webDotXmlPath = webArtifact.getDeploymentDescriptorPath();

@@ -48,7 +48,6 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.virgo.ide.bundlor.internal.core.BundlorCorePlugin;
 import org.eclipse.virgo.ide.bundlor.ui.BundlorUiPlugin;
 import org.springframework.ide.eclipse.core.SpringCorePreferences;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
 import org.springframework.ide.eclipse.ui.SpringUIUtils;
 import org.springframework.ide.eclipse.ui.dialogs.FilteredElementTreeSelectionDialog;
 import org.springframework.ide.eclipse.ui.dialogs.StorageSelectionValidator;

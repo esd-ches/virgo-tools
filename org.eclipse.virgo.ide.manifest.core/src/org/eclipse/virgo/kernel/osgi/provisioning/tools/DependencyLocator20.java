@@ -18,7 +18,6 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator;
-
 import org.eclipse.virgo.kernel.repository.BundleDefinition;
 import org.eclipse.virgo.kernel.repository.LibraryDefinition;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;

@@ -44,7 +44,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.internal.dialogs.DialogUtil;
 import org.eclipse.virgo.ide.module.core.ServerModuleDelegate;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
 
 
 /**

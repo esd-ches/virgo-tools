@@ -26,8 +26,8 @@ import org.eclipse.virgo.ide.bundlerepository.domain.LibraryArtefact;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.virgo.ide.runtime.internal.core.ServerRuntime;
 import org.eclipse.virgo.ide.runtime.internal.core.utils.WebDownloadUtils;
+import org.eclipse.virgo.util.io.FileCopyUtils;
 import org.eclipse.wst.server.core.IRuntime;
-import org.springframework.util.FileCopyUtils;
 
 
 /**

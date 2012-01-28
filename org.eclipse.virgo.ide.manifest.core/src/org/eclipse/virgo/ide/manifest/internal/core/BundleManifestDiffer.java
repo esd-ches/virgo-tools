@@ -16,15 +16,14 @@ import java.util.Set;
 
 import org.eclipse.virgo.ide.manifest.core.IBundleManifestChangeListener;
 import org.eclipse.virgo.ide.manifest.core.IBundleManifestChangeListener.Type;
-import org.osgi.framework.Constants;
-import org.springframework.util.ObjectUtils;
-
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.virgo.util.osgi.manifest.ExportPackage;
 import org.eclipse.virgo.util.osgi.manifest.ImportBundle;
 import org.eclipse.virgo.util.osgi.manifest.ImportLibrary;
 import org.eclipse.virgo.util.osgi.manifest.ImportPackage;
 import org.eclipse.virgo.util.osgi.manifest.RequireBundle;
+import org.osgi.framework.Constants;
+import org.springframework.util.ObjectUtils;
 
 /**
  * Utility that checks two {@link BundleManifest} instances for equality.

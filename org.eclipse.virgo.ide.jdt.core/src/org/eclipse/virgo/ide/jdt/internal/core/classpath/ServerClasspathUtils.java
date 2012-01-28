@@ -14,7 +14,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +28,7 @@ import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.jdt.internal.core.util.Util;
 import org.eclipse.virgo.ide.jdt.core.JdtCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
-import org.springframework.util.FileCopyUtils;
+import org.eclipse.virgo.util.io.FileCopyUtils;
 
 
 /**

@@ -21,7 +21,7 @@ import org.eclipse.libra.framework.editor.core.model.IBundle;
 import org.eclipse.libra.framework.editor.core.model.IPackageExport;
 import org.eclipse.libra.framework.editor.core.model.IPackageImport;
 import org.eclipse.libra.framework.editor.core.model.IServiceReference;
-import org.springframework.util.ObjectUtils;
+import org.eclipse.virgo.util.common.ObjectUtils;
 
 
 /**

@@ -19,7 +19,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.ide,
  org.eclipse.virgo.ide.bundlor.core,
  org.eclipse.core.expressions,
- org.springframework.core;bundle-version="3.0.4"
+ org.springframework.core
 Bundle-Activator: org.eclipse.virgo.ide.bundlor.ui.BundlorUiPlugin
 Export-Package: org.eclipse.virgo.ide.bundlor.ui
 Bundle-ActivationPolicy: lazy

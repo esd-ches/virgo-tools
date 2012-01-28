@@ -28,11 +28,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jst.server.core.PublishUtil;
+import org.eclipse.virgo.bundlor.util.AntPathMatcher;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
 import org.eclipse.virgo.ide.module.core.ServerModuleDelegate;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
+import org.eclipse.virgo.util.common.StringUtils;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifestFactory;
 import org.eclipse.wst.server.core.IModule;
@@ -44,8 +46,6 @@ import org.eclipse.wst.server.core.model.IModuleResource;
 import org.eclipse.wst.server.core.model.IModuleResourceDelta;
 import org.eclipse.wst.server.core.model.PublishOperation;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
-import org.springframework.util.AntPathMatcher;
-import org.springframework.util.StringUtils;
 
 /**
  * {@link PublishOperation} extension that deals with deploy, clean and refresh of dm Server modules.
@@ -157,6 +157,7 @@ public class ServerPublishOperation extends PublishOperation {
 				files.add((IModuleFile) delta.getModuleResource());
 			}
 			String name = delta.getModuleResource().getName();
+
 
 			boolean isStatic = false;
 			// Check the configuration options for static resources
