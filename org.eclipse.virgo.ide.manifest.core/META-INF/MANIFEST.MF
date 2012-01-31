@@ -59,5 +59,6 @@ Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Bundle-ClassPath: .,
  lib/com.springsource.json-1.0.1.RELEASE.jar,
+ lib/com.springsource.org.antlr.jar,
  lib/org.eclipse.virgo.kernel.artifact-2.1.0.RELEASE.jar,
  lib/org.eclipse.virgo.kernel.tools.jar
