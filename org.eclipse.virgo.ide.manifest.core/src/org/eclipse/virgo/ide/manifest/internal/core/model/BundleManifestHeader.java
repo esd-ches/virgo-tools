@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009 - 2012 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -18,8 +18,6 @@ import org.eclipse.osgi.util.ManifestElement;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCoreMessages;
 import org.osgi.framework.BundleException;
-import org.springframework.ide.eclipse.core.model.AbstractModelElement;
-import org.springframework.ide.eclipse.core.model.IModelElement;
 import org.springframework.util.StringUtils;
 
 
@@ -30,7 +28,7 @@ import org.springframework.util.StringUtils;
 /**
  * TODO CD add comments
  */
-public class BundleManifestHeader extends AbstractModelElement implements IModelElement {
+public class BundleManifestHeader extends AbstractManifestElement {
 
 	private static final int BUNDLE_MANIFEST_HEADER_TYPE = 1;
 
@@ -62,7 +60,7 @@ public class BundleManifestHeader extends AbstractModelElement implements IModel
 	}
 
 	@Override
-	public IModelElement[] getElementChildren() {
+	public AbstractManifestElement[] getChildren() {
 		return getBundleManifestHeaderElements();
 	}
 
@@ -93,7 +91,7 @@ public class BundleManifestHeader extends AbstractModelElement implements IModel
 					}
 					
 					List<BundleManifestHeaderElement> headerElements = new ArrayList<BundleManifestHeaderElement>();
-					ManifestElement[] elements = ManifestElement.parseHeader(getElementName(),
+					ManifestElement[] elements = ManifestElement.parseHeader(getName(),
 							getValue());
 					for (ManifestElement element : elements) {
 						headerElements.add(new BundleManifestHeaderElement(this, element));
@@ -104,8 +102,8 @@ public class BundleManifestHeader extends AbstractModelElement implements IModel
 				catch (BundleException be) {
 					String message = NLS.bind(
 							BundleManifestCoreMessages.BundleErrorReporter_parseHeader,
-							getElementName());
-					((BundleManifest) getElementParent()).error(IMarker.SEVERITY_ERROR, message,
+							getName());
+					((BundleManifest) getParent()).error(IMarker.SEVERITY_ERROR, message,
 							getLineNumber() + 1);
 					this.manifestElements = new BundleManifestHeaderElement[0];
 				}
@@ -119,9 +117,9 @@ public class BundleManifestHeader extends AbstractModelElement implements IModel
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("[").append(lineNumber).append("] ").append(getElementName()).append(" <")
+		builder.append("[").append(lineNumber).append("] ").append(getName()).append(" <")
 				.append(lines).append("> :\n");
-		for (IModelElement element : getElementChildren()) {
+		for (AbstractManifestElement element : getChildren()) {
 			builder.append("   ").append(element.toString());
 		}
 		return builder.toString();

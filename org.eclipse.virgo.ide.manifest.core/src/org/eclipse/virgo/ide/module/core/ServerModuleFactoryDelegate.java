@@ -32,7 +32,6 @@ import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.model.ModuleDelegate;
 import org.eclipse.wst.server.core.util.ProjectModuleFactoryDelegate;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
 
 
 /**

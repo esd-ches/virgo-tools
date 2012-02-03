@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009 - 2012 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -20,27 +20,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.IRegion;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCoreMessages;
-import org.springframework.ide.eclipse.core.model.AbstractResourceModelElement;
-import org.springframework.ide.eclipse.core.model.IModelElement;
-import org.springframework.ide.eclipse.core.model.IModelElementVisitor;
-import org.springframework.ide.eclipse.core.model.IResourceModelElement;
-import org.springframework.ide.eclipse.core.model.validation.ValidationProblem;
-
 
 /**
  * @author Christian Dupuis
@@ -49,8 +40,7 @@ import org.springframework.ide.eclipse.core.model.validation.ValidationProblem;
 /**
  * TODO CD add comments
  */
-public class BundleManifest extends AbstractResourceModelElement implements IResourceModelElement,
-		IModelElement {
+public class BundleManifest extends AbstractManifestElement {
 
 	private static final int BUNDLE_MANIFEST_TYPE = 1;
 
@@ -58,37 +48,23 @@ public class BundleManifest extends AbstractResourceModelElement implements IRes
 
 	private Map<String, BundleManifestHeader> headerMap;
 
-	private Set<ValidationProblem> problems;
+//	private Set<ValidationProblem> problems;
 
 	private IDocument textDocument;
 
 	public BundleManifest(IFile file) {
 		super(null, file.getName());
 		this.file = file;
-		this.problems = new LinkedHashSet<ValidationProblem>();
+//		this.problems = new LinkedHashSet<ValidationProblem>();
 		init();
-	}
-	
-	public void accept(IModelElementVisitor visitor, IProgressMonitor monitor) {
-
-		// First visit this config
-		if (!monitor.isCanceled() && visitor.visit(this, monitor)) {
-
-			// Now ask this config's imports
-			for (IModelElement imp : getElementChildren()) {
-				imp.accept(visitor, monitor);
-				if (monitor.isCanceled()) {
-					return;
-				}
-			}
-		}
 	}
 
 	public IDocument getDocument() {
 		return textDocument;
 	}
 
-	public IModelElement[] getElementChildren() {
+	@Override
+	public AbstractManifestElement[] getChildren() {
 		List<BundleManifestHeader> headers = new ArrayList<BundleManifestHeader>(this.headerMap
 				.values());
 		Collections.sort(headers, new Comparator<BundleManifestHeader>() {
@@ -113,9 +89,9 @@ public class BundleManifest extends AbstractResourceModelElement implements IRes
 		return this.headerMap.get(key.toLowerCase());
 	}
 
-	public Set<ValidationProblem> getProblems() {
-		return problems;
-	}
+//	public Set<ValidationProblem> getProblems() {
+//		return problems;
+//	}
 
 	public boolean isElementArchived() {
 		return false;
@@ -129,7 +105,7 @@ public class BundleManifest extends AbstractResourceModelElement implements IRes
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append(file.getLocation().toString()).append("\n");
-		for (IModelElement element : getElementChildren()) {
+		for (AbstractManifestElement element : getChildren()) {
 			builder.append(element.toString()).append("\n");
 		}
 		return builder.toString();
@@ -169,7 +145,8 @@ public class BundleManifest extends AbstractResourceModelElement implements IRes
 	}
 
 	protected void error(int severity, String message, int line) {
-		problems.add(new ValidationProblem(severity, message, file, line));
+		// TODO: re-implement validation with Eclipse APIs
+//		problems.add(new ValidationProblem(severity, message, file, line));
 	}
 
 	protected void init() {
@@ -208,7 +185,7 @@ public class BundleManifest extends AbstractResourceModelElement implements IRes
 					}
 					/* flush last line */
 					if (header != null) {
-						headerMap.put(header.getElementName().toLowerCase(), header);
+						headerMap.put(header.getName().toLowerCase(), header);
 						header = null;
 					}
 					break; /* done processing main attributes */
@@ -229,7 +206,7 @@ public class BundleManifest extends AbstractResourceModelElement implements IRes
 				}
 				// Expecting New Header
 				if (header != null) {
-					headerMap.put(header.getElementName().toLowerCase(), header);
+					headerMap.put(header.getName().toLowerCase(), header);
 					header = null;
 				}
 
@@ -259,7 +236,7 @@ public class BundleManifest extends AbstractResourceModelElement implements IRes
 					return;
 				}
 				header = new BundleManifestHeader(this, headerName, line.substring(colon + 2), l);
-				if (headerMap.containsKey(header.getElementName().toLowerCase())) {
+				if (headerMap.containsKey(header.getName().toLowerCase())) {
 					error(IMarker.SEVERITY_WARNING,
 							BundleManifestCoreMessages.BundleErrorReporter_duplicateHeader,
 							l + 1);
