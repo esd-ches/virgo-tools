@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.virgo.ide.jdt.internal.core.util.ClasspathUtils;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
 
 
 /**

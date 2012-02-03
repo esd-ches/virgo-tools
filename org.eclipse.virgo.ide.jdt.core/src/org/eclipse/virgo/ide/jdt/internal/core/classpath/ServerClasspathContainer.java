@@ -54,10 +54,8 @@ import org.eclipse.virgo.ide.par.Par;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocationException;
 import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocator;
-import org.eclipse.wst.server.core.IRuntime;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
-
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
+import org.eclipse.wst.server.core.IRuntime;
 
 /**
  * {@link IClasspathContainer} that installs the resolved dependencies taken from a {@link IJavaProject}'s bundle

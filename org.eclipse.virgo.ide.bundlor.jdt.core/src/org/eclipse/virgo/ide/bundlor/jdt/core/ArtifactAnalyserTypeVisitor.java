@@ -43,10 +43,8 @@ import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.springframework.asm.MethodVisitor;
-import org.springframework.util.StringUtils;
-
 import org.eclipse.virgo.bundlor.support.partialmanifest.PartialManifest;
+import org.springframework.util.StringUtils;
 
 /**
  * {@link MethodVisitor} that is based on JDT's AST </p>

@@ -23,7 +23,6 @@ import org.eclipse.virgo.ide.manifest.internal.core.BundleManifestManager;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.virgo.ide.runtime.core.provisioning.IBundleRepositoryChangeListener;
 import org.eclipse.wst.server.core.IRuntime;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
 
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 
