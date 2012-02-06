@@ -40,7 +40,7 @@ public class ServerVersionHelper {
 			return new ServerVirgoHandler();
 		}
 		if (SERVER_VIRGO_35.equals(id)) {
-			return new ServerVirgoHandler();
+			return new ServerVirgo35Handler();
 		}
 		else {
 			return null;
