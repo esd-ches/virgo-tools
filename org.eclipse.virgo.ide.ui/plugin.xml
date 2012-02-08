@@ -16,10 +16,6 @@
    <extension
          point="org.eclipse.ui.newWizards">
       <category
-            id="com.springsource.server.ide.ui.category"
-            name="SpringSource dm Server">
-      </category>
-      <category
       		id="org.eclipse.virgo.ide.ui.category"
       		name="EclipseRT">
       </category>
@@ -37,31 +33,6 @@
       </wizard>  
       <wizard
             category="/org.eclipse.virgo.ide.ui.category"
-            class="org.eclipse.virgo.ide.ui.wizards.NewBundleProjectWizard"
-            hasPages="true"
-            icon="icons/full/obj16/osgi_project_obj.gif"
-            id="org.eclipse.virgo.ide.ui.wizards.osgiProject"
-            name="Bundle Project"
-            project="true">
-         <description>
-            Create a new OSGi bundle project
-         </description>
-      </wizard>
-      
-      <wizard
-            category="/com.springsource.server.ide.ui.category"
-            class="org.eclipse.virgo.ide.ui.wizards.NewParProjectWizard"
-            hasPages="true"
-            icon="icons/full/obj16/par_project_obj.gif"
-            id="org.eclipse.virgo.ide.ui.wizards.parProject"
-            name="PAR Project"
-            project="true">
-         <description>
-            Create a new SpringSource PAR project
-         </description>
-      </wizard>
-       <wizard
-            category="/com.springsource.server.ide.ui.category"
             class="org.eclipse.virgo.ide.ui.wizards.NewBundleProjectWizard"
             hasPages="true"
             icon="icons/full/obj16/osgi_project_obj.gif"
