@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.virgo.ide.eclipse.feature"
-      label="Eclipse Dependencies Feature"
+      label="%featureName"
       version="1.0.0.qualifier"
-      provider-name="Eclipse.org">
+      provider-name="%providerName">
 
    <license url="http://www.eclipse.org/legal/epl-v10.html">
       Eclipse Public License - v 1.0
