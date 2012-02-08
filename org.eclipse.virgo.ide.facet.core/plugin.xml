@@ -103,7 +103,6 @@
       <runtime>
          <run class="org.eclipse.virgo.ide.facet.core.ServerNature"/>
       </runtime>
-      <requires-nature id="org.springframework.ide.eclipse.core.springnature"/>
       <content-type id="org.eclipse.virgo.ide.facet.core.bundleContentType" />
     </extension>
 
@@ -114,7 +113,6 @@
       <runtime>
          <run class="org.eclipse.virgo.ide.facet.core.ServerNature"/>
       </runtime>
-      <requires-nature id="org.springframework.ide.eclipse.core.springnature"/>
       <content-type id="org.eclipse.virgo.ide.facet.core.parContentType" />
     </extension>
 
@@ -125,7 +123,6 @@
       <runtime>
          <run class="org.eclipse.virgo.ide.facet.core.ServerNature"/>
       </runtime>
-      <requires-nature id="org.springframework.ide.eclipse.core.springnature"/>
       <content-type id="org.eclipse.virgo.ide.facet.core.planContentType" />
     </extension>
 

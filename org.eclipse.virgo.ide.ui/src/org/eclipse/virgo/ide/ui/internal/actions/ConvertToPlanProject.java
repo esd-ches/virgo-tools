@@ -30,9 +30,6 @@ import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
-import org.springframework.ide.eclipse.core.SpringCore;
-import org.springframework.ide.eclipse.core.SpringCoreUtils;
-
 
 /**
  * Menu action to add or remove the SpringSource Plan bundle project
@@ -92,9 +89,6 @@ public class ConvertToPlanProject implements IObjectActionDelegate {
 	private void addFacetsToProject(final IProject project) {
 		IWorkspaceRunnable oper = new IWorkspaceRunnable() {
 			public void run(IProgressMonitor monitor) throws CoreException {
-				if (!SpringCoreUtils.isSpringProject(project)) {
-					SpringCoreUtils.addProjectNature(project.getProject(), SpringCore.NATURE_ID, monitor);
-				}
 				IFacetedProject fProject = ProjectFacetsManager.create(project, true, monitor);
 				fProject.installProjectFacet(ProjectFacetsManager.getProjectFacet(FacetCorePlugin.PLAN_FACET_ID)
 						.getDefaultVersion(), null, monitor);
