@@ -27,18 +27,6 @@ public class BundleFacetInstallDelegate implements IDelegate {
 
 	public void execute(IProject project, IProjectFacetVersion fv, Object config,
 			IProgressMonitor monitor) throws CoreException {
-//		IJavaProject jproj = JavaCore.create(project);
-//		addToClasspath(jproj, JavaCore.newContainerEntry(FacetCorePlugin.CLASSPATH_CONTAINER_PATH), monitor);
-		SpringCoreUtils.addProjectNature(project, SpringCore.NATURE_ID, monitor);
 		SpringCoreUtils.addProjectNature(project, FacetCorePlugin.BUNDLE_NATURE_ID, monitor);
 	}
-
-//	protected void addToClasspath(IJavaProject javaProject, IClasspathEntry entry, IProgressMonitor monitor)
-//			throws CoreException {
-//		IClasspathEntry[] current = javaProject.getRawClasspath();
-//		IClasspathEntry[] updated = new IClasspathEntry[current.length + 1];
-//		System.arraycopy(current, 0, updated, 0, current.length);
-//		updated[current.length] = entry;
-//		javaProject.setRawClasspath(updated, monitor);
-//	}
 }

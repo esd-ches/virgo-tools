@@ -10,17 +10,6 @@
 // *******************************************************************************/
 //package org.eclipse.virgo.ide.manifest.internal.core.validation.rules;
 //
-//import org.eclipse.core.resources.IResource;
-//import org.eclipse.pde.internal.core.util.IdUtil;
-//import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
-//import org.eclipse.virgo.ide.facet.core.FacetUtils;
-//import org.eclipse.virgo.ide.manifest.core.BundleManifestCoreMessages;
-//import org.eclipse.virgo.ide.manifest.core.BundleManifestUtils;
-//import org.eclipse.virgo.ide.manifest.internal.core.model.BundleManifestHeader;
-//import org.eclipse.virgo.ide.manifest.internal.core.model.BundleManifestHeaderElement;
-//import org.eclipse.virgo.ide.manifest.internal.core.validation.BundleManifestValidationContext;
-//import org.osgi.framework.Constants;
-//import org.springframework.util.StringUtils;
 //
 //
 ///**

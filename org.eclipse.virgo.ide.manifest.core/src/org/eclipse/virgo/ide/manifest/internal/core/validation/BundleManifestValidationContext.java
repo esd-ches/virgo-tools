@@ -14,18 +14,6 @@
 //import java.util.Arrays;
 //import java.util.List;
 //
-//import org.eclipse.core.resources.IMarker;
-//import org.eclipse.jface.text.IDocument;
-//import org.eclipse.osgi.util.ManifestElement;
-//import org.eclipse.osgi.util.NLS;
-//import org.eclipse.virgo.ide.manifest.core.BundleManifestCoreMessages;
-//import org.eclipse.virgo.ide.manifest.core.BundleManifestUtils;
-//import org.eclipse.virgo.ide.manifest.internal.core.model.BundleManifest;
-//import org.eclipse.virgo.ide.manifest.internal.core.model.BundleManifestHeader;
-//import org.eclipse.virgo.ide.manifest.internal.core.model.BundleManifestHeaderElement;
-//import org.springframework.ide.eclipse.core.model.IResourceModelElement;
-//import org.springframework.ide.eclipse.core.model.validation.AbstractValidationContext;
-//import org.springframework.ide.eclipse.core.model.validation.ValidationProblemAttribute;
 //
 //
 ///**

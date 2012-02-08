@@ -10,26 +10,6 @@
 // *******************************************************************************/
 //package org.eclipse.virgo.ide.manifest.internal.core.validation;
 //
-//import java.util.Collections;
-//import java.util.HashSet;
-//import java.util.LinkedHashSet;
-//import java.util.Set;
-//
-//import org.eclipse.core.resources.IFile;
-//import org.eclipse.core.resources.IResource;
-//import org.eclipse.core.runtime.CoreException;
-//import org.eclipse.jdt.core.IJavaProject;
-//import org.eclipse.jdt.core.JavaCore;
-//import org.eclipse.virgo.ide.facet.core.FacetUtils;
-//import org.eclipse.virgo.ide.manifest.core.BundleManifestUtils;
-//import org.eclipse.virgo.ide.manifest.internal.core.model.BundleManifest;
-//import org.eclipse.virgo.ide.manifest.internal.core.model.BundleManifestHeader;
-//import org.springframework.ide.eclipse.core.SpringCoreUtils;
-//import org.springframework.ide.eclipse.core.model.IModelElement;
-//import org.springframework.ide.eclipse.core.model.IResourceModelElement;
-//import org.springframework.ide.eclipse.core.model.validation.AbstractValidator;
-//import org.springframework.ide.eclipse.core.model.validation.IValidationContext;
-//import org.springframework.ide.eclipse.core.model.validation.IValidationElementLifecycleManager;
 //
 //
 ///**

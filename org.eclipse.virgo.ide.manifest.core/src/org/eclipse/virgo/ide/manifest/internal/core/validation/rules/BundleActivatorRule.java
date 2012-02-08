@@ -10,18 +10,6 @@
 // *******************************************************************************/
 //package org.eclipse.virgo.ide.manifest.internal.core.validation.rules;
 //
-//import org.eclipse.core.resources.IProject;
-//import org.eclipse.core.runtime.NullProgressMonitor;
-//import org.eclipse.jdt.core.IJavaProject;
-//import org.eclipse.jdt.core.IType;
-//import org.eclipse.jdt.core.JavaCore;
-//import org.eclipse.jdt.core.JavaModelException;
-//import org.eclipse.osgi.util.NLS;
-//import org.eclipse.virgo.ide.manifest.core.BundleManifestCoreMessages;
-//import org.eclipse.virgo.ide.manifest.internal.core.model.BundleManifestHeader;
-//import org.eclipse.virgo.ide.manifest.internal.core.validation.BundleManifestValidationContext;
-//import org.osgi.framework.Constants;
-//import org.springframework.ide.eclipse.core.java.JdtUtils;
 //
 //
 ///**

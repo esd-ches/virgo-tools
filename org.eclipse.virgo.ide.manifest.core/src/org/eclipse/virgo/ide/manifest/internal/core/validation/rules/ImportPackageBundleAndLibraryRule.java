@@ -10,17 +10,6 @@
 // *******************************************************************************/
 //package org.eclipse.virgo.ide.manifest.internal.core.validation.rules;
 //
-//import org.eclipse.core.runtime.IStatus;
-//import org.eclipse.osgi.util.ManifestElement;
-//import org.eclipse.pde.internal.core.util.VersionUtil;
-//import org.eclipse.virgo.ide.manifest.core.BundleManifestUtils;
-//import org.eclipse.virgo.ide.manifest.internal.core.model.BundleManifestHeader;
-//import org.eclipse.virgo.ide.manifest.internal.core.model.BundleManifestHeaderElement;
-//import org.eclipse.virgo.ide.manifest.internal.core.validation.BundleManifestValidationContext;
-//import org.osgi.framework.Constants;
-//import org.springframework.ide.eclipse.core.model.validation.ValidationProblemAttribute;
-//
-//
 //
 ///**
 // * @author Christian Dupuis
