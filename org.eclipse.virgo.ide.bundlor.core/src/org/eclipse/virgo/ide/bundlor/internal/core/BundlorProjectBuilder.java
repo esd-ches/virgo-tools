@@ -781,7 +781,6 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 		}
 	}
 
-	@SuppressWarnings({ "unchecked" })
 	private InputStream formatManifest(IFile file, InputStream manifestInput) throws IOException {
 		StringWriter writer = new StringWriter();
 		SpringBundleModel model = new SpringBundleModel("", true);

@@ -149,7 +149,6 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 
 	private Boolean fIsAutobuild;
 
-	@SuppressWarnings("unchecked")
 	private HashSet fOrginalFolders;
 
 	/**
@@ -538,7 +537,6 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	private void restoreExistingFolders(URI projectLocation) {
 		try {
 			IFileStore[] children = EFS.getStore(projectLocation).childStores(EFS.NONE, null);

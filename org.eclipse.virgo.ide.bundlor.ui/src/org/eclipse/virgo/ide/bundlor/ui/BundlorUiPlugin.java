@@ -98,7 +98,7 @@ public class BundlorUiPlugin extends AbstractUIPlugin {
 		protected IStatus run(IProgressMonitor monitor) {
 			try {
 				javaProject.getProject().build(IncrementalProjectBuilder.FULL_BUILD, BundlorCorePlugin.BUILDER_ID,
-						Collections.EMPTY_MAP, monitor);
+						Collections.<String, String> emptyMap(), monitor);
 			}
 			catch (CoreException e) {
 			}

@@ -110,7 +110,7 @@ class ServerClasspathUtils {
 	 * <p>
 	 * This method returns <code>null</code> to indicate that the file could not be read.
 	 */
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "rawtypes" })
 	protected static IClasspathEntry[] readPersistedClasspathEntries(IJavaProject project) {
 		File file = new File(ServerCorePlugin.getDefault().getStateLocation().toFile(), project
 				.getProject().getName()	+ CLASSPATH_FILE);

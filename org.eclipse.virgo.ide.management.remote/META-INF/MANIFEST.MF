@@ -17,3 +17,4 @@ Import-Package: org.osgi.framework,
  org.eclipse.osgi.util
 Bundle-Vendor: SpringSource, a divison of VMware, Inc.
 Export-Package: org.eclipse.virgo.ide.management.remote
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
