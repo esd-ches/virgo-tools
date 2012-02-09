@@ -163,11 +163,4 @@
             class="org.eclipse.virgo.ide.runtime.internal.core.ServerLaunchableAdapterDelegate"
             id="org.eclipse.virgo.server.web"/>
     </extension>
-    
-    <extension point="org.eclipse.jst.server.core.runtimeClasspathProviders">
-         <runtimeClasspathProvider
-             id="org.eclipse.virgo.ide.server.core.runtime.classpath"
-             runtimeTypeIds="com.springsource.server.runtime.*"
-             class="org.eclipse.virgo.ide.runtime.internal.core.ServerRuntimeClasspathProvider"/>
-    </extension>
 </plugin>

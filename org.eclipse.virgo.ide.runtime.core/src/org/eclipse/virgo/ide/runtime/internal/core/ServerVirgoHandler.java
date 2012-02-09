@@ -11,26 +11,45 @@
 package org.eclipse.virgo.ide.runtime.internal.core;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
+import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.libra.framework.editor.core.model.IBundle;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.core.IServerVersionHandler;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
+import org.eclipse.virgo.ide.runtime.internal.core.command.GenericJmxServerDeployCommand;
 import org.eclipse.virgo.ide.runtime.internal.core.command.IServerCommand;
-import org.eclipse.virgo.ide.runtime.internal.core.command.JmxServer20UndeployCommand;
-import org.eclipse.virgo.ide.runtime.internal.core.command.JmxServer20UpdateCommand;
+import org.eclipse.virgo.ide.runtime.internal.core.command.JmxBundleAdminExecuteCommand;
+import org.eclipse.virgo.ide.runtime.internal.core.command.JmxBundleAdminServerCommand;
+import org.eclipse.virgo.ide.runtime.internal.core.command.JmxServerDeployCommand;
+import org.eclipse.virgo.ide.runtime.internal.core.command.JmxServerUndeployCommand;
+import org.eclipse.virgo.ide.runtime.internal.core.command.JmxServerUpdateCommand;
+import org.eclipse.virgo.ide.runtime.internal.core.command.JmxServerPingCommand;
+import org.eclipse.virgo.ide.runtime.internal.core.command.JmxServerRefreshCommand;
+import org.eclipse.virgo.ide.runtime.internal.core.command.JmxServerShutdownCommand;
+import org.eclipse.virgo.util.common.StringUtils;
 import org.eclipse.wst.server.core.IModule;
+import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.IModuleFile;
+import org.eclipse.wst.server.core.util.PublishHelper;
 
 
 /**
@@ -39,7 +58,7 @@ import org.eclipse.wst.server.core.model.IModuleFile;
  * @author Christian Dupuis
  * @since 2.0.0
  */
-public class ServerVirgoHandler extends Server20Handler implements IServerVersionHandler {
+public class ServerVirgoHandler implements IServerVersionHandler {
 
 	private static final String BUNDLE_OBJECT_NAME = "org.eclipse.virgo.kernel:type=Model,artifact-type=bundle,name=$NAME,version=$VERSION";
 
@@ -117,7 +136,7 @@ public class ServerVirgoHandler extends Server20Handler implements IServerVersio
 	 * {@inheritDoc}
 	 */
 	public IServerCommand<Void> getServerUndeployCommand(IServerBehaviour serverBehaviour, IModule module) {
-		return new JmxServer20UndeployCommand(serverBehaviour, module, BUNDLE_OBJECT_NAME, PAR_OBJECT_NAME,
+		return new JmxServerUndeployCommand(serverBehaviour, module, BUNDLE_OBJECT_NAME, PAR_OBJECT_NAME,
 				PLAN_OBJECT_NAME);
 	}
 
@@ -126,7 +145,7 @@ public class ServerVirgoHandler extends Server20Handler implements IServerVersio
 	 */
 	public IServerCommand<Void> getServerUpdateCommand(IServerBehaviour serverBehaviour, IModule module,
 			IModuleFile moduleFile, DeploymentIdentity identity, String bundleSymbolicName, String targetPath) {
-		return new JmxServer20UpdateCommand(serverBehaviour, module, moduleFile, identity, bundleSymbolicName,
+		return new JmxServerUpdateCommand(serverBehaviour, module, moduleFile, identity, bundleSymbolicName,
 				targetPath, BUNDLE_OBJECT_NAME, PAR_OBJECT_NAME, PLAN_OBJECT_NAME);
 	}
 
@@ -179,9 +198,174 @@ public class ServerVirgoHandler extends Server20Handler implements IServerVersio
 		return Status.OK_STATUS;
 	}
 
-	@Override
 	protected String getRepositoryConfigurationFileName() {
 		return "org.eclipse.virgo.repository.properties";
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	public IStatus canAddModule(IModule module) {
+		return Status.OK_STATUS;
+	}
+
+	public IServerCommand<Boolean> getServerPingCommand(IServerBehaviour IServerBehaviour) {
+		return new JmxServerPingCommand(IServerBehaviour);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public IServerCommand<Void> getServerShutdownCommand(IServerBehaviour IServerBehaviour) {
+		return new JmxServerShutdownCommand(IServerBehaviour);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public IServerCommand<Void> getServerRefreshCommand(IServerBehaviour IServerBehaviour, IModule module,
+			String bundleSymbolicName) {
+		return new JmxServerRefreshCommand(IServerBehaviour, module, bundleSymbolicName);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public IServerCommand<DeploymentIdentity> getServerDeployCommand(IServerBehaviour IServerBehaviour,
+			URI connectorBundleUri) {
+		return new GenericJmxServerDeployCommand(IServerBehaviour, connectorBundleUri);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String[] getExcludedRuntimeProgramArguments(boolean starting) {
+		List<String> list = new ArrayList<String>();
+		return list.toArray(new String[list.size()]);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public IPath getRuntimeBaseDirectory(IServer server) {
+		return server.getRuntime().getLocation();
+	}
+
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.core.IServerVersionHandler#getRuntimeClasspath(org.eclipse.core.runtime.IPath)
+	 */
+	public List<IRuntimeClasspathEntry> getRuntimeClasspath(IPath installPath) {
+		List<IRuntimeClasspathEntry> cp = new ArrayList<IRuntimeClasspathEntry>();
+
+		IPath binPath = installPath.append("lib");
+		if (binPath.toFile().exists()) {
+			File libFolder = binPath.toFile();
+			for (File library : libFolder.listFiles(new FileFilter() {
+				public boolean accept(File pathname) {
+					return pathname.isFile() && pathname.toString().endsWith(".jar");
+				}
+			})) {
+				IPath path = binPath.append(library.getName());
+				cp.add(JavaRuntime.newArchiveRuntimeClasspathEntry(path));
+			}
+		}
+
+		return cp;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getProfilePath(IRuntime runtime) {
+		return runtime.getLocation().append("lib").append("java6-server.profile").toString();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getUserLevelBundleRepositoryPath(IRuntime runtime) {
+		return runtime.getLocation().append("repository").append("usr").toString();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getUserLevelLibraryRepositoryPath(IRuntime runtime) {
+		return runtime.getLocation().append("repository").append("usr").toString();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public String getConfigPath(IRuntime runtime) {
+		return runtime.getLocation().append("config").append("server.config").toString();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public IServerCommand<DeploymentIdentity> getServerDeployCommand(IServerBehaviour IServerBehaviour, IModule module) {
+		return new JmxServerDeployCommand(IServerBehaviour, module);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public IServerCommand<Map<Long, IBundle>> getServerBundleAdminCommand(IServerBehaviour serverBehaviour) {
+		return new JmxBundleAdminServerCommand(serverBehaviour);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public IServerCommand<String> getServerBundleAdminExecuteCommand(IServerBehaviour serverBehaviour, String command) {
+		return new JmxBundleAdminExecuteCommand(serverBehaviour, command);
+	}
+
+	private void createRepositoryConfiguration(IServerBehaviour serverBehaviour, String fileName) {
+		// copy com.springsource.repository.properties into the stage and add the stage repository
+		File serverHome = ServerUtils.getServer(serverBehaviour).getRuntimeBaseDirectory().toFile();
+		Properties properties = new Properties();
+		try {
+			properties.load(new FileInputStream(new File(serverHome, "config" + File.separatorChar + fileName)));
+		}
+		catch (FileNotFoundException e) {
+			// TODO CD add logging
+		}
+		catch (IOException e) {
+			// TODO CD add logging
+		}
+
+		properties.put("stage.type", "watched");
+		properties.put("stage.watchDirectory", "stage");
+
+		String chain = properties.getProperty("chain");
+		chain = "stage" + (StringUtils.hasLength(chain) ? "," + chain : "");
+		properties.put("chain", chain);
+
+		try {
+			File stageDirectory = new File(serverHome, "stage");
+			if (!stageDirectory.exists()) {
+				stageDirectory.mkdirs();
+			}
+			properties.store(new FileOutputStream(new File(serverHome, "stage" + File.separator + fileName)),
+					"Generated by SpringSource dm Server Tools "
+							+ ServerCorePlugin.getDefault().getBundle().getVersion());
+		}
+		catch (FileNotFoundException e) {
+			// TODO CD add logging
+		}
+		catch (IOException e) {
+			// TODO CD add logging
+		}
+	}
+
+	public void preStartup(IServerBehaviour serverBehaviour) {
+		if (ServerUtils.getServer(serverBehaviour).shouldCleanStartup()) {
+			File serverHome = ServerUtils.getServer(serverBehaviour).getRuntimeBaseDirectory().toFile();
+			PublishHelper.deleteDirectory(new File(serverHome, "work"), new NullProgressMonitor());
+			PublishHelper.deleteDirectory(new File(serverHome, "serviceability"), new NullProgressMonitor());
+		}
+		createRepositoryConfiguration(serverBehaviour, getRepositoryConfigurationFileName());
+	}
 }

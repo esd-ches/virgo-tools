@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2010 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.util.concurrent.TimeoutException;
 
 import javax.management.openmbean.CompositeData;
 
+import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.internal.core.DeploymentIdentity;
 import org.eclipse.wst.server.core.IModule;
@@ -27,8 +28,8 @@ import org.eclipse.wst.server.core.IModule;
  * @author Christian Dupuis
  * @since 1.0.1
  */
-public class JmxServerDeployCommand extends AbstractJmxServerDeployerCommand<CompositeData>
-		implements IServerCommand<DeploymentIdentity> {
+public class JmxServerDeployCommand extends AbstractJmxServerDeployerCommand<CompositeData> implements
+		IServerCommand<DeploymentIdentity> {
 
 	private static final String ITEM_SYMBOLIC_NAME = "symbolicName"; //$NON-NLS-1$
 
@@ -62,7 +63,15 @@ public class JmxServerDeployCommand extends AbstractJmxServerDeployerCommand<Com
 	 * {@inheritDoc}
 	 */
 	protected Object[] getOperationArguments() {
-		URI uri = getUri(serverBehaviour.getModuleDeployUri(module));
+		URI uri = null;
+		if (module.getModuleType().getId().equals(FacetCorePlugin.PLAN_FACET_ID)) {
+			String fileName = module.getId();
+			fileName = fileName.substring(fileName.lastIndexOf('/') + 1);
+			uri =  getUri(serverBehaviour.getModuleDeployUri(module).append(fileName));
+		}
+		else {
+			uri = getUri(serverBehaviour.getModuleDeployUri(module));
+		}
 		return new Object[] { uri.toString(), false };
 	}
 
