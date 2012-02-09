@@ -95,7 +95,6 @@ import org.eclipse.virgo.ide.par.Par;
 import org.eclipse.virgo.ide.par.provider.ParItemProviderAdapterFactory;
 import org.eclipse.virgo.ide.ui.ServerIdeUiPlugin;
 
-
 /**
  * @author Christian Dupuis
  */
@@ -327,14 +326,6 @@ public class ParEditor extends SharedHeaderFormEditor implements ISelectionProvi
 
 	@Override
 	protected void addPages() {
-		// try {
-		// addPage(new ParXmlEditorPage(this,
-		// "com.springsource.platform.ide.ui.editor.par.dependencies",
-		// "Dependencies"));
-		// }
-		// catch (PartInitException e) {
-		// PlatformIdeUiPlugin.getDefault().log(e);
-		// }
 	}
 
 	/**

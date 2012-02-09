@@ -140,26 +140,6 @@
           </or>
         </and>
       </visibility>
-      <!--
-      <enablement>
-        <and>
-        	<or>
-	          <test forcePluginActivation="true"
-	            property="org.eclipse.wst.server.ui.moduleType"
-	            value="jst.web"/>
-	          <test forcePluginActivation="true"
-	            property="org.eclipse.wst.server.ui.moduleType"
-	            value="com.springsource.server.bundle"/>
-	          <test forcePluginActivation="true"
-	            property="org.eclipse.wst.server.ui.moduleType"
-	            value="com.springsource.server.par"/>
-            </or>
-          <test forcePluginActivation="true"
-            property="org.eclipse.wst.server.ui.serverType"
-            value="com.springsource.server.*"/>
-        </and>
-      </enablement>
-      -->
       <action
         class="org.eclipse.virgo.ide.runtime.internal.ui.actions.OpenManifestAction"
         enablesFor="1"
@@ -206,23 +186,6 @@
       </page>
    </extension>
 
-<!-- Commented out until we get the complete reaseon from dm Server  
-   <extension
-        point="org.eclipse.ui.decorators">
-     <decorator
-           class="com.springsource.server.ide.runtime.internal.ui.ServerDeploymentDecorator"
-           id="com.springsource.server.ide.runtime.ui.deploymentDecorator"
-           label="dm Server Deployment Decorator"
-           lightweight="true"
-           state="true">
-        <enablement>
-           <objectClass
-                 name="org.eclipse.wst.server.ui.internal.view.servers.ModuleServer">
-           </objectClass>
-        </enablement>
-     </decorator>
-  </extension>
--->
 	 <extension point="org.eclipse.ui.preferencePages">
 		<page 
 			id="org.eclipse.virgo.ide.runtime.ui.preferencePage" 

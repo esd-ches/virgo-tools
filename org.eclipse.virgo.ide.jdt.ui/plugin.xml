@@ -138,26 +138,5 @@
             class="org.eclipse.virgo.ide.jdt.internal.ui.classpath.ServerClasspathContainerPage">
       </classpathContainerPage>
    </extension>
-   
-   <!--
-   <extension
-		point="org.eclipse.jdt.ui.javaCompletionProposalComputer"
-		id="repositoryJavaTypeProposalCategory"
-		name="Bundle Repository Type Proposals">
-		<proposalCategory
-			icon="icons/full/obj16/springsource_obj.png"/>
-	</extension>
-   
-   <extension
-         id="repositoryJavaTypeProposal"
-         point="org.eclipse.jdt.ui.javaCompletionProposalComputer">
-      <javaCompletionProposalComputer
-            activate="true"
-            categoryId="com.springsource.server.ide.jdt.ui.repositoryJavaTypeProposalCategory"
-            class="com.springsource.server.ide.jdt.internal.ui.completion.RepositoryJavaTypeCompletionComputer">
-            <partition type="__dftl_partition_content_type"/>
-			<partition type="__java_string"/>
-      </javaCompletionProposalComputer>
-   </extension>-->
-	
+
 </plugin>
