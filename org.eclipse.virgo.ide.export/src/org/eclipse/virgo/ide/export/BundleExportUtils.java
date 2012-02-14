@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -51,9 +52,9 @@ import org.eclipse.virgo.ide.module.core.ServerModuleDelegate;
 import org.eclipse.wst.common.frameworks.datamodel.DataModelFactory;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 
-
 /**
  * Utility class for exporting bundle projects
+ * 
  * @author Christian Dupuis
  * @author Terry Hon
  */
@@ -61,10 +62,11 @@ public class BundleExportUtils {
 
 	/**
 	 * Find manifest file given a java project
+	 * 
 	 * @param project
 	 * @return
 	 */
-	public static IPath locateManifestFile(IJavaProject project) {
+	public static IResource getOutputManifestFile(IJavaProject project) {
 		try {
 
 			Set<IPath> outputPaths = new HashSet<IPath>();
@@ -83,41 +85,44 @@ public class BundleExportUtils {
 			}
 
 			for (IPath outputPath : outputPaths) {
-				if (outputPath != null) {
-					IPath manifestPath = getManifesFile(outputPath, project.getProject());
-					if (manifestPath != null) {
-						return manifestPath;
-					}
+				IResource manifest = getManifestFile(outputPath, project.getProject());
+				if (manifest != null) {
+					return manifest;
 				}
 			}
-		}
-		catch (JavaModelException e) {
-		}
-		catch (MalformedURLException e) {
+		} catch (JavaModelException e) {
+			// No error handling existed before. Are these expected?!
+			throw new RuntimeException(e);
+		} catch (MalformedURLException e) {
+			// No error handling existed before. Are these expected?!
+			throw new RuntimeException(e);
 		}
 		return null;
 	}
 
-	private static IPath getManifesFile(IPath outputLocation, IProject project) throws MalformedURLException {
+	private static IResource getManifestFile(IPath outputLocation, IProject project) throws MalformedURLException {
 		IPath path = outputLocation.append(BundleManifestCorePlugin.MANIFEST_FILE_LOCATION);
 		IPath projectPath = project.getFullPath();
 		path = path.removeFirstSegments(path.matchingFirstSegments(projectPath));
 		IResource manifest = project.findMember(path);
 		if (manifest != null) {
-			return manifest.getFullPath();
+			return manifest;
 		}
 		return null;
 	}
 
 	/**
-	 * Create export operation given project to be exported and location of the JAR.
+	 * Create export operation given project to be exported and location of the
+	 * JAR.
+	 * 
 	 * @param project
 	 * @param jarLocation
 	 * @param shell
-	 * @param warningMessages 
+	 * @param warningMessages
 	 * @return
 	 */
-	public static IJarExportRunnable createExportOperation(IJavaProject project, IPath jarLocation, Shell shell, List<IStatus> warnings) {
+	public static IJarExportRunnable createExportOperation(IJavaProject project, IPath jarLocation, Shell shell,
+			List<IStatus> warnings) {
 		JarPackageData jarPackage = new JarPackageData();
 		jarPackage.setJarLocation(jarLocation);
 		jarPackage.setExportClassFiles(true);
@@ -136,9 +141,9 @@ public class BundleExportUtils {
 					outputFiles.add(root);
 				}
 			}
-		}
-		catch (JavaModelException e) {
+		} catch (JavaModelException e) {
 			// TODO add error handling
+			throw new RuntimeException(e);
 		}
 		jarPackage.setElements(outputFiles.toArray());
 
@@ -147,54 +152,59 @@ public class BundleExportUtils {
 		return jarPackage.createJarExportRunnable(shell);
 	}
 
-	private static void setManifestFile(IJavaProject project, JarPackageData jarPackage, Shell shell, List<IStatus> warnings) {
-		IPath manifestPath = locateManifestFile(project);
-		if (manifestPath != null) {
-			File manifestFile = ResourcesPlugin.getWorkspace().getRoot().getLocation().append(manifestPath).toFile();
-			BufferedReader reader;
-			try {
-				reader = new BufferedReader(new FileReader(manifestFile));
-				char charactor = 'a';
-				while(reader.ready()) {
-					charactor = (char) reader.read();
+	private static void setManifestFile(IJavaProject project, JarPackageData jarPackage, Shell shell,
+			List<IStatus> warnings) {
+		IResource manifest = getOutputManifestFile(project);
+		if (manifest != null) {
+			File manifestFile = manifest.getLocation().toFile();
+			boolean exists = manifestFile.exists();
+			if (exists) {
+				BufferedReader reader;
+				try {
+					reader = new BufferedReader(new FileReader(manifestFile));
+					char charactor = 'a';
+					while (reader.ready()) {
+						charactor = (char) reader.read();
+					}
+
+					if (charactor != '\n') {
+						warnings.add(new Status(
+							Status.WARNING,
+							ServerExportPlugin.PLUGIN_ID,
+							"Manifest file for project "
+								+ project.getElementName()
+								+ " is missing a '\\n' at the end of file. The exported bundle might not work properly."));
+					}
+				} catch (IOException e) {
+					throw new RuntimeException(e);
 				}
-				
-				if (charactor != '\n') {
-					warnings.add(new Status(Status.WARNING, ServerExportPlugin.PLUGIN_ID, "Manifest file for project " + project.getElementName() + " is missing a '\\n' at the end of file. The exported bundle might not work properly."));
-				}
-			} catch (FileNotFoundException e) {
+				jarPackage.setGenerateManifest(false);
+				jarPackage.setManifestLocation(manifest.getFullPath());
+			} else {
 				jarPackage.setGenerateManifest(true);
-				return;
-			} catch (IOException e) {
-				jarPackage.setGenerateManifest(true);
-				return;
 			}
-			jarPackage.setGenerateManifest(false);
-			jarPackage.setManifestLocation(manifestPath);
-		}
-		else {
+		} else {
 			jarPackage.setGenerateManifest(true);
-		}	
+		}
 	}
-	
+
 	/**
 	 * Util method for running IJarExportRunnable operation.
+	 * 
 	 * @param op export JAR operation
 	 * @param reportStatus true if export errors are displayed to the user
 	 * @param context runnable context
 	 * @param shell
-	 * @param warningMessages 
+	 * @param warningMessages
 	 * @return if operation was performed successfully
 	 */
 	public static boolean executeExportOperation(IJarExportRunnable op, boolean reportStatus, IRunnableContext context,
 			Shell shell, List<IStatus> warnings) {
 		try {
 			context.run(true, true, op);
-		}
-		catch (InterruptedException e) {
+		} catch (InterruptedException e) {
 			return false;
-		}
-		catch (InvocationTargetException ex) {
+		} catch (InvocationTargetException ex) {
 			if (ex.getTargetException() != null) {
 				return false;
 			}
@@ -202,12 +212,14 @@ public class BundleExportUtils {
 		IStatus status = op.getStatus();
 		if ((warnings.size() > 0 || !status.isOK()) && reportStatus) {
 			List<IStatus> children = new ArrayList<IStatus>();
-			for(IStatus child: status.getChildren()) {
+			for (IStatus child : status.getChildren()) {
 				children.add(child);
 			}
 			children.addAll(warnings);
-			
-			MultiStatus multiStatus = new MultiStatus(ServerExportPlugin.PLUGIN_ID, !status.isOK() ? status.getCode() : Status.WARNING, children.toArray(new Status[0]), !status.isOK() ? status.getMessage() : "There were warnings while exporting bundle project. Click Details to see more...", null);
+
+			MultiStatus multiStatus = new MultiStatus(ServerExportPlugin.PLUGIN_ID, !status.isOK() ? status.getCode()
+				: Status.WARNING, children.toArray(new Status[0]), !status.isOK() ? status.getMessage()
+				: "There were warnings while exporting bundle project. Click Details to see more...", null);
 			ErrorDialog.openError(shell, "Export Warning", null, multiStatus);
 			return !(status.matches(IStatus.ERROR));
 		}
@@ -229,14 +241,12 @@ public class BundleExportUtils {
 		try {
 			operation.execute(new NullProgressMonitor(), null);
 			settingsFolder.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
-		}
-		catch (ExecutionException e) {
+		} catch (ExecutionException e) {
+			return false;
+		} catch (CoreException e) {
 			return false;
 		}
-		catch (CoreException e) {
-			return false;
-		}
-		
+
 		return true;
 	}
 
