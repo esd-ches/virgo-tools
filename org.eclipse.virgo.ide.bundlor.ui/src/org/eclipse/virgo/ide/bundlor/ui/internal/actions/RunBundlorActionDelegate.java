@@ -23,12 +23,15 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.ui.IEditorInput;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IObjectActionDelegate;
+import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.virgo.ide.bundlor.ui.BundlorUiPlugin;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
-import org.springframework.ide.eclipse.ui.SpringUIUtils;
 
 
 /**
@@ -83,10 +86,15 @@ public class RunBundlorActionDelegate implements IObjectActionDelegate {
 			}
 		}
 		else {
-			if (SpringUIUtils.getActiveEditor() != null) {
-				if (SpringUIUtils.getActiveEditor().getEditorInput() instanceof IFileEditorInput) {
-					selected.add(((IFileEditorInput) SpringUIUtils.getActiveEditor().getEditorInput()).getFile().getProject());
-					enabled = true;
+			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+			if (activePage != null) {
+				IEditorPart editor = activePage.getActiveEditor();
+				if (editor != null) {
+					IEditorInput editorInput = editor.getEditorInput();
+					if (editorInput instanceof IFileEditorInput) {
+						selected.add(((IFileEditorInput) editorInput).getFile().getProject());
+						enabled = true;
+					}
 				}
 			}
 		}
@@ -96,4 +104,7 @@ public class RunBundlorActionDelegate implements IObjectActionDelegate {
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 	}
 
+	public List<IProject> getSelected() {
+		return selected;
+	}
 }

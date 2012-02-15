@@ -7,19 +7,17 @@ Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
+ org.eclipse.ui.ide,
  org.eclipse.core.runtime,
  org.eclipse.jdt.core,
  org.eclipse.jdt.ui,
  org.eclipse.core.resources,
- org.eclipse.virgo.ide.facet.core,
- org.springframework.ide.eclipse.ui,
- org.springframework.ide.eclipse.core,
- org.eclipse.virgo.ide.manifest.core,
  org.eclipse.jface.text,
- org.eclipse.ui.ide,
- org.eclipse.virgo.ide.bundlor.core,
  org.eclipse.core.expressions,
- org.springframework.core;bundle-version="[3.0.0,4.0.0)"
+ org.eclipse.virgo.ide.facet.core,
+ org.eclipse.virgo.ide.manifest.core,
+ org.eclipse.virgo.ide.bundlor.core
 Bundle-Activator: org.eclipse.virgo.ide.bundlor.ui.BundlorUiPlugin
 Export-Package: org.eclipse.virgo.ide.bundlor.ui
 Bundle-ActivationPolicy: lazy
+Import-Package: org.apache.commons.lang

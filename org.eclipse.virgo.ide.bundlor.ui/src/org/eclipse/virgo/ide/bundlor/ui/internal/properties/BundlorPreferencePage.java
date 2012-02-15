@@ -14,14 +14,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IStorage;
 import org.eclipse.core.resources.IWorkspaceRoot;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.internal.ui.viewsupport.FilteredElementTreeSelectionDialog;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
 import org.eclipse.jdt.ui.JavaElementSorter;
 import org.eclipse.jface.dialogs.Dialog;
@@ -42,22 +50,22 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.ui.dialogs.ISelectionStatusValidator;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.virgo.ide.bundlor.internal.core.BundlorCorePlugin;
 import org.eclipse.virgo.ide.bundlor.ui.BundlorUiPlugin;
-import org.springframework.ide.eclipse.core.SpringCorePreferences;
-import org.springframework.ide.eclipse.ui.SpringUIUtils;
-import org.springframework.ide.eclipse.ui.dialogs.FilteredElementTreeSelectionDialog;
-import org.springframework.ide.eclipse.ui.dialogs.StorageSelectionValidator;
-import org.springframework.util.StringUtils;
-
+import org.osgi.service.prefs.BackingStoreException;
 
 /**
- * {@link PropertyPage} to configure properties files for Bundlor variable substitution
+ * {@link PropertyPage} to configure properties files for Bundlor variable
+ * substitution
+ * 
  * @author Christian Dupuis
  * @author Leo Dos Santos
+ * @author Miles Parker
  * @since 2.0.0
  */
 @SuppressWarnings("deprecation")
@@ -78,11 +86,11 @@ public class BundlorPreferencePage extends PropertyPage {
 	private List<String> filenames;
 
 	private Button scanByteCode;
-	
+
 	private Button formatManifests;
 
 	private boolean checkScanByteCodeButton;
-	
+
 	private boolean checkFormatManifestsButton;
 
 	protected Control createContents(Composite parent) {
@@ -106,7 +114,7 @@ public class BundlorPreferencePage extends PropertyPage {
 				modified = true;
 			}
 		});
-		
+
 		formatManifests = new Button(parentComposite, SWT.CHECK);
 		formatManifests.setText("Auto-format generated MANIFEST.MF and TEST.MF files");
 		formatManifests.setSelection(checkFormatManifestsButton);
@@ -143,8 +151,7 @@ public class BundlorPreferencePage extends PropertyPage {
 				Object obj = ((IStructuredSelection) event.getSelection()).getFirstElement();
 				if (obj != null) {
 					deleteButton.setEnabled(true);
-				}
-				else {
+				} else {
 					deleteButton.setEnabled(false);
 				}
 			}
@@ -165,13 +172,22 @@ public class BundlorPreferencePage extends PropertyPage {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				FilteredElementTreeSelectionDialog selDialog = new FilteredElementTreeSelectionDialog(SpringUIUtils
-						.getStandardDisplay().getActiveShell(), new JavaElementLabelProvider(),
-						new WorkspaceResourceContentProvider());
+				FilteredElementTreeSelectionDialog selDialog = new FilteredElementTreeSelectionDialog(Display
+						.getCurrent().getActiveShell(), new JavaElementLabelProvider(),
+					new WorkspaceResourceContentProvider());
 				selDialog.setTitle("Select properties files");
 				selDialog
 						.setMessage("Select properties files in the workspace that should be\nused for variable substitution:");
-				selDialog.setValidator(new StorageSelectionValidator(true));
+				selDialog.setValidator(new ISelectionStatusValidator() {
+					public IStatus validate(Object[] selection) {
+						for (Object object : selection) {
+							if (object instanceof IStorage) {
+								return new Status(IStatus.OK, BundlorUiPlugin.PLUGIN_ID, IStatus.OK, "", null); //$NON-NLS-1$;
+							}
+						}
+						return new Status(IStatus.ERROR, BundlorUiPlugin.PLUGIN_ID, IStatus.OK, "", null); //$NON-NLS-1$;
+					}
+				});
 				selDialog.setInput(ResourcesPlugin.getWorkspace().getRoot());
 				selDialog.setSorter(new JavaElementSorter());
 				if (selDialog.open() == Dialog.OK) {
@@ -179,8 +195,7 @@ public class BundlorPreferencePage extends PropertyPage {
 					if (resource instanceof IFile) {
 						if (resource.getProject().equals(project)) {
 							filenames.add(resource.getProjectRelativePath().toString());
-						}
-						else {
+						} else {
 							filenames.add(resource.getFullPath().toString());
 						}
 					}
@@ -214,44 +229,43 @@ public class BundlorPreferencePage extends PropertyPage {
 		setDescription("Define properties files that should be used for variable substitution during\ngeneration of MANIFEST.MF file:");
 
 		if (project != null) {
-			String properties = SpringCorePreferences.getProjectPreferences(project, BundlorCorePlugin.PLUGIN_ID)
-					.getString(BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_KEY,
-							BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_DEFAULT);
-			filenames = new ArrayList<String>(Arrays.asList(org.springframework.util.StringUtils
-					.delimitedListToStringArray(properties, ";")));
-			checkScanByteCodeButton = SpringCorePreferences.getProjectPreferences(project, BundlorCorePlugin.PLUGIN_ID)
-					.getBoolean(BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_KEY,
-							BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_DEFAULT);
-			checkFormatManifestsButton = SpringCorePreferences.getProjectPreferences(project, BundlorCorePlugin.PLUGIN_ID)
-					.getBoolean(BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_KEY,
-							BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_DEFAULT);
-		}
-		else {
+			IEclipsePreferences node = getProjectPreferences(project);
+			String properties = node.get(	BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_KEY,
+											BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_DEFAULT);
+			filenames = Arrays.asList(StringUtils.split(properties, ";"));
+			checkScanByteCodeButton = node.getBoolean(	BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_KEY,
+														BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_DEFAULT);
+			checkFormatManifestsButton = node.getBoolean(	BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_KEY,
+															BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_DEFAULT);
+		} else {
 			filenames = new ArrayList<String>();
 			checkScanByteCodeButton = BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_DEFAULT;
 			checkFormatManifestsButton = BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_DEFAULT;
 		}
 	}
 
+	public IEclipsePreferences getProjectPreferences(IProject project) {
+		IScopeContext context = new ProjectScope(project);
+		IEclipsePreferences node = context.getNode(BundlorCorePlugin.PLUGIN_ID);
+		return node;
+	}
+
 	public boolean performOk() {
 		if (!modified) {
 			return true;
 		}
+		IEclipsePreferences node = getProjectPreferences(project);
 
-		SpringCorePreferences.getProjectPreferences(project, BundlorCorePlugin.PLUGIN_ID)
-				.putString(BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_KEY,
-						StringUtils.collectionToDelimitedString(filenames, ";"));
-
-		boolean oldScanByteCode = SpringCorePreferences.getProjectPreferences(project, BundlorCorePlugin.PLUGIN_ID)
-				.getBoolean(BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_KEY,
-						BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_DEFAULT);
-
-		SpringCorePreferences.getProjectPreferences(project, BundlorCorePlugin.PLUGIN_ID).putBoolean(
-				BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_KEY, scanByteCode.getSelection());
-		
-		SpringCorePreferences.getProjectPreferences(project, BundlorCorePlugin.PLUGIN_ID).putBoolean(
-				BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_KEY, formatManifests.getSelection());
-
+		node.put(BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_KEY, StringUtils.join(filenames, ";"));
+		boolean oldScanByteCode = node.getBoolean(	BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_KEY,
+													BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_DEFAULT);
+		node.putBoolean(BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_KEY, scanByteCode.getSelection());
+		node.putBoolean(BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_KEY, formatManifests.getSelection());
+		try {
+			node.flush();
+		} catch (BackingStoreException e) {
+			throw new RuntimeException(e);
+		}
 		if (oldScanByteCode != scanByteCode.getSelection()) {
 			BundlorCorePlugin.getDefault().getManifestManager().clearPartialManifest(JavaCore.create(project));
 		}
@@ -307,8 +321,7 @@ public class BundlorPreferencePage extends PropertyPage {
 			if (parentElement instanceof IContainer) {
 				try {
 					return ((IContainer) parentElement).members();
-				}
-				catch (CoreException e) {
+				} catch (CoreException e) {
 				}
 			}
 			return new Object[0];

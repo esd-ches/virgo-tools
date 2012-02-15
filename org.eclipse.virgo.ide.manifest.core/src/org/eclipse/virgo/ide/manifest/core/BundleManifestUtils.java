@@ -26,6 +26,7 @@ import java.util.Dictionary;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -51,7 +52,6 @@ import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifestFactory;
 import org.eclipse.wst.common.project.facet.core.FacetedProjectFramework;
 import org.osgi.framework.Constants;
-import org.springframework.util.StringUtils;
 
 /**
  * Helper methods to located and load {@link BundleManifest} instances.
@@ -233,21 +233,21 @@ public class BundleManifestUtils {
 
 		manifest.setBundleManifestVersion(2);
 		Dictionary<String, String> dictonary = manifest.toDictionary();
-		if (StringUtils.hasText(symbolicName)) {
+		if (StringUtils.isNotBlank(symbolicName)) {
 			dictonary.put(Constants.BUNDLE_SYMBOLICNAME, symbolicName);
 		}
-		if (StringUtils.hasText(bundleVersion)) {
+		if (StringUtils.isNotBlank(bundleVersion)) {
 			dictonary.put(Constants.BUNDLE_VERSION, bundleVersion);
 		}
-		if (StringUtils.hasLength(bundleName)) {
+		if (StringUtils.isNotBlank(bundleName)) {
 			dictonary.put(Constants.BUNDLE_NAME, bundleName);
 		}
-		if (StringUtils.hasText(providerName)) {
+		if (StringUtils.isNotBlank(providerName)) {
 			dictonary.put(Constants.BUNDLE_DESCRIPTION, providerName);
 		}
 
 		for (Map.Entry<String, String> entry : properties.entrySet()) {
-			if (StringUtils.hasLength(entry.getValue()) && StringUtils.hasLength(entry.getKey())) {
+			if (StringUtils.isNotEmpty(entry.getValue()) && StringUtils.isNotEmpty(entry.getKey())) {
 				dictonary.put(entry.getKey(), entry.getValue());
 			}
 		}
@@ -281,16 +281,16 @@ public class BundleManifestUtils {
 	public static void createNewParManifest(IProject project, String symbolicName, String version, String name,
 			String description) {
 		Dictionary<String, String> manifest = BundleManifestFactory.createBundleManifest().toDictionary();
-		if (StringUtils.hasText(symbolicName)) {
+		if (StringUtils.isNotBlank(symbolicName)) {
 			manifest.put("Application-SymbolicName", symbolicName);
 		}
-		if (StringUtils.hasText(version)) {
+		if (StringUtils.isNotBlank(version)) {
 			manifest.put("Application-Version", version);
 		}
-		if (StringUtils.hasLength(name)) {
+		if (StringUtils.isNotBlank(name)) {
 			manifest.put("Application-Name", name);
 		}
-		if (StringUtils.hasText(description)) {
+		if (StringUtils.isNotBlank(description)) {
 			manifest.put("Application-Description", description);
 		}
 

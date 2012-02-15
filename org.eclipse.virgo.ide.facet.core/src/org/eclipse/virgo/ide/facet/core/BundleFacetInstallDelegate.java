@@ -10,13 +10,16 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.facet.core;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.wst.common.project.facet.core.IDelegate;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
-import org.springframework.ide.eclipse.core.SpringCore;
-import org.springframework.ide.eclipse.core.SpringCoreUtils;
 
 /**
  * Facet install delegate that installs the class path container. 
@@ -27,6 +30,10 @@ public class BundleFacetInstallDelegate implements IDelegate {
 
 	public void execute(IProject project, IProjectFacetVersion fv, Object config,
 			IProgressMonitor monitor) throws CoreException {
-		SpringCoreUtils.addProjectNature(project, FacetCorePlugin.BUNDLE_NATURE_ID, monitor);
+		IProjectDescription desc = project.getDescription();
+		List<String> natures = new ArrayList<String>(Arrays.asList(desc.getNatureIds()));
+		natures.add(FacetCorePlugin.BUNDLE_NATURE_ID);
+		desc.setNatureIds(natures.toArray(new String[]{}));
+		project.setDescription(desc, monitor);		
 	}
 }

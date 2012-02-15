@@ -28,7 +28,6 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.eclipse.virgo.ide.bundlor.internal.core.BundlorCorePlugin;
 import org.osgi.framework.BundleContext;
-import org.springframework.ide.eclipse.core.SpringCoreUtils;
 
 
 /**
@@ -111,15 +110,26 @@ public class BundlorUiPlugin extends AbstractUIPlugin {
 		}
 	}
 
-	public static boolean isBundlorBuilderEnabled(IResource resource) {
+	public static ICommand getBundlorBuilderCommand(IResource resource) {
 		if (resource != null) {
 			try {
-				ICommand command = SpringCoreUtils.getProjectBuilderCommand(resource.getProject().getDescription(),
-						BundlorCorePlugin.BUILDER_ID);
-				return command != null && command.isBuilding(IncrementalProjectBuilder.FULL_BUILD);
+				ICommand[] commands = resource.getProject().getDescription().getBuildSpec();
+				for (ICommand command : commands) {
+					if (command.getBuilderName().equals(BundlorCorePlugin.BUILDER_ID)) {
+						return command;
+					}
+				}
 			}
 			catch (CoreException e) {
 			}
+		}
+		return null;
+	}
+
+	public static boolean isBundlorBuilding(IResource resource) {
+		if (resource != null) {
+			ICommand command = getBundlorBuilderCommand(resource);
+			return command != null && command.isBuilding(IncrementalProjectBuilder.FULL_BUILD);
 		}
 		return false;
 	}

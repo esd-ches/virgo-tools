@@ -61,8 +61,6 @@ import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
-import org.springframework.ide.eclipse.core.SpringCore;
-import org.springframework.ide.eclipse.core.SpringCoreUtils;
 
 /**
  * @author Christian Dupuis
@@ -106,7 +104,6 @@ public class NewBundleProjectWizard extends NewElementWizard implements INewWiza
 			protected void execute(IProgressMonitor monitor) throws CoreException, InvocationTargetException,
 					InterruptedException {
 
-				SpringCoreUtils.addProjectNature(project.getProject(), SpringCore.NATURE_ID, monitor);
 				IFacetedProject fProject = ProjectFacetsManager.create(project.getProject(), true, monitor);
 
 				// WST 3.0 only

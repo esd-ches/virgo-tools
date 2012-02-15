@@ -25,7 +25,7 @@ public class BundlorStatePropertyTester extends PropertyTester {
 
 	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
 		if (receiver instanceof IResource && "isBundlorEnabled".equals(property)) {
-			return BundlorUiPlugin.isBundlorBuilderEnabled((IResource) receiver);
+			return BundlorUiPlugin.isBundlorBuilding((IResource) receiver);
 		}
 		return false;
 	}

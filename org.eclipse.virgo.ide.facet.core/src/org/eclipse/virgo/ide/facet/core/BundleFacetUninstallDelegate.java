@@ -10,10 +10,14 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.facet.core;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IClasspathEntry;
@@ -21,11 +25,11 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.wst.common.project.facet.core.IDelegate;
 import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
-import org.springframework.ide.eclipse.core.SpringCoreUtils;
 
 /**
  * Uninstall delegate to remove the class path container.
  * @author Christian Dupuis
+ * @author Miles Parker
  * @since 1.0.0
  */
 public class BundleFacetUninstallDelegate implements IDelegate {
@@ -35,7 +39,11 @@ public class BundleFacetUninstallDelegate implements IDelegate {
 		IJavaProject jproj = JavaCore.create(project);
 		removeFromClasspath(jproj, JavaCore.newContainerEntry(FacetCorePlugin.CLASSPATH_CONTAINER_PATH),
 				monitor);
-		SpringCoreUtils.removeProjectNature(project, FacetCorePlugin.BUNDLE_NATURE_ID, monitor);
+		IProjectDescription desc = project.getDescription();
+		List<String> natures = new ArrayList<String>(Arrays.asList(desc.getNatureIds()));
+		natures.remove(FacetCorePlugin.BUNDLE_NATURE_ID);
+		desc.setNatureIds(natures.toArray(new String[]{}));
+		project.setDescription(desc, monitor);		
 	}
 
 	protected void removeFromClasspath(IJavaProject javaProject, IClasspathEntry entry,

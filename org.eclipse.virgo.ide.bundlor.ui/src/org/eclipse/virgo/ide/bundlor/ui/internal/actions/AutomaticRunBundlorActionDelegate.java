@@ -12,26 +12,24 @@ package org.eclipse.virgo.ide.bundlor.ui.internal.actions;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.operation.IRunnableWithProgress;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PlatformUI;
@@ -40,8 +38,6 @@ import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.ide.bundlor.internal.core.BundlorCorePlugin;
 import org.eclipse.virgo.ide.bundlor.ui.BundlorUiPlugin;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
-import org.springframework.ide.eclipse.core.SpringCoreUtils;
-import org.springframework.ide.eclipse.ui.SpringUIUtils;
 
 
 /**
@@ -49,13 +45,11 @@ import org.springframework.ide.eclipse.ui.SpringUIUtils;
  * @author Christian Dupuis
  * @since 1.1.3
  */
-public class AutomaticRunBundlorActionDelegate implements IObjectActionDelegate {
-
-	private final List<IProject> selected = new ArrayList<IProject>();
+public class AutomaticRunBundlorActionDelegate extends RunBundlorActionDelegate {
 
 	public void run(IAction action) {
 		final Set<IJavaProject> projects = new LinkedHashSet<IJavaProject>();
-		Iterator<IProject> iter = selected.iterator();
+		Iterator<IProject> iter = getSelected().iterator();
 		while (iter.hasNext()) {
 			IProject project = iter.next();
 			if (FacetUtils.isBundleProject(project)) {
@@ -66,14 +60,25 @@ public class AutomaticRunBundlorActionDelegate implements IObjectActionDelegate 
 			protected void execute(IProgressMonitor monitor) throws CoreException,
 					InterruptedException {
 				for (final IJavaProject javaProject : projects) {
+					IProject project = javaProject.getProject();
+					IProjectDescription description = project.getDescription();
 					try {
-						if (BundlorUiPlugin.isBundlorBuilderEnabled(javaProject.getProject())) {
-							SpringCoreUtils.removeProjectBuilder(javaProject.getProject(),
-									BundlorCorePlugin.BUILDER_ID, new NullProgressMonitor());
+						List<ICommand> cmds = Arrays.asList(description.getBuildSpec());
+						List<ICommand> newCmds = new ArrayList<ICommand>(cmds);
+						for (ICommand config : cmds) {
+							if (config.getBuilderName().equals(BundlorCorePlugin.BUILDER_ID)) {
+								if (BundlorUiPlugin.isBundlorBuilding(project)) {
+									newCmds.remove(config);
+								} else { 
+									ICommand command = project.getDescription().newCommand();
+									command.setBuilderName(BundlorCorePlugin.BUILDER_ID);
+									newCmds.add(config);
+								}
+							}
 						}
-						else {
-							SpringCoreUtils.addProjectBuilder(javaProject.getProject(),
-									BundlorCorePlugin.BUILDER_ID, new NullProgressMonitor());
+						if (!cmds.equals(newCmds)) {
+							description.setBuildSpec((ICommand[]) newCmds.toArray(new ICommand[]{}));
+							project.setDescription(description, monitor);
 						}
 					}
 					catch (CoreException e) {
@@ -94,44 +99,6 @@ public class AutomaticRunBundlorActionDelegate implements IObjectActionDelegate 
 		catch (InterruptedException e) {
 		}
 
-	}
-
-	public void selectionChanged(IAction action, ISelection selection) {
-		selected.clear();
-		boolean enabled = true;
-		if (selection instanceof IStructuredSelection) {
-			Iterator<?> iter = ((IStructuredSelection) selection).iterator();
-			while (iter.hasNext()) {
-				Object obj = iter.next();
-				if (obj instanceof IJavaProject) {
-					obj = ((IJavaProject) obj).getProject();
-				}
-				if (obj instanceof IResource) {
-					IResource project = (IResource) obj;
-					if (!project.getProject().isOpen()) {
-						enabled = false;
-						break;
-					}
-					else {
-						selected.add(project.getProject());
-					}
-				}
-				else {
-					enabled = false;
-					break;
-				}
-			}
-		}
-		else {
-			if (SpringUIUtils.getActiveEditor() != null) {
-				if (SpringUIUtils.getActiveEditor().getEditorInput() instanceof IFileEditorInput) {
-					selected.add(((IFileEditorInput) SpringUIUtils.getActiveEditor()
-							.getEditorInput()).getFile().getProject());
-					enabled = true;
-				}
-			}
-		}
-		action.setEnabled(enabled);
 	}
 
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {

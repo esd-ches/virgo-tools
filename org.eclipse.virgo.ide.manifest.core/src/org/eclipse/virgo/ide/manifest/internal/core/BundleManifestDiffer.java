@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.virgo.ide.manifest.core.IBundleManifestChangeListener;
 import org.eclipse.virgo.ide.manifest.core.IBundleManifestChangeListener.Type;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
@@ -23,7 +24,6 @@ import org.eclipse.virgo.util.osgi.manifest.ImportLibrary;
 import org.eclipse.virgo.util.osgi.manifest.ImportPackage;
 import org.eclipse.virgo.util.osgi.manifest.RequireBundle;
 import org.osgi.framework.Constants;
-import org.springframework.util.ObjectUtils;
 
 /**
  * Utility that checks two {@link BundleManifest} instances for equality.
@@ -70,22 +70,22 @@ class BundleManifestDiffer {
 
 		Set<Type> differences = new HashSet<Type>();
 
-		if (!ObjectUtils.nullSafeEquals(importPackageHeader1, importPackageHeader2)) {
+		if (!ObjectUtils.equals(importPackageHeader1, importPackageHeader2)) {
 			differences.add(Type.IMPORT_PACKAGE);
 		}
-		if (!ObjectUtils.nullSafeEquals(execEnvironment1, execEnvironment2)) {
+		if (!ObjectUtils.equals(execEnvironment1, execEnvironment2)) {
 			differences.add(Type.IMPORT_PACKAGE);
 		}
-		if (!ObjectUtils.nullSafeEquals(exportPackageHeader1, exportPackageHeader2)) {
+		if (!ObjectUtils.equals(exportPackageHeader1, exportPackageHeader2)) {
 			differences.add(Type.EXPORT_PACKAGE);
 		}
-		if (!ObjectUtils.nullSafeEquals(importLibraryHeader1, importLibraryHeader2)) {
+		if (!ObjectUtils.equals(importLibraryHeader1, importLibraryHeader2)) {
 			differences.add(Type.IMPORT_LIBRARY);
 		}
-		if (!ObjectUtils.nullSafeEquals(importBundleHeader1, importBundleHeader2)) {
+		if (!ObjectUtils.equals(importBundleHeader1, importBundleHeader2)) {
 			differences.add(Type.IMPORT_BUNDLE);
 		}
-		if (!ObjectUtils.nullSafeEquals(requireBundleHeader1, requireBundleHeader2)) {
+		if (!ObjectUtils.equals(requireBundleHeader1, requireBundleHeader2)) {
 			differences.add(Type.REQUIRE_BUNDLE);
 		}
 

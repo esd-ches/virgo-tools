@@ -323,7 +323,7 @@ public class ServerVirgoHandler implements IServerVersionHandler {
 	}
 
 	private void createRepositoryConfiguration(IServerBehaviour serverBehaviour, String fileName) {
-		// copy com.springsource.repository.properties into the stage and add the stage repository
+		// copy repository.properties into the stage and add the stage repository
 		File serverHome = ServerUtils.getServer(serverBehaviour).getRuntimeBaseDirectory().toFile();
 		Properties properties = new Properties();
 		try {

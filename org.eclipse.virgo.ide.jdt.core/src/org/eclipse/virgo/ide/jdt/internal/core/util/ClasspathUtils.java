@@ -21,6 +21,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
@@ -34,8 +35,6 @@ import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestUtils;
 import org.eclipse.virgo.ide.manifest.core.IBundleManifestChangeListener;
 import org.eclipse.virgo.ide.manifest.internal.core.BundleManifestManager;
-import org.springframework.ide.eclipse.core.SpringCorePreferences;
-
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.virgo.util.osgi.manifest.ImportedPackage;
 import org.eclipse.virgo.util.osgi.manifest.RequiredBundle;
@@ -119,9 +118,8 @@ public class ClasspathUtils {
 	 * @param file the jar that needs a source attachment
 	 */
 	public static IPath getSourceAttachment(IJavaProject project, File file) {
-		SpringCorePreferences prefs = SpringCorePreferences.getProjectPreferences(project
-				.getProject(), JdtCorePlugin.PLUGIN_ID);
-		String value = prefs.getString("source.attachment-" + file.getName(), null);
+		IEclipsePreferences preferences = JdtCorePlugin.getDefault().getProjectPreferences(project.getProject());
+		String value = preferences.get("source.attachment-" + file.getName(), null);
 		if (value != null) {
 			return new Path(value);
 		}
@@ -135,13 +133,12 @@ public class ClasspathUtils {
 	 */
 	public static void storeSourceAttachments(IJavaProject project,
 			IClasspathContainer containerSuggestion) {
-		SpringCorePreferences prefs = SpringCorePreferences.getProjectPreferences(project
-				.getProject(), JdtCorePlugin.PLUGIN_ID);
+		IEclipsePreferences preferences = JdtCorePlugin.getDefault().getProjectPreferences(project.getProject());
 		for (IClasspathEntry entry : containerSuggestion.getClasspathEntries()) {
 			IPath path = entry.getPath();
 			IPath sourcePath = entry.getSourceAttachmentPath();
 			if (sourcePath != null) {
-				prefs.putString("source.attachment-" + path.lastSegment().toString(), sourcePath
+				preferences.put("source.attachment-" + path.lastSegment().toString(), sourcePath
 						.toString());
 			}
 		}

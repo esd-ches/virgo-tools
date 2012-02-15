@@ -35,7 +35,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.ui.internal.misc.StatusUtil;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
@@ -48,8 +47,6 @@ import org.eclipse.virgo.ide.par.Bundle;
 import org.eclipse.virgo.ide.par.Par;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.virgo.util.osgi.manifest.ExportedPackage;
-import org.springframework.ide.eclipse.core.SpringCoreUtils;
-import org.springframework.ide.eclipse.core.java.JdtUtils;
 
 /**
  * Default {@link IBundleManifestManager} implementation used to manage the life-cycle of the
@@ -362,9 +359,8 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 			protected boolean resourceChanged(IResource resource, int flags) {
 				if (resource instanceof IFile) {
 					if ((flags & IResourceDelta.CONTENT) != 0) {
-						if ((FacetUtils.isBundleProject(resource) || SpringCoreUtils
-								.hasProjectFacet(resource, FacetCorePlugin.WEB_FACET_ID))) {
-							if (SpringCoreUtils.isManifest(resource)) {
+						if ((FacetUtils.isBundleProject(resource) ||  FacetUtils.hasProjectFacet(resource, FacetCorePlugin.WEB_FACET_ID))) {
+							if (isManifest(resource)) {
 								updateBundleManifest(JavaCore.create(resource.getProject()), false);
 							}
 							else if (isTestManifest(resource)) {
@@ -417,7 +413,7 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 			}
 
 			protected boolean resourceRemoved(IResource resource) {
-				if (SpringCoreUtils.isManifest(resource)) {
+				if (isManifest(resource)) {
 					updateBundleManifest(JavaCore.create(resource.getProject()), false);
 				}
 				else if (isTestManifest(resource)) {
@@ -478,6 +474,16 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 					&& resource.isAccessible()
 					&& resource.getType() == IResource.FILE
 					&& resource.getName().equals("TEST.MF")
+					&& resource.getParent() != null
+					&& resource.getParent().getProjectRelativePath().lastSegment().equals(
+							"META-INF");
+		}
+
+		public boolean isManifest(IResource resource) {
+			return resource != null
+					&& resource.isAccessible()
+					&& resource.getType() == IResource.FILE
+					&& resource.getName().equals("MANIFEST.MF")
 					&& resource.getParent() != null
 					&& resource.getParent().getProjectRelativePath().lastSegment().equals(
 							"META-INF");

@@ -11,15 +11,18 @@
 package org.eclipse.virgo.ide.ui.editors;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
@@ -64,7 +67,6 @@ import org.eclipse.virgo.ide.manifest.internal.core.BundleManifestManager;
 import org.eclipse.virgo.ide.ui.ServerIdeUiPlugin;
 import org.eclipse.virgo.ide.ui.StatusHandler;
 import org.springframework.ide.eclipse.beans.ui.graph.BeansGraphImages;
-import org.springframework.ide.eclipse.core.SpringCoreUtils;
 
 /**
  * @author Christian Dupuis
@@ -195,14 +197,27 @@ public class BundleOverviewPage extends PDEFormPage implements IHyperlinkListene
 			public void widgetSelected(SelectionEvent e) {
 				IRunnableWithProgress op = new WorkspaceModifyOperation() {
 					protected void execute(IProgressMonitor monitor) throws CoreException, InterruptedException {
+						IProject project = resource.getProject();
+						IProjectDescription description = project.getDescription();
+
 						try {
-							if (isBundlorBuilderEnabled()) {
-								SpringCoreUtils.removeProjectBuilder(resource.getProject(),
-										BundlorCorePlugin.BUILDER_ID, new NullProgressMonitor());
+							List<ICommand> cmds = Arrays.asList(description.getBuildSpec());
+							List<ICommand> newCmds = new ArrayList<ICommand>(cmds);
+							for (ICommand config : cmds) {
+								if (config.getBuilderName().equals(BundlorCorePlugin.BUILDER_ID)) {
+									if (BundlorUiPlugin.isBundlorBuilding(project)) {
+										newCmds.remove(config);
+									}
+									else {
+										ICommand command = project.getDescription().newCommand();
+										command.setBuilderName(BundlorCorePlugin.BUILDER_ID);
+										newCmds.add(config);
+									}
+								}
 							}
-							else {
-								SpringCoreUtils.addProjectBuilder(resource.getProject(), BundlorCorePlugin.BUILDER_ID,
-										new NullProgressMonitor());
+							if (!cmds.equals(newCmds)) {
+								description.setBuildSpec(newCmds.toArray(new ICommand[] {}));
+								project.setDescription(description, monitor);
 							}
 						}
 						catch (CoreException e1) {
@@ -223,7 +238,7 @@ public class BundleOverviewPage extends PDEFormPage implements IHyperlinkListene
 		TableWrapData data = new TableWrapData(TableWrapData.FILL_GRAB);
 		data.indent = 5;
 		button.setLayoutData(data);
-		button.setSelection(isBundlorBuilderEnabled());
+		button.setSelection(BundlorUiPlugin.isBundlorBuilding(resource.getProject()));
 
 		toolkit.createLabel(container, "");
 
@@ -236,19 +251,6 @@ public class BundleOverviewPage extends PDEFormPage implements IHyperlinkListene
 		text.addHyperlinkListener(this);
 
 		section.setClient(container);
-	}
-
-	private boolean isBundlorBuilderEnabled() {
-		if (resource != null) {
-			try {
-				ICommand command = SpringCoreUtils.getProjectBuilderCommand(resource.getProject().getDescription(),
-						BundlorCorePlugin.BUILDER_ID);
-				return command != null && command.isBuilding(IncrementalProjectBuilder.FULL_BUILD);
-			}
-			catch (CoreException e) {
-			}
-		}
-		return false;
 	}
 
 	protected final Section createStaticSection(FormToolkit toolkit, Composite parent, String text) {

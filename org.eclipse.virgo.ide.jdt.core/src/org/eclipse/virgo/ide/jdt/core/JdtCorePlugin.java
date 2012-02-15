@@ -10,9 +10,13 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.jdt.core;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.virgo.ide.jdt.internal.core.classpath.ServerClasspathContainerBundleManifestChangeListener;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
@@ -60,6 +64,12 @@ public class JdtCorePlugin extends Plugin {
 		super.stop(context);
 	}
 
+	public IEclipsePreferences getProjectPreferences(IProject project) {
+		IScopeContext context = new ProjectScope(project);
+		IEclipsePreferences node = context.getNode(PLUGIN_ID);
+		return node;
+	}
+	
 	public static JdtCorePlugin getDefault() {
 		return plugin;
 	}

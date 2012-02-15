@@ -85,7 +85,7 @@ public class FacetUtils {
 			try {
 				return FacetedProjectFramework.hasProjectFacet(resource.getProject(), facetId);
 			} catch (CoreException e) {
-				// TODO CD handle exception
+				throw new RuntimeException(e);
 			}
 		}
 		return false;

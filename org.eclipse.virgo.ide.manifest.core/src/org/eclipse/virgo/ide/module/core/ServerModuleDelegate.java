@@ -20,7 +20,10 @@ import java.util.List;
 import java.util.Set;
 
 import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
@@ -38,7 +41,6 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.ui.internal.misc.StatusUtil;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
@@ -55,8 +57,6 @@ import org.eclipse.wst.server.core.model.ModuleDelegate;
 import org.eclipse.wst.server.core.util.ModuleFile;
 import org.eclipse.wst.server.core.util.ModuleFolder;
 import org.eclipse.wst.server.core.util.ProjectModule;
-import org.springframework.ide.eclipse.core.SpringCoreUtils;
-import org.springframework.util.ObjectUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -380,10 +380,10 @@ public class ServerModuleDelegate extends ProjectModule {
 				return false;
 			}
 			ParModuleFile other = (ParModuleFile) obj;
-			if (!ObjectUtils.nullSafeEquals(modulePath, other.modulePath)) {
+			if (!ObjectUtils.equals(modulePath, other.modulePath)) {
 				return false;
 			}
-			return ObjectUtils.nullSafeEquals(wrappedFile, other.wrappedFile);
+			return ObjectUtils.equals(wrappedFile, other.wrappedFile);
 		}
 
 		@Override
@@ -447,10 +447,10 @@ public class ServerModuleDelegate extends ProjectModule {
 				return false;
 			}
 			ParModuleFolder other = (ParModuleFolder) obj;
-			if (!ObjectUtils.nullSafeEquals(modulePath, other.modulePath)) {
+			if (!ObjectUtils.equals(modulePath, other.modulePath)) {
 				return false;
 			}
-			return ObjectUtils.nullSafeEquals(wrappedFolder, other.wrappedFolder);
+			return ObjectUtils.equals(wrappedFolder, other.wrappedFolder);
 		}
 
 		@Override
@@ -498,7 +498,7 @@ public class ServerModuleDelegate extends ProjectModule {
 		Set<IModule> modules = new HashSet<IModule>();
 
 		try {
-			DocumentBuilder docBuilder = SpringCoreUtils.getDocumentBuilder();
+			DocumentBuilder docBuilder =  DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document doc = docBuilder.parse(file.getContents(true));
 			NodeList artifactNodes = doc.getDocumentElement().getElementsByTagName("artifact");
 			for (int i = 0; i < artifactNodes.getLength(); i++) {
@@ -548,10 +548,15 @@ public class ServerModuleDelegate extends ProjectModule {
 			}
 		}
 		catch (SAXException e) {
+			StatusManager.getManager().handle(new Status(IStatus.ERROR,"Problem while getting plan dependencies.", BundleManifestCorePlugin.PLUGIN_ID, e));
 		}
 		catch (IOException e) {
+			StatusManager.getManager().handle(new Status(IStatus.ERROR,"Problem while getting plan dependencies.", BundleManifestCorePlugin.PLUGIN_ID, e));
 		}
 		catch (CoreException e) {
+			StatusManager.getManager().handle(e, BundleManifestCorePlugin.PLUGIN_ID);
+		} catch (ParserConfigurationException e) {
+			StatusManager.getManager().handle(new Status(IStatus.ERROR,"Problem while getting plan dependencies.", BundleManifestCorePlugin.PLUGIN_ID, e));
 		}
 
 		return modules;

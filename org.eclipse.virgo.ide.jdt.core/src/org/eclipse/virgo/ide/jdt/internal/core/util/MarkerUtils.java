@@ -44,8 +44,11 @@ public class MarkerUtils {
 	 */
 	public static void removeErrorMarkers(IJavaProject javaProject, boolean testBundle) {
 		IResource manifest = BundleManifestUtils.locateManifest(javaProject, testBundle);
-		org.springframework.ide.eclipse.core.MarkerUtils.deleteMarkers(manifest,
-				JdtCorePlugin.DEPENDENCY_PROBLEM_MARKER_ID);
+		try {
+			manifest.deleteMarkers(JdtCorePlugin.DEPENDENCY_PROBLEM_MARKER_ID, true, IResource.DEPTH_INFINITE);
+		} catch (CoreException e) {
+			StatusManager.getManager().handle(e, JdtCorePlugin.PLUGIN_ID);
+		}
 	}
 
 	/**

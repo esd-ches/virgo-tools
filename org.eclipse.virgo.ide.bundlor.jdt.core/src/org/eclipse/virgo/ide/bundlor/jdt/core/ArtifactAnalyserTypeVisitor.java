@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
 import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
@@ -44,7 +45,6 @@ import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.virgo.bundlor.support.partialmanifest.PartialManifest;
-import org.springframework.util.StringUtils;
 
 /**
  * {@link MethodVisitor} that is based on JDT's AST </p>
@@ -438,7 +438,7 @@ public class ArtifactAnalyserTypeVisitor extends ASTVisitor {
 							break;
 						}
 					}
-					fqn = StringUtils.collectionToDelimitedString(newSegments, ".");
+					fqn = StringUtils.join(newSegments, ".");
 				}
 
 				this.partialManifest.recordReferencedType(fqn);

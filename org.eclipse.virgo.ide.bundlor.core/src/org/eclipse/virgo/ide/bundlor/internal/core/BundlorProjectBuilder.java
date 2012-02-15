@@ -12,15 +12,14 @@ package org.eclipse.virgo.ide.bundlor.internal.core;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
-import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -28,16 +27,22 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Set;
 import java.util.jar.Manifest;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
+import org.eclipse.core.resources.IResourceDeltaVisitor;
+import org.eclipse.core.resources.IResourceVisitor;
+import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
@@ -46,6 +51,8 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.preferences.IEclipsePreferences;
+import org.eclipse.core.runtime.preferences.IScopeContext;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
@@ -54,7 +61,6 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.osgi.util.ManifestElement;
 import org.eclipse.pde.internal.core.text.bundle.ManifestHeader;
-import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.bundlor.ClassPath;
 import org.eclipse.virgo.bundlor.ClassPathEntry;
 import org.eclipse.virgo.bundlor.EntryScannerListener;
@@ -63,7 +69,6 @@ import org.eclipse.virgo.bundlor.support.ArtifactAnalyzer;
 import org.eclipse.virgo.bundlor.support.classpath.StandardClassPathFactory;
 import org.eclipse.virgo.bundlor.support.partialmanifest.PartialManifest;
 import org.eclipse.virgo.bundlor.support.partialmanifest.ReadablePartialManifest;
-import org.eclipse.virgo.bundlor.support.properties.FileSystemPropertiesSource;
 import org.eclipse.virgo.bundlor.support.properties.PropertiesSource;
 import org.eclipse.virgo.bundlor.util.SimpleManifestContents;
 import org.eclipse.virgo.ide.bundlor.internal.core.asm.ExtensibleAsmTypeArtefactAnalyser;
@@ -82,27 +87,24 @@ import org.eclipse.virgo.util.parser.manifest.ManifestContents;
 import org.eclipse.virgo.util.parser.manifest.ManifestParser;
 import org.eclipse.virgo.util.parser.manifest.RecoveringManifestParser;
 import org.osgi.framework.BundleException;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.ide.eclipse.core.SpringCorePreferences;
-import org.springframework.ide.eclipse.core.SpringCoreUtils;
-import org.springframework.ide.eclipse.core.internal.project.SpringProjectContributionManager.ResourceDeltaVisitor;
-import org.springframework.ide.eclipse.core.internal.project.SpringProjectContributionManager.ResourceTreeVisitor;
-import org.springframework.ide.eclipse.core.project.IProjectContributor;
-import org.springframework.util.StringUtils;
 
 /**
- * {@link IncrementalProjectBuilder} that runs on a bundle project and generates the MANIFEST.MF based on actual
- * dependencies from the source code and the Bundlor template.
+ * {@link IncrementalProjectBuilder} that runs on a bundle project and generates
+ * the MANIFEST.MF based on actual dependencies from the source code and the
+ * Bundlor template.
+ * 
  * @author Christian Dupuis
  * @author Leo Dos Santos
+ * @author Miles Parker
  * @since 1.1.2
  */
 @SuppressWarnings("restriction")
 public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 
+	private static final String WEB_XML_PATH = "WEB-INF/web.xml";
+
 	private final static String CLASS_FILE_EXTENSION = ".class";
-	
+
 	/** Deleted sources from a source directory */
 	private Set<IResource> deletedSourceResources = new HashSet<IResource>();
 
@@ -115,11 +117,11 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 	/** Change or new sources from a test source directory */
 	private Set<IResource> testResources = new HashSet<IResource>();
 
-	/** WEB-INF/web.xml resource */
-	private IResource webXmlResource = null;
-
-	/** <code>true</code> if a MANIFEST.MF, TEST.MF or template.mf has been changed */
-	private boolean templateChanged = false;
+	/**
+	 * <code>true</code> if a MANIFEST.MF, TEST.MF or template.mf has been
+	 * changed
+	 */
+	private boolean forceFullBuild = false;
 
 	/** <code>true</code> if Bundlor should scan byte code instead of source code */
 	private boolean scanByteCode = true;
@@ -138,16 +140,15 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 		deletedTestResources.clear();
 		testResources.clear();
 		templatePackageImports.clear();
-		templateChanged = false;
-		webXmlResource = null;
+		forceFullBuild = false;
 
 		IProject project = getProject();
 		IResourceDelta delta = getDelta(project);
 
 		// Get the configuration setting
-		scanByteCode = SpringCorePreferences.getProjectPreferences(project, BundlorCorePlugin.PLUGIN_ID).getBoolean(
-				BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_KEY,
-				BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_DEFAULT);
+		scanByteCode = getProjectPreferences(project)
+				.getBoolean(BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_KEY,
+							BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_DEFAULT);
 
 		// Prepare the list of changed resources
 		visitResourceDelta(project, kind, delta);
@@ -165,7 +166,8 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 	}
 
 	/**
-	 * Checks if the given {@link IResource} is either on source or test source folders.
+	 * Checks if the given {@link IResource} is either on source or test source
+	 * folders.
 	 */
 	private void addResourceIfInSourceFolder(IResource resource, Set<IClasspathEntry> classpathEntries,
 			Set<IClasspathEntry> testClasspathEntries) {
@@ -189,12 +191,13 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 
 		// No resources selected -> on relevant change
 		if (sourceResources.size() == 0 && testResources.size() == 0 && deletedSourceResources.size() == 0
-				&& deletedTestResources.size() == 0 && !templateChanged) {
+			&& deletedTestResources.size() == 0 && !forceFullBuild) {
 			return;
 		}
 
-		// Increase scope of build to FULL_BUILD if template.mf, MANIFEST.MF or TEST.MF has changed
-		if (templateChanged) {
+		// Increase scope of build to FULL_BUILD if template.mf, MANIFEST.MF or
+		// TEST.MF has changed
+		if (forceFullBuild) {
 			kind = IncrementalProjectBuilder.FULL_BUILD;
 		}
 
@@ -202,157 +205,126 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 
 		IJavaProject javaProject = JavaCore.create(getProject());
 
-		// No incremental manifest model has been recorded or the build is a full build
+		// No incremental manifest model has been recorded or the build is a
+		// full build
 		final boolean isFullBuild = !manifestManager.hasPartialManifest(javaProject)
-				|| kind == IncrementalProjectBuilder.FULL_BUILD;
+			|| kind == IncrementalProjectBuilder.FULL_BUILD;
 
 		final ReadablePartialManifest model = manifestManager.getPartialManifest(javaProject, false, isFullBuild);
 		final ReadablePartialManifest testModel = manifestManager.getPartialManifest(javaProject, true, isFullBuild);
 
-		Set<PropertiesSource> propertiesSources = createPropertiesSource(javaProject);
+		PropertiesSource[] propertiesSources = createPropertiesSource(javaProject);
 
 		// Firstly create the MANFIEST.MF
 		ArtifactAnalyzer artefactAnalyser = (scanByteCode ? new ProgressReportingAsmTypeArtefactAnalyser(monitor)
-				: new ProgressReportingAstTypeArtefactAnalyser(javaProject, monitor));
+			: new ProgressReportingAstTypeArtefactAnalyser(javaProject, monitor));
 
-		BundleManifest manifest = generateManifest(
-				javaProject,
-				model,
-				ManifestGeneratorFactory.create(model, artefactAnalyser,
-						propertiesSources.toArray(new PropertiesSource[propertiesSources.size()])), sourceResources,
-				isFullBuild, false);
+		try {
+			BundleManifest manifest = generateManifest(	javaProject, model,
+														ManifestGeneratorFactory.create(model, artefactAnalyser,
+																						propertiesSources),
+														sourceResources, isFullBuild, false);
+			// Secondly create the TEST.MF
+			BundleManifest testManifest = generateManifest(	javaProject, testModel,
+															ManifestGeneratorFactory.create(testModel,
+																							artefactAnalyser,
+																							propertiesSources),
+															testResources, isFullBuild, true);
 
-		// Secondly create the TEST.MF
-		BundleManifest testManifest = generateManifest(
-				javaProject,
-				testModel,
-				ManifestGeneratorFactory.create(testModel, artefactAnalyser,
-						propertiesSources.toArray(new PropertiesSource[propertiesSources.size()])), testResources,
-				isFullBuild, true);
+			// Lastly merge the manifests
+			mergeManifests(javaProject, manifest, testManifest);
 
-		// Lastly merge the manifests
-		mergeManifests(javaProject, manifest, testManifest);
+			monitor.done();
+		} catch (IOException e) {
+			throw new CoreException(new Status(IStatus.ERROR, BundlorCorePlugin.PLUGIN_ID,
+				"Exception while generating manifest.", e));
+		}
 
-		monitor.done();
 	}
 
 	/**
-	 * Set up {@link PropertiesSource} instances for configured properties files.
+	 * Set up {@link PropertiesSource} instances for configured properties
+	 * files.
 	 */
-	private Set<PropertiesSource> createPropertiesSource(final IJavaProject javaProject) throws CoreException {
+	private PropertiesSource[] createPropertiesSource(final IJavaProject javaProject) throws CoreException {
 
-		Set<PropertiesSource> propertiesSources = new HashSet<PropertiesSource>();
+		IProject project = javaProject.getProject();
+		IEclipsePreferences preferences = getProjectPreferences(project);
+		String propertiesFiles = preferences.get(	BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_KEY,
+													BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_DEFAULT);
+		String[] properties = StringUtils.split(propertiesFiles, ";");
 
-		SpringCorePreferences preferences = SpringCorePreferences.getProjectPreferences(javaProject.getProject(),
-				BundlorCorePlugin.PLUGIN_ID);
-		String propertiesFiles = preferences.getString(BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_KEY,
-				BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_DEFAULT);
-		String[] properties = StringUtils.delimitedListToStringArray(propertiesFiles, ";");
-
-		List<Resource> resources = new ArrayList<Resource>();
+		List<IPath> paths = new ArrayList<IPath>();
 		if (properties != null && properties.length > 0) {
 			for (String propertiesFile : properties) {
-				Resource resource = null;
+				IResource resource = null;
 
-				try {
-					// Assume file is relative to the project but still in the workspace
-					IFile propertiesResource = javaProject.getProject().getFile(propertiesFile);
-					if (propertiesResource.exists()) {
-						if (propertiesResource.isLinked()) {
-							URI uri = propertiesResource.getLocationURI();
-							if (uri != null) {
-								resource = new FileSystemResource(new File(uri));
-							}
-						}
-						else {
-							URI uri = propertiesResource.getRawLocationURI();
-							if (uri != null) {
-								resource = new FileSystemResource(new File(uri));
-							}
-						}
+				// Assume file is relative to the project but still in the
+				// workspace
+				IPath location = new Path(propertiesFile);
+				IFile propertiesResource = project.getFile(location);
+				if (propertiesResource.exists()) {
+					if (propertiesResource.isLinked()) {
+						paths.add(propertiesResource.getLocation());
+					} else {
+						paths.add(propertiesResource.getRawLocation());
 					}
-				}
-				catch (RuntimeException e) {
-					// Ignore; simply means the file is not relative to the project
+					continue;
 				}
 
-				// Assume file is relative to the project and can be outside of the project and workspace
-				if (resource == null) {
-					URI uri = javaProject.getProject().getLocationURI();
-					if (uri != null) {
-						File source = new File(new File(uri), propertiesFile);
-						if (source.exists()) {
-							resource = new FileSystemResource(source);
-						}
-					}
-					uri = javaProject.getProject().getRawLocationURI();
-					if (uri != null) {
-						File source = new File(new File(uri), propertiesFile);
-						if (source.exists()) {
-							resource = new FileSystemResource(source);
-						}
-					}
+				// Assume file is relative to the project and can be outside of
+				// the project and workspace
+				IPath projectRelativeLocation = project.getLocation();
+				if (projectRelativeLocation == null) {
+					projectRelativeLocation = project.getRawLocation();
+				}
+				projectRelativeLocation = location.append(propertiesFile);
+				if (projectRelativeLocation.toFile().exists()) {
+					paths.add(projectRelativeLocation);
+					continue;
 				}
 
-				if (resource == null) {
-					// Assume file is relative to the workspace
-					try {
-						IFile propertiesResource = javaProject.getProject().getWorkspace().getRoot()
-								.getFile(new Path(propertiesFile));
-						if (propertiesResource.exists()) {
-							URI uri = propertiesResource.getRawLocationURI();
-							if (uri != null) {
-								resources.add(new FileSystemResource(new File(uri)));
-							}
-						}
-					}
-					catch (RuntimeException e) {
-						// Ignore; simply means the file is not relative to the workspace
-					}
+				// Assume file is relative to the workspace
+				IPath workspaceRelativeLocation = project.getWorkspace().getRoot().getLocation().append(location);
+				if (workspaceRelativeLocation.toFile().exists()) {
+					paths.add(workspaceRelativeLocation);
+					continue;
 				}
 
-				if (resource == null) {
-					// Assume file is a full qualified in the file system
-					File nativeFile = new File(propertiesFile);
-					if (nativeFile.exists()) {
-						resource = new FileSystemResource(nativeFile);
-					}
-					else {
-						// Assume relative to the project
-						if (javaProject.getProject().getRawLocation() != null) {
-							File parent = javaProject.getProject().getRawLocation().toFile();
-							if (parent.exists()) {
-								File file = new File(parent, propertiesFile);
-								if (file.exists()) {
-									resources.add(new FileSystemResource(file));
-								}
-							}
-						}
-						else if (javaProject.getProject().getLocation() != null) {
-							File parent = javaProject.getProject().getLocation().toFile();
-							if (parent.exists()) {
-								File file = new File(parent, propertiesFile);
-								if (file.exists()) {
-									resources.add(new FileSystemResource(file));
-								}
-							}
-						}
-					}
+				// Assume absolute path
+				if (location.toFile().exists()) {
+					paths.add(location);
 				}
-				if (resource != null) {
-					resources.add(resource);
-				}
-				// TODO CD we could add an error marker for those files that can't be resolved to a resource
+				// TODO CD we could add an error marker for those files that
+				// can't be resolved to a resource
 			}
 		}
 
+		PropertiesSource[] propertiesSources = new PropertiesSource[paths.size()];
+
+		int i = 0;
 		// Add in properties sources for the resolved properties files
-		for (Resource resource : resources) {
-			try {
-				propertiesSources.add(new FileSystemPropertiesSource(resource.getFile()));
-			}
-			catch (IOException e) {
-			}
+		for (final IPath path : paths) {
+			propertiesSources[i] = new PropertiesSource() {
+				public Properties getProperties() {
+					File file = path.toFile();
+					try {
+						FileReader reader = new FileReader(file);
+						Properties p = new Properties();
+						p.load(reader);
+						return p;
+					} catch (FileNotFoundException e) {
+						throw new RuntimeException(e);
+					} catch (IOException e) {
+						throw new RuntimeException(e);
+					}
+				}
+
+				public int getPriority() {
+					return 0;
+				}
+			};
+			i++;
 		}
 
 		return propertiesSources;
@@ -361,16 +333,11 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 	/**
 	 * Create a {@link Manifest} instance from the file at the given path.
 	 */
-	private ManifestContents createManifestFromPath(IResource templateResource) {
+	private ManifestContents createManifestFromPath(IResource templateResource) throws IOException {
 		if (templateResource != null) {
 			ManifestParser parser = new RecoveringManifestParser();
 			ManifestContents manifest = null;
-			try {
-				manifest = parser.parse(new FileReader(templateResource.getRawLocation().toString()));
-			}
-			catch (IOException e) {
-				StatusManager.getManager().handle(new Status(IStatus.ERROR, BundlorCorePlugin.PLUGIN_ID, "An IO Exception occurred.", e));
-			}
+			manifest = parser.parse(new FileReader(templateResource.getRawLocation().toString()));
 			return manifest;
 		}
 		// Create new empty MANIFEST
@@ -389,10 +356,10 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 		IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
 
 		// Get the source folders
-		Set<IClasspathEntry> classpathEntries = ServerModuleDelegate.getSourceClasspathEntries(resource.getProject(),
-				false);
-		Set<IClasspathEntry> testClasspathEntries = ServerModuleDelegate.getSourceClasspathEntries(
-				resource.getProject(), true);
+		Set<IClasspathEntry> classpathEntries = ServerModuleDelegate.getSourceClasspathEntries(	resource.getProject(),
+																								false);
+		Set<IClasspathEntry> testClasspathEntries = ServerModuleDelegate.getSourceClasspathEntries(resource
+				.getProject(), true);
 
 		// Java source files
 		if (!scanByteCode && resource.getName().endsWith("java")) { //$NON-NLS-1$
@@ -406,8 +373,7 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 						if (classpathEntry.equals(entry)) {
 							if (deltaKind == IResourceDelta.REMOVED) {
 								deletedSourceResources.add(resource);
-							}
-							else {
+							} else {
 								sourceResources.add(resource);
 							}
 							break;
@@ -417,16 +383,15 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 						if (classpathEntry.equals(entry)) {
 							if (deltaKind == IResourceDelta.REMOVED) {
 								deletedTestResources.add(resource);
-							}
-							else {
+							} else {
 								testResources.add(resource);
 							}
 							break;
 						}
 					}
-				}
-				catch (JavaModelException e) {
-					// This can happen in case of .java resources not on the classpath of the project
+				} catch (JavaModelException e) {
+					// This can happen in case of .java resources not on the
+					// classpath of the project
 				}
 			}
 		}
@@ -437,7 +402,8 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 			// Check default output folders
 			IPath defaultOutputLocation = project.getOutputLocation();
 			if (defaultOutputLocation.isPrefixOf(classFilePath)) {
-				// Ok we know that the file is a class in the default output location; let's get the class name
+				// Ok we know that the file is a class in the default output
+				// location; let's get the class name
 				String className = classFilePath.removeFirstSegments(defaultOutputLocation.segmentCount()).toString();
 				className = className.substring(0, className.length() - CLASS_FILE_EXTENSION.length());
 
@@ -451,8 +417,7 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 				if (deltaKind == IResourceDelta.REMOVED) {
 					deletedSourceResources.add(resource);
 					deletedTestResources.add(resource);
-				}
-				else {
+				} else {
 
 					for (IClasspathEntry entry : classpathEntries) {
 						IPath sourceLocation = entry.getPath();
@@ -483,8 +448,7 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 				if (outputLocation != null && outputLocation.isPrefixOf(classFilePath)) {
 					if (deltaKind == IResourceDelta.REMOVED) {
 						deletedSourceResources.add(resource);
-					}
-					else {
+					} else {
 						sourceResources.add(resource);
 					}
 
@@ -498,8 +462,7 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 				if (outputLocation != null && outputLocation.isPrefixOf(classFilePath)) {
 					if (deltaKind == IResourceDelta.REMOVED) {
 						deletedTestResources.add(resource);
-					}
-					else {
+					} else {
 						testResources.add(resource);
 					}
 
@@ -507,9 +470,15 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 				}
 			}
 		}
-		// Bundlor template has changed
-		else if (resource.getName().equals("template.mf") || SpringCoreUtils.isManifest(resource)) {
-			templateChanged = true;
+		// Some template or actual manifest file (whether or not it actually
+		// affects packaged build) has changed. Note that this is different
+		// behavior than
+		// pre-Virgo server. Still, it seems reasonably conservative as worst
+		// case we'll be re-building the project when we really don't need to,
+		// and best case we'll catch an edge case that we would have otherwise
+		// missed.
+		else if (resource.getName().equals("template.mf") || resource.getName().equals("MANIFEST.MF")) {
+			forceFullBuild = true;
 		}
 		// Hibernate mapping files
 		else if (resource.getName().endsWith(".hbm")) {
@@ -517,15 +486,10 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 		}
 		// JPA persistence descriptor
 		else if (resource.getName().equals("persistence.xml") && resource.getParent() != null
-				&& resource.getParent().getName().equals("META-INF")) {
+			&& resource.getParent().getName().equals("META-INF")) {
 			addResourceIfInSourceFolder(resource, classpathEntries, testClasspathEntries);
-		}
-		else if (resource.getFullPath().toString().endsWith("WEB-INF/web.xml")
-				&& FacetUtils.hasProjectFacet(resource, FacetCorePlugin.WEB_FACET_ID)) {
-			IResource webResource = getWebXmlResource();
-			if (resource.equals(webResource)) {
-				sourceResources.add(resource);
-			}
+		} else if (isWebXML(resource)) {
+			sourceResources.add(resource);
 		}
 		// Spring configuration file
 		else if (resource.getName().endsWith(".xml")) {
@@ -533,12 +497,19 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 		}
 	}
 
+	private boolean isWebXML(IResource resource) {
+		return resource.getFullPath().toString().endsWith(WEB_XML_PATH)
+			&& FacetUtils.hasProjectFacet(resource, FacetCorePlugin.WEB_FACET_ID);
+	}
+
 	/**
 	 * Generate a new or update the existing manifest.
+	 * 
+	 * @throws IOException
 	 */
 	private BundleManifest generateManifest(IJavaProject javaProject, ReadablePartialManifest model,
 			ManifestGenerator generator, Set<IResource> resources, boolean isFullBuild, boolean isTestManifest)
-			throws JavaModelException, CoreException {
+			throws JavaModelException, CoreException, IOException {
 
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 
@@ -561,7 +532,8 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 
 		ManifestContents templateManifest = createManifestFromPath(templateResource);
 
-		// Test-Import-Package and Test-Import-Bundle -> Import-Package and Import-Bundle
+		// Test-Import-Package and Test-Import-Bundle -> Import-Package and
+		// Import-Bundle
 		if (isTestManifest) {
 
 			templateManifest.getMainAttributes().remove("Import-Package");
@@ -569,20 +541,22 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 			templateManifest.getMainAttributes().remove("Import-Library");
 
 			if (templateManifest.getMainAttributes().containsKey("Test-Import-Bundle")) {
-				templateManifest.getMainAttributes().put("Import-Bundle",
-						templateManifest.getMainAttributes().get("Test-Import-Bundle"));
+				templateManifest.getMainAttributes().put(	"Import-Bundle",
+															templateManifest.getMainAttributes()
+																	.get("Test-Import-Bundle"));
 			}
 			if (templateManifest.getMainAttributes().containsKey("Test-Import-Package")) {
-				templateManifest.getMainAttributes().put("Import-Package",
-						templateManifest.getMainAttributes().get("Test-Import-Package"));
+				templateManifest.getMainAttributes().put(	"Import-Package",
+															templateManifest.getMainAttributes()
+																	.get("Test-Import-Package"));
 			}
 			if (templateManifest.getMainAttributes().containsKey("Test-Import-Library")) {
-				templateManifest.getMainAttributes().put("Import-Library",
-						templateManifest.getMainAttributes().get("Test-Import-Library"));
+				templateManifest.getMainAttributes().put(	"Import-Library",
+															templateManifest.getMainAttributes()
+																	.get("Test-Import-Library"));
 			}
 
-		}
-		else {
+		} else {
 			String importPackageHeader = templateManifest.getMainAttributes().get("Import-Package");
 			Dictionary<String, String> contents = new Hashtable<String, String>();
 			if (importPackageHeader != null) {
@@ -599,15 +573,14 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 			for (String folder : folders) {
 				classpathEntries.add(factory.create(folder));
 			}
-		}
-		else {
+		} else {
 			for (String folder : folders) {
 				classpathEntries.add(new FilteringClassPath(resources, folder));
 			}
 		}
 
-		manifest = generator.generate(templateManifest,
-				classpathEntries.toArray(new ClassPath[classpathEntries.size()]));
+		manifest = generator.generate(	templateManifest,
+										classpathEntries.toArray(new ClassPath[classpathEntries.size()]));
 		return org.eclipse.virgo.bundlor.util.BundleManifestUtils.createBundleManifest(manifest);
 	}
 
@@ -640,7 +613,8 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 
 		// Add parent folder of web.xml
 		if (!testFolders && FacetUtils.hasProjectFacet(getProject(), FacetCorePlugin.WEB_FACET_ID)) {
-			IResource resource = getWebXmlResource();
+			//We're really cheating a bit here, as we aren't handling the case where the user has multiple WEB-INF dirs, but that seems like an edge case.
+			IResource resource = getProject().findMember(WEB_XML_PATH);
 			if (resource != null) {
 				folders.add(resource.getRawLocation().removeLastSegments(2).toString());
 			}
@@ -664,19 +638,20 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 		if (testManifest != null) {
 
 			/*
-			 * As the test manifest should not contain imported packages, bundles and libraries those need to be
-			 * removed. Furthermore there shouldn't be any bundlor related headers in the manifest.
+			 * As the test manifest should not contain imported packages,
+			 * bundles and libraries those need to be removed. Furthermore there
+			 * shouldn't be any bundlor related headers in the manifest.
 			 */
 			cleanTestManifest = BundleManifestFactory.createBundleManifest();
 			cleanTestManifest.setBundleManifestVersion(2);
 			if (testManifest.getImportBundle() != null && testManifest.getImportBundle().getImportedBundles() != null
-					&& testManifest.getImportBundle().getImportedBundles().size() > 0) {
+				&& testManifest.getImportBundle().getImportedBundles().size() > 0) {
 				cleanTestManifest.getImportBundle().getImportedBundles()
 						.addAll(testManifest.getImportBundle().getImportedBundles());
 			}
 			if (testManifest.getImportLibrary() != null
-					&& testManifest.getImportLibrary().getImportedLibraries() != null
-					&& testManifest.getImportLibrary().getImportedLibraries().size() > 0) {
+				&& testManifest.getImportLibrary().getImportedLibraries() != null
+				&& testManifest.getImportLibrary().getImportedLibraries().size() > 0) {
 				cleanTestManifest.getImportLibrary().getImportedLibraries()
 						.addAll(testManifest.getImportLibrary().getImportedLibraries());
 			}
@@ -705,8 +680,10 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 		}
 
 		/*
-		 * Never ever import packages that are exported already; we need this as the STS integrated support will
-		 * sometimes try to import certain packages that are usually exported already if the classpath is incomplete.
+		 * Never ever import packages that are exported already; we need this as
+		 * the STS integrated support will sometimes try to import certain
+		 * packages that are usually exported already if the classpath is
+		 * incomplete.
 		 */
 		List<ImportedPackage> importedPackagesCopy = new ArrayList<ImportedPackage>(manifest.getImportPackage()
 				.getImportedPackages());
@@ -715,7 +692,8 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 				if (packageExport.getPackageName().equals(packageImport.getPackageName())) {
 
 					boolean remove = true;
-					// It might still be that the user explicitly wants the package import in the template.mf
+					// It might still be that the user explicitly wants the
+					// package import in the template.mf
 					for (ImportedPackage templatePackageImport : templatePackageImports) {
 						if (packageExport.getPackageName().equals(templatePackageImport.getPackageName())) {
 							remove = false;
@@ -739,9 +717,9 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 			testManifestResource = BundleManifestUtils.getFirstPossibleManifestFile(getProject(), true);
 		}
 
-		boolean formatPref = SpringCorePreferences.getProjectPreferences(javaProject.getProject(),
-				BundlorCorePlugin.PLUGIN_ID).getBoolean(BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_KEY,
-				BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_DEFAULT);
+		boolean formatPref = getProjectPreferences(javaProject.getProject())
+				.getBoolean(BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_KEY,
+							BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_DEFAULT);
 		if (manifestResource != null && manifestResource instanceof IFile) {
 			try {
 				StringWriter writer = new StringWriter();
@@ -750,14 +728,15 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 				if (formatPref) {
 					manifestStream = formatManifest((IFile) manifestResource, manifestStream);
 				}
-				if (SpringCoreUtils.validateEdit((IFile) manifestResource)) {
-					((IFile) manifestResource).setContents(manifestStream, IResource.FORCE | IResource.KEEP_HISTORY,
-							new NullProgressMonitor());
+				IStatus valid = ResourcesPlugin.getWorkspace().validateEdit(new IFile[] { (IFile) manifestResource },
+																			IWorkspace.VALIDATE_PROMPT);
+				if (valid.isOK()) {
+					((IFile) manifestResource).setContents(	manifestStream, IResource.FORCE | IResource.KEEP_HISTORY,
+															new NullProgressMonitor());
 				}
 				writer.close();
 				manifestStream.close();
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 			}
 
 		}
@@ -769,14 +748,15 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 				if (formatPref) {
 					testManifestStream = formatManifest((IFile) testManifestResource, testManifestStream);
 				}
-				if (SpringCoreUtils.validateEdit((IFile) testManifestResource)) {
+				IStatus valid = ResourcesPlugin.getWorkspace()
+						.validateEdit(new IFile[] { (IFile) testManifestResource }, IWorkspace.VALIDATE_PROMPT);
+				if (valid.isOK()) {
 					((IFile) testManifestResource).setContents(testManifestStream, IResource.FORCE
-							| IResource.KEEP_HISTORY, new NullProgressMonitor());
+						| IResource.KEEP_HISTORY, new NullProgressMonitor());
 				}
 				writer.close();
 				testManifestStream.close();
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 			}
 		}
 	}
@@ -795,8 +775,7 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 				String result = header.write();
 				writer.write(result);
 			}
-		}
-		catch (BundleException e) {
+		} catch (BundleException e) {
 		}
 		String manifestOutput = writer.toString();
 		writer.close();
@@ -806,50 +785,40 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 	}
 
 	/**
-	 * Visit the {@link IResourceDelta} and prepare the internal structures of changed and removed resources.
+	 * Visit the {@link IResourceDelta} and prepare the internal structures of
+	 * changed and removed resources.
 	 */
-	private void visitResourceDelta(IProject project, int kind, IResourceDelta delta) throws CoreException {
+	private void visitResourceDelta(IProject project, final int kind, IResourceDelta delta) throws CoreException {
 		if (delta == null || kind == IncrementalProjectBuilder.FULL_BUILD) {
-			ResourceTreeVisitor visitor = new ResourceTreeVisitor(new IProjectContributor() {
+			IResourceVisitor visitor = new IResourceVisitor() {
 
-				public void cleanup(IResource resource, IProgressMonitor monitor) throws CoreException {
+				public boolean visit(IResource resource) throws CoreException {
+					doGetAffectedResources(resource, IncrementalProjectBuilder.FULL_BUILD, IResourceDelta.CHANGED);
+					return true;
 				}
-
-				public Set<IResource> getAffectedResources(IResource resource, int kind, int deltaKind)
-						throws CoreException {
-					doGetAffectedResources(resource, kind, deltaKind);
-					return Collections.emptySet();
-				}
-			});
-
+			};
 			project.accept(visitor);
-		}
-		else {
-			ResourceDeltaVisitor visitor = new ResourceDeltaVisitor(new IProjectContributor() {
+		} else {
+			IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
 
-				public void cleanup(IResource resource, IProgressMonitor monitor) throws CoreException {
+				public boolean visit(IResourceDelta delta) throws CoreException {
+					doGetAffectedResources(delta.getResource(), kind, delta.getKind());
+					return true;
 				}
-
-				public Set<IResource> getAffectedResources(IResource resource, int kind, int deltaKind)
-						throws CoreException {
-					doGetAffectedResources(resource, kind, deltaKind);
-					return Collections.emptySet();
-				}
-			}, kind);
-
+			};
 			delta.accept(visitor);
 		}
 	}
 
-	private IResource getWebXmlResource() {
-		if (webXmlResource == null) {
-			webXmlResource = SpringCoreUtils.getDeploymentDescriptor(getProject());
-		}
-		return webXmlResource;
+	public IEclipsePreferences getProjectPreferences(IProject project) {
+		IScopeContext context = new ProjectScope(project);
+		IEclipsePreferences node = context.getNode(BundlorCorePlugin.PLUGIN_ID);
+		return node;
 	}
 
 	/**
-	 * Extension to {@link AstTypeArtifactAnalyser} that takes a {@link IProgressMonitor} to report monitor
+	 * Extension to {@link AstTypeArtifactAnalyser} that takes a
+	 * {@link IProgressMonitor} to report monitor
 	 */
 	class ProgressReportingAstTypeArtefactAnalyser extends AstTypeArtifactAnalyser {
 
@@ -934,8 +903,7 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 		public InputStream getInputStream() {
 			try {
 				return file.getContents(true);
-			}
-			catch (CoreException e) {
+			} catch (CoreException e) {
 				throw new RuntimeException(e);
 			}
 		}

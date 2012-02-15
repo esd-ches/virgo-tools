@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.IInputValidator;
@@ -51,7 +52,6 @@ import org.eclipse.virgo.ide.runtime.internal.core.actions.ModifyStaticResources
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiImages;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.editor.ServerEditorSection;
-import org.springframework.util.StringUtils;
 
 
 /**
@@ -159,7 +159,7 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 						"", new IInputValidator() {
 
 							public String isValid(String newText) {
-								if (!StringUtils.hasText(newText)) {
+								if (!StringUtils.isNotBlank(newText)) {
 									return "Pattern can't be empty";
 								}
 								return null;
@@ -171,7 +171,7 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 							.getElements(server)));
 					filenames.add(dialog.getValue());
 					execute(new ModifyStaticResourcesCommand(serverWorkingCopy, StringUtils
-							.collectionToCommaDelimitedString(filenames)));
+							.join(filenames, ",")));
 					filenamesTableViewer.setInput(server);
 					filenamesTableViewer.setSelection(new StructuredSelection(dialog.getValue()));
 					// update buttons
@@ -194,7 +194,7 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 						.getElements(server)));
 				filenames.remove(selectedArtefact);
 				execute(new ModifyStaticResourcesCommand(serverWorkingCopy, StringUtils
-						.collectionToCommaDelimitedString(filenames)));
+						.join(filenames, ",")));
 				filenamesTableViewer.setInput(server);
 				// update buttons
 				updating = false;
@@ -217,7 +217,7 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 					return;
 				updating = true;
 				execute(new ModifyStaticResourcesCommand(serverWorkingCopy, StringUtils
-						.collectionToCommaDelimitedString(modules)));
+						.join(modules, ",")));
 				filenamesTableViewer.setInput(server);
 				updateButtons(selectedArtefact);
 				updating = false;
@@ -240,7 +240,7 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 					return;
 				updating = true;
 				execute(new ModifyStaticResourcesCommand(serverWorkingCopy, StringUtils
-						.collectionToCommaDelimitedString(modules)));
+				                 						.join(modules, ",")));
 				filenamesTableViewer.setInput(server);
 				updateButtons(selectedArtefact);
 				updating = false;
@@ -333,7 +333,7 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 				IServer server = (IServer) inputElement;
 				IServerWorkingCopy dmServer = (IServerWorkingCopy) server.loadAdapter(
 						IServerWorkingCopy.class, null);
-				String[] filenames = StringUtils.delimitedListToStringArray(dmServer
+				String[] filenames = StringUtils.split(dmServer
 						.getStaticFilenamePatterns(), ",");
 				return filenames;
 

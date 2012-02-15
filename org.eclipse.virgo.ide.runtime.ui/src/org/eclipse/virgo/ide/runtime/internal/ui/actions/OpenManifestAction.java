@@ -20,6 +20,9 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
@@ -27,7 +30,6 @@ import org.eclipse.virgo.ide.manifest.core.BundleManifestUtils;
 import org.eclipse.wst.common.project.facet.core.FacetedProjectFramework;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
-import org.springframework.ide.eclipse.ui.SpringUIUtils;
 
 /**
  * Action implementation that opens a MANIFEST.MF or par.xml file of the
@@ -65,7 +67,11 @@ public class OpenManifestAction implements IObjectActionDelegate {
 
 	private void openResource(IResource resource) {
 		if (resource instanceof IFile) {
-			SpringUIUtils.openInEditor((IFile) resource, -1);
+			try {
+				IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), (IFile) resource);
+			} catch (PartInitException e) {
+				throw new RuntimeException(e);
+			}
 		}
 	}
 

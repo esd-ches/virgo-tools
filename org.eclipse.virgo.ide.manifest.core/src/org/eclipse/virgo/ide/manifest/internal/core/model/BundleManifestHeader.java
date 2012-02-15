@@ -13,12 +13,12 @@ package org.eclipse.virgo.ide.manifest.internal.core.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.osgi.util.ManifestElement;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCoreMessages;
 import org.osgi.framework.BundleException;
-import org.springframework.util.StringUtils;
 
 
 /**
@@ -86,7 +86,7 @@ public class BundleManifestHeader extends AbstractManifestElement {
 				try {
 
 					// Make sure the every " is closed
-					if (StringUtils.countOccurrencesOf(getValue(), "\"") % 2 != 0) {
+					if (StringUtils.countMatches(getValue(), "\"") % 2 != 0) {
 						throw new BundleException("");
 					}
 					
