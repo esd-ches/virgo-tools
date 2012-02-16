@@ -28,8 +28,8 @@
 	        </adapt>
         </enablement>
         <menu
-               label="Spring Tools"
-               id="org.springframework.ide.eclipse.ui.tools">
+               label="Virgo"
+               id="org.eclipse.virgo.ide.menu">
             <separator
                name="group1">
             </separator>
@@ -41,7 +41,7 @@
                icon="icons/full/obj16/osgi_obj.gif"
                id="org.eclipse.virgo.ide.bundlor.ui.actions.runBundlorOnTemplate"
                label="%runBundlorActionLabel"
-               menubarPath="org.springframework.ide.eclipse.ui.tools/group2">
+               menubarPath="org.eclipse.virgo.ide.menu/group2">
          </action>
       </objectContribution>
       <objectContribution
@@ -64,7 +64,7 @@
                enablesFor="+"
                id="org.eclipse.virgo.ide.bundlor.ui.actions.disableAutomaticRunBundlorOnTemplate"
                label="%automaticRunBundlorActionLabel.disable"
-               menubarPath="org.springframework.ide.eclipse.ui.tools/group2">
+               menubarPath="org.eclipse.virgo.ide.menu/group2">
          </action>
       </objectContribution>
       <objectContribution
@@ -89,7 +89,7 @@
                enablesFor="+"
                id="org.eclipse.virgo.ide.bundlor.ui.actions.enableAutomaticRunBundlorOnTemplate"
                label="%automaticRunBundlorActionLabel.enable"
-               menubarPath="org.springframework.ide.eclipse.ui.tools/group2">
+               menubarPath="org.eclipse.virgo.ide.menu/group2">
          </action>
       </objectContribution>
     </extension>
@@ -128,7 +128,7 @@
             id="org.eclipse.virgo.ide.bundlor.ui.internal.properties.bundlorPreferencePage"
             name="%bundlorConfigurationPage.name"
             class="org.eclipse.virgo.ide.bundlor.ui.internal.properties.BundlorPreferencePage"
-            category="org.springframework.ide.eclipse.ui.projectPropertyPage"
+            category="org.eclipse.virgo.ide.projectPropertyPage"
             adaptable="true"
             objectClass="org.eclipse.core.resources.IProject">
          <filter

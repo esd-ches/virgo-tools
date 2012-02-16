@@ -41,7 +41,7 @@
             id="org.eclipse.virgo.ide.jdt.ui.testSourceFolderPreferencePage"
             name="%sourceFolderConfigurationPage.name"
             class="org.eclipse.virgo.ide.jdt.internal.ui.properties.TestSourceFolderPreferencePage"
-            category="org.springframework.ide.eclipse.ui.projectPropertyPage"
+            category="org.eclipse.virgo.ide.projectPropertyPage"
             adaptable="true"
             objectClass="org.eclipse.core.resources.IProject">
          <filter
@@ -73,7 +73,7 @@
                label="%refreshClasspathContainerActionLabel"
                class="org.eclipse.virgo.ide.jdt.internal.ui.actions.RefreshServerClasspathContainerActionDelegate"
                enablesFor="+"
-               menubarPath="org.springframework.ide.eclipse.ui.tools/group1"
+               menubarPath="org.eclipse.virgo.ide.menu/group1"
                id="org.eclipse.virgo.ide.jdt.ui.actions.refreshServerClasspathContainer">
          </action>
       </objectContribution>
@@ -98,7 +98,7 @@
                enablesFor="+"
                id="org.eclipse.virgo.ide.jdt.ui.actions.disableServerClasspathContainerAction"
                label="%serverClasspathContainerActionLabel.disable"
-               menubarPath="org.springframework.ide.eclipse.ui.tools/group1">
+               menubarPath="org.eclipse.virgo.ide.menu/group1">
          </action>
       </objectContribution>
       <objectContribution
@@ -123,7 +123,7 @@
                enablesFor="+"
                id="org.eclipse.virgo.ide.jdt.ui.actions.enableServerClasspathContainerAction"
                label="%serverClasspathContainerActionLabel.enable"
-               menubarPath="org.springframework.ide.eclipse.ui.tools/group1">
+               menubarPath="org.eclipse.virgo.ide.menu/group1">
          </action>
       </objectContribution>
       
@@ -138,5 +138,4 @@
             class="org.eclipse.virgo.ide.jdt.internal.ui.classpath.ServerClasspathContainerPage">
       </classpathContainerPage>
    </extension>
-
 </plugin>

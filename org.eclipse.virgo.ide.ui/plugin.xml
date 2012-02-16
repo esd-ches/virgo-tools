@@ -95,7 +95,7 @@
                label="Add OSGi Bundle Project Nature"
                class="org.eclipse.virgo.ide.ui.internal.actions.ConvertToBundleProject"
                enablesFor="+"
-               menubarPath="org.springframework.ide.eclipse.ui.tools/group1"
+               menubarPath="org.eclipse.virgo.ide.menu/group1"
                id="org.eclipse.virgo.ide.ui.actions.addBundleFacet">
          </action>
       </objectContribution>
@@ -114,7 +114,7 @@
                label="Remove OSGi Bundle Project Nature"
                class="org.eclipse.virgo.ide.ui.internal.actions.ConvertToBundleProject"
                enablesFor="+"
-               menubarPath="org.springframework.ide.eclipse.ui.tools/group1"
+               menubarPath="org.eclipse.virgo.ide.menu/group1"
                id="org.eclipse.virgo.ide.ui.actions.removeBundleFacet">
          </action>
       </objectContribution>
@@ -135,7 +135,7 @@
                label="Add OSGi Plan Project Nature"
                class="org.eclipse.virgo.ide.ui.internal.actions.ConvertToPlanProject"
                enablesFor="+"
-               menubarPath="org.springframework.ide.eclipse.ui.tools/group1"
+               menubarPath="org.eclipse.virgo.ide.menu/group1"
                id="org.eclipse.virgo.ide.ui.actions.addPlanFacet">
          </action>
       </objectContribution>
@@ -154,7 +154,7 @@
                label="Remove OSGi Plan Project Nature"
                class="org.eclipse.virgo.ide.ui.internal.actions.ConvertToPlanProject"
                enablesFor="+"
-               menubarPath="org.springframework.ide.eclipse.ui.tools/group1"
+               menubarPath="org.eclipse.virgo.ide.menu/group1"
                id="org.eclipse.virgo.ide.ui.actions.removePlanFacet">
          </action>
       </objectContribution>
