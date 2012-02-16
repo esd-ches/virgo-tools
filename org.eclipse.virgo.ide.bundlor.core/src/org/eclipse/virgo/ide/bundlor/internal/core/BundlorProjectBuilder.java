@@ -11,8 +11,6 @@
 package org.eclipse.virgo.ide.bundlor.internal.core;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,11 +25,11 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 import java.util.jar.Manifest;
 
 import org.apache.commons.lang.StringUtils;
+import org.eclipse.core.internal.resources.Resource;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -69,6 +67,7 @@ import org.eclipse.virgo.bundlor.support.ArtifactAnalyzer;
 import org.eclipse.virgo.bundlor.support.classpath.StandardClassPathFactory;
 import org.eclipse.virgo.bundlor.support.partialmanifest.PartialManifest;
 import org.eclipse.virgo.bundlor.support.partialmanifest.ReadablePartialManifest;
+import org.eclipse.virgo.bundlor.support.properties.FileSystemPropertiesSource;
 import org.eclipse.virgo.bundlor.support.properties.PropertiesSource;
 import org.eclipse.virgo.bundlor.util.SimpleManifestContents;
 import org.eclipse.virgo.ide.bundlor.internal.core.asm.ExtensibleAsmTypeArtefactAnalyser;
@@ -300,34 +299,12 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 			}
 		}
 
-		PropertiesSource[] propertiesSources = new PropertiesSource[paths.size()];
-
-		int i = 0;
 		// Add in properties sources for the resolved properties files
-		for (final IPath path : paths) {
-			propertiesSources[i] = new PropertiesSource() {
-				public Properties getProperties() {
-					File file = path.toFile();
-					try {
-						FileReader reader = new FileReader(file);
-						Properties p = new Properties();
-						p.load(reader);
-						return p;
-					} catch (FileNotFoundException e) {
-						throw new RuntimeException(e);
-					} catch (IOException e) {
-						throw new RuntimeException(e);
-					}
-				}
-
-				public int getPriority() {
-					return 0;
-				}
-			};
-			i++;
+		Set<PropertiesSource> propertiesSources = new HashSet<PropertiesSource>();
+		for (IPath path : paths) {
+			propertiesSources.add(new FileSystemPropertiesSource(path.toFile()));
 		}
-
-		return propertiesSources;
+		return propertiesSources.toArray(new PropertiesSource[] {});
 	}
 
 	/**
@@ -613,7 +590,9 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 
 		// Add parent folder of web.xml
 		if (!testFolders && FacetUtils.hasProjectFacet(getProject(), FacetCorePlugin.WEB_FACET_ID)) {
-			//We're really cheating a bit here, as we aren't handling the case where the user has multiple WEB-INF dirs, but that seems like an edge case.
+			// We're really cheating a bit here, as we aren't handling the case
+			// where the user has multiple WEB-INF dirs, but that seems like an
+			// edge case.
 			IResource resource = getProject().findMember(WEB_XML_PATH);
 			if (resource != null) {
 				folders.add(resource.getRawLocation().removeLastSegments(2).toString());

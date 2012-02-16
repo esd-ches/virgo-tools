@@ -238,7 +238,8 @@ public class BundleOverviewPage extends PDEFormPage implements IHyperlinkListene
 		TableWrapData data = new TableWrapData(TableWrapData.FILL_GRAB);
 		data.indent = 5;
 		button.setLayoutData(data);
-		button.setSelection(BundlorUiPlugin.isBundlorBuilding(resource.getProject()));
+		boolean building = resource != null && BundlorUiPlugin.isBundlorBuilding(resource.getProject());
+		button.setSelection(building);
 
 		toolkit.createLabel(container, "");
 
