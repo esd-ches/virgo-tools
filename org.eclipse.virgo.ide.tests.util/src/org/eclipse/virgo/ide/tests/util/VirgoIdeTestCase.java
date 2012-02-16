@@ -19,8 +19,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.junit.After;
-import org.springframework.ide.eclipse.uaa.IUaa;
-import org.springframework.ide.eclipse.uaa.UaaPlugin;
 
 /**
  * Derived from AbstractBeansCoreTestCase
@@ -30,10 +28,6 @@ import org.springframework.ide.eclipse.uaa.UaaPlugin;
  * @author Terry Hon
  */
 public abstract class VirgoIdeTestCase extends TestCase {
-
-	static {
-		UaaPlugin.getUAA().setPrivacyLevel(IUaa.LIMITED_DATA);
-	}
 
 	protected IProject createPredefinedProject(final String projectName) throws CoreException, IOException {
 		return VirgoIdeTestUtil.createPredefinedProject(projectName, getBundleName());

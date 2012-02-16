@@ -32,10 +32,7 @@ import org.eclipse.virgo.ide.ui.editors.BundleManifestEditor;
 import org.eclipse.virgo.ide.ui.editors.ParManifestEditor;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.ide.eclipse.uaa.IUaa;
-import org.springframework.ide.eclipse.uaa.UaaPlugin;
 
 /**
  * @author Steffen Pingel
@@ -44,11 +41,6 @@ import org.springframework.ide.eclipse.uaa.UaaPlugin;
 public class BundleManifestEditorTest {
 
 	private IWorkbenchPage activePage;
-
-	@BeforeClass
-	public static void setUpEnvironment() {
-		UaaPlugin.getUAA().setPrivacyLevel(IUaa.LIMITED_DATA);
-	}
 
 	@Before
 	public void setUp() throws Exception {

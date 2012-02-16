@@ -19,8 +19,7 @@ Require-Bundle: org.eclipse.core.filesystem,
  org.eclipse.swtbot.swt.finder,
  org.eclipse.virgo.ide.tests.util,
  org.eclipse.virgo.ide.runtime.core,
- org.hamcrest,
- org.springframework.ide.eclipse.uaa
+ org.hamcrest
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Import-Package: junit.framework;version="4.3.0",
