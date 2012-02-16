@@ -11,11 +11,16 @@
 package org.eclipse.virgo.ide.runtime.internal.core.provisioning;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactRepository;
 import org.eclipse.virgo.ide.bundlerepository.domain.BundleArtefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.BundleImport;
@@ -25,17 +30,13 @@ import org.eclipse.virgo.ide.bundlerepository.domain.PackageExport;
 import org.eclipse.virgo.ide.bundlerepository.domain.PackageImport;
 import org.eclipse.virgo.ide.bundlerepository.domain.PackageMemberType;
 import org.eclipse.virgo.ide.bundlerepository.domain.VersionRange;
+import org.eclipse.virgo.ide.internal.utils.json.JSONChildParser;
+import org.eclipse.virgo.ide.internal.utils.json.JSONFileParser;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-
-import com.springsource.json.parser.AntlrJSONParser;
-import com.springsource.json.parser.JSONParser;
-import com.springsource.json.parser.MapNode;
-import com.springsource.json.parser.Node;
-import com.springsource.json.parser.internal.StandardBooleanNode;
-import com.springsource.json.parser.internal.StandardListNode;
-import com.springsource.json.parser.internal.StandardStringNode;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 /**
  * @author Christian Dupuis
@@ -49,37 +50,34 @@ public class JsonArtefactRepositoryLoader implements IArtefactRepositoryLoader {
 
 	private Map<String, PackageImport> imports = new HashMap<String, PackageImport>();
 
-	private boolean loadClasses = ServerCorePlugin.getDefault().getPreferenceStore().getBoolean(
-			ServerCorePlugin.PREF_LOAD_CLASSES_KEY);
+	private boolean loadClasses = ServerCorePlugin.getDefault().getPreferenceStore()
+			.getBoolean(ServerCorePlugin.PREF_LOAD_CLASSES_KEY);
 
-	// private static final SimpleDateFormat FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+	// private static final SimpleDateFormat FORMAT = new
+	// SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
 	public ArtefactRepository loadArtefactRepository(File rootFolder) {
-		ArtefactRepository newArtefactRepository = new ArtefactRepository();
-		try {
-			Resource[] resources = new PathMatchingResourcePatternResolver().getResources("file:"
-					+ rootFolder.toString() + "/**/*-*");
-			for (Resource resource : resources) {
-				JSONParser parser = new AntlrJSONParser();
-				try {
-					MapNode node = (MapNode) parser.parse(resource.getURL());
-					MapNode nb = (MapNode) node.getNode("bundle");
-					MapNode nl = (MapNode) node.getNode("library");
-
-					if (nb != null) {
-						newArtefactRepository.addBundle(createBundleArtefact(nb));
-					}
-					if (nl != null) {
-						newArtefactRepository.addLibrary(createLibraryArtefact(nl));
-					}
+		final ArtefactRepository newArtefactRepository = new ArtefactRepository();
+		IPath path = new Path(rootFolder.getAbsolutePath());
+		IPath bundlePath = path.append("bundles");
+		File bundleFolder = bundlePath.toFile();
+		for (File bundleFile : bundleFolder.listFiles()) {
+			new JSONFileParser(bundleFile) {
+				public void parse(JSONObject object) throws JSONException {
+					JSONObject bundleNode = (JSONObject) object.get("bundle");
+					newArtefactRepository.addBundle(createBundleArtefact(bundleNode));
 				}
-				catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
+			};
 		}
-		catch (IOException e) {
-			e.printStackTrace();
+		IPath libraryPath = path.append("libraries");
+		File libraryFolder = libraryPath.toFile();
+		for (File libraryFile : libraryFolder.listFiles()) {
+			new JSONFileParser(libraryFile) {
+				public void parse(JSONObject object) throws JSONException {
+					JSONObject bundleNode = (JSONObject) object.get("library");
+					newArtefactRepository.addLibrary(createLibraryArtefact(bundleNode));
+				}
+			};
 		}
 		return newArtefactRepository;
 	}
@@ -112,128 +110,90 @@ public class JsonArtefactRepositoryLoader implements IArtefactRepositoryLoader {
 		return packageImport;
 	}
 
-	private BundleArtefact createBundleArtefact(MapNode nb) throws ParseException {
-		StandardStringNode name = (StandardStringNode) nb.getNode("name");
-		StandardStringNode version = (StandardStringNode) nb.getNode("version");
-		StandardStringNode symbolicName = (StandardStringNode) nb.getNode("symbolicName");
-		StandardStringNode organistationName = (StandardStringNode) nb.getNode("organisationName");
-		StandardStringNode moduleName = (StandardStringNode) nb.getNode("moduleName");
-		// StandardStringNode notes = (StandardStringNode) nb.getNode("notes");
-		StandardBooleanNode sourceAvailable = (StandardBooleanNode) nb.getNode("sourceAvailable");
-		// StandardStringNode dateAdded = (StandardStringNode) nb.getNode("dateAdded");
+	private BundleArtefact createBundleArtefact(JSONObject bundleNode) throws JSONException {
+		String name = bundleNode.getString("name");
+		String version = bundleNode.getString("version");
+		String symbolicName = bundleNode.getString("symbolicName");
+		String organistationName = bundleNode.getString("organisationName");
+		String moduleName = bundleNode.getString("moduleName");
+		// String notes = nb.getString("notes");
+		boolean sourceAvailable = bundleNode.getBoolean("sourceAvailable");
+		// String dateAdded = nb.getString("dateAdded");
 
-		BundleArtefact artefact = new BundleArtefact(name.getValue(), symbolicName.getValue(), getVersion(version
-				.getValue()), organistationName.getValue(), moduleName.getValue());
-		// artefact.setNotes(notes.getValue());
-		artefact.setSourceAvailable(sourceAvailable.getValue());
-		// artefact.setDateAdded(FORMAT.parse(dateAdded.getValue()));
-
-		Node exports = nb.getNode("packageExports");
-		if (exports != null) {
-			if (exports instanceof StandardListNode) {
-				for (Node en : ((StandardListNode) exports).getNodes()) {
-					MapNode e = (MapNode) en;
-					createPackageExport(artefact, e);
-				}
+		final BundleArtefact artefact = new BundleArtefact(name, symbolicName, getVersion(version), organistationName,
+			moduleName);
+		// artefact.setNotes(notes);
+		artefact.setSourceAvailable(sourceAvailable);
+		// artefact.setDateAdded(FORMAT.parse(dateAdded));
+		new JSONChildParser(bundleNode, "packageExports") {
+			public void parse(JSONObject object) throws JSONException {
+				createPackageExport(artefact, object);
 			}
-			else {
-				MapNode e = (MapNode) exports;
-				createPackageExport(artefact, e);
+		};
+		new JSONChildParser(bundleNode, "packageImports") {
+			public void parse(JSONObject object) throws JSONException {
+				createPackageImport(artefact, object);
 			}
-		}
-
-		Node imports = nb.getNode("packageImports");
-		if (imports != null) {
-			if (imports instanceof StandardListNode) {
-				for (Node en : ((StandardListNode) imports).getNodes()) {
-					MapNode e = (MapNode) en;
-					createPackageImport(artefact, e);
-				}
-			}
-			else {
-				MapNode e = (MapNode) imports;
-				createPackageImport(artefact, e);
-			}
-		}
-
+		};
 		return artefact;
 	}
 
-	private void createPackageImport(BundleArtefact artefact, MapNode e) {
-		StandardStringNode name;
-		StandardStringNode version;
-		name = (StandardStringNode) e.getNode("name");
-		version = (StandardStringNode) e.getNode("versionRange");
-		StandardBooleanNode optional = (StandardBooleanNode) e.getNode("optional");
-		PackageImport npi = getPackageImport(name.getValue(), version.getValue(), optional.getValue());
+	private void createPackageImport(BundleArtefact artefact, JSONObject e) throws JSONException {
+		String name = e.getString("name");
+		String version = e.getString("versionRange");
+		Boolean optional = e.getBoolean("optional");
+		PackageImport npi = getPackageImport(name, version, optional);
 
 		artefact.addImport(npi);
 	}
 
-	private void createPackageExport(BundleArtefact artefact, MapNode e) {
-		StandardStringNode name;
-		StandardStringNode version;
-		name = (StandardStringNode) e.getNode("name");
-		version = (StandardStringNode) e.getNode("version");
-		PackageExport npe = new PackageExport(artefact, name.getValue(), getVersion(version.getValue()));
+	private void createPackageExport(BundleArtefact artefact, JSONObject e) throws JSONException {
+		String name;
+		String version;
+		name = e.getString("name");
+		version = e.getString("version");
+		PackageExport npe = new PackageExport(artefact, name, getVersion(version));
 
 		if (loadClasses) {
-			Node exportMembers = (Node) e.getNode("packageMembers");
-			if (exportMembers != null) {
-				if (exportMembers instanceof StandardListNode) {
-					for (Node em : ((StandardListNode) exportMembers).getNodes()) {
-						MapNode m = (MapNode) em;
-						createPackageMember(npe, m);
-					}
-				}
-				else {
-					MapNode m = (MapNode) exportMembers;
-					createPackageMember(npe, m);
-				}
+			JSONArray exportMembers = e.getJSONArray("packageMembers");
+			for (int i = 0; i < exportMembers.length(); i++) {
+				JSONObject m = (JSONObject) exportMembers.get(i);
+				createPackageMember(npe, m);
 			}
 		}
 
 		artefact.addExport(npe);
 	}
 
-	private void createPackageMember(PackageExport npe, MapNode m) {
-		StandardStringNode name = (StandardStringNode) m.getNode("name");
-		PackageMemberType type = PackageMemberType.valueOf(((StandardStringNode) m.getNode("type")).getValue());
+	private void createPackageMember(PackageExport npe, JSONObject m) throws JSONException {
+		String name = m.getString("name");
+		PackageMemberType type = PackageMemberType.valueOf((m.getString("type")));
 		if (type == PackageMemberType.CLASS) {
-			npe.addClassExport(name.getValue());
-		}
-		else {
-			npe.addResourceExport(name.getValue());
+			npe.addClassExport(name);
+		} else {
+			npe.addResourceExport(name);
 		}
 	}
 
-	private LibraryArtefact createLibraryArtefact(MapNode nl) throws ParseException {
-		StandardStringNode name = (StandardStringNode) nl.getNode("name");
-		StandardStringNode version = (StandardStringNode) nl.getNode("version");
-		StandardStringNode symbolicName = (StandardStringNode) nl.getNode("symbolicName");
-		StandardStringNode organistationName = (StandardStringNode) nl.getNode("organisationName");
-		StandardStringNode moduleName = (StandardStringNode) nl.getNode("moduleName");
-		// StandardStringNode notes = (StandardStringNode) nl.getNode("notes");
-		StandardBooleanNode sourceAvailable = (StandardBooleanNode) nl.getNode("sourceAvailable");
-		// StandardStringNode dateAdded = (StandardStringNode) nl.getNode("dateAdded");
+	private LibraryArtefact createLibraryArtefact(JSONObject nl) throws JSONException {
+		String name = nl.getString("name");
+		String version = nl.getString("version");
+		String symbolicName = nl.getString("symbolicName");
+		String organistationName = nl.getString("organisationName");
+		String moduleName = nl.getString("moduleName");
+		Boolean sourceAvailable = nl.getBoolean("sourceAvailable");
 
-		LibraryArtefact artefact = new LibraryArtefact(name.getValue(), symbolicName.getValue(), getVersion(version
-				.getValue()), organistationName.getValue(), moduleName.getValue());
-		// artefact.setNotes(notes.getValue());
-		artefact.setSourceAvailable(sourceAvailable.getValue());
-		// artefact.setDateAdded(FORMAT.parse(dateAdded.getValue()));
+		final LibraryArtefact artefact = new LibraryArtefact(name, symbolicName, getVersion(version),
+			organistationName, moduleName);
+		artefact.setSourceAvailable(sourceAvailable);
 
-		StandardListNode exports = (StandardListNode) nl.getNode("bundleImports");
-		if (exports != null) {
-			for (Node en : exports.getNodes()) {
-				MapNode e = (MapNode) en;
-				name = (StandardStringNode) e.getNode("name");
-				version = (StandardStringNode) e.getNode("versionRange");
-				BundleImport npe = new BundleImport(artefact, name.getValue(), getVersionRange(version.getValue()));
-
+		new JSONChildParser(nl, "bundleImports") {
+			public void parse(JSONObject object) throws JSONException {
+				BundleImport npe = new BundleImport(artefact, object.getString("name"),
+					getVersionRange(object.getString("versionRange")));
 				artefact.addBundleImport(npe);
 			}
-		}
+		};
 		return artefact;
 
 	}

@@ -81,7 +81,12 @@ public interface IServerVersionHandler {
 	String getProfilePath(IRuntime runtime);
 
 	/**
-	 * Returns the path to the bundle repository. 
+	 * Returns the path to the ext directory in the bundle repository. 
+	 */
+	String getExtLevelBundleRepositoryPath(IRuntime runtime);
+	
+	/**
+	 * Returns the path to the user directory in the bundle repository. 
 	 */
 	String getUserLevelBundleRepositoryPath(IRuntime runtime);
 

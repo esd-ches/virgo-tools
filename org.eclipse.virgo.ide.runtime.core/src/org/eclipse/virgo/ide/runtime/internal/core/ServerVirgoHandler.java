@@ -293,6 +293,13 @@ public class ServerVirgoHandler implements IServerVersionHandler {
 	public String getUserLevelLibraryRepositoryPath(IRuntime runtime) {
 		return runtime.getLocation().append("repository").append("usr").toString();
 	}
+	
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.core.IServerVersionHandler#getExtLevelBundleRepositoryPath(org.eclipse.wst.server.core.IRuntime)
+	 */
+	public String getExtLevelBundleRepositoryPath(IRuntime runtime) {
+		return runtime.getLocation().append("repository").append("ext").toString();
+	}
 
 	/**
 	 * {@inheritDoc}

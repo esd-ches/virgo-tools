@@ -26,11 +26,11 @@ import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
  * @author Christian Dupuis
  * @since 2.0.0
  */
-public class DependencyLocator20 implements IDependencyLocator {
+public class DependencyLocatorVirgo implements IDependencyLocator {
 	
 	private final DependencyLocator dependencyLocator;
 	
-	public DependencyLocator20(String serverHomePath, String[] additionalSearchPaths, String indexDirectoryPath,
+	public DependencyLocatorVirgo(String serverHomePath, String[] additionalSearchPaths, String indexDirectoryPath,
 			JavaVersion javaVersion) throws IOException {
 		// Some platform dependent string matching
 		if (Platform.getOS().equals(Platform.OS_WIN32)) {
