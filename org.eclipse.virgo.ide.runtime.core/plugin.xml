@@ -163,4 +163,18 @@
             class="org.eclipse.virgo.ide.runtime.internal.core.ServerLaunchableAdapterDelegate"
             id="org.eclipse.virgo.server.web"/>
     </extension>
+  <extension
+        point="org.eclipse.core.runtime.preferences">
+     <initializer
+           class="org.eclipse.virgo.ide.preferences.PreferenceInitializer">
+     </initializer>
+  </extension>
+  <extension
+        point="org.eclipse.ui.preferencePages">
+     <page
+           class="org.eclipse.virgo.ide.preferences.VirgoPreferencePage"
+           id="org.eclipse.virgo.ide.preferencePage"
+           name="Virgo">
+     </page>
+  </extension>
 </plugin>

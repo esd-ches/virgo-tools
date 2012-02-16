@@ -191,7 +191,7 @@
 			id="org.eclipse.virgo.ide.runtime.ui.preferencePage" 
 			name="Repository Browser"
 			class="org.eclipse.virgo.ide.runtime.internal.ui.properties.RuntimePreferencePage"
-			category="org.springframework.ide.eclipse.ui.preferencePage">
+			category="org.eclipse.virgo.ide.preferencePage">
 		</page>
 	</extension>
 	
