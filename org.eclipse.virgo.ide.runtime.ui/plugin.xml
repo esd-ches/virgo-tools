@@ -113,7 +113,7 @@
          id="org.eclipse.virgo.ide.server.ui.configuration.editor.artefactorder"
          order="10"
          insertionId="org.eclipse.wst.server.editor.overview.right"
-         typeIds="org.eclipse.virgo.server.virgo,org.eclipse.virgo.server.virgo,35"
+         typeIds="org.eclipse.virgo.server.virgo,org.eclipse.virgo.server.virgo.35"
          class="org.eclipse.virgo.ide.runtime.internal.ui.editor.ArtefactOrderEditorSection">
       </section>
       <section
