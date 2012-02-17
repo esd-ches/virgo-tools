@@ -251,9 +251,9 @@ public class ArtefactOrderEditorSection extends ServerEditorSection {
 				IServer server = (IServer) inputElement;
 				IModule[] modules = server.getModules();
 
-				IServerWorkingCopy dmServer = (IServerWorkingCopy) server.loadAdapter(
+				IServerWorkingCopy workingServer = (IServerWorkingCopy) server.loadAdapter(
 						IServerWorkingCopy.class, null);
-				final List<String> orderedArtefacts = dmServer.getConfiguration()
+				final List<String> orderedArtefacts = workingServer.getConfiguration()
 						.getArtefactOrder();
 
 				List<IModule> orderedModules = Arrays.asList(modules);

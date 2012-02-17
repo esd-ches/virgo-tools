@@ -52,12 +52,6 @@ public abstract class AbstractJmxServerCommand {
 
 	private JMXConnector getJmxConnector() throws IOException {
 		Hashtable<String, Object> h = new Hashtable<String, Object>();
-//		String username = behaviour.getDmServer().getDeployerUsername();
-//		String password = behaviour.getDmServer().getDeployerPassword();
-//		if (StringUtils.hasText(username)) {
-//			String[] credentials = new String[] { username, password };
-//			h.put(JMX_REMOTE_CREDENTIALS, credentials);
-//		}
 		Server server = ServerUtils.getServer(serverBehaviour);
 
 		if (serverBehaviour.getMBeanServerIp() == null) {
