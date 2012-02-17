@@ -66,7 +66,6 @@ import org.eclipse.virgo.ide.jdt.internal.core.classpath.ServerClasspathContaine
 import org.eclipse.virgo.ide.manifest.internal.core.BundleManifestManager;
 import org.eclipse.virgo.ide.ui.ServerIdeUiPlugin;
 import org.eclipse.virgo.ide.ui.StatusHandler;
-import org.springframework.ide.eclipse.beans.ui.graph.BeansGraphImages;
 
 /**
  * @author Christian Dupuis
@@ -248,7 +247,8 @@ public class BundleOverviewPage extends PDEFormPage implements IHyperlinkListene
 		text.setImage("page", lp.get(PDEPluginImages.DESC_PAGE_OBJ, SharedLabelProvider.F_EDIT)); //$NON-NLS-1$
 		text.setImage(
 				"dependencies", JavaUI.getSharedImages().getImage(ISharedImages.IMG_OBJS_EXTERNAL_ARCHIVE_WITH_SOURCE)); //$NON-NLS-1$
-		text.setImage("export", BeansGraphImages.getImage(BeansGraphImages.IMG_OBJS_EXPORT_ENABLED));
+		//TODO Replace these with appropriate images as needed. MTP
+		//text.setImage("export", BeansGraphImages.getImage(BeansGraphImages.IMG_OBJS_EXPORT_ENABLED));
 		text.addHyperlinkListener(this);
 
 		section.setClient(container);

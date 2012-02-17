@@ -76,7 +76,6 @@ import org.eclipse.virgo.ide.ui.ServerIdeUiPlugin;
 import org.eclipse.virgo.ide.ui.editors.text.BundleColorManager;
 import org.eclipse.virgo.ide.ui.editors.text.BundleManifestConfiguration;
 import org.eclipse.virgo.ide.ui.internal.actions.ManifestFormatAction;
-import org.springframework.util.ReflectionUtils;
 
 /**
  * @author Christian Dupuis
@@ -230,10 +229,27 @@ public class SpringBundleSourcePage extends BundleSourcePage {
 
 	@Override
 	public IDocumentRange findRange() {
-		try {
-			java.lang.reflect.Field field = ReflectionUtils.findField(this.getClass(), "fSelection", Object.class);
+		java.lang.reflect.Field field = null;
+		Class classAncestor = this.getClass();
+		while (classAncestor != Object.class) {
+			try {
+				field = classAncestor.getDeclaredField("fSelection");
+				break;
+			}
+			catch (NoSuchFieldException e) {
+			}
+			// meh, just move up the hierarchy
+			classAncestor = classAncestor.getSuperclass();
+		}
+		if (field != null) {
 			field.setAccessible(true);
-			Object selection = field.get(this);
+			Object selection;
+			try {
+				selection = field.get(this);
+			}
+			catch (Exception e) {
+				throw new RuntimeException("Internal Error", e);
+			}
 
 			if (selection instanceof ImportLibraryObject) {
 				return getSpecificRange(((ImportLibraryObject) selection).getModel(), IHeaderConstants.IMPORT_LIBRARY,
@@ -271,11 +287,6 @@ public class SpringBundleSourcePage extends BundleSourcePage {
 							IHeaderConstants.EXCLUDED_EXPORTS, ((ExportPackageObject) selection).getValue());
 				}
 			}
-			else {
-				return super.findRange();
-			}
-		}
-		catch (Exception e) {
 		}
 		return super.findRange();
 	}

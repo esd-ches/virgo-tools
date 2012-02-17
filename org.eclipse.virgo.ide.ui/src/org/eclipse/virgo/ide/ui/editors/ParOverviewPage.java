@@ -36,7 +36,6 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.virgo.ide.export.ParExportWizard;
 import org.eclipse.virgo.ide.ui.ServerIdeUiPlugin;
-import org.springframework.ide.eclipse.beans.ui.graph.BeansGraphImages;
 
 
 /**
@@ -106,7 +105,8 @@ public class ParOverviewPage extends PDEFormPage implements IHyperlinkListener {
 		Composite container = createStaticSectionClient(toolkit, section);
 
 		FormText text = createClient(container, PAR_ACTION_SECTION_TEXT, true, toolkit);
-		text.setImage("export", BeansGraphImages.getImage(BeansGraphImages.IMG_OBJS_EXPORT_ENABLED));
+		//TODO Replace these with appropriate images as needed. MTP
+//		text.setImage("export", BeansGraphImages.getImage(BeansGraphImages.IMG_OBJS_EXPORT_ENABLED));
 		text.addHyperlinkListener(this);
 
 		section.setClient(container);
