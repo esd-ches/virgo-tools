@@ -96,7 +96,7 @@
 
 	<extension point="org.eclipse.ui.commands">
 	    <category
-            name="SpringSource dm Server Tools"
+            name="Virgo Tools"
             description=""
             id="org.eclipse.virgo.ide.bundlor.ui.commands">
         </category>

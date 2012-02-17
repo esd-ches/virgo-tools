@@ -133,7 +133,7 @@
            file-extensions="MF"
            file-names="MANIFEST"
            id="org.eclipse.virgo.ide.facet.core.bundleContentType"
-           name="SpringSource Bundle Content Type"
+           name="Virgo Bundle Content Type"
            priority="high">
       </content-type>
     </extension>
@@ -145,7 +145,7 @@
            file-extensions="MF"
            file-names="MANIFEST"
            id="org.eclipse.virgo.ide.facet.core.parContentType"
-           name="SpringSource PAR Content Type"
+           name="Virgo PAR Content Type"
            priority="high">
       </content-type>
     </extension>
@@ -157,7 +157,7 @@
             default-charset="UTF-8"
             file-extensions="plan"
             id="org.eclipse.virgo.ide.facet.core.planContentType"
-            name="SpringSource Plan Content Type"
+            name="Virgo Plan Content Type"
             priority="high">
       </content-type>
     </extension>

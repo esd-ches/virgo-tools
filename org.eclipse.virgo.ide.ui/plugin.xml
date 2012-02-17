@@ -231,7 +231,7 @@
 			elementLocator="org.springframework.ide.eclipse.beans.ui.editor.namespaces.DefaultReferenceableElementsLocator"
 			hyperLinkDetector="org.eclipse.virgo.ide.ui.editors.plan.PlanHyperlinkDetector"
 			labelProvider="org.eclipse.virgo.ide.ui.editors.plan.PlanOutlineLabelProvider"
-			name="SpringSource Plan File"
+			name="Virgo Plan File"
 			uri="http://www.springsource.org/schema/dm-server/plan" />
 	</extension>
    
