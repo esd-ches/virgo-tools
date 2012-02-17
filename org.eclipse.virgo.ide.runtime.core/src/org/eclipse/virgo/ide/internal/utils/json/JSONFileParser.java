@@ -1,11 +1,13 @@
-/**
- * <copyright>
+/*******************************************************************************
+ * Copyright (c) 2009, 2012 SpringSource, a divison of VMware, Inc.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * TODO Copyright
- *
- * </copyright>
- *
- */
+ * Contributors:
+ *     SpringSource, a division of VMware, Inc. - initial API and implementation
+ *******************************************************************************/
 package org.eclipse.virgo.ide.internal.utils.json;
 
 import java.io.File;
@@ -21,6 +23,9 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 /**
+ * Safely reads a JSON file.
+ * 
+ * Usage: Just implement {@link #parse(JSONObject)} with the processing you need and pass in a file.
  * 
  * @author Miles Parker
  * 
