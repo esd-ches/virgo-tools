@@ -27,13 +27,6 @@
             			value="org.eclipse.virgo.server.bundle:1.0"/>
 	        </adapt>
         </enablement>
-        <menu
-               label="Virgo"
-               id="org.eclipse.virgo.ide.menu">
-            <separator
-               name="group1">
-            </separator>
-         </menu> 
          <action
                class="org.eclipse.virgo.ide.bundlor.ui.internal.actions.RunBundlorActionDelegate"
                definitionId="org.eclipse.virgo.ide.bundlor.ui.commands.runBundlorOnTemplate"

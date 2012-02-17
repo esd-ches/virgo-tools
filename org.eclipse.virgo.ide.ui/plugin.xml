@@ -158,6 +158,18 @@
                id="org.eclipse.virgo.ide.ui.actions.removePlanFacet">
          </action>
       </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="org.eclipse.virgo.ide.ui.toolsMenu"
+            objectClass="org.eclipse.core.resources.IProject">
+         <menu
+               id="org.eclipse.virgo.ide.menu"
+               label="Virgo Tools">
+            <separator
+                  name="group0">
+            </separator>
+         </menu>
+      </objectContribution>
    </extension>
    
    	<extension point="org.eclipse.wst.xml.core.catalogContributions">
