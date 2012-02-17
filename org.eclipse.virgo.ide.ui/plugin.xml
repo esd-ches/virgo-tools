@@ -175,11 +175,11 @@
    	<extension point="org.eclipse.wst.xml.core.catalogContributions">
 		<catalogContribution>
 			<system
-				systemId="http://www.springsource.org/schema/dm-server/plan/springsource-dm-server-plan.xsd"
-    		    uri="xsds/springsource-dm-server-plan.xsd" />
+				systemId="http://www.eclipse.org/virgo/schema/plan/eclipse-virgo-plan.xsd"
+    		    uri="xsds/eclipse-virgo-plan.xsd" />
 			<public
-	        	publicId="http://www.springsource.org/schema/dm-server/plan"
-    		    uri="xsds/springsource-dm-server-plan.xsd" />
+	        	publicId="http://www.eclipse.org/virgo/schema/plan"
+    		    uri="xsds/eclipse-virgo-plan.xsd" />
 		</catalogContribution>
 	</extension>
    
@@ -216,7 +216,7 @@
 	
 	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
 		<sourceViewerConfiguration
-			class="org.springframework.ide.eclipse.beans.ui.editor.BeansStructuredTextViewerConfiguration"
+			class="org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML"
 			target="org.eclipse.virgo.ide.facet.core.planContentType" />
 	</extension>
 
@@ -236,16 +236,6 @@
 		</adapterFactoryDescription>
 	</extension>
 	
-	<extension
-		point="org.springframework.ide.eclipse.beans.ui.editor.namespaces">
-		<namespace
-			contentAssistProcessor="org.eclipse.virgo.ide.ui.editors.plan.PlanContentAssistProcessor"
-			elementLocator="org.springframework.ide.eclipse.beans.ui.editor.namespaces.DefaultReferenceableElementsLocator"
-			hyperLinkDetector="org.eclipse.virgo.ide.ui.editors.plan.PlanHyperlinkDetector"
-			labelProvider="org.eclipse.virgo.ide.ui.editors.plan.PlanOutlineLabelProvider"
-			name="Virgo Plan File"
-			uri="http://www.springsource.org/schema/dm-server/plan" />
-	</extension>
 	
 	<extension
         point="org.eclipse.ui.preferencePages">
