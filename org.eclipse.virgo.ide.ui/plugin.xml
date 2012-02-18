@@ -259,5 +259,18 @@
        </filter>
     </page>
  </extension>
+ <extension
+       point="org.eclipse.wst.sse.ui.completionProposal">
+    <proposalComputer
+          activate="true"
+          categoryId="org.eclipse.wst.xml.ui.proposalCategory.xmlTags"
+          class="org.eclipse.virgo.ide.ui.editors.plan.PlanContentAssistProcessor"
+          id="org.eclipse.virgo.ide.ui.plan.proposals"
+          name="Plan Completion Proposals">
+       <contentType
+             id="org.eclipse.virgo.ide.facet.core.planContentType">
+       </contentType>
+    </proposalComputer>
+ </extension>
    
 </plugin>
