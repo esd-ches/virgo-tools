@@ -33,7 +33,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.virgo.repository,
  org.eclipse.virgo.medic,
  org.eclipse.jst.jee.web,
- org.eclipse.jst.j2ee
+ org.eclipse.jst.j2ee,
+ org.aspectj.weaver
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Eclipse-LazyStart: true
 Export-Package: 
