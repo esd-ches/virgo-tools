@@ -86,13 +86,6 @@
   </profiles>
 
   <repositories>
-	<!--
-	<repository>
-	  <id>bundles</id>
-	  <layout>p2</layout>
-	  <url>file:${basedir}/../required-bundles/repo</url>
-	</repository>
-	-->
 	<repository>
 	  <id>helios</id>
 	  <layout>p2</layout>
@@ -118,6 +111,7 @@
       <layout>p2</layout>
       <url>http://download.eclipse.org/libra/milestones/</url>
     </repository>
+    <!-- 
     <repository>
       <id>bundlor-milestone</id>
       <layout>p2</layout>
@@ -128,12 +122,17 @@
       <layout>p2</layout>
       <url>http://download.eclipse.org/virgo/updatesite/3.5.0.M02</url>
     </repository>
-	<!--	
+    -->
 	<repository>
-	  <id>virgo</id>
-	  <url>http://build.eclipse.org/rt/virgo/maven/bundles/snapshot</url>
-	</repository> 
-	-->
+	  <id>bundles</id>
+	  <layout>p2</layout>
+	  <url>file:${basedir}/../required-bundles/repo</url>
+	</repository>
+	<repository>
+      <id>springide</id>
+      <layout>p2</layout>
+      <url>http://dist.springsource.com/release/TOOLS/update/2.7.1.RELEASE/e3.6/</url>
+    </repository>
   </repositories>
 
   <build>
