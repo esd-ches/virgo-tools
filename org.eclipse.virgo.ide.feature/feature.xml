@@ -50,8 +50,6 @@
       <import plugin="org.eclipse.wst.common.modulecore"/>
       <import plugin="org.eclipse.equinox.launcher"/>
       <import plugin="org.eclipse.jface.text"/>
-      <import plugin="org.springframework.ide.eclipse.core" version="2.3.0" match="greaterOrEqual"/>
-      <import plugin="org.springframework.ide.eclipse.ui" version="2.3.0" match="greaterOrEqual"/>
    </requires>
 
    <plugin
@@ -249,15 +247,6 @@
          version="0.0.0"
          unpack="false"/>
 
-   <!--
-   <plugin
-         id="org.slf4j.nop"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         fragment="true"
-         unpack="false"/>
-   -->
    <plugin
          id="org.jdom"
          download-size="0"
