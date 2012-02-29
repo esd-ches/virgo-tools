@@ -38,7 +38,7 @@ import org.springframework.osgi.util.OsgiServiceReferenceUtils;
 /**
  * @author Christian Dupuis
  */
-@ManagedResource(objectName = "com.springsource.server:type=BundleAdmin", description = "SpringSource Tool Suite Connector Bean")
+@ManagedResource(objectName = "com.springsource.server:type=BundleAdmin", description = "Virgo IDE Connector Bean")
 public class StandardBundleAdmin implements BundleAdmin {
 
 	private final PlatformAdmin platformAdmin;
