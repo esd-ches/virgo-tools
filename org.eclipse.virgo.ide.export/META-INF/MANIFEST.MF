@@ -27,6 +27,7 @@ Require-Bundle: org.eclipse.core.resources,
  org.eclipse.jst.j2ee,
  org.eclipse.jst.j2ee.web,
  org.eclipse.wst.common.frameworks,
- org.eclipse.wst.server.core
+ org.eclipse.wst.server.core,
+ org.eclipse.virgo.util.osgi.manifest
 Bundle-Activator: org.eclipse.virgo.ide.export.ServerExportPlugin
 Bundle-Localization: plugin

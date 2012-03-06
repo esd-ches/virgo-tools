@@ -163,7 +163,7 @@ public class RepositoryUtils {
 									runtime.getRuntime());
 					org.eclipse.virgo.kernel.repository.BundleDefinition bundleDefinition = bundleRepository
 							.findBySymbolicName(bundle,
-									new org.eclipse.virgo.util.osgi.VersionRange(version));
+									new org.eclipse.virgo.util.osgi.manifest.VersionRange(version));
 					if (bundleDefinition != null) {
 						bundles.add(bundleDefinition);
 						return false;
