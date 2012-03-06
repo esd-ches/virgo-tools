@@ -44,7 +44,7 @@ public class ServerRuntime extends RuntimeDelegate implements IServerRuntime,
 	}
 
 	public IServerVersionHandler getVersionHandler() {
-		return ServerVersionHelper.getVersionHandler(getRuntime().getRuntimeType()
+		return ServerVersionAdapter.getVersionHandler(getRuntime().getRuntimeType()
 				.getId());
 	}
 

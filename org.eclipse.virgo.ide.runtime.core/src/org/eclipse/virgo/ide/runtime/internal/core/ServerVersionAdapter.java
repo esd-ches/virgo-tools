@@ -11,21 +11,27 @@
 package org.eclipse.virgo.ide.runtime.internal.core;
 
 import org.eclipse.virgo.ide.runtime.core.IServerVersionHandler;
+import org.eclipse.wst.server.core.IRuntime;
 
 /**
  * Utility that loads {@link IServerVersionHandler}s based on given version identifiers.
  * @author Christian Dupuis
+ * @author Leo Dos Santos
+ * @author Miles Parker
  * @since 1.0.0
  */
-public class ServerVersionHelper {
+public class ServerVersionAdapter {
 	
-	public static final String SERVER_VIRGO = "org.eclipse.virgo.server.runtime.virgo";
+	public static final String SERVER_VIRGO_BASE = "org.eclipse.virgo.server.runtime.virgo";
 	
-	public static final String SERVER_VIRGO_35 = "org.eclipse.virgo.server.runtime.virgo.35";
+	//Need to preserve id for backward compatibility
+	public static final String SERVER_VIRGO_21x_31x = SERVER_VIRGO_BASE;
+	
+	public static final String SERVER_VIRGO_35 = SERVER_VIRGO_BASE + ".35";
 
 	public static IServerVersionHandler getVersionHandler(String id) {
-		if (SERVER_VIRGO.equals(id)) {
-			return new ServerVirgoHandler();
+		if (SERVER_VIRGO_21x_31x.equals(id)) {
+			return new ServerVirgo21_30Handler();
 		}
 		if (SERVER_VIRGO_35.equals(id)) {
 			return new ServerVirgo35Handler();
@@ -35,4 +41,7 @@ public class ServerVersionHelper {
 		}
 	}
 
+	public static boolean isVirgo(IRuntime runtime) {
+		return runtime.getRuntimeType().getId().startsWith(ServerVersionAdapter.SERVER_VIRGO_BASE);
+	}
 }

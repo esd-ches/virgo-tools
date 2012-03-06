@@ -17,7 +17,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -33,48 +32,49 @@ import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.wst.server.core.IRuntime;
 
 /**
- * {@link IServerVersionHandler} for Virgo Server 3.5.0 and above.
+ * {@link IServerVersionHandler} for Virgo Server 2.1.x through 3.0.x.
  * 
  * @author Borislav Kapukaranov
  * @author Miles Parker
  */
-public class ServerVirgo35Handler extends ServerVirgoHandler {
+public class ServerVirgo21_30Handler extends ServerVirgoHandler {
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public String getRuntimeClass() {
-		return "org.eclipse.equinox.launcher.Main";
-	}
-
-	String getConfigDir() {
-		return "configuration";
+		return "org.eclipse.virgo.osgi.launcher.Launcher";
 	}
 
 	/**
-	 * @see org.eclipse.virgo.ide.runtime.internal.core.ServerVirgoHandler#getProfileDir()
+	 * {@inheritDoc}
+	 */
+	String getConfigDir() {
+		return "config";
+	}
+
+	/**
+	 * {@inheritDoc}
 	 */
 	String getProfileDir() {
-		return getConfigDir();
+		return "lib";
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerVersionHandler#getRuntimeClasspath(org.eclipse.core.runtime.IPath)
 	 */
 	public List<IRuntimeClasspathEntry> getRuntimeClasspath(IPath installPath) {
-		List<IRuntimeClasspathEntry> cp = super.getRuntimeClasspath(installPath);
+		List<IRuntimeClasspathEntry> cp = new ArrayList<IRuntimeClasspathEntry>();
 
-		IPath pluginsPath = installPath.append("plugins");
-		if (pluginsPath.toFile().exists()) {
-			File pluginsFolder = pluginsPath.toFile();
-			for (File library : pluginsFolder.listFiles(new FileFilter() {
+		IPath binPath = installPath.append("lib");
+		if (binPath.toFile().exists()) {
+			File libFolder = binPath.toFile();
+			for (File library : libFolder.listFiles(new FileFilter() {
 				public boolean accept(File pathname) {
-					return pathname.isFile() && pathname.toString().endsWith(".jar")
-						&& pathname.toString().contains("org.eclipse.osgi_")
-						&& pathname.toString().contains("org.eclipse.equinox.console.supportability_");
+					return pathname.isFile() && pathname.toString().endsWith(".jar");
 				}
 			})) {
-				IPath path = pluginsPath.append(library.getName());
+				IPath path = binPath.append(library.getName());
 				cp.add(JavaRuntime.newArchiveRuntimeClasspathEntry(path));
 			}
 		}
@@ -86,58 +86,15 @@ public class ServerVirgo35Handler extends ServerVirgoHandler {
 	 * {@inheritDoc}
 	 */
 	public String[] getRuntimeProgramArguments(IServerBehaviour behaviour) {
-		List<String> list = new ArrayList<String>();
-		list.add("-noExit");
-		return list.toArray(new String[list.size()]);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public String[] getRuntimeVMArguments(IServerBehaviour behaviour, IPath installPath, IPath configPath,
-			IPath deployPath) {
-		String[] commonArguments = super.getRuntimeVMArguments(behaviour, installPath, configPath, deployPath);
 		String serverHome = ServerUtils.getServer(behaviour).getRuntimeBaseDirectory().toOSString();
 		List<String> list = new ArrayList<String>();
-		list.addAll(Arrays.asList(commonArguments));
-
-		list.add("-Dorg.eclipse.virgo.kernel.config=" + serverHome + "/" + getConfigDir());
-		list.add("-Dosgi.java.profile=file:" + serverHome + "/" + getConfigDir() + "/java6-server.profile");
-		list.add("-Declipse.ignoreApp=true");
-		list.add("-Dosgi.install.area=" + serverHome);
-		list.add("-Dosgi.configuration.area=" + serverHome + "/work");
-		list.add("-Dssh.server.keystore=" + serverHome + "/" + getConfigDir() + "/hostkey.ser");
-
-		String fwClassPath = createFWClassPath(serverHome);
-
-		list.add("-Dosgi.frameworkClassPath=" + fwClassPath);
-
+		list.add("-config \"" + serverHome + "/lib/org.eclipse.virgo.kernel.launch.properties\"");
+		list.add("-Forg.eclipse.virgo.kernel.home=\"" + serverHome + "\"");
+		list.add("-Forg.eclipse.virgo.kernel.config=\"" + serverHome + "/config," + serverHome + "/stage\"");
+		list.add("-Fosgi.configuration.area=\"" + serverHome + "/work/osgi/configuration\"");
+		list.add("-Fosgi.java.profile=\"file:" + serverHome + "/lib/java6-server.profile\"");
+		list.add("-Fosgi.clean=true");
 		return list.toArray(new String[list.size()]);
-	}
-
-	private String createFWClassPath(String serverHome) {
-		StringBuilder fwClassPath = new StringBuilder();
-		File libDir = new File(serverHome + "/lib");
-		if (libDir.exists()) {
-			for (File file : libDir.listFiles()) {
-				if (file.getName().endsWith(".jar")) {
-					fwClassPath.append("file:" + file.getAbsolutePath() + ",");
-				}
-			}
-		}
-		File plugins = new File(serverHome + "/plugins");
-		if (plugins.exists()) {
-			for (File file : plugins.listFiles()) {
-				if (file.getName().contains("org.eclipse.osgi_")) {
-					fwClassPath.append("file:" + file.getAbsolutePath() + ",");
-				}
-				if (file.getName().contains("org.eclipse.equinox.console.supportability_")) {
-					fwClassPath.append("file:" + file.getAbsolutePath() + ",");
-				}
-			}
-		}
-		fwClassPath.deleteCharAt(fwClassPath.length() - 1);
-		return fwClassPath.toString();
 	}
 
 	/**

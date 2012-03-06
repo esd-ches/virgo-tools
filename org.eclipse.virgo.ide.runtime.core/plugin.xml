@@ -28,9 +28,9 @@
 		</runtimeType>
 		  <runtimeType
 		        class="org.eclipse.virgo.ide.runtime.internal.core.VirgoServerRuntime"
-		        description="%runtimeVirgo35Description"
+		        description="%runtimeVirgoDescription35"
 		        id="org.eclipse.virgo.server.runtime.virgo.35"
-		        name="%runtimeVirgo35TypeName"
+		        name="%runtimeVirgoTypeName35"
 		        vendor="%runtimeVirgoTypeVendor"
 		        version="3.5">
 		        <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5" />
@@ -42,8 +42,8 @@
 	
 	<extension point="org.eclipse.wst.server.core.serverTypes">
 		<serverType id="org.eclipse.virgo.server.virgo" 
-			name="%serverVirgoServerType"
-			description="%serverVirgoServerDescription" 
+			name="%serverVirgoServerType21_30"
+			description="%serverVirgoServerDescription21_30" 
 			supportsRemoteHosts="false"
 			runtime="true" 
 			startTimeout="300000" 
@@ -55,15 +55,14 @@
 			class="org.eclipse.virgo.ide.runtime.internal.core.VirgoServer"
 			behaviourClass="org.eclipse.virgo.ide.runtime.internal.core.VirgoServerBehaviour">
 		</serverType>
-		  <serverType
+		  <serverType id="org.eclipse.virgo.server.virgo.35"
 		        behaviourClass="org.eclipse.virgo.ide.runtime.internal.core.VirgoServerBehaviour"
 		        class="org.eclipse.virgo.ide.runtime.internal.core.VirgoServer"
-		        description="%serverVirgo35ServerDescription"
+		        name="%serverVirgoServerType35"
+		        description="%serverVirgoServerDescription35"
 		        hasConfiguration="true"
-		        id="org.eclipse.virgo.server.virgo.35"
 		        initialState="stopped"
 		        launchConfigId="org.eclipse.virgo.server.launchconfig.virgo"
-		        name="%serverVirgo35ServerType"
 		        runtime="true"
 		        runtimeTypeId="org.eclipse.virgo.server.runtime.virgo.35"
 		        startTimeout="300000"
@@ -133,9 +132,8 @@
 			runtimeTypeId="org.eclipse.virgo.server.runtime.virgo"
 			runtime-component="org.eclipse.virgo.server.virgo" version="2.1" />
 		  <runtimeFacetMapping
-		        runtime-component="org.eclipse.virgo.server.virgo"
 		        runtimeTypeId="org.eclipse.virgo.server.runtime.virgo.35"
-		        version="3.5">
+		        runtime-component="org.eclipse.virgo.server.virgo" version="3.5">
 		  </runtimeFacetMapping>
 	</extension>
 	
