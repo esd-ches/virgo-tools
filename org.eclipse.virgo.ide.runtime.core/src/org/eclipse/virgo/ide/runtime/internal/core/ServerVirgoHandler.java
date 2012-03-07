@@ -39,11 +39,11 @@ import org.eclipse.virgo.ide.runtime.internal.core.command.IServerCommand;
 import org.eclipse.virgo.ide.runtime.internal.core.command.JmxBundleAdminExecuteCommand;
 import org.eclipse.virgo.ide.runtime.internal.core.command.JmxBundleAdminServerCommand;
 import org.eclipse.virgo.ide.runtime.internal.core.command.JmxServerDeployCommand;
-import org.eclipse.virgo.ide.runtime.internal.core.command.JmxServerUndeployCommand;
-import org.eclipse.virgo.ide.runtime.internal.core.command.JmxServerUpdateCommand;
 import org.eclipse.virgo.ide.runtime.internal.core.command.JmxServerPingCommand;
 import org.eclipse.virgo.ide.runtime.internal.core.command.JmxServerRefreshCommand;
 import org.eclipse.virgo.ide.runtime.internal.core.command.JmxServerShutdownCommand;
+import org.eclipse.virgo.ide.runtime.internal.core.command.JmxServerUndeployCommand;
+import org.eclipse.virgo.ide.runtime.internal.core.command.JmxServerUpdateCommand;
 import org.eclipse.virgo.util.common.StringUtils;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IRuntime;
@@ -61,6 +61,8 @@ import org.eclipse.wst.server.core.util.PublishHelper;
  */
 public abstract class ServerVirgoHandler implements IServerVersionHandler {
 
+	public static final String SERVER_VIRGO_BASE = "org.eclipse.virgo.server.runtime.virgo";
+	
 	private static final String BUNDLE_OBJECT_NAME = "org.eclipse.virgo.kernel:type=Model,artifact-type=bundle,name=$NAME,version=$VERSION";
 
 	private static final String DEPLOYER_MBEAN_NAME = "org.eclipse.virgo.kernel:category=Control,type=Deployer";
@@ -134,6 +136,48 @@ public abstract class ServerVirgoHandler implements IServerVersionHandler {
 	 */
 	public String getShutdownMBeanName() {
 		return SHUTDOWN_MBEAN_NAME;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public IStatus verifyInstallation(IPath installPath) {
+		String version = installPath.append("lib").append(".version").toOSString();
+		File versionFile = new File(version);
+		if (versionFile.exists()) {
+			InputStream is = null;
+			try {
+				is = new FileInputStream(versionFile);
+				Properties versionProperties = new Properties();
+				versionProperties.load(is);
+				String versionString = versionProperties.getProperty("virgo.server.version");
+
+				if (versionString == null) {
+					return new Status(
+							Status.ERROR,
+							ServerCorePlugin.PLUGIN_ID,
+							".version file in lib directory is missing key 'virgo.server.version'. Make sure to point to a Virgo Server installation.");
+				}
+			}
+			catch (FileNotFoundException e) {
+			}
+			catch (IOException e) {
+			}
+			finally {
+				if (is != null) {
+					try {
+						is.close();
+					}
+					catch (IOException e) {
+					}
+				}
+			}
+		}
+		else {
+			return new Status(Status.ERROR, ServerCorePlugin.PLUGIN_ID,
+					".version file in lib directory is missing. Make sure to point to a Virgo Server installation.");
+		}
+		return Status.OK_STATUS;
 	}
 
 	protected String getRepositoryConfigurationFileName() {
@@ -315,6 +359,16 @@ public abstract class ServerVirgoHandler implements IServerVersionHandler {
 		createRepositoryConfiguration(serverBehaviour, getRepositoryConfigurationFileName());
 	}
 	
+	public boolean isHandlerFor(IRuntime runtime) {
+		IPath configPath = runtime.getLocation().append(getConfigDir());
+		File configDir = configPath.toFile();
+		return configDir.exists();
+	}
+
+	public static boolean isVirgo(IRuntime runtime) {
+		return runtime.getRuntimeType().getId().startsWith(SERVER_VIRGO_BASE);
+	}
+	
 	/**
 	 * Non-API
 	 */
@@ -324,4 +378,8 @@ public abstract class ServerVirgoHandler implements IServerVersionHandler {
 	 * Non-API
 	 */
 	abstract String getProfileDir();
+
+	public abstract String getID();
+	
+	public abstract String getName();
 }

@@ -169,7 +169,7 @@ public class ServerUtils {
 	private static IDependencyLocator createDependencyLocator(IRuntime runtime, String serverHomePath,
 			String[] additionalSearchPaths, String indexDirectoryPath, JavaVersion javaVersion) throws IOException {
 		// TODO CD check to see if this can be moved into the version handler
-		if (ServerVersionAdapter.isVirgo(runtime)) {
+		if (ServerVersionAdapter.getVersionHandler(runtime.getRuntimeType().getId()) != null) {
 			return new DependencyLocatorVirgo(serverHomePath, additionalSearchPaths, indexDirectoryPath, javaVersion);
 		}
 		return null;

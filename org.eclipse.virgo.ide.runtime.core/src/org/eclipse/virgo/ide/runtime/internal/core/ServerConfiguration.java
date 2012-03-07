@@ -11,8 +11,6 @@
 package org.eclipse.virgo.ide.runtime.internal.core;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
@@ -21,18 +19,11 @@ import java.util.List;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.ide.internal.utils.json.JSONChildParser;
 import org.eclipse.virgo.ide.internal.utils.json.JSONFileParser;
-import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.IServerConfiguration;
-import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 /**
  * Default {@link IServerConfiguration} implementation.

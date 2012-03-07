@@ -28,7 +28,7 @@ import org.eclipse.wst.server.core.model.RuntimeDelegate;
 
 
 /**
- * Default dm server runtime implementation.
+ * Virgo server runtime implementation. Delegates to handlers.
  * @author Christian Dupuis
  * @since 1.0.0
  */
@@ -36,16 +36,11 @@ public class ServerRuntime extends RuntimeDelegate implements IServerRuntime,
 		IServerRuntimeWorkingCopy {
 	
 	public List<IRuntimeClasspathEntry> getRuntimeClasspath() {
-		return getVersionHandler().getRuntimeClasspath(getRuntime().getLocation());
+		return getVirgoVersion().getRuntimeClasspath(getRuntime().getLocation());
 	}
 	
 	public String getRuntimeClass() {
-		return getVersionHandler().getRuntimeClass();
-	}
-
-	public IServerVersionHandler getVersionHandler() {
-		return ServerVersionAdapter.getVersionHandler(getRuntime().getRuntimeType()
-				.getId());
+		return getVirgoVersion().getRuntimeClass();
 	}
 
 	public IVMInstall getVMInstall() {
@@ -103,7 +98,7 @@ public class ServerRuntime extends RuntimeDelegate implements IServerRuntime,
 	}
 
 	public IStatus verifyLocation() {
-		return getVersionHandler().verifyInstallation(getRuntime().getLocation());
+		return getVirgoVersion().verifyInstallation(getRuntime().getLocation());
 	}
 
 	protected String getVMInstallId() {
@@ -131,19 +126,30 @@ public class ServerRuntime extends RuntimeDelegate implements IServerRuntime,
 	}
 	
 	public String getUserLevelBundleRepositoryPath() {
-		return getVersionHandler().getUserLevelBundleRepositoryPath(getRuntime());
+		return getVirgoVersion().getUserLevelBundleRepositoryPath(getRuntime());
 	}
 
 	public String getUserLevelLibraryRepositoryPath() {
-		return getVersionHandler().getUserLevelLibraryRepositoryPath(getRuntime());
+		return getVirgoVersion().getUserLevelLibraryRepositoryPath(getRuntime());
 	}
 	
 	public String getProfilePath() {
-		return getVersionHandler().getProfilePath(getRuntime());
+		return getVirgoVersion().getProfilePath(getRuntime());
 	}
 	
 	public String getConfigPath() {
-		return getVersionHandler().getConfigPath(getRuntime());
+		return getVirgoVersion().getConfigPath(getRuntime());
+	}
+	
+	public IServerVersionHandler getVirgoVersion() {
+		String versionID = getAttribute(PROPERTY_VIRGO_VERSION_TYPE_ID, ServerVirgo35Handler.INSTANCE.getID());
+		return ServerVersionAdapter.getVersionHandler(versionID);
 	}
 
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeWorkingCopy#setVirgoVersion(java.lang.String)
+	 */
+	public void setVirgoVersion(IServerVersionHandler handler) {
+		setAttribute(PROPERTY_VIRGO_VERSION_TYPE_ID, ServerVersionAdapter.getVersionID(handler));
+	}
 }

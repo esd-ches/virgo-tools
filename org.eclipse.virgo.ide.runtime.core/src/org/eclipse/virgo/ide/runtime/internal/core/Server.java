@@ -268,7 +268,7 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 			if (getServer().getRuntime() == null || getRuntime() == null) {
 				return null;
 			}
-			versionHandler = getRuntime().getVersionHandler();
+			versionHandler = getRuntime().getVirgoVersion();
 		}
 		return versionHandler;
 	}

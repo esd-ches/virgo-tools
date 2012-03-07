@@ -11,37 +11,34 @@
 package org.eclipse.virgo.ide.runtime.internal.core;
 
 import org.eclipse.virgo.ide.runtime.core.IServerVersionHandler;
-import org.eclipse.wst.server.core.IRuntime;
 
 /**
- * Utility that loads {@link IServerVersionHandler}s based on given version identifiers.
+ * Utility that loads {@link IServerVersionHandler}s based on given version
+ * identifiers.
+ * 
  * @author Christian Dupuis
  * @author Leo Dos Santos
  * @author Miles Parker
  * @since 1.0.0
  */
 public class ServerVersionAdapter {
-	
-	public static final String SERVER_VIRGO_BASE = "org.eclipse.virgo.server.runtime.virgo";
-	
-	//Need to preserve id for backward compatibility
-	public static final String SERVER_VIRGO_21x_31x = SERVER_VIRGO_BASE;
-	
-	public static final String SERVER_VIRGO_35 = SERVER_VIRGO_BASE + ".35";
+
+	public static final ServerVirgoHandler[] ALL_HANDLERS = new ServerVirgoHandler[] {
+		ServerVirgo21_30Handler.INSTANCE, ServerVirgo35Handler.INSTANCE };
 
 	public static IServerVersionHandler getVersionHandler(String id) {
-		if (SERVER_VIRGO_21x_31x.equals(id)) {
-			return new ServerVirgo21_30Handler();
+		for (ServerVirgoHandler handler : ALL_HANDLERS) {
+			if (handler.getID().equals(id)) {
+				return handler;
+			}
 		}
-		if (SERVER_VIRGO_35.equals(id)) {
-			return new ServerVirgo35Handler();
-		}
-		else {
-			return null;
-		}
+		return null;
 	}
 
-	public static boolean isVirgo(IRuntime runtime) {
-		return runtime.getRuntimeType().getId().startsWith(ServerVersionAdapter.SERVER_VIRGO_BASE);
+	public static String getVersionID(IServerVersionHandler handler) {
+		if (handler instanceof ServerVirgoHandler) {
+			return ((ServerVirgoHandler) handler).getID();
+		}
+		return null;
 	}
 }

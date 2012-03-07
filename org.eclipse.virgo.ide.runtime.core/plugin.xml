@@ -17,8 +17,8 @@
 	<extension point="org.eclipse.wst.server.core.runtimeTypes">
 		<runtimeType id="org.eclipse.virgo.server.runtime.virgo"
 			version="2.1" 
-			name="%runtimeVirgoTypeName" 
-			description="%runtimeVirgoDescription"
+			name="%runtimeVirgoTypeName21_30" 
+			description="%runtimeVirgoDescription21_30"
 			vendor="%runtimeVirgoTypeVendor" 
 			class="org.eclipse.virgo.ide.runtime.internal.core.VirgoServerRuntime">
 			<moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5" />
