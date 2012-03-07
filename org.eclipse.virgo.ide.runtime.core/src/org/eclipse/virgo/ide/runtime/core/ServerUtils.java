@@ -45,6 +45,7 @@ import org.eclipse.virgo.ide.runtime.internal.core.ServerVersionAdapter;
 import org.eclipse.virgo.ide.runtime.internal.core.utils.StatusUtil;
 import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocator;
 import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocatorVirgo;
+import org.eclipse.virgo.kernel.osgi.provisioning.tools.Pre35DependencyLocatorVirgo;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.util.PublishUtil;
@@ -168,9 +169,9 @@ public class ServerUtils {
 
 	private static IDependencyLocator createDependencyLocator(IRuntime runtime, String serverHomePath,
 			String[] additionalSearchPaths, String indexDirectoryPath, JavaVersion javaVersion) throws IOException {
-		// TODO CD check to see if this can be moved into the version handler
-		if (ServerVersionAdapter.getVersionHandler(runtime.getRuntimeType().getId()) != null) {
-			return new DependencyLocatorVirgo(serverHomePath, additionalSearchPaths, indexDirectoryPath, javaVersion);
+		IServerVersionHandler versionHandler = ServerVersionAdapter.getVersionHandler(runtime.getRuntimeType().getId());
+		if (versionHandler != null) {
+			return versionHandler.createDependencyLocator(runtime, serverHomePath, additionalSearchPaths, indexDirectoryPath, javaVersion);
 		}
 		return null;
 	}

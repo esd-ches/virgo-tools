@@ -26,7 +26,7 @@ public class ServerVersionAdapter {
 	public static final ServerVirgoHandler[] ALL_HANDLERS = new ServerVirgoHandler[] {
 		ServerVirgo21_30Handler.INSTANCE, ServerVirgo35Handler.INSTANCE };
 
-	public static IServerVersionHandler getVersionHandler(String id) {
+	public static ServerVirgoHandler getVersionHandler(String id) {
 		for (ServerVirgoHandler handler : ALL_HANDLERS) {
 			if (handler.getID().equals(id)) {
 				return handler;

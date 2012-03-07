@@ -12,6 +12,7 @@ package org.eclipse.virgo.ide.runtime.internal.core;
 
 import java.io.File;
 import java.io.FileFilter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -19,9 +20,13 @@ import java.util.List;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator;
+import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator.JavaVersion;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.core.IServerVersionHandler;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
+import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocatorVirgo;
+import org.eclipse.wst.server.core.IRuntime;
 
 /**
  * {@link IServerVersionHandler} for Virgo Server 3.5.0 and above.
@@ -31,14 +36,14 @@ import org.eclipse.virgo.ide.runtime.core.ServerUtils;
  */
 public class ServerVirgo35Handler extends ServerVirgoHandler {
 
-	//Assumes Stateless
+	// Assumes Stateless
 	public static final ServerVirgoHandler INSTANCE = new ServerVirgo35Handler();
-	
+
 	private static final String SERVER_VIRGO_35 = SERVER_VIRGO_BASE + ".35";
 
 	private ServerVirgo35Handler() {
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -145,8 +150,18 @@ public class ServerVirgo35Handler extends ServerVirgoHandler {
 	public String getID() {
 		return SERVER_VIRGO_35;
 	}
-	
+
 	public String getName() {
 		return "v3.5+";
+	}
+
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.core.IServerVersionHandler#createDependencyLocator(org.eclipse.wst.server.core.IRuntime,
+	 *      java.lang.String, java.lang.String[], java.lang.String,
+	 *      org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator.JavaVersion)
+	 */
+	public IDependencyLocator createDependencyLocator(IRuntime runtime, String serverHomePath,
+			String[] additionalSearchPaths, String indexDirectoryPath, JavaVersion javaVersion) throws IOException {
+		return new DependencyLocatorVirgo(serverHomePath, additionalSearchPaths, indexDirectoryPath, javaVersion);
 	}
 }

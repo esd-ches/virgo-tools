@@ -10,12 +10,18 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.runtime.internal.core;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator;
+import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator.JavaVersion;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.core.IServerVersionHandler;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
+import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocatorVirgo;
+import org.eclipse.virgo.kernel.osgi.provisioning.tools.Pre35DependencyLocatorVirgo;
+import org.eclipse.wst.server.core.IRuntime;
 
 /**
  * {@link IServerVersionHandler} for Virgo Server 2.1.x through 3.0.x.
@@ -79,4 +85,15 @@ public class ServerVirgo21_30Handler extends ServerVirgoHandler {
 	public String getName() {
 		return "v2.1-3.0";
 	}
+	
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.core.IServerVersionHandler#createDependencyLocator(org.eclipse.wst.server.core.IRuntime,
+	 *      java.lang.String, java.lang.String[], java.lang.String,
+	 *      org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator.JavaVersion)
+	 */
+	public IDependencyLocator createDependencyLocator(IRuntime runtime, String serverHomePath,
+			String[] additionalSearchPaths, String indexDirectoryPath, JavaVersion javaVersion) throws IOException {
+		return new Pre35DependencyLocatorVirgo(serverHomePath, additionalSearchPaths, indexDirectoryPath, javaVersion);
+	}
+
 }

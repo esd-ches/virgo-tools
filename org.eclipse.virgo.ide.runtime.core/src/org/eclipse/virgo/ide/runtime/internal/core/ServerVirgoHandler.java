@@ -30,6 +30,8 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.libra.framework.editor.core.model.IBundle;
+import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator;
+import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator.JavaVersion;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.core.IServerVersionHandler;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
@@ -368,7 +370,6 @@ public abstract class ServerVirgoHandler implements IServerVersionHandler {
 	public static boolean isVirgo(IRuntime runtime) {
 		return runtime.getRuntimeType().getId().startsWith(SERVER_VIRGO_BASE);
 	}
-	
 	/**
 	 * Non-API
 	 */
