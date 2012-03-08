@@ -24,7 +24,7 @@ import org.eclipse.virgo.ide.bundlerepository.domain.Artefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.BundleArtefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.LibraryArtefact;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
-import org.eclipse.virgo.ide.runtime.internal.core.ServerRuntime;
+import org.eclipse.virgo.ide.runtime.internal.core.VirgoServerRuntime;
 import org.eclipse.virgo.ide.runtime.internal.core.utils.WebDownloadUtils;
 import org.eclipse.virgo.util.io.FileCopyUtils;
 import org.eclipse.wst.server.core.IRuntime;
@@ -92,7 +92,7 @@ public class RepositoryProvisioningJob extends Job {
 
 	protected void copyDownloadedArtifactsIntoServer(File bundlesFile, File libraryFile) {
 		for (IRuntime runtime : runtimes) {
-			ServerRuntime serverRuntime = (ServerRuntime) runtime.loadAdapter(ServerRuntime.class,
+			VirgoServerRuntime serverRuntime = (VirgoServerRuntime) runtime.loadAdapter(VirgoServerRuntime.class,
 					new NullProgressMonitor());
 			copyDirectoryContent(bundlesFile, new File(serverRuntime
 					.getUserLevelBundleRepositoryPath()));

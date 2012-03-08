@@ -228,12 +228,12 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 		return new IModule[0];
 	}
 
-	public ServerRuntime getRuntime() {
+	public VirgoServerRuntime getRuntime() {
 		if (getServer().getRuntime() == null) {
 			return null;
 		}
 
-		return (ServerRuntime) getServer().getRuntime().loadAdapter(ServerRuntime.class, null);
+		return (VirgoServerRuntime) getServer().getRuntime().loadAdapter(VirgoServerRuntime.class, null);
 	}
 
 	public IPath getRuntimeBaseDirectory() {

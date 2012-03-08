@@ -39,7 +39,7 @@ import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator;
 import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator.JavaVersion;
 import org.eclipse.virgo.ide.runtime.internal.core.Server;
 import org.eclipse.virgo.ide.runtime.internal.core.ServerBehaviour;
-import org.eclipse.virgo.ide.runtime.internal.core.ServerRuntime;
+import org.eclipse.virgo.ide.runtime.internal.core.VirgoServerRuntime;
 import org.eclipse.virgo.ide.runtime.internal.core.ServerRuntimeUtils;
 import org.eclipse.virgo.ide.runtime.internal.core.runtimes.RuntimeProviders;
 import org.eclipse.virgo.ide.runtime.internal.core.utils.StatusUtil;
@@ -98,7 +98,7 @@ public class ServerUtils {
 	 */
 	public static String getServerHome(IRuntime... targetedServerRuntimes) {
 		for (org.eclipse.wst.server.core.IRuntime serverRuntime : targetedServerRuntimes) {
-			ServerRuntime sRuntime = (ServerRuntime) serverRuntime.loadAdapter(	ServerRuntime.class,
+			VirgoServerRuntime sRuntime = (VirgoServerRuntime) serverRuntime.loadAdapter(	VirgoServerRuntime.class,
 																				new NullProgressMonitor());
 			if (sRuntime != null) {
 				return serverRuntime.getLocation().toString();
@@ -117,7 +117,7 @@ public class ServerUtils {
 
 		ServerRuntimeUtils.execute(project, new ServerRuntimeUtils.ServerRuntimeCallback() {
 
-			public boolean doWithRuntime(ServerRuntime runtime) {
+			public boolean doWithRuntime(VirgoServerRuntime runtime) {
 				targetedServerRuntimes.add(runtime.getRuntime());
 				return true;
 			}
@@ -280,13 +280,13 @@ public class ServerUtils {
 		return null;
 	}
 
-	public static ServerRuntime getServerRuntime(IServerBehaviour server) {
+	public static VirgoServerRuntime getServerRuntime(IServerBehaviour server) {
 		if (server instanceof ServerBehaviour) {
 			if (((ServerBehaviour) server).getServer().getRuntime() == null) {
 				return null;
 			}
-			return (ServerRuntime) ((ServerBehaviour) server).getServer().getRuntime()
-					.loadAdapter(ServerRuntime.class, null);
+			return (VirgoServerRuntime) ((ServerBehaviour) server).getServer().getRuntime()
+					.loadAdapter(VirgoServerRuntime.class, null);
 		}
 		return null;
 	}

@@ -77,7 +77,7 @@ public interface IServerRuntimeProvider {
 	/**
 	 * Verifies the installation directory
 	 */
-	IStatus verifyInstallation(IPath installPath);
+	IStatus verifyInstallation(IRuntime runtime);
 
 	/**
 	 * Returns the path to the server.config file

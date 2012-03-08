@@ -34,10 +34,10 @@ import org.eclipse.wst.server.core.IRuntime;
  * @author Borislav Kapukaranov
  * @author Miles Parker
  */
-public class Virgo35Provider extends AbstractVirgoRuntimeProvider {
+public class Virgo35Provider extends VirgoRuntimeProvider {
 
 	// Assumes Stateless
-	public static final AbstractVirgoRuntimeProvider INSTANCE = new Virgo35Provider();
+	public static final VirgoRuntimeProvider INSTANCE = new Virgo35Provider();
 
 	private static final String SERVER_VIRGO_35 = SERVER_VIRGO_BASE + ".35";
 
@@ -56,7 +56,7 @@ public class Virgo35Provider extends AbstractVirgoRuntimeProvider {
 	}
 
 	/**
-	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.AbstractVirgoRuntimeProvider#getProfileDir()
+	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider#getProfileDir()
 	 */
 	String getProfileDir() {
 		return getConfigDir();
@@ -145,14 +145,14 @@ public class Virgo35Provider extends AbstractVirgoRuntimeProvider {
 	}
 
 	/**
-	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.AbstractVirgoRuntimeProvider#getID()
+	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider#getID()
 	 */
 	public String getID() {
 		return SERVER_VIRGO_35;
 	}
 
-	public String getName() {
-		return "v3.5+";
+	public String getSupportedVersions() {
+		return "3.5+";
 	}
 
 	/**

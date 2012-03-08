@@ -29,14 +29,14 @@ import org.eclipse.wst.server.core.IRuntime;
  * @author Borislav Kapukaranov
  * @author Miles Parker
  */
-public class Virgo21_30Provider extends AbstractVirgoRuntimeProvider {
+public class Virgo21_30Provider extends VirgoRuntimeProvider {
 
 	//Assumes Stateless
-	public static final AbstractVirgoRuntimeProvider INSTANCE = new Virgo21_30Provider();
+	public static final VirgoRuntimeProvider INSTANCE = new Virgo21_30Provider();
 	
 	private static final String SERVER_VIRGO_21x_31x = SERVER_VIRGO_BASE;
 
-	private Virgo21_30Provider() {
+	Virgo21_30Provider() {
 	}
 	
 	/**
@@ -76,14 +76,14 @@ public class Virgo21_30Provider extends AbstractVirgoRuntimeProvider {
 	}
 
 	/**
-	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.AbstractVirgoRuntimeProvider#getID()
+	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider#getID()
 	 */
 	public String getID() {
 		return SERVER_VIRGO_21x_31x;
 	}
 	
-	public String getName() {
-		return "v2.1-3.0";
+	public String getSupportedVersions() {
+		return "2.1-3.0";
 	}
 	
 	/**
@@ -95,5 +95,4 @@ public class Virgo21_30Provider extends AbstractVirgoRuntimeProvider {
 			String[] additionalSearchPaths, String indexDirectoryPath, JavaVersion javaVersion) throws IOException {
 		return new Pre35DependencyLocatorVirgo(serverHomePath, additionalSearchPaths, indexDirectoryPath, javaVersion);
 	}
-
 }

@@ -24,11 +24,11 @@ import org.eclipse.wst.server.core.IRuntime;
  */
 public class RuntimeProviders {
 
-	public static final AbstractVirgoRuntimeProvider[] ALL_HANDLERS = new AbstractVirgoRuntimeProvider[] {
+	public static final VirgoRuntimeProvider[] ALL_HANDLERS = new VirgoRuntimeProvider[] {
 		Virgo21_30Provider.INSTANCE, Virgo35Provider.INSTANCE };
 
 	public static IServerRuntimeProvider getVersionHandler(String id) {
-		for (AbstractVirgoRuntimeProvider handler : ALL_HANDLERS) {
+		for (VirgoRuntimeProvider handler : ALL_HANDLERS) {
 			if (handler.getID().equals(id)) {
 				return handler;
 			}
@@ -37,15 +37,15 @@ public class RuntimeProviders {
 	}
 
 	public static String getRuntimeID(IServerRuntimeProvider handler) {
-		if (handler instanceof AbstractVirgoRuntimeProvider) {
-			return ((AbstractVirgoRuntimeProvider) handler).getID();
+		if (handler instanceof VirgoRuntimeProvider) {
+			return ((VirgoRuntimeProvider) handler).getID();
 		}
 		return null;
 	}
 
 	public static IServerRuntimeProvider getRuntimeProvider(IRuntime runtime) {
 		if (runtime != null) {
-			for (AbstractVirgoRuntimeProvider version : RuntimeProviders.ALL_HANDLERS) {
+			for (VirgoRuntimeProvider version : RuntimeProviders.ALL_HANDLERS) {
 				if (version.isHandlerFor(runtime)) {
 					return version;
 				}

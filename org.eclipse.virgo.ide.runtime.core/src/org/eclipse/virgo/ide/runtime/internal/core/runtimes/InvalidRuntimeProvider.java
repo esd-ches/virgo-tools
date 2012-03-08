@@ -69,34 +69,34 @@ public class InvalidRuntimeProvider implements IServerRuntimeProvider {
 		return null;
 	}
 
-	public IStatus verifyInstallation(IPath installPath) {
+	public IStatus verifyInstallation(IRuntime runtime) {
 		return new Status(Status.ERROR, ServerCorePlugin.PLUGIN_ID,
 							"The installation directory does not contain a valid Virgo Server.");
 	}
 	
 	/**
-	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.AbstractVirgoRuntimeProvider#getConfigDir()
+	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider#getConfigDir()
 	 */
 	String getConfigDir() {
 		throw new RuntimeException(ERROR_MESSAGE);
 	}
 
 	/**
-	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.AbstractVirgoRuntimeProvider#getProfileDir()
+	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider#getProfileDir()
 	 */
 	String getProfileDir() {
 		throw new RuntimeException(ERROR_MESSAGE);
 	}
 
 	/**
-	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.AbstractVirgoRuntimeProvider#getID()
+	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider#getID()
 	 */
 	public String getID() {
 		throw new RuntimeException(ERROR_MESSAGE);
 	}
 
 	/**
-	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.AbstractVirgoRuntimeProvider#getName()
+	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider#getName()
 	 */
 	public String getName() {
 		throw new RuntimeException(ERROR_MESSAGE);

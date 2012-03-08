@@ -26,7 +26,7 @@ import org.eclipse.wst.server.core.ServerUtil;
 
 
 /**
- * Utility class that allows callback operations with the {@link ServerRuntime} that a given
+ * Utility class that allows callback operations with the {@link VirgoServerRuntime} that a given
  * {@link IProject} is targeted to.
  * @author Christian Dupuis
  * @since 1.0.0
@@ -34,19 +34,19 @@ import org.eclipse.wst.server.core.ServerUtil;
 public class ServerRuntimeUtils { 
 
 	/**
-	 * Callback interface to do logic within the context of a {@link ServerRuntime}.
+	 * Callback interface to do logic within the context of a {@link VirgoServerRuntime}.
 	 */
 	public interface ServerRuntimeCallback {
 
 		/**
-		 * Execute logic within the context of a {@link ServerRuntime}
+		 * Execute logic within the context of a {@link VirgoServerRuntime}
 		 */
-		boolean doWithRuntime(ServerRuntime runtime);
+		boolean doWithRuntime(VirgoServerRuntime runtime);
 
 	}
 
 	/**
-	 * Executes the given callback with every {@link ServerRuntime} that given {@link IProject} is
+	 * Executes the given callback with every {@link VirgoServerRuntime} that given {@link IProject} is
 	 * targeted against.
 	 * @param project the project to check for targeted runtimes
 	 * @param callback the callback to execute
@@ -110,8 +110,8 @@ public class ServerRuntimeUtils {
 	}
 
 	private static boolean executeCallback(ServerRuntimeCallback callback, IRuntime runtime) {
-		ServerRuntime serverRuntime = (ServerRuntime) runtime.loadAdapter(
-				ServerRuntime.class, new NullProgressMonitor());
+		VirgoServerRuntime serverRuntime = (VirgoServerRuntime) runtime.loadAdapter(
+				VirgoServerRuntime.class, new NullProgressMonitor());
 		if (serverRuntime != null) {
 			return callback.doWithRuntime(serverRuntime);
 		}
