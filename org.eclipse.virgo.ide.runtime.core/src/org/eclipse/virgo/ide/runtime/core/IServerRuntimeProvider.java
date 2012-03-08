@@ -30,12 +30,13 @@ import org.eclipse.wst.server.core.model.IModuleFile;
 
 
 /**
- * Interface that encapsulates different dm server settings that are depending on the version.
+ * Interface that encapsulates server settings such as for versions.
  * @author Christian Dupuis
  * @author Kaloyan Raev
+ * @author Miles Parker
  * @since 1.0.0
  */
-public interface IServerVersionHandler {
+public interface IServerRuntimeProvider {
 
 	/**
 	 * Check if a certain dm server can serve a given module(type)

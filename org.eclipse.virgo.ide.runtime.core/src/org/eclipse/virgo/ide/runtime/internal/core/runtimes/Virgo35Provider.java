@@ -8,7 +8,7 @@
  * Contributors:
  *     SAP AG - initial implementation
  *******************************************************************************/
-package org.eclipse.virgo.ide.runtime.internal.core;
+package org.eclipse.virgo.ide.runtime.internal.core.runtimes;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -23,25 +23,25 @@ import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator;
 import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator.JavaVersion;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
-import org.eclipse.virgo.ide.runtime.core.IServerVersionHandler;
+import org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocatorVirgo;
 import org.eclipse.wst.server.core.IRuntime;
 
 /**
- * {@link IServerVersionHandler} for Virgo Server 3.5.0 and above.
+ * {@link IServerRuntimeProvider} for Virgo Server 3.5.0 and above.
  * 
  * @author Borislav Kapukaranov
  * @author Miles Parker
  */
-public class ServerVirgo35Handler extends ServerVirgoHandler {
+public class Virgo35Provider extends AbstractVirgoRuntimeProvider {
 
 	// Assumes Stateless
-	public static final ServerVirgoHandler INSTANCE = new ServerVirgo35Handler();
+	public static final AbstractVirgoRuntimeProvider INSTANCE = new Virgo35Provider();
 
 	private static final String SERVER_VIRGO_35 = SERVER_VIRGO_BASE + ".35";
 
-	private ServerVirgo35Handler() {
+	private Virgo35Provider() {
 	}
 
 	/**
@@ -56,14 +56,14 @@ public class ServerVirgo35Handler extends ServerVirgoHandler {
 	}
 
 	/**
-	 * @see org.eclipse.virgo.ide.runtime.internal.core.ServerVirgoHandler#getProfileDir()
+	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.AbstractVirgoRuntimeProvider#getProfileDir()
 	 */
 	String getProfileDir() {
 		return getConfigDir();
 	}
 
 	/**
-	 * @see org.eclipse.virgo.ide.runtime.core.IServerVersionHandler#getRuntimeClasspath(org.eclipse.core.runtime.IPath)
+	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getRuntimeClasspath(org.eclipse.core.runtime.IPath)
 	 */
 	public List<IRuntimeClasspathEntry> getRuntimeClasspath(IPath installPath) {
 		List<IRuntimeClasspathEntry> cp = super.getRuntimeClasspath(installPath);
@@ -145,7 +145,7 @@ public class ServerVirgo35Handler extends ServerVirgoHandler {
 	}
 
 	/**
-	 * @see org.eclipse.virgo.ide.runtime.internal.core.ServerVirgoHandler#getID()
+	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.AbstractVirgoRuntimeProvider#getID()
 	 */
 	public String getID() {
 		return SERVER_VIRGO_35;
@@ -156,7 +156,7 @@ public class ServerVirgo35Handler extends ServerVirgoHandler {
 	}
 
 	/**
-	 * @see org.eclipse.virgo.ide.runtime.core.IServerVersionHandler#createDependencyLocator(org.eclipse.wst.server.core.IRuntime,
+	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#createDependencyLocator(org.eclipse.wst.server.core.IRuntime,
 	 *      java.lang.String, java.lang.String[], java.lang.String,
 	 *      org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator.JavaVersion)
 	 */

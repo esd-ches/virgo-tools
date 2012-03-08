@@ -8,7 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.virgo.ide.runtime.internal.core;
+package org.eclipse.virgo.ide.runtime.internal.core.runtimes;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -33,9 +33,10 @@ import org.eclipse.libra.framework.editor.core.model.IBundle;
 import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator;
 import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator.JavaVersion;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
-import org.eclipse.virgo.ide.runtime.core.IServerVersionHandler;
+import org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
+import org.eclipse.virgo.ide.runtime.internal.core.DeploymentIdentity;
 import org.eclipse.virgo.ide.runtime.internal.core.command.GenericJmxServerDeployCommand;
 import org.eclipse.virgo.ide.runtime.internal.core.command.IServerCommand;
 import org.eclipse.virgo.ide.runtime.internal.core.command.JmxBundleAdminExecuteCommand;
@@ -55,13 +56,13 @@ import org.eclipse.wst.server.core.util.PublishHelper;
 
 
 /**
- * {@link IServerVersionHandler} for Generic Virgo Server.
+ * {@link IServerRuntimeProvider} for Generic Virgo Server.
  * @author Terry Hon
  * @author Christian Dupuis
  * @author Miles Parker
  * @since 2.0.0
  */
-public abstract class ServerVirgoHandler implements IServerVersionHandler {
+public abstract class AbstractVirgoRuntimeProvider implements IServerRuntimeProvider {
 
 	public static final String SERVER_VIRGO_BASE = "org.eclipse.virgo.server.runtime.virgo";
 	
@@ -179,7 +180,10 @@ public abstract class ServerVirgoHandler implements IServerVersionHandler {
 			return new Status(Status.ERROR, ServerCorePlugin.PLUGIN_ID,
 					".version file in lib directory is missing. Make sure to point to a Virgo Server installation.");
 		}
-		return Status.OK_STATUS;
+		return new Status(
+							Status.OK,
+							ServerCorePlugin.PLUGIN_ID,
+							"Valid Virgo Server installation directory. Version: " + getName() + ".");
 	}
 
 	protected String getRepositoryConfigurationFileName() {
@@ -251,7 +255,7 @@ public abstract class ServerVirgoHandler implements IServerVersionHandler {
 
 	/**
 	 * Provides runtime class path common to server versions.
-	 * @see org.eclipse.virgo.ide.runtime.core.IServerVersionHandler#getRuntimeClasspath(org.eclipse.core.runtime.IPath)
+	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getRuntimeClasspath(org.eclipse.core.runtime.IPath)
 	 */
 	public List<IRuntimeClasspathEntry> getRuntimeClasspath(IPath installPath) {
 		List<IRuntimeClasspathEntry> cp = new ArrayList<IRuntimeClasspathEntry>();
@@ -287,7 +291,7 @@ public abstract class ServerVirgoHandler implements IServerVersionHandler {
 	}
 	
 	/**
-	 * @see org.eclipse.virgo.ide.runtime.core.IServerVersionHandler#getExtLevelBundleRepositoryPath(org.eclipse.wst.server.core.IRuntime)
+	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getExtLevelBundleRepositoryPath(org.eclipse.wst.server.core.IRuntime)
 	 */
 	public String getExtLevelBundleRepositoryPath(IRuntime runtime) {
 		return runtime.getLocation().append("repository").append("ext").toString();

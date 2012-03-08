@@ -11,7 +11,6 @@
 package org.eclipse.virgo.ide.runtime.internal.ui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.eclipse.core.runtime.IStatus;
@@ -42,8 +41,6 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.virgo.ide.runtime.core.IServerRuntimeWorkingCopy;
-import org.eclipse.virgo.ide.runtime.internal.core.ServerVersionAdapter;
-import org.eclipse.virgo.ide.runtime.internal.core.ServerVirgoHandler;
 import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.internal.IInstallableRuntime;
 import org.eclipse.wst.server.core.internal.ServerPlugin;
@@ -170,40 +167,40 @@ public class ServerRuntimeComposite extends Composite {
 			}
 		});
 
-		Composite configuration = new Composite(this, SWT.BORDER);
-		GridLayout configLayout = new GridLayout();
-		configLayout.numColumns = 2;
-		configuration.setLayout(configLayout);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		configuration.setLayoutData(data);
-
-		Label versionLabel = new Label(configuration, SWT.NONE);
-		versionLabel.setText(ServerUiPlugin.getResourceString("version"));
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		versionLabel.setLayoutData(data);
-
-		versionCombo = new Combo(configuration, SWT.DROP_DOWN | SWT.READ_ONLY);
-
-		List<String> names = new ArrayList<String>();
-		for (ServerVirgoHandler version : ServerVersionAdapter.ALL_HANDLERS) {
-			names.add(version.getName());
-		}
-		versionCombo.setItems(names.toArray(new String[] {}));
-		data = new GridData(GridData.FILL_HORIZONTAL);
-
-		versionCombo.setLayoutData(data);
-
-		versionCombo.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent e) {
-				int sel = versionCombo.getSelectionIndex();
-				runtime.setVirgoVersion(ServerVersionAdapter.ALL_HANDLERS[sel]);
-				validate();
-			}
-
-			public void widgetDefaultSelected(SelectionEvent e) {
-				widgetSelected(e);
-			}
-		});
+//		Composite configuration = new Composite(this, SWT.BORDER);
+//		GridLayout configLayout = new GridLayout();
+//		configLayout.numColumns = 2;
+//		configuration.setLayout(configLayout);
+//		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+//		configuration.setLayoutData(data);
+//
+//		Label versionLabel = new Label(configuration, SWT.NONE);
+//		versionLabel.setText(ServerUiPlugin.getResourceString("version"));
+//		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+//		versionLabel.setLayoutData(data);
+//
+//		versionCombo = new Combo(configuration, SWT.DROP_DOWN | SWT.READ_ONLY);
+//
+//		List<String> names = new ArrayList<String>();
+//		for (ServerVirgoHandler version : ServerVersionAdapter.ALL_HANDLERS) {
+//			names.add(version.getName());
+//		}
+//		versionCombo.setItems(names.toArray(new String[] {}));
+//		data = new GridData(GridData.FILL_HORIZONTAL);
+//
+//		versionCombo.setLayoutData(data);
+//
+//		versionCombo.addSelectionListener(new SelectionListener() {
+//			public void widgetSelected(SelectionEvent e) {
+//				int sel = versionCombo.getSelectionIndex();
+//				runtime.setVirgoVersion(ServerVersionAdapter.ALL_HANDLERS[sel]);
+//				validate();
+//			}
+//
+//			public void widgetDefaultSelected(SelectionEvent e) {
+//				widgetSelected(e);
+//			}
+//		});
 
 		updateJREs();
 
@@ -312,7 +309,7 @@ public class ServerRuntimeComposite extends Composite {
 			installDir.setText("");
 		}
 
-		updateConfiguration();
+//		updateConfiguration();
 
 		// set selection
 		if (runtime.isUsingDefaultJRE()) {
@@ -333,16 +330,16 @@ public class ServerRuntimeComposite extends Composite {
 		}
 	}
 
-	private void updateConfiguration() {
-		int v = 0;
-		for (ServerVirgoHandler version : ServerVersionAdapter.ALL_HANDLERS) {
-			if (version.isHandlerFor(runtimeWC)) {
-				versionCombo.select(v);
-				break;
-			}
-			v++;
-		}
-	}
+//	private void updateConfiguration() {
+//		int v = 0;
+//		for (ServerVirgoHandler version : ServerVersionAdapter.ALL_HANDLERS) {
+//			if (version.isHandlerFor(runtimeWC)) {
+//				versionCombo.select(v);
+//				break;
+//			}
+//			v++;
+//		}
+//	}
 
 	protected void validate() {
 		if (runtime == null) {
@@ -351,14 +348,16 @@ public class ServerRuntimeComposite extends Composite {
 		}
 
 		IStatus status = runtimeWC.validate(null);
-		if (status == null || status.isOK()) {
+		if (status == null) {
 			wizard.setMessage(null, IMessageProvider.NONE);
+		} else if (status.isOK()) {
+			wizard.setMessage(status.getMessage(), IMessageProvider.INFORMATION);
 		} else if (status.getSeverity() == IStatus.WARNING) {
 			wizard.setMessage(status.getMessage(), IMessageProvider.WARNING);
 		} else {
 			wizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
 		}
 		wizard.update();
-		updateConfiguration();
+//		updateConfiguration();
 	}
 }

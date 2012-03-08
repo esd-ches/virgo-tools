@@ -21,24 +21,24 @@ import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.virgo.ide.runtime.core.IServerRuntime;
 import org.eclipse.virgo.ide.runtime.core.IServerRuntimeWorkingCopy;
-import org.eclipse.virgo.ide.runtime.core.IServerVersionHandler;
+import org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
+import org.eclipse.virgo.ide.runtime.internal.core.runtimes.RuntimeProviders;
 import org.eclipse.wst.server.core.IRuntimeType;
 import org.eclipse.wst.server.core.model.RuntimeDelegate;
 
-
 /**
  * Virgo server runtime implementation. Delegates to handlers.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
-public class ServerRuntime extends RuntimeDelegate implements IServerRuntime,
-		IServerRuntimeWorkingCopy {
-	
+public class ServerRuntime extends RuntimeDelegate implements IServerRuntime, IServerRuntimeWorkingCopy {
+
 	public List<IRuntimeClasspathEntry> getRuntimeClasspath() {
 		return getVirgoVersion().getRuntimeClasspath(getRuntime().getLocation());
 	}
-	
+
 	public String getRuntimeClass() {
 		return getVirgoVersion().getRuntimeClass();
 	}
@@ -48,16 +48,14 @@ public class ServerRuntime extends RuntimeDelegate implements IServerRuntime,
 			return JavaRuntime.getDefaultVMInstall();
 		}
 		try {
-			IVMInstall[] vmInstalls = JavaRuntime.getVMInstallType(getVMInstallTypeId())
-					.getVMInstalls();
+			IVMInstall[] vmInstalls = JavaRuntime.getVMInstallType(getVMInstallTypeId()).getVMInstalls();
 			String id = getVMInstallId();
 			for (IVMInstall vmInstall : vmInstalls) {
 				if (id.equals(vmInstall.getId())) {
 					return vmInstall;
 				}
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 		}
 		return null;
 	}
@@ -69,15 +67,13 @@ public class ServerRuntime extends RuntimeDelegate implements IServerRuntime,
 	@Override
 	public void setDefaults(IProgressMonitor monitor) {
 		IRuntimeType type = getRuntimeWorkingCopy().getRuntimeType();
-		getRuntimeWorkingCopy().setLocation(
-				new Path(ServerCorePlugin.getPreference("location" + type.getId())));
+		getRuntimeWorkingCopy().setLocation(new Path(ServerCorePlugin.getPreference("location" + type.getId())));
 	}
 
 	public void setVMInstall(IVMInstall vmInstall) {
 		if (vmInstall == null) {
 			setVMInstall(null, null);
-		}
-		else {
+		} else {
 			setVMInstall(vmInstall.getVMInstallType().getId(), vmInstall.getId());
 		}
 	}
@@ -90,11 +86,11 @@ public class ServerRuntime extends RuntimeDelegate implements IServerRuntime,
 		}
 
 		status = verifyLocation();
-		if (!status.isOK()) {
-			return status;
-		}
+		// if (!status.isOK()) {
+		return status;
+		// }
 
-		return Status.OK_STATUS;
+		// return Status.OK_STATUS;
 	}
 
 	public IStatus verifyLocation() {
@@ -112,19 +108,17 @@ public class ServerRuntime extends RuntimeDelegate implements IServerRuntime,
 	protected void setVMInstall(String typeId, String id) {
 		if (typeId == null) {
 			setAttribute(PROPERTY_VM_INSTALL_TYPE_ID, (String) null);
-		}
-		else {
+		} else {
 			setAttribute(PROPERTY_VM_INSTALL_TYPE_ID, typeId);
 		}
 
 		if (id == null) {
 			setAttribute(PROPERTY_VM_INSTALL_ID, (String) null);
-		}
-		else {
+		} else {
 			setAttribute(PROPERTY_VM_INSTALL_ID, id);
 		}
 	}
-	
+
 	public String getUserLevelBundleRepositoryPath() {
 		return getVirgoVersion().getUserLevelBundleRepositoryPath(getRuntime());
 	}
@@ -132,24 +126,25 @@ public class ServerRuntime extends RuntimeDelegate implements IServerRuntime,
 	public String getUserLevelLibraryRepositoryPath() {
 		return getVirgoVersion().getUserLevelLibraryRepositoryPath(getRuntime());
 	}
-	
+
 	public String getProfilePath() {
 		return getVirgoVersion().getProfilePath(getRuntime());
 	}
-	
+
 	public String getConfigPath() {
 		return getVirgoVersion().getConfigPath(getRuntime());
 	}
-	
-	public IServerVersionHandler getVirgoVersion() {
-		String versionID = getAttribute(PROPERTY_VIRGO_VERSION_TYPE_ID, ServerVirgo35Handler.INSTANCE.getID());
-		return ServerVersionAdapter.getVersionHandler(versionID);
+
+	public IServerRuntimeProvider getVirgoVersion() {
+		return RuntimeProviders.getRuntimeProvider(getRuntimeWorkingCopy());
 	}
 
-	/**
-	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeWorkingCopy#setVirgoVersion(java.lang.String)
-	 */
-	public void setVirgoVersion(IServerVersionHandler handler) {
-		setAttribute(PROPERTY_VIRGO_VERSION_TYPE_ID, ServerVersionAdapter.getVersionID(handler));
-	}
+	// /**
+	// * @see
+	// org.eclipse.virgo.ide.runtime.core.IServerRuntimeWorkingCopy#setVirgoVersion(java.lang.String)
+	// */
+	// public void setVirgoVersion(IServerVersionHandler handler) {
+	// setAttribute(PROPERTY_VIRGO_VERSION_TYPE_ID,
+	// ServerVersionAdapter.getVersionID(handler));
+	// }
 }

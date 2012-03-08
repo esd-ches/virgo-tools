@@ -41,13 +41,12 @@ import org.eclipse.virgo.ide.runtime.internal.core.Server;
 import org.eclipse.virgo.ide.runtime.internal.core.ServerBehaviour;
 import org.eclipse.virgo.ide.runtime.internal.core.ServerRuntime;
 import org.eclipse.virgo.ide.runtime.internal.core.ServerRuntimeUtils;
-import org.eclipse.virgo.ide.runtime.internal.core.ServerVersionAdapter;
+import org.eclipse.virgo.ide.runtime.internal.core.runtimes.RuntimeProviders;
 import org.eclipse.virgo.ide.runtime.internal.core.utils.StatusUtil;
 import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocator;
-import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocatorVirgo;
-import org.eclipse.virgo.kernel.osgi.provisioning.tools.Pre35DependencyLocatorVirgo;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.util.PublishUtil;
 import org.osgi.framework.Constants;
 
@@ -169,7 +168,8 @@ public class ServerUtils {
 
 	private static IDependencyLocator createDependencyLocator(IRuntime runtime, String serverHomePath,
 			String[] additionalSearchPaths, String indexDirectoryPath, JavaVersion javaVersion) throws IOException {
-		IServerVersionHandler versionHandler = ServerVersionAdapter.getVersionHandler(runtime.getRuntimeType().getId());
+		IServerRuntimeWorkingCopy serverRuntime = (IServerRuntimeWorkingCopy) runtime.loadAdapter(IServerRuntimeWorkingCopy.class, null);
+		IServerRuntimeProvider versionHandler = serverRuntime.getVirgoVersion();
 		if (versionHandler != null) {
 			return versionHandler.createDependencyLocator(runtime, serverHomePath, additionalSearchPaths, indexDirectoryPath, javaVersion);
 		}

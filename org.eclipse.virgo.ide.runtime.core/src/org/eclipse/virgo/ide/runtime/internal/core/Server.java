@@ -35,7 +35,7 @@ import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.module.core.ServerModuleDelegate;
 import org.eclipse.virgo.ide.runtime.core.IServer;
 import org.eclipse.virgo.ide.runtime.core.IServerConfiguration;
-import org.eclipse.virgo.ide.runtime.core.IServerVersionHandler;
+import org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider;
 import org.eclipse.virgo.ide.runtime.core.IServerWorkingCopy;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.wst.common.project.facet.core.FacetedProjectFramework;
@@ -59,7 +59,7 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 
 	protected transient List<PropertyChangeListener> listeners = new ArrayList<PropertyChangeListener>();
 
-	protected transient IServerVersionHandler versionHandler;
+	protected transient IServerRuntimeProvider versionHandler;
 
 	public void addConfigurationChangeListener(PropertyChangeListener listener) {
 		if (!listeners.contains(listener)) {
@@ -237,7 +237,7 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 	}
 
 	public IPath getRuntimeBaseDirectory() {
-		IServerVersionHandler tvh = getVersionHandler();
+		IServerRuntimeProvider tvh = getVersionHandler();
 		if (tvh != null) {
 			return tvh.getRuntimeBaseDirectory(this.getServer());
 		}
@@ -263,7 +263,7 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 		return deployPath;
 	}
 
-	public IServerVersionHandler getVersionHandler() {
+	public IServerRuntimeProvider getVersionHandler() {
 		if (versionHandler == null) {
 			if (getServer().getRuntime() == null || getRuntime() == null) {
 				return null;
