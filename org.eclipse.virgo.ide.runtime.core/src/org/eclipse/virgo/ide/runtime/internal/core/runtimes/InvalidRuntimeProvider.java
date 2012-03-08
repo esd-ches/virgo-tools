@@ -12,6 +12,9 @@ package org.eclipse.virgo.ide.runtime.internal.core.runtimes;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -20,12 +23,16 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.libra.framework.editor.core.model.IBundle;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator;
 import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator.JavaVersion;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
+import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.virgo.ide.runtime.internal.core.DeploymentIdentity;
+import org.eclipse.virgo.ide.runtime.internal.core.Server;
+import org.eclipse.virgo.ide.runtime.internal.core.VirgoServerRuntime;
 import org.eclipse.virgo.ide.runtime.internal.core.command.IServerCommand;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IRuntime;
@@ -42,8 +49,6 @@ public class InvalidRuntimeProvider implements IServerRuntimeProvider {
 	// Assumes Stateless
 	public static final IServerRuntimeProvider INSTANCE = new InvalidRuntimeProvider();
 
-	private static final String ERROR_MESSAGE = "Internal Error: Tried to reference invalid server configuration.";
-
 	private InvalidRuntimeProvider() {
 	}
 
@@ -51,14 +56,47 @@ public class InvalidRuntimeProvider implements IServerRuntimeProvider {
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getRuntimeClass()
 	 */
 	public String getRuntimeClass() {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError();
+		return null;
+	}
+
+	//Potential leak source? Unlikely, but possible.
+	public static Collection<String> errorsReported = new HashSet<String>();
+	
+	private void handleError(IRuntime runtime) {
+		String runtimeName = null;
+//		boolean showError = false;
+		if (runtime != null) {
+			runtimeName = runtime.getName();
+//			showError = errorsReported.add(runtimeName);
+		} else {
+			runtimeName = "The runtime";
+		}
+		String message = runtimeName + " is not a valid environment. Go to Preferences:Server:Runtime Environments to define a valid server.";
+		message += "\n(This error may be followed by related exceptions.)";
+		int type = StatusManager.LOG | StatusManager.SHOW;
+//		if (showError) {
+//			type |= StatusManager.SHOW;
+//		}
+		StatusManager.getManager().handle(new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, message), type);
+	}
+
+	private void handleError(IServerBehaviour serverBehaviour) {
+		Server server = ServerUtils.getServer(serverBehaviour);
+		VirgoServerRuntime runtime = server.getRuntime();
+		handleError(runtime.getRuntime());
+	}
+
+	private void handleError() {
+		handleError((IRuntime) null);
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getRuntimeProgramArguments(org.eclipse.virgo.ide.runtime.core.IServerBehaviour)
 	 */
 	public String[] getRuntimeProgramArguments(IServerBehaviour serverBehaviour) {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError(serverBehaviour);
+		return null;
 	}
 
 	/**
@@ -66,68 +104,77 @@ public class InvalidRuntimeProvider implements IServerRuntimeProvider {
 	 */
 	public IDependencyLocator createDependencyLocator(IRuntime runtime, String serverHomePath,
 			String[] additionalSearchPaths, String indexDirectoryPath, JavaVersion javaVersion) throws IOException {
+		handleError(runtime);
 		return null;
 	}
 
 	public IStatus verifyInstallation(IRuntime runtime) {
 		return new Status(Status.ERROR, ServerCorePlugin.PLUGIN_ID,
-							"The installation directory does not contain a valid Virgo Server.");
+							"No Virgo Runtime found: " + runtime.getLocation() + ".");
 	}
 	
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider#getConfigDir()
 	 */
 	String getConfigDir() {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError();
+		return null;
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider#getProfileDir()
 	 */
 	String getProfileDir() {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError();
+		return null;
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider#getID()
 	 */
 	public String getID() {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError();
+		return null;
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider#getName()
 	 */
 	public String getName() {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError();
+		return "Invalid Runtime";
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#canAddModule(org.eclipse.wst.server.core.IModule)
 	 */
 	public IStatus canAddModule(IModule module) {
-		throw new RuntimeException(ERROR_MESSAGE);
+		return new Status(Status.ERROR, ServerCorePlugin.PLUGIN_ID,
+							"No Virgo Runtime found.");
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getExcludedRuntimeProgramArguments(boolean)
 	 */
 	public String[] getExcludedRuntimeProgramArguments(boolean starting) {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError();
+		return null;
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getRuntimeBaseDirectory(org.eclipse.wst.server.core.IServer)
 	 */
 	public IPath getRuntimeBaseDirectory(IServer server) {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError(server.getRuntime());
+		return null;
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getRuntimeClasspath(org.eclipse.core.runtime.IPath)
 	 */
 	public List<IRuntimeClasspathEntry> getRuntimeClasspath(IPath installPath) {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError();
+		return Collections.EMPTY_LIST;
 	}
 
 	/**
@@ -135,84 +182,96 @@ public class InvalidRuntimeProvider implements IServerRuntimeProvider {
 	 */
 	public String[] getRuntimeVMArguments(IServerBehaviour serverBehaviour, IPath installPath, IPath configPath,
 			IPath deployPath) {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError(serverBehaviour);
+		return new String[]{};
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getProfilePath(org.eclipse.wst.server.core.IRuntime)
 	 */
 	public String getProfilePath(IRuntime runtime) {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError(runtime);
+		return null;
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getExtLevelBundleRepositoryPath(org.eclipse.wst.server.core.IRuntime)
 	 */
 	public String getExtLevelBundleRepositoryPath(IRuntime runtime) {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError(runtime);
+		return null;
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getUserLevelBundleRepositoryPath(org.eclipse.wst.server.core.IRuntime)
 	 */
 	public String getUserLevelBundleRepositoryPath(IRuntime runtime) {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError(runtime);
+		return null;
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getUserLevelLibraryRepositoryPath(org.eclipse.wst.server.core.IRuntime)
 	 */
 	public String getUserLevelLibraryRepositoryPath(IRuntime runtime) {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError(runtime);
+		return null;
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getConfigPath(org.eclipse.wst.server.core.IRuntime)
 	 */
 	public String getConfigPath(IRuntime runtime) {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError(runtime);
+		return null;
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getDeployerMBeanName()
 	 */
 	public String getDeployerMBeanName() {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError();
+		return null;
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getRecoveryMonitorMBeanName()
 	 */
 	public String getRecoveryMonitorMBeanName() {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError();
+		return null;
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getShutdownMBeanName()
 	 */
 	public String getShutdownMBeanName() {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError();
+		return null;
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getServerPingCommand(org.eclipse.virgo.ide.runtime.core.IServerBehaviour)
 	 */
 	public IServerCommand<Boolean> getServerPingCommand(IServerBehaviour serverBehaviour) {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError();
+		return null;
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getServerShutdownCommand(org.eclipse.virgo.ide.runtime.core.IServerBehaviour)
 	 */
 	public IServerCommand<Void> getServerShutdownCommand(IServerBehaviour serverBehaviour) {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError(serverBehaviour);
+		return null;
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getServerDeployCommand(org.eclipse.virgo.ide.runtime.core.IServerBehaviour, org.eclipse.wst.server.core.IModule)
 	 */
 	public IServerCommand<DeploymentIdentity> getServerDeployCommand(IServerBehaviour serverBehaviour, IModule module) {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError(serverBehaviour);
+		return null;
 	}
 
 	/**
@@ -220,7 +279,8 @@ public class InvalidRuntimeProvider implements IServerRuntimeProvider {
 	 */
 	public IServerCommand<Void> getServerRefreshCommand(IServerBehaviour serverBehaviour, IModule module,
 			String bundleSymbolicName) {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError(serverBehaviour);
+		return null;
 	}
 
 	/**
@@ -228,14 +288,16 @@ public class InvalidRuntimeProvider implements IServerRuntimeProvider {
 	 */
 	public IServerCommand<Void> getServerUpdateCommand(IServerBehaviour serverBehaviour, IModule module,
 			IModuleFile moduleFile, DeploymentIdentity identity, String bundleSymbolicName, String targetPath) {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError(serverBehaviour);
+		return null;
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getServerUndeployCommand(org.eclipse.virgo.ide.runtime.core.IServerBehaviour, org.eclipse.wst.server.core.IModule)
 	 */
 	public IServerCommand<Void> getServerUndeployCommand(IServerBehaviour serverBehaviour, IModule module) {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError(serverBehaviour);
+		return null;
 	}
 
 	/**
@@ -243,27 +305,30 @@ public class InvalidRuntimeProvider implements IServerRuntimeProvider {
 	 */
 	public IServerCommand<DeploymentIdentity> getServerDeployCommand(IServerBehaviour serverBehaviour,
 			URI connectorBundleUri) {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError(serverBehaviour);
+		return null;
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getServerBundleAdminCommand(org.eclipse.virgo.ide.runtime.core.IServerBehaviour)
 	 */
 	public IServerCommand<Map<Long, IBundle>> getServerBundleAdminCommand(IServerBehaviour serverBehaviour) {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError(serverBehaviour);
+		return null;
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getServerBundleAdminExecuteCommand(org.eclipse.virgo.ide.runtime.core.IServerBehaviour, java.lang.String)
 	 */
 	public IServerCommand<String> getServerBundleAdminExecuteCommand(IServerBehaviour serverBehaviour, String command) {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError(serverBehaviour);
+		return null;
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#preStartup(org.eclipse.virgo.ide.runtime.core.IServerBehaviour)
 	 */
 	public void preStartup(IServerBehaviour serverBehaviour) {
-		throw new RuntimeException(ERROR_MESSAGE);
+		handleError(serverBehaviour);
 	}
 }
