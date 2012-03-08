@@ -371,9 +371,6 @@ public abstract class AbstractVirgoRuntimeProvider implements IServerRuntimeProv
 		return configDir.exists();
 	}
 
-	public static boolean isVirgo(IRuntime runtime) {
-		return runtime.getRuntimeType().getId().startsWith(SERVER_VIRGO_BASE);
-	}
 	/**
 	 * Non-API
 	 */

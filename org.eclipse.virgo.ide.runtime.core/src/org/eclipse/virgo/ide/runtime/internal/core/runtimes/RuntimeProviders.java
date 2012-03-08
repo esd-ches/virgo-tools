@@ -11,7 +11,7 @@
 package org.eclipse.virgo.ide.runtime.internal.core.runtimes;
 
 import org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider;
-import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
+import org.eclipse.wst.server.core.IRuntime;
 
 /**
  * Utility that loads {@link IServerRuntimeProvider}s based on given version
@@ -43,7 +43,7 @@ public class RuntimeProviders {
 		return null;
 	}
 
-	public static IServerRuntimeProvider getRuntimeProvider(IRuntimeWorkingCopy runtime) {
+	public static IServerRuntimeProvider getRuntimeProvider(IRuntime runtime) {
 		if (runtime != null) {
 			for (AbstractVirgoRuntimeProvider version : RuntimeProviders.ALL_HANDLERS) {
 				if (version.isHandlerFor(runtime)) {

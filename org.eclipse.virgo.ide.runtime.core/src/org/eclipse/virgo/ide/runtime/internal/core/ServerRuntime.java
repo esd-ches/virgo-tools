@@ -136,7 +136,7 @@ public class ServerRuntime extends RuntimeDelegate implements IServerRuntime, IS
 	}
 
 	public IServerRuntimeProvider getVirgoVersion() {
-		return RuntimeProviders.getRuntimeProvider(getRuntimeWorkingCopy());
+		return RuntimeProviders.getRuntimeProvider(getRuntime());
 	}
 
 	// /**
