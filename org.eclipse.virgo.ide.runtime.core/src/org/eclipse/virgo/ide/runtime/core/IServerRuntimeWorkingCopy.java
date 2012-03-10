@@ -25,4 +25,5 @@ public interface IServerRuntimeWorkingCopy extends IServerRuntime, IJavaRuntime 
 	 */
 	void setVMInstall(IVMInstall vmInstall);
 	
+	IServerRuntimeProvider getVirgoVersion();
 }

@@ -28,6 +28,8 @@ public interface IServerRuntime extends IJavaRuntime {
 
 	String PROPERTY_SERVER_ADDRESS = ServerCorePlugin.PLUGIN_ID + ".serverAddressProperty";
 
+	String PROPERTY_VIRGO_VERSION_TYPE_ID = "virgo-version-type-id";
+
 	/**
 	 * Returns the runtime classpath of the dm server runtime
 	 */

@@ -39,7 +39,7 @@ import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
-import org.eclipse.virgo.ide.runtime.internal.core.ServerRuntime;
+import org.eclipse.virgo.ide.runtime.internal.core.VirgoServerRuntime;
 import org.eclipse.virgo.ide.runtime.internal.core.ServerRuntimeUtils;
 import org.eclipse.virgo.kernel.repository.BundleRepository;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
@@ -118,7 +118,7 @@ public class RepositoryUtils {
 
 		ServerRuntimeUtils.execute(project, new ServerRuntimeUtils.ServerRuntimeCallback() {
 
-			public boolean doWithRuntime(ServerRuntime runtime) {
+			public boolean doWithRuntime(VirgoServerRuntime runtime) {
 				runtimes.add(runtime.getRuntime());
 				return true;
 			}
@@ -156,7 +156,7 @@ public class RepositoryUtils {
 
 		ServerRuntimeUtils.execute(project, new ServerRuntimeUtils.ServerRuntimeCallback() {
 
-			public boolean doWithRuntime(ServerRuntime runtime) {
+			public boolean doWithRuntime(VirgoServerRuntime runtime) {
 				try {
 					BundleRepository bundleRepository = ServerCorePlugin
 							.getArtefactRepositoryManager().getBundleRepository(
@@ -210,7 +210,7 @@ public class RepositoryUtils {
 
 		ServerRuntimeUtils.execute(project, new ServerRuntimeUtils.ServerRuntimeCallback() {
 
-			public boolean doWithRuntime(ServerRuntime runtime) {
+			public boolean doWithRuntime(VirgoServerRuntime runtime) {
 				packages.addAll(getImportBundleProposalsForRuntime(runtime, project, value));
 				return true;
 			}
@@ -242,7 +242,7 @@ public class RepositoryUtils {
 
 		ServerRuntimeUtils.execute(project, new ServerRuntimeUtils.ServerRuntimeCallback() {
 
-			public boolean doWithRuntime(ServerRuntime runtime) {
+			public boolean doWithRuntime(VirgoServerRuntime runtime) {
 				packages.addAll(getImportLibraryProposalsForRuntime(runtime, project, value));
 				return true;
 			}
@@ -272,7 +272,7 @@ public class RepositoryUtils {
 
 		ServerRuntimeUtils.execute(project, new ServerRuntimeUtils.ServerRuntimeCallback() {
 
-			public boolean doWithRuntime(ServerRuntime runtime) {
+			public boolean doWithRuntime(VirgoServerRuntime runtime) {
 				packages.addAll(getImportPackageProposalsForRuntime(runtime, project, value));
 				return true;
 			}
@@ -524,7 +524,7 @@ public class RepositoryUtils {
 		}
 	}
 
-	private static Set<BundleArtefact> getImportBundleProposalsForRuntime(ServerRuntime runtime,
+	private static Set<BundleArtefact> getImportBundleProposalsForRuntime(VirgoServerRuntime runtime,
 			IProject project, String value) {
 		if (value == null) {
 			value = "";
@@ -554,7 +554,7 @@ public class RepositoryUtils {
 		return bundles;
 	}
 
-	private static Set<LibraryArtefact> getImportLibraryProposalsForRuntime(ServerRuntime runtime,
+	private static Set<LibraryArtefact> getImportLibraryProposalsForRuntime(VirgoServerRuntime runtime,
 			IProject project, String value) {
 		if (value == null) {
 			value = "";
@@ -577,7 +577,7 @@ public class RepositoryUtils {
 	}
 
 	private static Set<org.eclipse.virgo.ide.bundlerepository.domain.PackageExport> getImportPackageProposalsForRuntime(
-			ServerRuntime runtime, IProject project, String value) {
+			VirgoServerRuntime runtime, IProject project, String value) {
 		if (value == null) {
 			value = "";
 		}

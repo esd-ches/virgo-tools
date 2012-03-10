@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.runtime.core;
 
+import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.libra.framework.editor.core.model.IBundle;
+import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator;
+import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator.JavaVersion;
 import org.eclipse.virgo.ide.runtime.internal.core.DeploymentIdentity;
 import org.eclipse.virgo.ide.runtime.internal.core.command.IServerCommand;
 import org.eclipse.wst.server.core.IModule;
@@ -27,12 +30,13 @@ import org.eclipse.wst.server.core.model.IModuleFile;
 
 
 /**
- * Interface that encapsulates different dm server settings that are depending on the version.
+ * Interface that encapsulates server settings such as for versions.
  * @author Christian Dupuis
  * @author Kaloyan Raev
+ * @author Miles Parker
  * @since 1.0.0
  */
-public interface IServerVersionHandler {
+public interface IServerRuntimeProvider {
 
 	/**
 	 * Check if a certain dm server can serve a given module(type)
@@ -73,7 +77,7 @@ public interface IServerVersionHandler {
 	/**
 	 * Verifies the installation directory
 	 */
-	IStatus verifyInstallation(IPath installPath);
+	IStatus verifyInstallation(IRuntime runtime);
 
 	/**
 	 * Returns the path to the server.config file
@@ -169,4 +173,8 @@ public interface IServerVersionHandler {
 	 * Callback method for version handlers to setup servers before the server starts 
 	 */
 	void preStartup(IServerBehaviour serverBehaviour);
+	
+	IDependencyLocator createDependencyLocator(IRuntime runtime, String serverHomePath,
+			String[] additionalSearchPaths, String indexDirectoryPath, JavaVersion javaVersion) throws IOException;
+
 }

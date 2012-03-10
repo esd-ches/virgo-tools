@@ -39,15 +39,14 @@ import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator;
 import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator.JavaVersion;
 import org.eclipse.virgo.ide.runtime.internal.core.Server;
 import org.eclipse.virgo.ide.runtime.internal.core.ServerBehaviour;
-import org.eclipse.virgo.ide.runtime.internal.core.ServerRuntime;
+import org.eclipse.virgo.ide.runtime.internal.core.VirgoServerRuntime;
 import org.eclipse.virgo.ide.runtime.internal.core.ServerRuntimeUtils;
-import org.eclipse.virgo.ide.runtime.internal.core.ServerVersionAdapter;
+import org.eclipse.virgo.ide.runtime.internal.core.runtimes.RuntimeProviders;
 import org.eclipse.virgo.ide.runtime.internal.core.utils.StatusUtil;
 import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocator;
-import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocatorVirgo;
-import org.eclipse.virgo.kernel.osgi.provisioning.tools.Pre35DependencyLocatorVirgo;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.util.PublishUtil;
 import org.osgi.framework.Constants;
 
@@ -99,7 +98,7 @@ public class ServerUtils {
 	 */
 	public static String getServerHome(IRuntime... targetedServerRuntimes) {
 		for (org.eclipse.wst.server.core.IRuntime serverRuntime : targetedServerRuntimes) {
-			ServerRuntime sRuntime = (ServerRuntime) serverRuntime.loadAdapter(	ServerRuntime.class,
+			VirgoServerRuntime sRuntime = (VirgoServerRuntime) serverRuntime.loadAdapter(	VirgoServerRuntime.class,
 																				new NullProgressMonitor());
 			if (sRuntime != null) {
 				return serverRuntime.getLocation().toString();
@@ -118,7 +117,7 @@ public class ServerUtils {
 
 		ServerRuntimeUtils.execute(project, new ServerRuntimeUtils.ServerRuntimeCallback() {
 
-			public boolean doWithRuntime(ServerRuntime runtime) {
+			public boolean doWithRuntime(VirgoServerRuntime runtime) {
 				targetedServerRuntimes.add(runtime.getRuntime());
 				return true;
 			}
@@ -169,9 +168,10 @@ public class ServerUtils {
 
 	private static IDependencyLocator createDependencyLocator(IRuntime runtime, String serverHomePath,
 			String[] additionalSearchPaths, String indexDirectoryPath, JavaVersion javaVersion) throws IOException {
-		// TODO CD check to see if this can be moved into the version handler
-		if (ServerVersionAdapter.isVirgo(runtime)) {
-			return new DependencyLocatorVirgo(serverHomePath, additionalSearchPaths, indexDirectoryPath, javaVersion);
+		IServerRuntimeWorkingCopy serverRuntime = (IServerRuntimeWorkingCopy) runtime.loadAdapter(IServerRuntimeWorkingCopy.class, null);
+		IServerRuntimeProvider versionHandler = serverRuntime.getVirgoVersion();
+		if (versionHandler != null) {
+			return versionHandler.createDependencyLocator(runtime, serverHomePath, additionalSearchPaths, indexDirectoryPath, javaVersion);
 		}
 		return null;
 	}
@@ -280,13 +280,13 @@ public class ServerUtils {
 		return null;
 	}
 
-	public static ServerRuntime getServerRuntime(IServerBehaviour server) {
+	public static VirgoServerRuntime getServerRuntime(IServerBehaviour server) {
 		if (server instanceof ServerBehaviour) {
 			if (((ServerBehaviour) server).getServer().getRuntime() == null) {
 				return null;
 			}
-			return (ServerRuntime) ((ServerBehaviour) server).getServer().getRuntime()
-					.loadAdapter(ServerRuntime.class, null);
+			return (VirgoServerRuntime) ((ServerBehaviour) server).getServer().getRuntime()
+					.loadAdapter(VirgoServerRuntime.class, null);
 		}
 		return null;
 	}

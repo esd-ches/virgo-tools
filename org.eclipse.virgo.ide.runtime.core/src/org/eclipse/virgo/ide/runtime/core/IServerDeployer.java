@@ -18,7 +18,7 @@ import org.eclipse.wst.server.core.model.IModuleFile;
 
 /**
  * Interface for clients that want to control the deploy mechanism associated with a
- * {@link IServerVersionHandler}.
+ * {@link IServerRuntimeProvider}.
  * @author Christian Dupuis
  * @since 2.0.0
  */

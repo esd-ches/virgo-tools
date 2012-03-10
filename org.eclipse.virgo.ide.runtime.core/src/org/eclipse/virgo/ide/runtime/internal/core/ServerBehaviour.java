@@ -55,7 +55,7 @@ import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.core.IServerDeployer;
 import org.eclipse.virgo.ide.runtime.core.IServerRuntime;
-import org.eclipse.virgo.ide.runtime.core.IServerVersionHandler;
+import org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.wst.common.project.facet.core.FacetedProjectFramework;
@@ -115,7 +115,7 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 		return ServerUtils.getServer(this).getServerDeployDirectory();
 	}
 
-	public IServerVersionHandler getVersionHandler() {
+	public IServerRuntimeProvider getVersionHandler() {
 		return ServerUtils.getServer(this).getVersionHandler();
 	}
 

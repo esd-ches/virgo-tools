@@ -21,12 +21,12 @@ import org.eclipse.virgo.ide.runtime.core.IServerWorkingCopy;
  */
 public class VirgoServer extends Server implements IServer, IServerWorkingCopy {
 
-	public ServerRuntime getRuntime() {
+	public VirgoServerRuntime getRuntime() {
 		if (getServer().getRuntime() == null) {
 			return null;
 		}
 
-		return (ServerRuntime) getServer().getRuntime().loadAdapter(VirgoServerRuntime.class, null);
+		return (VirgoServerRuntime) getServer().getRuntime().loadAdapter(VirgoServerRuntime.class, null);
 	}
 
 	@Override

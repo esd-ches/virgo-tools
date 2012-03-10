@@ -17,33 +17,21 @@
 	<extension point="org.eclipse.wst.server.core.runtimeTypes">
 		<runtimeType id="org.eclipse.virgo.server.runtime.virgo"
 			version="2.1" 
-			name="%runtimeVirgoTypeName" 
-			description="%runtimeVirgoDescription"
-			vendor="%runtimeVirgoTypeVendor" 
+			name="%virgoRuntimeName" 
+			description="%virgoRuntimeDescription"
+			vendor="%virgoVendor" 
 			class="org.eclipse.virgo.ide.runtime.internal.core.VirgoServerRuntime">
 			<moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5" />
 			<moduleType types="org.eclipse.virgo.server.bundle" versions="1.0"/>
 			<moduleType types="org.eclipse.virgo.server.par" versions="1.0"/>
 			<moduleType types="org.eclipse.virgo.server.plan" versions="2.0"/>
 		</runtimeType>
-		  <runtimeType
-		        class="org.eclipse.virgo.ide.runtime.internal.core.VirgoServerRuntime"
-		        description="%runtimeVirgoDescription35"
-		        id="org.eclipse.virgo.server.runtime.virgo.35"
-		        name="%runtimeVirgoTypeName35"
-		        vendor="%runtimeVirgoTypeVendor"
-		        version="3.5">
-		        <moduleType types="jst.web" versions="2.2, 2.3, 2.4, 2.5" />
-				<moduleType types="org.eclipse.virgo.server.bundle" versions="1.0"/>
-				<moduleType types="org.eclipse.virgo.server.par" versions="1.0"/>
-				<moduleType types="org.eclipse.virgo.server.plan" versions="2.0"/>
-		  </runtimeType>
 	</extension>
 	
 	<extension point="org.eclipse.wst.server.core.serverTypes">
 		<serverType id="org.eclipse.virgo.server.virgo" 
-			name="%serverVirgoServerType21_30"
-			description="%serverVirgoServerDescription21_30" 
+			name="%virgoServerName"
+			description="%virgoServerDescription" 
 			supportsRemoteHosts="false"
 			runtime="true" 
 			startTimeout="300000" 
@@ -55,19 +43,6 @@
 			class="org.eclipse.virgo.ide.runtime.internal.core.VirgoServer"
 			behaviourClass="org.eclipse.virgo.ide.runtime.internal.core.VirgoServerBehaviour">
 		</serverType>
-		  <serverType id="org.eclipse.virgo.server.virgo.35"
-		        behaviourClass="org.eclipse.virgo.ide.runtime.internal.core.VirgoServerBehaviour"
-		        class="org.eclipse.virgo.ide.runtime.internal.core.VirgoServer"
-		        name="%serverVirgoServerType35"
-		        description="%serverVirgoServerDescription35"
-		        hasConfiguration="true"
-		        initialState="stopped"
-		        launchConfigId="org.eclipse.virgo.server.launchconfig.virgo"
-		        runtime="true"
-		        runtimeTypeId="org.eclipse.virgo.server.runtime.virgo.35"
-		        startTimeout="300000"
-		        supportsRemoteHosts="false">
-		  </serverType>
 	</extension>
 	
 	<extension point="org.eclipse.debug.core.launchConfigurationTypes">
@@ -87,12 +62,7 @@
 	<extension point="org.eclipse.wst.common.project.facet.core.runtimes">
 		<runtime-component-type id="org.eclipse.virgo.server.virgo" />
 		<runtime-component-version type="org.eclipse.virgo.server.virgo"
-			version="2.1" />
-		  <runtime-component-version
-		        type="org.eclipse.virgo.server.virgo"
-		        version="3.5">
-		  </runtime-component-version>
-		
+			version="[2.1" />
 		<adapter>
 			<runtime-component id="org.eclipse.virgo.server.virgo" />
 			<factory
@@ -108,17 +78,7 @@
 		</adapter>
 		
 		<supported>
-			<runtime-component id="org.eclipse.virgo.server.virgo"
-				version="2.1" />
-			<facet id="jst.web" version="2.2,2.3,2.4,2.5" />
-			<facet id="jst.utility" version="1.0" />
-			<facet id="org.eclipse.virgo.server.bundle" version="1.0"/>
-			<facet id="org.eclipse.virgo.server.par" version="1.0"/>
-			<facet id="org.eclipse.virgo.server.plan" version="2.0"/>
-		</supported>
-		<supported>
-			<runtime-component id="org.eclipse.virgo.server.virgo"
-				version="3.5" />
+			<runtime-component id="org.eclipse.virgo.server.virgo"/>
 			<facet id="jst.web" version="2.2,2.3,2.4,2.5" />
 			<facet id="jst.utility" version="1.0" />
 			<facet id="org.eclipse.virgo.server.bundle" version="1.0"/>
@@ -130,22 +90,13 @@
 	<extension point="org.eclipse.jst.server.core.runtimeFacetMappings">
 		<runtimeFacetMapping 
 			runtimeTypeId="org.eclipse.virgo.server.runtime.virgo"
-			runtime-component="org.eclipse.virgo.server.virgo" version="2.1" />
-		  <runtimeFacetMapping
-		        runtimeTypeId="org.eclipse.virgo.server.runtime.virgo.35"
-		        runtime-component="org.eclipse.virgo.server.virgo" version="3.5">
-		  </runtimeFacetMapping>
+			runtime-component="org.eclipse.virgo.server.virgo" version="[2.1" />
 	</extension>
 	
 	<extension point="org.eclipse.wst.server.core.publishTasks">
 		<publishTask id="org.eclipse.virgo.server.publishTask"
 			typeIds="org.eclipse.virgo.server.virgo" 
 			class="org.eclipse.virgo.ide.runtime.internal.core.ServerPublishTask" />
-		  <publishTask
-		        class="org.eclipse.virgo.ide.runtime.internal.core.ServerPublishTask"
-		        id="org.eclipse.virgo.server.publishTask"
-		        typeIds="org.eclipse.virgo.server.virgo.35">
-		  </publishTask>
 	</extension>
  
  	<extension

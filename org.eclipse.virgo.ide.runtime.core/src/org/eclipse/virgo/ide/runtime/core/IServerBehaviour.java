@@ -50,7 +50,7 @@ public interface IServerBehaviour extends IURLProvider {
 	 */
 	IServerDeployer getServerDeployer();
 
-	IServerVersionHandler getVersionHandler();
+	IServerRuntimeProvider getVersionHandler();
 
 	Map<String, DeploymentIdentity> getDeploymentIdentities();
 

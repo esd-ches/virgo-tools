@@ -8,37 +8,41 @@
  * Contributors:
  *     SAP AG - initial implementation
  *******************************************************************************/
-package org.eclipse.virgo.ide.runtime.internal.core;
+package org.eclipse.virgo.ide.runtime.internal.core.runtimes;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
+import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator;
+import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator.JavaVersion;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
-import org.eclipse.virgo.ide.runtime.core.IServerVersionHandler;
-import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
+import org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
+import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocatorVirgo;
 import org.eclipse.wst.server.core.IRuntime;
 
 /**
- * {@link IServerVersionHandler} for Virgo Server 3.5.0 and above.
+ * {@link IServerRuntimeProvider} for Virgo Server 3.5.0 and above.
  * 
  * @author Borislav Kapukaranov
  * @author Miles Parker
  */
-public class ServerVirgo35Handler extends ServerVirgoHandler {
+public class Virgo35Provider extends VirgoRuntimeProvider {
+
+	// Assumes Stateless
+	public static final VirgoRuntimeProvider INSTANCE = new Virgo35Provider();
+
+	private static final String SERVER_VIRGO_35 = SERVER_VIRGO_BASE + ".35";
+
+	private Virgo35Provider() {
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -52,14 +56,14 @@ public class ServerVirgo35Handler extends ServerVirgoHandler {
 	}
 
 	/**
-	 * @see org.eclipse.virgo.ide.runtime.internal.core.ServerVirgoHandler#getProfileDir()
+	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider#getProfileDir()
 	 */
 	String getProfileDir() {
 		return getConfigDir();
 	}
 
 	/**
-	 * @see org.eclipse.virgo.ide.runtime.core.IServerVersionHandler#getRuntimeClasspath(org.eclipse.core.runtime.IPath)
+	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getRuntimeClasspath(org.eclipse.core.runtime.IPath)
 	 */
 	public List<IRuntimeClasspathEntry> getRuntimeClasspath(IPath installPath) {
 		List<IRuntimeClasspathEntry> cp = super.getRuntimeClasspath(installPath);
@@ -141,40 +145,23 @@ public class ServerVirgo35Handler extends ServerVirgoHandler {
 	}
 
 	/**
-	 * {@inheritDoc}
+	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider#getID()
 	 */
-	public IStatus verifyInstallation(IPath installPath) {
-		String version = installPath.append("lib").append(".version").toOSString();
-		File versionFile = new File(version);
-		if (versionFile.exists()) {
-			InputStream is = null;
-			try {
-				is = new FileInputStream(versionFile);
-				Properties versionProperties = new Properties();
-				versionProperties.load(is);
-				String versionString = versionProperties.getProperty("virgo.server.version");
-
-				if (versionString == null) {
-					return new Status(
-						Status.ERROR,
-						ServerCorePlugin.PLUGIN_ID,
-						".version file in lib directory is missing key 'virgo.server.version'. Make sure to point to a Virgo Server installation.");
-				}
-			} catch (FileNotFoundException e) {
-			} catch (IOException e) {
-			} finally {
-				if (is != null) {
-					try {
-						is.close();
-					} catch (IOException e) {
-					}
-				}
-			}
-		} else {
-			return new Status(Status.ERROR, ServerCorePlugin.PLUGIN_ID,
-				".version file in lib directory is missing. Make sure to point to a Virgo Server installation.");
-		}
-		return Status.OK_STATUS;
+	public String getID() {
+		return SERVER_VIRGO_35;
 	}
 
+	public String getSupportedVersions() {
+		return "3.5+";
+	}
+
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#createDependencyLocator(org.eclipse.wst.server.core.IRuntime,
+	 *      java.lang.String, java.lang.String[], java.lang.String,
+	 *      org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator.JavaVersion)
+	 */
+	public IDependencyLocator createDependencyLocator(IRuntime runtime, String serverHomePath,
+			String[] additionalSearchPaths, String indexDirectoryPath, JavaVersion javaVersion) throws IOException {
+		return new DependencyLocatorVirgo(serverHomePath, additionalSearchPaths, indexDirectoryPath, javaVersion);
+	}
 }
