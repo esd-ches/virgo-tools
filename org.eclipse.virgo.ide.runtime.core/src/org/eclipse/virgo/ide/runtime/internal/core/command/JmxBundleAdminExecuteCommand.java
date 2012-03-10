@@ -41,7 +41,7 @@ public class JmxBundleAdminExecuteCommand extends AbstractJmxServerCommand imple
 
 			public Object invokeOperation(MBeanServerConnection connection) throws Exception {
 				ObjectName name = ObjectName
-						.getInstance("com.springsource.server:type=BundleAdmin");
+						.getInstance("org.eclipse.virgo.kernel:type=BundleAdmin");
 
 				// Verify that the BundleAdmin exists and runs
 				checkBundleAdminAndInstall(serverBehaviour, connection, name);

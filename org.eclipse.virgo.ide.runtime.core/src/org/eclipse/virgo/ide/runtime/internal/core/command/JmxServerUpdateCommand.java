@@ -80,7 +80,7 @@ public class JmxServerUpdateCommand extends AbstractJmxServerCommand implements 
 			public Object invokeOperation(MBeanServerConnection connection) throws Exception {
 				ObjectName bundleObject = null;
 				if (bundleSymbolicName != null) {
-					String partialObjectName = "com.springsource.kernel:artifact-type=bundle,name="
+					String partialObjectName = "org.eclipse.virgo.kernel:artifact-type=bundle,name="
 							+ bundleSymbolicName + ",type=Model,version=";
 
 					String parObject = null;

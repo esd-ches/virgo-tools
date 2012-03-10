@@ -28,8 +28,9 @@ import org.osgi.framework.BundleContext;
  */
 public class ServerCorePlugin extends AbstractUIPlugin {
 	
+	//TODO We should put this in a property so that we can maintain it
 	public static final String CONNECTOR_BUNDLE_NAME = 
-		"org.eclipse.virgo.ide.management.remote_1.0.0.jar";
+		"org.eclipse.virgo.ide.management.remote_1.0.0.201203091803.jar";
 
 	/** The bundle symbolic name */
 	public static final String PLUGIN_ID = "org.eclipse.virgo.ide.runtime.core";
