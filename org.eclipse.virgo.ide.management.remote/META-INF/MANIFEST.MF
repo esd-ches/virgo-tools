@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-Name: Virgo Server Remote Management Bundle
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: org.eclipse.virgo.ide.management.remote
-Bundle-Version: 1.0.0
+Bundle-Version: 1.0.0.qualifier
 Import-Package: org.osgi.framework,
  org.osgi.service.packageadmin,
  org.osgi.util.tracker,
