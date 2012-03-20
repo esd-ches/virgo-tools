@@ -64,6 +64,12 @@ import org.eclipse.wst.server.core.util.PublishHelper;
  */
 public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
 
+	private static final String EXT_DIR = "ext";
+
+	private static final String USR_DIR = "usr";
+
+	private static final String REPOSITORY_DIR = "repository";
+
 	public static final String SERVER_VIRGO_BASE = "org.eclipse.virgo.server.runtime.virgo";
 
 	private static final String BUNDLE_OBJECT_NAME = "org.eclipse.virgo.kernel:type=Model,artifact-type=bundle,name=$NAME,version=$VERSION";
@@ -113,6 +119,9 @@ public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
 			+ "/org.eclipse.virgo.kernel.users.properties\"");
 		list.add("-Djava.security.auth.login.config=\"" + serverHome + "/" + getConfigDir()
 			+ "/org.eclipse.virgo.kernel.authentication.config\"");
+		if (getInstallationType(ServerUtils.getServer(behaviour).getRuntime().getRuntime()) == InstallationType.JETTY) {
+			list.add("-Djetty.home=\"" + serverHome + "/jetty\"");
+		}
 		return list.toArray(new String[list.size()]);
 	}
 
@@ -258,21 +267,21 @@ public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
 	 * {@inheritDoc}
 	 */
 	public String getUserLevelBundleRepositoryPath(IRuntime runtime) {
-		return runtime.getLocation().append("repository").append("usr").toString();
+		return runtime.getLocation().append(REPOSITORY_DIR).append(USR_DIR).toString();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public String getUserLevelLibraryRepositoryPath(IRuntime runtime) {
-		return runtime.getLocation().append("repository").append("usr").toString();
+		return runtime.getLocation().append(REPOSITORY_DIR).append(USR_DIR).toString();
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getExtLevelBundleRepositoryPath(org.eclipse.wst.server.core.IRuntime)
 	 */
 	public String getExtLevelBundleRepositoryPath(IRuntime runtime) {
-		return runtime.getLocation().append("repository").append("ext").toString();
+		return runtime.getLocation().append(REPOSITORY_DIR).append(EXT_DIR).toString();
 	}
 
 	/**
@@ -359,14 +368,19 @@ public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
 
 	public InstallationType getInstallationType(IRuntime runtime) {
 		Properties versionProperties;
+		IPath location = runtime.getLocation();
 		try {
-			versionProperties = getProperties(runtime.getLocation(), "version");
+			versionProperties = getProperties(location, "version");
 		} catch (IOException e) {
 			return null;
 		}
 		String versionString = versionProperties.getProperty("virgo.server.version");
 		if (versionString != null) {
-			return InstallationType.TOMCAT;
+			if (location.append("jetty").toFile().exists()) {
+				return InstallationType.JETTY;
+			} else {
+				return InstallationType.TOMCAT;
+			}
 		}
 		versionString = versionProperties.getProperty("virgo.kernel.version");
 		if (versionString != null) {
