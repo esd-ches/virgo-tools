@@ -311,7 +311,7 @@ public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
 		File serverHome = ServerUtils.getServer(serverBehaviour).getRuntimeBaseDirectory().toFile();
 		Properties properties = new Properties();
 		try {
-			properties.load(new FileInputStream(new File(serverHome, "config" + File.separatorChar + fileName)));
+			properties.load(new FileInputStream(new File(serverHome, getConfigDir() + File.separatorChar + fileName)));
 		} catch (FileNotFoundException e) {
 			// TODO CD add logging
 		} catch (IOException e) {
