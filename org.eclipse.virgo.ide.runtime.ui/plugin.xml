@@ -194,5 +194,14 @@
 			category="org.eclipse.virgo.ide.preferencePage">
 		</page>
 	</extension>
+<!--  <extension
+        point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.eclipse.wst.server.ui.internal.editor.ServerEditor"
+            class="org.eclipse.virgo.ide.runtime.internal.ui.editor.VirgoEditorAdapterFactory">
+         <adapter
+               type="org.eclipse.ui.views.contentoutline.IContentOutlinePage">
+         </adapter>
+      </factory>  </extension>-->
 	
 </plugin>

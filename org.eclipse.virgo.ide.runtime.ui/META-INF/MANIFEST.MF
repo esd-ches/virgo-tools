@@ -31,7 +31,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.virgo.ide.manifest.core,
  org.eclipse.virgo.ide.facet.core,
  org.eclipse.ui.browser,
- org.eclipse.pde.ui
+ org.eclipse.pde.ui,
+ org.eclipse.ui.views
 Import-Package: org.apache.commons.lang,
  org.apache.commons.logging,
  org.eclipse.libra.framework.editor.core;version="[0.1.0,2.0.0)",
