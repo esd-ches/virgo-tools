@@ -1,0 +1,124 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Creating Plans</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="ch04.html" title="Chapter&nbsp;4.&nbsp;Developing Applications"><link rel="prev" href="ch04s02.html" title="Creating PARs and Web Applications"><link rel="next" href="ch04s04.html" title="Creating and Using Configuration Artifacts"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Creating Plans"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="developing-applications-plans"></a>Creating Plans</h2></div></div></div><p>
+			Plans are similar to PARs in that they encapsulate the artifacts of an application as a single unit.
+			However plans are XML files that refer to their artifacts, whereas PARs are JAR files that physically contain their artifacts.
+			Plans, known as <span class="emphasis"><em>parent</em></span> plans may refer to other plans, known as <span class="emphasis"><em>child</em></span> plans.
+		</p><p>
+			Plans share several benefits with PARs:
+			</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">A plan has a (symbolic) name and a version.</li><li class="listitem">A plan may be scoped, although this is optional.
+					See <a class="link" href="ch04s03.html#developing-applications-plans-scoping" title="Plans and Scoping">Plans and Scoping</a> for more on scoping.
+				</li><li class="listitem">A plan is visible to management interfaces.</li><li class="listitem">A plan can be undeployed and redeployed as a unit.</li><li class="listitem">A plam may be atomic, although this is optional.</li></ul></div><p>
+		</p><p>
+			Plans have the following additional benefits compared to PARs:
+			</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+					Virgo deploys the artifacts in the plan in the order in which they are listed in the XML file, which gives you
+					complete control over deployment order.
+					With a PAR, the order of deployment of the included artifacts is not guaranteed.
+				</li><li class="listitem">Since plans refer to their artifacts, it is easier to share content between plans as well as update individual
+					parts of a plan without having to physically repackage (re-JAR) it.
+				</li><li class="listitem">
+					Plans may contain child plans, but PARs cannot contain other PARs.
+					</li><li class="listitem">
+					You can make certain plans deploy faster by disabling the provisioning of bundles to satisfy missing dependencies,
+					but you cannot disable provisioning for PARs.
+				</li><li class="listitem">
+					You can specify whether a plan is scoped or unscoped and atomic or non-atomic; PARs are always scoped and atomic.
+				</li></ul></div><p>
+		</p><p>
+			The artifacts of a plan are stored in Virgo's repository.  This means, for example, that if you drop one of the plan&rsquo;s artifacts in the <code class="code">pickup</code> directory rather than adding it to the repository, the plan will fail to deploy because it will not find the artifact.
+		</p><div class="section" title="Creating the Plan XML File"><div class="titlepage"><div><div><h3 class="title"><a name="developing-applications-plans-create"></a>Creating the Plan XML File</h3></div></div></div><p>
+				Plans are XML files that have a <code class="code">.plan</code> file extension, such as <code class="code">multi-artifact.plan</code>.  
+				The structure of the XML file is simple: 
+				the root element is <code class="code">&lt;plan&gt;</code> with attributes specifying the name of the plan, the version, atomicity, and scoping. 
+				Then, for each artifact that makes up your application, 
+				you add a <code class="code">&lt;artifact&gt;</code> element, using its attributes to specify the type of artifact and its name and version.  
+				The following is a simple example of a plan&rsquo;s XML file:
+			</p><pre class="programlisting">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;plan name="multi-artifact.plan" version="1.0.0" scoped="true" atomic="true"
+        xmlns="http://www.eclipse.org/virgo/schema/plan"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="
+		        http://www.eclipse.org/virgo/schema/plan
+		        http://www.eclipse.org/virgo/schema/plan/eclipse-virgo-plan.xsd"&gt;
+
+    &lt;artifact type="configuration" name="app-properties" version="1.0.0"/&gt;
+    &lt;artifact type="bundle" name="com.springsource.exciting.app" version="[2.0.0, 3.1.0)"/&gt;
+
+&lt;/plan&gt;</pre><p>
+				In the preceding example, the name of the plan is <code class="code">multi-artifact.plan</code> and its version is <code class="code">1.0.0</code>.  
+				The plan is both scoped and atomic.    The plan contains two artifacts: one is a bundle called <code class="code">com.springsource.exciting.app</code> and the other is a configuration file called <code class="code">app-properties</code>.  
+			</p><p>
+				The following table describes the attributes of the <code class="code">&lt;plan&gt;</code> element.
+			</p><div class="table"><a name="developing-applications-plans-create-plan-attributes"></a><p class="title"><b>Table&nbsp;4.2.&nbsp;Attributes of the &lt;plan&gt; Element</b></p><div class="table-contents"><table summary="Attributes of the <plan> Element" border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Description</th><th>Required?</th></tr></thead><tbody><tr><td><code class="literal">name</code></td><td>Specifies the name of this plan.  Virgo uses the name as one component of the unique identifier of this plan. </td><td>Yes.</td></tr><tr><td><code class="literal">version</code></td><td>Specifies the version of this plan.  You must use OSGi version specification syntax, such as <code class="code">2.1.0</code>. Virgo uses the version as one component of the unique identifier of this plan. </td><td>Yes.</td></tr><tr><td><code class="literal">scoped</code></td><td>Specifies whether Virgo should install the artifacts into plan-specific scope so that only the application described by this plan has access to the artifacts. If you disable scoping, then Virgo installs the artifacts into the global scope, which means they are then available for access by all other deployed artifacts.  Set the attribute to <code class="code">true</code> to enable scoping or <code class="code">false</code> to disable it.</td><td>Yes.</td></tr><tr><td><code class="literal">atomic</code></td><td>Specifies whether you want to tie together the lifecycle of the artifacts in this plan.
+								Making a plan atomic means that if you start, stop, or uninstall a single artifact in the plan, Virgo escalates the operation to
+								the whole plan. Also Virgo prevents artifacts of an atomic plan from being in inconsistent states.
+								For example, if one artifact should fail to start, then Virgo stops all artifacts in the plan.
+								Set this attribute to <code class="code">true</code> to enable atomicity or <code class="code">false</code> to disable it. </td><td>Yes.</td></tr><tr><td><code class="literal">provisioning</code></td><td>
+								<p>
+									Specifies whether Virgo installs bundles from the repository to attempt to satisfy any missing dependencies in the plan.
+									Missing dependencies prevent one or more bundles in the plan from resolving.
+									For example, a bundle which imports a package cannot resolve if the package is missing, that is, not exported by another bundle.
+								</p>
+								<p>
+									A value of <code class="code">auto</code> instructs Virgo to install bundles from the repository
+									to attempt to satisfy any missing dependencies in the plan. This is known as <span class="emphasis"><em>auto-provisioning</em></span>.
+								</p>
+								<p>
+									A value of <code class="code">disabled</code> prevents Virgo from installing bundles from the repository to attempt to
+									satisfy any missing	dependencies in the plan.
+									This value can make the plan deploy faster, although if there are missing dependencies, deployment will fail.
+								</p>
+								<p>
+									A value of <code class="code">inherit</code>, which is the default if no value is specified, inherits the parent plan's provisioning behaviour.
+									If the plan does not have a parent, it inherits Virgo's auto-provisioning behaviour. 
+								</p>
+							</td><td>No. If not specified, defaults to <code class="code">inherit</code>.</td></tr></tbody></table></div></div><br class="table-break"><p>
+				The following table describes the attributes of the <code class="code">&lt;artifact&gt;</code> element.
+			</p><div class="table"><a name="developing-applications-plans-create-artifact-attributes"></a><p class="title"><b>Table&nbsp;4.3.&nbsp;Attributes of the &lt;artifact&gt; Element</b></p><div class="table-contents"><table summary="Attributes of the <artifact> Element" border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Description</th><th>Required?</th></tr></thead><tbody><tr><td><code class="literal">type</code></td><td>Specifies the type of the artifact.  Valid values are: 
+		<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><code class="code">bundle</code>: Specifies an OSGi bundle.  Use this artifact type for WAR files and Web application bundles. </li><li class="listitem"><code class="code">configuration</code>: Specifies that the artifact is a configuration file.  Configuration files contain name/value pairs that set initial values for configuration properties of a bundle.  </li><li class="listitem"><code class="code">plan</code>: Specifies that the artifact is a plan. </li><li class="listitem"><code class="code">par</code>: Specifies that the artifact is a PAR. </li></ul></div>
+		</td><td>Yes.</td></tr><tr><td><code class="literal">name</code></td><td>Specifies the name of the artifact. 
+
+		<p>See <a class="link" href="">Artifact Names</a> for guidelines for determining the name of an artifact.</p>
+							</td><td>Yes.</td></tr><tr><td><code class="literal">version</code></td><td>Specifies the version or range of versions of this artifact that Virgo should look up in its repositories and then install and deploy.  You must use OSGi version specification syntax, such as <code class="code">[1.0.0, 2.0.0)</code>. </td><td>No.  If not specified, defaults to <code class="code">0</code>, which in OSGi means 0 to infinity, or any version.</td></tr></tbody></table></div></div><br class="table-break"></div><div class="section" title="Artifact Names"><div class="titlepage"><div><div><h3 class="title"><a name="names-of-artifacts"></a>Artifact Names</h3></div></div></div><p>When you create a plan, you use the <code class="code">name</code> attribute of the <code class="code">&lt;artifact&gt;</code> element to specify the name of all the plan&rsquo;s dependencies.  This section describes how to determine the name of an artifact, which is not always obvious.</p><p>Use the following guidelines to determine the name of an artifact:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><span class="bold"><strong>Bundle</strong></span>: In this context, a <span class="emphasis"><em>bundle</em></span> refers to a standard OSGi bundle as well as a Web Application Bundle and a WAR file.  The name of a bundle is the value of the <code class="code">Bundle-SymbolicName</code> header in the <code class="code">META-INF/MANIFEST.MF</code> file of the <code class="code">*.jar</code>. 
+			If a WAR file has <code class="code">Bundle-SymbolicName</code> header then it will be treated as a Web Application Bundle. The following <code class="code">MANIFEST.MF</code> snippet shows a bundle with name <code class="code">com.springsource.exciting.app</code>:</p><pre class="screen">Bundle-SymbolicName: org.eclispe.virgo.exciting.app</pre><p>If the bundle does not contain a <code class="code">META-INF/MANIFEST.MF</code> file or the <code class="literal">MANIFEST.MF</code> doesn't contain a <code class="code">Bundle-SymbolicName</code> header, then the name of the bundle is its filename minus the <code class="code">.jar</code> or <code class="code">.war</code> extension.</p></li><li class="listitem"><p><span class="bold"><strong>Configuration File</strong></span>: The name of a configuration or PID (Persistent Identity) is its filename minus the <code class="code">.properties</code> extension. The PID can also be specified within the properties file with the 
+					<span class="emphasis"><em>service.pid</em></span> property.
+					</p></li><li class="listitem"><p><span class="bold"><strong>Plan</strong></span>: The name of a plan is the value of the required <code class="code">name</code> attribute of the <code class="code">&lt;plan&gt;</code> element in the plan&rsquo;s XML file.  In the following XML snippet, the plan name is <code class="code">multi-artifact.plan</code>:</p><pre class="screen">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;plan name="<span class="bold"><strong>multi-artifact.plan</strong></span>" version="1.0.0" scoped="true" atomic="true"
+        xmlns="http://www.eclipse.org/virgo/schema/plan"
+...</pre></li><li class="listitem"><p><span class="bold"><strong>PAR</strong></span>: The name of a PAR is the value of the <code class="code">Application-SymbolicName</code> header in the <code class="code">META-INF/MANIFEST.MF</code> file of the <code class="code">*.par</code> file.   The following <code class="code">MANIFEST.MF</code> snippet shows a PAR with name <code class="code">com.springsource.my.par</code>:</p><pre class="screen">Application-SymbolicName: org.eclipse.virgo.my.par</pre><p>If the PAR does not contain a <code class="code">META-INF/MANIFEST.MF</code> file, then the name of the PAR is its filename minus the <code class="code">.par</code> extension.</p></li></ul></div></div><div class="section" title="Supplying Properties to Artifacts"><div class="titlepage"><div><div><h3 class="title"><a name="passing-properties"></a>Supplying Properties to Artifacts</h3></div></div></div><p>
+				It is possible to pass properties to an artifact specified in a plan. An example of this can be seen in the Admin Console plan where the context path to be used in the Admin console is passed from the plan.
+			</p><pre class="programlisting">
+    &lt;artifact type="bundle" name="org.eclipse.virgo.apps.admin.web" version="[3.0, 4.0)"&gt;
+        &lt;property name="header:Web-ContextPath" value="/admin" /&gt;
+    &lt;/artifact&gt;
+			</pre><p>
+				The only supported property is <code class="literal">header</code> which will overwrite the given manifest header with the supplied value. This should be used with care!
+			</p></div><div class="section" title="Using the Plan"><div class="titlepage"><div><div><h3 class="title"><a name="developing-applications-plans-use"></a>Using the Plan</h3></div></div></div><p>
+				Because a plan is a list of artifacts, rather than a physical file that contains the artifacts, there are a few additional steps you must perform before you deploy it to Virgo.  
+			</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Copy the artifacts that make up the plan to the <code class="code">usr</code> repository, which by default is the <code class="code">$SERVER_HOME/repository/usr</code> directory, where <code class="code">$SERVER_HOME</code> refers to the top-level installation directory of Virgo.  Note that you might have configured the server differently; in which case, copy the artifacts to your custom repository directory.</p></li><li class="listitem"><p>Restart Virgo if the repository used is not a <span class="emphasis"><em>watched</em></span> repository.</p></li><li class="listitem"><p>After the server has started, either use the Admin Console to deploy the plan, or manually deploy it by copying the plan&rsquo;s XML file into the <code class="code">$SERVER_HOME/pickup</code> directory. </p><p>This results in Virgo deploying the plan.</p></li><li class="listitem"><p>To undeploy the plan, use the Admin Console, or simply delete it from the <code class="code">$SERVER_HOME/pickup</code> directory.</p></li></ol></div></div><div class="section" title="Plans and Scoping"><div class="titlepage"><div><div><h3 class="title"><a name="developing-applications-plans-scoping"></a>Plans and Scoping</h3></div></div></div><p>As described in previous sections, you can specify that a plan be <span class="emphasis"><em>scoped</em></span>.  This means that Virgo installs the artifacts that make up the plan into a plan-specific scope so that only the application described by the plan has access to the artifacts. If you disable scoping, then Virgo installs the artifacts into the global scope, which means they are available for access by all other deployed artifacts. This section describes scoping in a bit more detail.  It also describes how you can change the default behavior of scoping, with respect to services, so that a service that is in a scope can be made globally available. </p><p>If a bundle in a given scope imports a package and a bundle in the same scope exports the package, then the import may only be satisfied by the bundle in the scope, and not by any bundles outside the scope, including the global scope.   Similarly, package exports from bundles in a scope are not visible to bundles in the global scope.</p><p>If a bundle in a scope uses Spring DM (or the blueprint service) to obtain a service reference and a bundle in the same scope uses Spring DM (or the blueprint service) to publish a matching service, then the service reference may only bind to the service published in the scope (and not to any services outside the scope).  Services published by bundles in a scope are not visible to bundles in the global scope. </p><p>However, sometimes it is useful to make a service in a scope globally available to artifacts outside the scope.  To do this, publish the service with the <code class="literal">org.eclipse.virgo.service.scope</code> service property set to <code class="literal">global</code>.  Use the <code class="literal">&lt;service-properties&gt;</code> child element of <code class="literal">&lt;service&gt;</code>, as shown in the following example: </p><pre class="programlisting">&lt;service id="publishIntoGlobal" interface="java.lang.CharSequence"&gt;
+  <span class="bold"><strong>&lt;service-properties&gt;
+    &lt;beans:entry key="org.eclipse.virgo.service.scope" value="global" /&gt;
+  &lt;/service-properties&gt;</strong></span>
+  &lt;beans:bean class="java.lang.String"&gt;
+    &lt;beans:constructor-arg value="foo"/&gt;
+  &lt;/beans:bean&gt;
+&lt;/service&gt;</pre><p>
+				A scope forms a boundary for automatic propagation of load time weaving and bundle refresh.
+				Additionally, a synthetic context bundle is generated for each scope. This bundle imports all the packages exported by other bundles in the scope.
+				The class loader of the synthetic context bundle is used for thread context class loading. So,
+				for example, hibernate will be able to load classes of any of the exported
+				packages of the bundles in a scope using the thread context class loader.
+			</p><p>
+				To ensure predictable class loading behaviour and avoid other issues associated with <span class="emphasis"><em>split packages</em></span> (packages whose classes
+				are split across more than one bundle), the synthetic context bundle has a restriction:
+				<span class="bold"><strong>no package may be exported by more than one
+				bundle in the scope</strong></span>.
+				If this restriction is broken, the scoped application will fail to deploy.
+				This restriction can cause problems for <a class="link" href="ch08s08.html" title="Scoping and Substitutable Exports">substitutable exports</a>.
+			</p><div class="section" title="Web Applications and Scoping"><div class="titlepage"><div><div><h4 class="title"><a name="developing-applications-plans-scoping-webapps"></a>Web Applications and Scoping</h4></div></div></div><p>
+					A Web Application Bundle (WAB) or WAR has its bundle class loader set as the TCCL, even when the WAB or WAR belongs to
+					a PAR or scoped plan.
+					To enable the TCCL to load classes of other bundles in the same scope as a WAB or WAR, use a WAB which imports the necessary packages.
+				</p><p>
+					Also a WAB or WAR has its own per-application trace, independent of the per-application trace of any PAR or scoped plan to which the
+					WAB or WAR belongs.
+				</p></div></div></div></body></html>

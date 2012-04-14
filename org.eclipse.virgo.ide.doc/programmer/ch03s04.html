@@ -1,0 +1,25 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>A Guide to Forming Bundles</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="ch03.html" title="Chapter&nbsp;3.&nbsp;Deployment Architecture"><link rel="prev" href="ch03s03.html" title="Regions"><link rel="next" href="ch04.html" title="Chapter&nbsp;4.&nbsp;Developing Applications"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="A Guide to Forming Bundles"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="architecture-forming-bundles"></a>A Guide to Forming Bundles</h2></div></div></div><p> 
+			So what makes an application suitable for deployment on the Virgo Tomcat Server? Since
+			OSGi is at the heart of the VTS, modular applications consisting of
+			bundles, which each represent distinct functionality and well-defined boundaries, can
+			take maximum advantage of the OSGi container&rsquo;s capabilities. The core ideas behind
+			forming bundles require following good software engineering practices: separation of
+			concerns, loose coupling, and communication through clear interfaces. In this section,
+			we look at a few approaches that you may use to create modular applications for
+			Virgo Tomcat Server deployment. Please consider the following discussion as guidelines and
+			not as rules. 
+		</p><p> 
+			Bundles can be formed along horizontal slices of layering and vertical slices of
+			function. The objective is to enable independent development of each bundle and minimize
+			the skills required to develop each bundle.
+		</p><p> For example, an application could have the following bundles:
+				<span class="emphasis"><em>infrastructure</em></span>, <span class="emphasis"><em>domain</em></span>,
+				<span class="emphasis"><em>repository</em></span>, <span class="emphasis"><em>service</em></span>, and
+			<span class="emphasis"><em>web</em></span> as shown in the following diagram.</p><div class="mediaobject"><img src="images/bundle-dependencies-layers.png"></div><p> Each bundle consists of types appropriate for that layer and exports
+			packages and services to be used by other layers. Let&rsquo;s examine each bundle in
+			more detail: </p><div class="table"><a name="architecture-forming-bundles-across-layers-table"></a><p class="title"><b>Table&nbsp;3.2.&nbsp;Bundles across layers</b></p><div class="table-contents"><table summary="Bundles across layers" border="1"><colgroup><col><col><col><col><col></colgroup><thead><tr><th>Bundles</th><th>Imported Packages</th><th>Exported Packages</th><th>Consumed Services</th><th>Published Services</th></tr></thead><tbody><tr><td>Infrastructure</td><td>Third-party libraries</td><td>Infrastructure interfaces</td><td>None</td><td>None</td></tr><tr><td>Domain</td><td>Depends: for example, if JPA is used to annotate persistent
+								types, then JPA packages.</td><td>Public domain types</td><td>None</td><td>None</td></tr><tr><td>Web</td><td>Domain, Service</td><td>None</td><td>Service beans</td><td>None</td></tr><tr><td>Service</td><td>Domain, Infrastructure, Repository</td><td>Service interfaces</td><td>Repository beans</td><td>Service beans</td></tr><tr><td>Repository</td><td>Domain, Third-party libraries, ORM bundles, etc.</td><td>Repository interfaces</td><td>DataSources, ORM session/entity managers, etc.</td><td>Repository beans</td></tr></tbody></table></div></div><p><br class="table-break"></p><p> Within each layer, you may create bundles for each subsystem representing a vertical
+			slice of business functionality. For example, as shown in the following figure, the
+			service layer is divided into two bundles each representing separate business
+			functions. </p><div class="mediaobject"><img src="images/bundle-dependencies-verticals.png"></div><p> You can similarly separate the repositories, domain classes, and web controllers
+			based on the business role they play.</p></div></body></html>

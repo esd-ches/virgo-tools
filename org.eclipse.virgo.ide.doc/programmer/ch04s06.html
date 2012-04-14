@@ -1,0 +1,32 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Programmatic Access to the Servlet Context</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="ch04.html" title="Chapter&nbsp;4.&nbsp;Developing Applications"><link rel="prev" href="ch04s05.html" title="Using Spring and Spring DM"><link rel="next" href="ch04s07.html" title="Web Application Manifest Processing"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Programmatic Access to the Servlet Context"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="developing-applications-programmatic-access"></a>Programmatic Access to the Servlet Context</h2></div></div></div><p>
+			This section describes how to programmatically access the servlet context to obtain the WebApplicationContext or the BundleContext. 
+		</p><div class="section" title="Programmatic Access to Web Features"><div class="titlepage"><div><div><h3 class="title"><a name="developing-applications-programmatic-access-web"></a>Programmatic Access to Web Features</h3></div></div></div><div class="section" title="Programmatic Access to the WebApplicationContext"><div class="titlepage"><div><div><h4 class="title"><a name="developing-applications-programmatic-access-web-application-context"></a>Programmatic Access to the WebApplicationContext</h4></div></div></div><p>
+					The Virgo Tomcat Server automatically creates a <code class="literal">WebApplicationContext</code>
+					for Web Application Bundles and WAR files. When used in conjunction with an
+					an auto-configured Spring MVC <code class="literal">DispatcherServlet</code>,
+					there is generally no need to access the <code class="literal">WebApplicationContext</code>
+					programmatically, since all components of the web application are configured
+					within the scope of the <code class="literal">WebApplicationContext</code>
+					itself. However, if you wish to access the <code class="literal">WebApplicationContext</code>
+					you can do so via the web application&rsquo;s <code class="literal">ServletContext</code>.
+					Virgo stores the bundle&rsquo;s
+					<code class="literal">WebApplicationContext</code> in the ServletContext under
+					the attribute name "<code class="literal">BSN-ApplicationContext</code>", where
+					<code class="literal">BSN</code> is the <code class="literal">Bundle-SymbolicName</code>
+					of your WAR or Web Application Bundle.
+				</p><p>
+					Alternatively, since Virgo also stores the
+					<code class="literal">WebApplicationContext</code> under the attribute name
+					with the value of the <code class="literal">WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE</code>
+					constant, you may choose to use Spring MVC&rsquo;s WebApplicationContextUtils&rsquo;
+					<code class="literal">getWebApplicationContext(servletContext)</code>
+					or
+					<code class="literal">getRequiredWebApplicationContext(servletContext)</code>
+					methods to access the <code class="literal">WebApplicationContext</code> without providing
+					an explicit attribute name. 
+				</p></div><div class="section" title="Programmatic Access to the BundleContext"><div class="titlepage"><div><div><h4 class="title"><a name="developing-applications-programmatic-access-web-bundle-context"></a>Programmatic Access to the BundleContext</h4></div></div></div><p>
+					As required by the OSGi Web Applications specification, you can access the
+					<code class="literal">BundleContext</code> of your WAR or Web Application Bundle via the web application&rsquo;s
+					<code class="literal">ServletContext</code>. The bundle context is stored in the
+					<code class="literal">ServletContext</code> under the attribute name <code class="literal">osgi-bundlecontext</code>.
+				</p></div></div></div></body></html>

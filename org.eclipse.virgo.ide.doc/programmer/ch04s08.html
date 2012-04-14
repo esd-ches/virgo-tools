@@ -1,0 +1,102 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Working with Dependencies</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="ch04.html" title="Chapter&nbsp;4.&nbsp;Developing Applications"><link rel="prev" href="ch04s07.html" title="Web Application Manifest Processing"><link rel="next" href="ch04s09.html" title="Application Trace"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Working with Dependencies"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="developing-applications-dependencies"></a>Working with Dependencies</h2></div></div></div><p>Complex enterprise frameworks such a Spring and Hibernate are typically divided into many, many different
+			packages. Traditionally, if an OSGi bundle wished to make extensive use of such a framework its manifest would
+			have to import a huge number of different packages. This can be an error-prone and tedious process. Furthermore,
+			application developers are used to thinking in terms of their application using a framework, such as Spring, as a
+			whole, rather than a long list of all the different packages that comprise the framework.
+		</p><p>The following figure provides a simple illustration of the complexity of only using <code class="code">Import-Package</code>:
+		</p><p>
+			<img src="images/import-package.png">
+		</p><p>Virgo reduces the need for long lists of imported packages by introducing two new manifest
+			headers; <code class="code">Import-Bundle</code> and <code class="code">Import-Library</code>. The following figure provides an
+			illustration of the simplification that these new headers offer:
+	    </p><p>
+			<img src="images/import-bundle_import-library.png">			
+		</p><p>
+			As you can see, use of <code class="code">Import-Bundle</code> and <code class="code">Import-Library</code> can lead to a dramatic reduction
+			in the number of imports that you need to include in an application bundle&rsquo;s manifest. Furthermore, <code class="code">Import-Bundle</code>
+			and <code class="code">Import-Library</code> are simply aliases for <code class="code">Import-Package</code>; at deployment time <code class="code">Import-Bundle</code>
+			and <code class="code">Import-Library</code> header entries are automatically expanded into numerous <code class="code">Import-Package</code> entries. This
+			means that you retain the exact same semantics of using <code class="code">Import-Package</code>, without having to go through the labourious
+			process of doing so.
+		</p><div class="section" title="Importing Libraries"><div class="titlepage"><div><div><h3 class="title"><a name="developing-applications-importing-libraries"></a>Importing Libraries</h3></div></div></div><p>A bundle in an application can declare a dependency on a library by using the
+				Virgo Server specific <code class="code">Import-Library</code> header. This header specifies a
+				comma-separated list of library symbolic names and version ranges that determine which libraries
+				are imported. By default a dependency on a library is mandatory but this can be
+				controlled through use of the resolution directive in exactly the same way as
+				it can with <code class="code">Import-Package</code>.
+			</p><pre class="programlisting">
+<span class="bold"><strong>Import-Library</strong></span>: org.springframework.spring;version="[2.5.4, 3.0)",
+ org.aspectj;version="[1.6.0,1.6.0]";resolution:="optional"
+            </pre><p>
+                This example <code class="code">Import-Library</code> header declares a mandatory dependency on the Spring
+                library at a version from 2.5.4 inclusive to 3.0 exclusive. It also declares an
+                optional dependency on the AspectJ library at exactly 1.6.0.
+            </p></div><div class="section" title="Importing Bundles"><div class="titlepage"><div><div><h3 class="title"><a name="developing-applications-importing-bundles"></a>Importing Bundles</h3></div></div></div><p>A bundle in an application can declare a dependency on a bundle by using the
+		   Virgo Server specific <code class="code">Import-Bundle</code> header. The header specifies a comma-separated 
+		   list of bundle symbolic names, version ranges, and scope declarmations that determine which bundles are imported and the scope of their dependency. By default a dependency
+		   on a bundle is mandatory but this can be controlled through use of the resolution directive in exactly
+		   the same way as it can with <code class="code">Import-Package</code>.
+		   </p><pre class="programlisting">
+<span class="bold"><strong>Import-Bundle</strong></span>: com.springsource.org.apache.commons.dbcp;version="[1.2.2.osgi, 1.2.2.osgi]"
+           </pre><p>
+				This example <code class="code">Import-Bundle</code> header declares a mandatory dependency on the Apache Commons
+				DBCP bundle at exactly 1.2.2.osgi.
+			</p><div class="section" title="Disadvantages"><div class="titlepage"><div><div><h4 class="title"><a name="developing-applications-importing-bundles-disadvantages"></a>Disadvantages</h4></div></div></div><p>
+					A disadvantage of using <code class="code">Import-Bundle</code> or especially <code class="code">Import-Library</code>, is that the application 
+					bundle has a greater apparent fan-out than it strictly needs. An Alternative is to use a tool such as bnd or Bundlor 
+					to generate the package imports of the bundle.
+				</p></div></div><div class="section" title="Scoping Bundles in an Application"><div class="titlepage"><div><div><h3 class="title"><a name="developing-applications-scoping-libraries-bundles"></a>Scoping Bundles in an Application</h3></div></div></div><p>
+				When working with a scoped application, such as a PAR file or a plan, you might run into a situation where one of the bundles in the application (call it <code class="code">bundleA</code>) depends on another bundle (<code class="code">bundleB</code>) that performs a runtime task (such as class generation) that a third bundle (<code class="code">bundleC</code>) might need to know about, although <code class="code">bundleC</code> does not explicitly depend on <code class="code">bundleB</code>.  
+			</p><p>
+				For example, Hibernate uses CGLIB (code generation library) at runtime to generate proxies for persistent classes.  Assume that a domain bundle in your application uses Hibernate for its persistent objects, and thus its <code class="code">Import-Bundle</code> manifest header includes the Hibernate bundle.  Further assume that a separate Web bundle uses reflection in its data-binding code, and thus needs to reflect on the persistent classes generated by Hibernate at runtime.  The Web bundle now has an indirect dependency on the Hibernate bundle because of these dynamically generated classes, although the Web bundle does not typically care about the details of how these classes are persisted.  One way to solve this dependency problem is to explicitly add the Hibernate bundle to the <code class="code">Import-Bundle</code> header of the Web bundle; however, this type of explicit-specified dependency breaks the modularity of the application and is not a programming best practice.
+			</p><p>
+				A better way to solve this problem is to specify that Virgo itself dynamically import 
+				the bundle (Hibernate in the example above) to all bundles in the application at runtime.  
+				You do this by adding the <code class="code">import-scope:=application</code> directive to the <code class="code">Import-Bundle</code> header 
+				of the bundle that has the direct dependency (the domain bundle in our example).  At runtime, although the Web bundle 
+				does not explicitly import the Hibernate bundle, Virgo implicitly imports it and thus its classes are available 
+				to the Web bundle.  This mechanism allows you to declare the dependencies you need to make your application run,
+				without having to make changes to your application that might limit its flexibility. 
+			</p><p>
+				The following example shows how to use the <code class="code">import-scope</code> directive with the <code class="code">Import-Bundle</code> header:
+			</p><pre class="programlisting">
+Import-Bundle: com.springsource.org.hibernate;version="[3.2.6.ga,3.2.6.ga]";<span class="bold"><strong>import-scope:=application</strong></span></pre><p>
+		You can also set the <code class="code">import-scope</code> directive to the (default) value <code class="code">bundle</code>; in this case, the scope of the bundle is just the bundle itself and thus Virgo does not perform any implicit importing into other bundles of the application.  
+	    </p><p>
+		Note that use of the <code class="code">import-scope:=application</code> directive of the <code class="code">Import-Bundle</code> header only makes sense when the bundle is part of a scoped application (PAR or plan);  if the bundle is not part of a scoped application, then this directive has no effect.
+	    </p><p>
+		Finally, because <code class="code">import-scope:=application</code> implicitly adds a bundle import to each bundle of the PAR or plan, the impact of subsequently refreshing the imported bundle is, in general, broader than it would have been if you had not used <code class="code">import-scope:=application</code>. This may well affect the performance of refresh.
+	    </p></div><div class="section" title="Defining Libraries"><div class="titlepage"><div><div><h3 class="title"><a name="developing-applications-defining-libraries"></a>Defining Libraries</h3></div></div></div><p>
+			    Libraries are defined in a simple text file, typically with a <code class="code">.libd</code> suffix. This file identifies the
+			    library and lists all of its constituent bundles. For example, the following is the library definition for
+			    Spring 2.5.4:
+			    </p><pre class="programlisting"><span class="bold"><strong>Library-SymbolicName</strong></span>: org.springframework.spring
+<span class="bold"><strong>Library-Version</strong></span>: 2.5.4
+<span class="bold"><strong>Library-Name</strong></span>: Spring Framework
+<span class="bold"><strong>Import-Bundle</strong></span>: org.springframework.core;version="[2.5.4,2.5.5)",
+ org.springframework.beans;version="[2.5.4,2.5.5)",
+ org.springframework.context;version="[2.5.4,2.5.5)",
+ org.springframework.aop;version="[2.5.4,2.5.5)",
+ org.springframework.web;version="[2.5.4,2.5.5)", 
+ org.springframework.web.servlet;version="[2.5.4,2.5.5)",
+ org.springframework.jdbc;version="[2.5.4,2.5.5)",
+ org.springframework.orm;version="[2.5.4,2.5.5)",
+ org.springframework.transaction;version="[2.5.4,2.5.5)",
+ org.springframework.context.support;version="[2.5.4,2.5.5)",
+ org.springframework.aspects;version="[2.5.4,2.5.5)",
+ com.springsource.org.aopalliance;version="1.0"</pre><p>
+			</p><p>
+				The following table lists all of the headers that may be used in a library definition:
+			</p><div class="table"><a name="developing-applications-defining-libraries-library-headers-table"></a><p class="title"><b>Table&nbsp;4.4.&nbsp;Library definition headers</b></p><div class="table-contents"><table summary="Library definition headers" border="1"><colgroup><col><col></colgroup><thead><tr><th>Header</th><th>Description</th></tr></thead><tbody><tr><td>Library-SymbolicName</td><td>Identifier for the library</td></tr><tr><td>Library-Version</td><td>Version number for the library</td></tr><tr><td>Import-Bundle</td><td>A comma separated list of bundle symbolic names. 
+							Each entry may optionally specify a version (using the <code class="code">version=</code> directive) 
+							and the scope of the import (using the <code class="code">import-scope</code> directive).</td></tr><tr><td>Library-Name</td><td>Optional. The human-readable name of the library</td></tr><tr><td>Library-Description</td><td>Optional. A human-readable description of the library</td></tr></tbody></table></div></div><br class="table-break"></div><div class="section" title="Installing Dependencies"><div class="titlepage"><div><div><h3 class="title"><a name="developing-applications-installing-dependencies"></a>Installing Dependencies</h3></div></div></div><p>
+			    Rather than encouraging the packaging of all an application&rsquo;s dependencies within the application itself, Virgo
+			    uses a local provisioning repository of bundles and libraries upon which an application can depend. When the Virgo
+			    encounters an application with a particular dependency, it will automatically provide, from its provisioning repository,
+			    the appropriate bundle or library.
+			</p><p>
+			    Making a dependency available for provisioning is simply a matter of copying it to the appropriate location in the
+			    Virgo&rsquo;s local provisioning repository. By default this is
+			    <code class="literal">SERVER_HOME/repository/usr</code>. A more detailed discussion of the provisioning
+			    repository can be found in the <a class="ulink" href="../../virgo-user-guide/html/index.html" target="_top">User Guide</a>.
+			</p></div></div></body></html>

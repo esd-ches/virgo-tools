@@ -1,0 +1,34 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;1.&nbsp;Tooling</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo IDE Guide"><link rel="up" href="index.html" title="Virgo IDE Guide"><link rel="prev" href="index.html" title="Virgo IDE Guide"><link rel="next" href="ch01s02.html" title="Running a Virgo Tomcat Server Instance Within Eclipse"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" title="Chapter&nbsp;1.&nbsp;Tooling"><div class="titlepage"><div><div><h2 class="title"><a name="tooling"></a>Chapter&nbsp;1.&nbsp;Tooling</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="ch01.html#tooling-installation">Installation</a></span></dt><dt><span class="section"><a href="ch01s02.html">Running a Virgo Tomcat Server Instance Within Eclipse</a></span></dt><dt><span class="section"><a href="ch01s03.html">Bundle and Library Provisioning</a></span></dt><dt><span class="section"><a href="ch01s04.html">Setting up Eclipse Projects</a></span></dt><dd><dl><dt><span class="section"><a href="ch01s04.html#tooling-config-creating-new-projects">Creating New Projects</a></span></dt><dt><span class="section"><a href="ch01s04.html#tooling-config-migrating-existing-projects">Migrating Existing Java Projects</a></span></dt><dt><span class="section"><a href="ch01s04.html#tooling-config-creating-plan-projects">Creating Plan Projects</a></span></dt></dl></dd><dt><span class="section"><a href="ch01s05.html">Developing OSGi Bundles</a></span></dt><dd><dl><dt><span class="section"><a href="ch01s05.html#tooling-developing-resolving-bundle-dependencies">Resolving Bundle Dependencies</a></span></dt><dt><span class="section"><a href="ch01s05.html#tooling-developing-editing-manifest-mf">Editing the Manifest</a></span></dt></dl></dd><dt><span class="section"><a href="ch01s06.html">Developing PARs</a></span></dt><dt><span class="section"><a href="ch01s07.html">Deploying Applications</a></span></dt></dl></div><p>
+		SpringSource provides a set of plug-ins for the Eclipse IDE that streamline the development
+		lifecycle of OSGi bundles and PAR applications. The Virgo Tomcat Server Tools build on top
+		of the Eclipse Web Tools Project (WTP).
+	</p><p>
+		The Virgo Tomcat Server Tools support the creation of new OSGi bundle and PAR projects within Eclipse, and the
+		conversion of existing projects into OSGi bundle projects. Projects can then be deployed and debugged on a running
+		VTS from within Eclipse.
+	</p><div class="section" title="Installation"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="tooling-installation"></a>Installation</h2></div></div></div><p>
+			Currently the Tools support Eclipse 3.5 and Eclipse 3.6 with the corresponding version of WTP. Downloading and
+			unzipping the <a class="ulink" href="http://www.eclipse.org/downloads/" target="_top">Eclipse IDE for Java EE  Developers</a> is the
+			easiest way to start.
+		</p><p>
+			You may like to change the Eclipse launcher options to increase the values of <code class="literal">-XX:MaxPermSize</code>,
+			<code class="literal">-Xms</code>, and <code class="literal">-Xmx</code>. Suggested values, if you have plenty of RAM, are <code class="literal">768m</code>,
+			<code class="literal">500m</code>, and <code class="literal">2500m</code>, respectively.
+		</p><p>
+			Install the dm Server Tools, which include the Virgo Tools, from one of the following update sites depending on
+			your version of Eclipse. Releases are, in general, more stable than milestones whereas nightly builds are not for the
+			faint of heart.
+			</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>
+						<code class="literal">http://dist.springsource.com/release/TOOLS/update/e3.6/</code>
+					</p></li><li class="listitem"><p>
+						<code class="literal">http://dist.springsource.com/release/TOOLS/update/e3.5/</code>
+					</p></li><li class="listitem"><p>
+						<code class="literal">http://dist.springsource.com/milestone/TOOLS/update/e3.6/</code>
+					</p></li><li class="listitem"><p>
+						<code class="literal">http://dist.springsource.com/milestone/TOOLS/update/e3.5/</code>
+					</p></li><li class="listitem"><p>
+						<code class="literal">http://dist.springsource.com/snapshot/TOOLS/nightly/e3.6/</code>
+					</p></li><li class="listitem"><p>
+						<code class="literal">http://dist.springsource.com/snapshot/TOOLS/nightly/e3.5/</code>
+					</p></li></ul></div><p>
+		</p></div></div></body></html>

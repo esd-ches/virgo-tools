@@ -1,0 +1,109 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Creating and Using Configuration Artifacts</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="ch04.html" title="Chapter&nbsp;4.&nbsp;Developing Applications"><link rel="prev" href="ch04s03.html" title="Creating Plans"><link rel="next" href="ch04s05.html" title="Using Spring and Spring DM"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Creating and Using Configuration Artifacts"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="developing-applications-configuration-artifacts"></a>Creating and Using Configuration Artifacts</h2></div></div></div><p>
+		Applications typically include some sort of configuration data
+		that might change depending on the environment in which the
+		application is deployed. For example, if an application connects to a
+		database server using JDBC, the configuration data would include the
+		JDBC URL of the database server, the JDBC drvier, and the username and
+		password that the application uses to connect to the database server.
+		This information often changes as the application is deployed to
+		different computers or the application moves from the testing phase to
+		the production phase.
+	</p><p>
+		Virgo provides a feature called
+		<span class="emphasis"><em>configuration artifacts</em></span>
+		that makes it very easy for you to manage this configuration data. A
+		configuration artifact is simply a properties file that is made
+		available at runtime using the OSGi
+		<code class="literal">ConfigurationAdmin</code>
+		service. When you create this properties file, you set the values of
+		the properties for the specific environment in which you are going to
+		deploy your application, and then update the metadata of your Spring
+		application to use the properties file. You then deploy the
+		application and properties file together, typically as a
+		<a class="link" href="ch04s03.html" title="Creating Plans">plan</a>
+		. Virgo automatically creates a configuration artifact from
+		the properties file, and you can manage the lifecycle of this
+		configuration artifact in the same way you manage the lifecycle of
+		PARs, bundles, and plans, using the Admin
+		Console. Additionally, Virgo subscribes your
+		application for notification of any refresh of the configuration
+		artifact and the application can then adapt accordingly, which means
+		you can easily
+		<span class="emphasis"><em>change</em></span>
+		the configuration of your application without redeploying it.
+	</p><p>In sum, configuration artifacts, especially when combined with
+		plans, provide an excellent mechanism for managing external
+		configuration data for your applications.</p><p>The following sections describe the format of the configuration
+		artifact, how to update the Spring application context file of your
+		application so that it knows about the configuration artifact, and
+		finally how to include it in a plan alongside your application.  </p><p>
+		As an example to illustrate the configuration artifact feature, assume
+		that you have a Spring bean called
+		<code class="literal">PropertiesController</code>
+		whose constructor requires that four property values be passed to it,
+		as shown in the following snippet of Java code:
+	</p><pre class="programlisting">@Controller
+public class PropertiesController {
+
+    private final String driverClassName;
+    private final String url;
+    private final String username;
+    private final String password;
+
+    public PropertiesController(String driverClassName, String url, String username, String password) {
+        this.driverClassName = driverClassName;
+        this.url = url;
+        this.username = username;
+        this.password = password;
+}</pre><p>In the preceding example, the <code class="literal">PropertiesController</code> constructor requires four property values: <code class="literal">driverClassName</code>, <code class="literal">url</code>, <code class="literal">username</code>, and <code class="literal">password</code>.  Note that the example shows just one way that a class might require property values; your application may code it another way.</p><p>Additionally, assume that the following snippet of the associated Spring application context XML file shows how the <code class="literal">PropertiesController</code> bean is configured:</p><pre class="programlisting">&lt;bean class="com.springsource.configuration.properties.PropertiesController"&gt;
+                &lt;constructor-arg value="${driverClassName}"/&gt;
+                &lt;constructor-arg value="${url}"/&gt;
+                &lt;constructor-arg value="${username}"/&gt;
+                &lt;constructor-arg value="${password}"/&gt;
+&lt;/bean&gt;</pre><p>The rest of this section describes how the bean can get these property values using a configuration artifact.</p><div class="section" title="Creating the Properties File"><div class="titlepage"><div><div><h3 class="title"><a name="developing-applications-configuration-artifacts-propfile"></a>Creating the Properties File</h3></div></div></div><p>To create a properties file that in turn will become a configuration artifact when deployed to Virgo from which a Spring bean, such as the <code class="literal">PropertiesController</code> bean, will get the actual property values, follow these guidelines:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>Create a text file in which each property is listed as a name/value pair, one pair per line.  Precede comments with a <code class="literal">#</code>.  For example:</p><pre class="screen"># Properties for the com.springsource.configuration.properties sample
+
+driverClassName   = org.w3.Driver
+url               = http://www.springsource.com
+username          = joe
+password          = secret</pre><p>The example shows four properties whose name correspond to the constructor arguments of the <code class="literal">PropertiesController</code> Spring bean.</p></li><li class="listitem"><p>Name the file anything you want, as long as it has a <code class="literal">.properties</code> extension, such as <code class="literal">app-properties.properties</code>.</p></li></ul></div></div><div class="section" title="Updating Your Application"><div class="titlepage"><div><div><h3 class="title"><a name="developing-applications-configuration-artifacts-app"></a>Updating Your Application</h3></div></div></div><p>To update your application so that it "knows" about the configuration artifact, you update the application's Spring application context XML file, typically located in the <code class="literal">WEB-INF</code> or <code class="literal">META-INF/spring</code> directories (read <a class="link" href="ch04s05.html" title="Using Spring and Spring DM">Using Spring and Spring DM</a>
+	to understand which directory to use).</p><p>You use the <code class="literal">&lt;context:property-placeholder&gt;</code> element to specify that you want to use the Virgo mechanism for substituting values into bean properties.  The <code class="literal">properties-ref</code> attribute of this element points to a <code class="literal">&lt;osgi-compendium:cm-properties&gt;</code> element which you use to specify the configuration artifact that contains the property values.  You set the value of the <code class="literal">persistent-id</code> attribute of this element equal to the name of the configuration artifact, which is the name of the properties file <span class="emphasis"><em>minus</em></span> the <code class="literal">.properties</code> extension. </p><p>The following sample Spring application context XMl file shows everything wired together; only relevant parts of the file are shown:</p><pre class="programlisting">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:osgi-compendium="http://www.springframework.org/schema/osgi-compendium"
+  xsi:schemaLocation="http://www.springframework.org/schema/osgi 
+    http://www.springframework.org/schema/osgi/spring-osgi-1.2.xsd
+    http://www.springframework.org/schema/beans 
+    http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+    http://www.springframework.org/schema/context 
+    http://www.springframework.org/schema/context/spring-context-2.5.xsd
+    http://www.springframework.org/schema/osgi-compendium 
+    http://www.springframework.org/schema/osgi-compendium/spring-osgi-compendium-1.2.xsd"&gt;
+
+...
+
+        &lt;bean class="com.springsource.configuration.properties.PropertiesController"&gt;
+                &lt;constructor-arg value="${driverClassName}"/&gt;
+                &lt;constructor-arg value="${url}"/&gt;
+                &lt;constructor-arg value="${username}"/&gt;
+                &lt;constructor-arg value="${password}"/&gt;
+        &lt;/bean&gt;
+
+        &lt;context:property-placeholder properties-ref="configAdminProperties"/&gt;
+
+        &lt;osgi-compendium:cm-properties id="configAdminProperties" persistent-id="app-properties"/&gt;
+
+...
+
+&lt;/beans&gt; </pre></div><p>The preceding example shows how the id <code class="literal">configAdminProperites</code> wires the <code class="literal">&lt;context:property-placeholder&gt;</code> and <code class="literal">&lt;osgi-compendium:cm-properties&gt;</code> elements together.  Based on the value of the <code class="literal">persistent-id</code> attribute, you must also deploy a properties file called <code class="literal">app-properties.properties</code> which Virgo installs as a configuration artifact.</p><div class="section" title="Adding the Configuration Artifact to a Plan"><div class="titlepage"><div><div><h3 class="title"><a name="developing-applications-configuration-artifacts-plan"></a>Adding the Configuration Artifact to a Plan</h3></div></div></div><p>Although you can always deploy your application and associated configuration artifact using the <code class="literal">pickup</code> directory, we recommends that you group the two together in a plan, add the two artifacts to the repository, and then deploy the plan using the <code class="literal">pickup</code> directory.  The following sample plan includes the two artifacts:</p><pre class="programlisting">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;plan name="multi-artifact.plan" version="1.0.0" 
+         scoped="false" atomic="false"
+        xmlns="http://www.eclipse.org/virgo/schema/plan"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="
+		        http://www.eclipse.org/virgo/schema/plan
+		        http://www.eclipse.org/virgo/schema/plan/eclipse-virgo-plan.xsd"&gt;
+
+    &lt;artifact type="configuration" name="app-properties" version="0"/&gt;
+    &lt;artifact type="bundle" name="org.eclipse.virgo.configuration.properties" version="1.0.0"/&gt;
+&lt;/plan&gt;</pre><p>For additional information about plans, see <a class="link" href="ch04s03.html" title="Creating Plans">Creating Plans</a>.</p></div></div></body></html>

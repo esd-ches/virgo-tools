@@ -1,0 +1,72 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Form Tags Shared Libraries WAR</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="ch06.html" title="Chapter&nbsp;6.&nbsp;Case Study: Migrating the Form Tags Sample Application"><link rel="prev" href="ch06s02.html" title="Form Tags WAR"><link rel="next" href="ch06s04.html" title="Form Tags Shared Services WAR"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Form Tags Shared Libraries WAR"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="formtags-case-study-war-shared-libs"></a>Form Tags Shared Libraries WAR</h2></div></div></div><p>
+			As mentioned above, a standard WAR file typically packages of all its required
+			dependencies in <code class="literal">WEB-INF/lib</code>. The servlet container will
+			then add all of the JARs in <code class="literal">WEB-INF/lib</code> to the application&rsquo;s
+			classpath.
+		</p><p>
+			The first step of the migration towards benefiting from an OSGi
+			container is to retrieve the dependencies from the VTS&rsquo;s bundle
+			repository at runtime.  This can significantly reduce the time it takes to build
+			and deploy the application.  It also enables the enforcement of policies
+			regarding the use of third-party libraries.
+		</p><p>
+			The way in which dependencies are declared in an OSGi environment is
+			via manifest headers in a bundle&rsquo;s <code class="literal">/META-INF/MANIFEST.MF</code>.
+			As mentioned in <a class="xref" href="ch04.html" title="Chapter&nbsp;4.&nbsp;Developing Applications">Chapter&nbsp;4.&nbsp;<i>Developing Applications</i></a>, there are
+			three ways of expressing dependencies: <code class="literal">Import-Package</code>,
+			<code class="literal">Import-Bundle</code> and <code class="literal">Import-Library</code>.
+		</p><p>
+			The Form Tags application uses JSTL standard tag libraries.
+			Thus, you need to choose a JSTL provider, for example the
+			Apache implementation which comes with the VTS. To use the
+			Apache implementation of JSTL, you need to express your dependency
+			as outlined in the following manifest listing.
+			Because it is a single bundle, <code class="literal">Import-Bundle</code> is
+			the simplest and therefore preferred manifest header to use.
+		</p><p>
+			The Form Tags application requires commons-logging and Spring.
+			It would be very painful to have to list all the Spring packages one by one.
+			Equally, considering the number of bundles that make up the
+			Spring framework, it would be verbose to list each bundle. Therefore
+			<code class="literal">Import-Library</code> is the preferred approach
+			for expressing the dependency on the Spring framework.
+		</p><div class="tip" title="Tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3><p>
+				How do you determine the name of a library definition provided
+				by the Virgo Tomcat Server?
+				Use the <a class="ulink" href="http://www.springsource.com/repository" target="_top">SpringSource Enterprise Bundle Repository</a>.
+			</p></div><p>
+			Examine the <code class="literal">/META-INF/MANIFEST.MF</code> in
+			<code class="literal">/dist/formtags-shared-libs-*.war</code>:
+</p><pre class="programlisting">
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.7.0
+Created-By: 1.5.0_13-119 (Apple Inc.)
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.springframework.showcase.formtags-shared-libs
+<span class="bold"><strong>Import-Library</strong></span>: org.springframework.spring;version="[3.0.0,4.0.0)"
+<span class="bold"><strong>Import-Bundle</strong></span>: com.springsource.org.apache.taglibs.standard;version="1
+ .1.2"
+</pre><p>
+		You can see the <code class="literal">Import-Library</code> and <code class="literal">Import-Bundle</code>
+		directives that instruct the VTS to add the appropriate package imports to the bundle
+		classpath used by this WAR file.
+		</p><p>
+			Deploying the shared libraries WAR onto the VTS should result
+			in console output similar to the following:
+		</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The console output has been reformatted to fit this document.</p></div><pre class="programlisting">
+[2009-07-01 15:00:14.953] fs-watcher
+	&lt;SPDE0048I&gt; Processing 'CREATED' event for file 'formtags-shared-libs-3.0.0.RELEASE.war'.
+[2009-07-01 15:00:15.363] fs-watcher
+	&lt;SPDE0010I&gt; Deployment of 'org.springframework.showcase.formtags_shared_libs' version '2' completed.
+[2009-07-01 15:00:15.364] Thread-20
+	&lt;SPWE0000I&gt; Starting web bundle '/formtags-shared-libs-3.0.0.RELEASE'.
+[2009-07-01 15:00:15.816] Thread-20
+	&lt;SPWE0001I&gt; Started web bundle '/formtags-shared-libs-3.0.0.RELEASE'.
+</pre><p>
+			Navigating to <code class="literal">http://localhost:8080/formtags-shared-libs-BUILDTAG</code>
+			should render the welcome page. Note that for the pre-packaged distributable,
+			the <code class="literal">BUILDTAG</code> should be similar to <code class="literal">3.0.0.RELEASE</code>;
+			whereas, for a local build the <code class="literal">-BUILDTAG</code> may be completely
+			omitted. Please consult the console output, web-based admin console, or log
+			to determine the exact context path under which the web application has been deployed.
+		</p></div></body></html>

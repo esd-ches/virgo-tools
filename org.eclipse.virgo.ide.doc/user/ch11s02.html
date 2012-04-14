@@ -1,0 +1,39 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Configuring Framework Extensions and Fragments on the System Bundle</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo User Guide"><link rel="up" href="ch11.html" title="Chapter&nbsp;11.&nbsp;Configuration"><link rel="prev" href="ch11.html" title="Chapter&nbsp;11.&nbsp;Configuration"><link rel="next" href="ch11s03.html" title="Configuring Serviceability and Diagnostics"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Configuring Framework Extensions and Fragments on the System Bundle"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="configuring-framework-extensions"></a>Configuring Framework Extensions and Fragments on the System Bundle</h2></div></div></div><p>
+			This section provides information about configuring framework extensions and fragments on the system bundle. Deployment of such bundles is not allowed in 		
+			Virgo. This is because by refreshing or uninstalling them the system.bundle is also refreshed, which causes Virgo to crash.
+		</p><p>
+			<span class="bold"><strong>NOTE:</strong></span> This only applies for fragments on the system bundle. All other fragment bundles have no deployment restrictions.
+		</p><p>
+			Generally it's best to avoid usage of such fragment bundles as they are a common OSGi framework issue and often require restarting the framework.
+			However sometimes there are no other options and one has to use framework extensions or fragments on the system bundle.
+		</p><p>
+			You can configure framework extensions and system bundle fragments as follows:
+		</p><p>
+			<span class="bold"><strong>1.</strong></span> Place your fragment bundle in the <code class="literal">/lib/kernel</code> directory of your Virgo installation.
+			</p><p>
+				Lets say we have bundle with
+			</p><p>
+			</p><pre class="programlisting">
+symbolic name: <span class="emphasis"><em>testFragment</em></span>, version: <span class="emphasis"><em>1.0.0</em></span> and filename: <span class="emphasis"><em>testFragmentBinary_1.0.0.jar</em></span>
+			</pre><p>
+		</p><p>
+			<span class="bold"><strong>2.</strong></span> Configure the <code class="literal">org.eclipse.virgo.kernel.launch.properties</code> file in <code class="literal">/lib</code> to include the 
+			just copied fragment or framework extension bundle.
+			</p><p>
+				Add a line at the end of the <code class="literal">launcher.bundles</code> property similar to this one:		
+			</p><p>
+			</p><pre class="programlisting">
+<span class="emphasis"><em>file:lib/kernel/testFragmentBinary_1.0.0.jar</em></span>
+			</pre><p>
+			</p><div class="tip" title="Tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3>
+				Don't forget to add <code class="literal">,\</code> at the end of the previous bundle in the <code class="literal">launcher.bundles</code> list.
+			</div><p>
+		</p><p>
+			<span class="bold"><strong>3.</strong></span> Configure the <code class="literal">org.eclipse.virgo.kernel.userregion.properties</code> file in <code class="literal">/config</code> folder to import the fragment bundle or framework extension in the User Region.
+			</p><p>
+				Add to the <code class="literal">bundleImports</code> property a new line describing the fragment bundle using its symbolic name and version.
+			</p><p>
+			</p><pre class="programlisting">
+bundleImports = org.eclipse.osgi;bundle-version="0",<span class="bold"><strong>testFragment;bundle-version="0"</strong></span>
+			</pre><p>
+		</p></div></body></html>

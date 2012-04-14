@@ -1,0 +1,42 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Web Application Manifest Processing</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="ch04.html" title="Chapter&nbsp;4.&nbsp;Developing Applications"><link rel="prev" href="ch04s06.html" title="Programmatic Access to the Servlet Context"><link rel="next" href="ch04s08.html" title="Working with Dependencies"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Web Application Manifest Processing"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="developing-applications-automatic-imports-web"></a>Web Application Manifest Processing</h2></div></div></div><p>
+			Virgo Tomcat Server generates automatic package imports (i.e., via the
+			<code class="literal">Import-Package</code> manifest header) for certain web applications.
+			This section lists which packages are automatically generated.
+		</p><p>
+			VTS supports Web Application Bundles (WABs) as defined by the OSGi Web Applications Specification and WAR files.
+			A WAR will typically not contain any OSGi defined manifest headers.
+			A WAB is distinguished from a WAR by the presence of one or more of the following OSGi defined headers:
+				</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><code class="literal">Bundle-SymbolicName</code></li><li class="listitem"><code class="literal">Bundle-Version</code></li><li class="listitem"><code class="literal">Bundle-ManifestVersion</code></li><li class="listitem"><code class="literal">Import-Package</code></li><li class="listitem"><code class="literal">Web-ContextPath</code></li></ul></div><p>
+		</p><p>
+			As required by the OSGi Web Applications specification, the following defaults are applied to a WAR:
+			</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><code class="literal">Bundle-ManifestVersion</code> is set to <code class="literal">2</code></li><li class="listitem"><code class="literal">Bundle-SymbolicName</code> is generated from the path from which the bundle was installed
+				</li><li class="listitem"><code class="literal">Bundle-ClassPath</code> is set to <code class="literal">WEB-INF/classes</code> followed by the JARs in
+					<code class="literal">WEB-INF/lib</code> in an unspecified order, followed by any transitive dependencies declared
+					by the JARs in <code class="literal">WEB-INF/lib</code></li><li class="listitem"><code class="literal">Import-Package</code> is extended in an implementation defined way, as described below
+				</li></ul></div><p>
+		</p><p>
+			The following packages are automatically imported into WARs:		
+		</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><code class="literal">javax.servlet;version="2.5"</code></li><li class="listitem"><code class="literal">javax.servlet.http;version="2.5"</code></li><li class="listitem"><code class="literal">javax.servlet.jsp;version="2.1"</code></li><li class="listitem"><code class="literal">javax.servlet.jsp.el;version="2.1"</code></li><li class="listitem"><code class="literal">javax.servlet.jsp.tagext;version="2.1"</code></li><li class="listitem"><code class="literal">javax.el;version="1.0"</code></li></ul></div><p>
+		</p><p>
+			In addition to the above-described imports, VTS will also
+			generate automatic imports for all of the packages that are exported by the system
+			bundle, unless an import for the package already exists in the WAR&rsquo;s manifest,
+			or the WAR contains the package, i.e. within <code class="literal">WEB-INF/classes</code>,
+			or in a jar file in <code class="literal">WEB-INF/lib</code>. When an import is generated, it
+			is versioned such that it exactly matches the version or versions of the package that
+			are exported from the system bundle. For example, a package that&rsquo;s exported only at
+			version <code class="literal">1.0.0</code> will generate an import with a version of
+			<code class="literal">[1.0.0,1.0.0]</code>, and a package that&rsquo;s exported at version
+			<code class="literal">1.0.0</code> and version <code class="literal">2.0.0</code> will generate an import 
+			with a version of <code class="literal">[1.0.0,2.0.0]</code>.
+		</p><p>
+			Web Application Bundles are not subject to the above manifest processing.
+			This is a change of behaviour compared to Virgo Web Server 2.1.x.
+			See (see <a class="link" href="ch08s06.html" title="Default Web Application Bundle Headers">Default Web 
+			Application Bundle Headers</a>) if you need the old behaviour until you
+			have changed your WABs to match the new behaviour.
+		</p><div class="tip" title="System Bundle Package Exports" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">System Bundle Package Exports</h3><p>
+				For further details on which packages are exported by the
+				OSGi system bundle, consult the <code class="filename">java6-server.profile</code>
+				file located in the <code class="literal">SERVER_HOME/lib</code> directory.
+			</p></div></div></body></html>

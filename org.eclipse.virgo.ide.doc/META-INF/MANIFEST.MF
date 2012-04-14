@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Doc
+Bundle-SymbolicName: org.eclipse.virgo.ide.doc;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Require-Bundle: org.eclipse.ui;bundle-version="3.7.0",
+ org.eclipse.help;bundle-version="3.5.100",
+ org.eclipse.help.ui;bundle-version="3.5.101"

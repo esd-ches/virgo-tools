@@ -1,0 +1,81 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Why the Virgo Tomcat Server?</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="ch02.html" title="Chapter&nbsp;2.&nbsp;Introduction to the Virgo Tomcat Server"><link rel="prev" href="ch02s02.html" title="What is the Virgo Tomcat Server?"><link rel="next" href="ch03.html" title="Chapter&nbsp;3.&nbsp;Deployment Architecture"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Why the Virgo Tomcat Server?"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="introduction-why"></a>Why the Virgo Tomcat Server?</h2></div></div></div><p>
+			You could deploy a web application in a stand-alone servlet engine or application server.
+			Or you could even deploy directly in an OSGi container such as Equinox. However,
+			deploying in the Virgo Tomcat Server offers a number of key benefits that make it both more
+			appealing and more suitable for enterprise application development.
+		</p><div class="section" title="Deployment Options and Migration Paths"><div class="titlepage"><div><div><h3 class="title"><a name="introduction-unified-deployment"></a>Deployment Options and Migration Paths</h3></div></div></div><p>
+				While many applications deployed in the Virgo Tomcat Server will take advantage
+				of OSGi capabilities, not all applications need such sophistication.
+				For example, development teams may initially choose to continue packaging
+				existing web applications as standard WAR files and then gradually migrate
+				toward a fully OSGi-based packaging and deployment model. The Virgo Tomcat Server
+				makes such migrations easy for developers by supporting multiple packaging
+				and deployment formats. These formats and migration strategies are discussed
+				in greater detail in <a class="xref" href="ch05.html" title="Chapter&nbsp;5.&nbsp;Migrating to OSGi">Chapter&nbsp;5.&nbsp;<i>Migrating to OSGi</i></a> and
+				<a class="xref" href="ch06.html" title="Chapter&nbsp;6.&nbsp;Case Study: Migrating the Form Tags Sample Application">Chapter&nbsp;6.&nbsp;<i>Case Study: Migrating the Form Tags Sample Application</i></a>. 
+			</p></div><div class="section" title="Simplified Development and Deployment of OSGi-based Applications"><div class="titlepage"><div><div><h3 class="title"><a name="introduction-simplified-deployment"></a>Simplified Development and Deployment of OSGi-based Applications</h3></div></div></div><p>
+				Prior to the release of the Virgo Tomcat Server, developing and deploying OSGi
+				applications involved inherent complexity such as:
+			</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><span class="emphasis"><em>Obtaining OSGi bundles for popular Java libraries:</em></span>
+					For optimal benefits, every technology you use in an OSGi application must
+					be packaged as OSGi bundles. Currently, this involves manually converting
+					JAR files into bundles and making sure that any libraries needed by those
+					bundles are also available as OSGi bundles. The SpringSource Enterprise Bundle Repository is a good source of
+					popular pre-bundled libraries.
+				</li><li class="listitem"><span class="emphasis"><em>Package management complexity:</em></span>
+					OSGi bundles use other bundles through <code class="code">Import-Package</code> manifest headers.
+					Many applications use a set of common technologies (e.g., an ORM solution,
+					a web framework, etc.). Combining these two characteristics leads to duplicated
+					configuration in the form of repeated and verbose <code class="code">Import-Package</code> statements.
+				</li><li class="listitem"><span class="emphasis"><em>Lack of application-level isolation:</em></span>
+					In OSGi everything is a bundle, and all bundles share the same OSGi Service Registry.
+					To highlight how conflicts can arise between applications and their services in this
+					shared service registry, consider the following scenarios.
+					<div class="itemizedlist"><ul class="itemizedlist" type="circle"><li class="listitem">
+							Application <code class="code">A</code> is comprised of bundles <code class="code">B</code> and <code class="code">C</code>. 
+							In a standard OSGi environment, if you attempt to install two instances of the same
+							version of application <code class="code">A</code> (i.e., two sets of bundles <code class="code">B</code> and
+							<code class="code">C</code>), a clash will occur, because you cannot deploy multiple bundles with
+							the same <code class="code">Bundle-SymbolicName</code> and <code class="code">Bundle-Version</code> combination.
+						</li><li class="listitem">
+							Application <code class="code">A1</code> is comprised of bundles <code class="code">B1</code> and <code class="code">C1</code>. 
+							Similarly, application <code class="code">A2</code> is comprised of bundles <code class="code">B2</code> and <code class="code">C2</code>.
+							Each bundle has a unique combination of <code class="code">Bundle-SymbolicName</code> and <code class="code">Bundle-Version</code>.
+							Bundles <code class="code">B1</code> and <code class="code">B2</code> both export service <code class="code">S</code> which
+							is imported by both <code class="code">C1</code> and <code class="code">C2</code>. In contrast to the previous
+							example, there is no conflict resulting from duplicate 
+							<code class="code">Bundle-SymbolicName</code>/<code class="code">Bundle-Version</code> combinations; however,
+							there is a clash for the exported service <code class="code">S</code>. 
+							Which service <code class="code">S</code> will bundles <code class="code">C1</code> and <code class="code">C2</code> end up
+							using once they are installed?
+							Assuming bundles <code class="code">B1</code> and <code class="code">C1</code> are intended to work together, 
+							you would not want bundle <code class="code">C1</code> to get a reference to service <code class="code">S</code>
+							from bundle <code class="code">B2</code>, because it is installed in a different logical application.
+							On the contrary, you typically want bundle <code class="code">C1</code> to get a reference to 
+							service <code class="code">S</code> exported by bundle <code class="code">B1</code>, but in a standard OSGi environment
+							this may not be the case.
+						</li></ul></div></li></ul></div><p>
+				Furthermore, since standard OSGi does not define a notion of an application as a set of bundles,
+				you cannot deploy or undeploy an application and its constituent bundles as a single unit.
+			</p><p>
+				The Virgo Tomcat Server introduces a number of features to solve these issues:
+			</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+					A full set of OSGi bundles for many popular Java libraries to get you
+					started quickly with creating OSGi applications.
+				</li><li class="listitem">
+					An OSGi library concept that obviates the need to
+					duplicate verbose <code class="code">Import-Package</code> statements.
+				</li><li class="listitem">
+					The PAR packaging format which offers
+					application-level isolation and deployment.
+				</li><li class="listitem">
+					The concept of a plan, which is an XML file that lists a collection of bundles that Virgo Tomcat Server should load together as a single application.  Conceptually, plans are very like PARs, except that a plan describes the contents of the application rather than a PAR that actually contains them.
+				</li></ul></div></div><div class="section" title="Enhanced Diagnostics During Deployment and in Production"><div class="titlepage"><div><div><h3 class="title"><a name="introduction-diagnostics"></a>Enhanced Diagnostics During Deployment and in Production</h3></div></div></div><p>
+			    Identifying why an application won&rsquo;t deploy or which particular library
+			    dependencies are unsatisfied is the cause of many headaches!
+			    Similarly, production time errors that don&rsquo;t identify the root cause are
+			    all too familiar to Java developers. The VTS was designed from the
+			    ground up to enable tracing and First Failure Data Capture (FFDC) that
+			    empower developers with precise information at the point of failure to
+			    fix the problem quickly.
+			</p></div></div></body></html>

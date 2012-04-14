@@ -1,0 +1,85 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Virgo Concepts</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo User Guide"><link rel="up" href="ch02.html" title="Chapter&nbsp;2.&nbsp;Concepts"><link rel="prev" href="ch02s03.html" title="Spring DM Concepts"><link rel="next" href="ch03.html" title="Chapter&nbsp;3.&nbsp;Installing Virgo Tomcat Server"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Virgo Concepts"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="concepts.virgo"></a>Virgo Concepts</h2></div></div></div><div class="section" title="The Provisioning Repository"><div class="titlepage"><div><div><h3 class="title"><a name="concepts.repositories"></a>The Provisioning Repository</h3></div></div></div>
+
+The Virgo provisioning repository contains artifacts and metadata indexed by the artifact type, name, and version. There are three kinds of repository: <span class="emphasis"><em>external</em></span>, <span class="emphasis"><em>watched</em></span>, and <span class="emphasis"><em>remote</em></span>. Repositories are passive in the sense that changes to repository content do not cause artifacts to be deployed into Virgo, refreshed, or undeployed.
+
+<div class="section" title="Artifact Types"><div class="titlepage"><div><div><h4 class="title"><a name="N1030F"></a>Artifact Types</h4></div></div></div>
+
+In addition to the standard OSGi bundle, artifact types in Virgo include configuration (properties file), PAR, plan, and library.
+PARs, plans, and libraries are discussed in <a class="xref" href="ch02s04.html#concepts.grouping" title="Grouping Bundles">Grouping Bundles</a>. 
+
+</div><div class="section" title="External Repositories"><div class="titlepage"><div><div><h4 class="title"><a name="N10316"></a>External Repositories</h4></div></div></div><p>
+	External repositories are created by scanning a directory which contains artifacts, possibly in nested directories. The repository configuration specifies a pattern which 
+	says which files should be treated as artifacts. After the repository is created, changes to the directory do not affect the repository content. 
+</p><p>
+	Virgo's default repository configuration, in <code class="literal">config/org.eclipse.virgo.repository.properties</code>, specifies an external repository created from the 
+	<code class="literal">repository/ext</code> directory.
+</p></div><div class="section" title="Watched Repositories"><div class="titlepage"><div><div><h4 class="title"><a name="N10325"></a>Watched Repositories</h4></div></div></div><p>
+	Watched repositories are created by scanning a directory which contains artifacts but no nested directories. All files in the directory are treated as artifacts.
+	The directory is re-scanned periodically and the interval between re-scans is specified in the repository configuration.
+	The directory is also re-scanned when an artifact is deployed into Virgo.
+	Changes detected by re-scanning are reflected in the repository content. Note that changing the content of a watched repository does not cause artifacts to be deployed 	
+	into Virgo, refreshed, or undeployed. 
+</p><p>
+	Virgo's default repository configuration specifies a watched repository based on the contents of the <code class="literal">repository/usr</code> directory. 
+</p></div><div class="section" title="Remote Repositories"><div class="titlepage"><div><div><h4 class="title"><a name="N10330"></a>Remote Repositories</h4></div></div></div><p>
+	A remote repository refers to a repository hosted by a Virgo instance sometimes known as a <span class="emphasis"><em>repository server</em></span>.
+	The hosted repository is configured using the file <code class="literal">config/org.eclipse.virgo.apps.repository.properties</code> and may be either an external or a watched 	
+	repository.
+</p><p>
+	The remote repository is accessed by a Virgo instance sometimes known as a <span class="emphasis"><em>repository client</em></span>.
+	The repository client is normally a different instance of Virgo to the instance hosting the repository, but it can be the same instance (which is handy for 	
+	testing). The remote repository periodically downloads its index from the hosted repository. The period between downloads may be configured in the repository 	
+	configuration. The remote repository also caches artifacts which have secure hashes associated with them in the hosted repository. Only bundles currently have secure 	
+	hashes associated with them. The secure hash is used to determine when a cached artifact is stale and needs to be freshly downloaded.
+</p></div><div class="section" title="Repository Chains"><div class="titlepage"><div><div><h4 class="title"><a name="N10341"></a>Repository Chains</h4></div></div></div><p>
+	The Virgo repository is configured as a <span class="emphasis"><em>chain</em></span> of external, watched, and remote repositories.
+	The chain is a list which is searched in the configured order.
+	The effect of this search order is that an artifact with a given type, name, and version which appears in more than one repository in the chain is only accessed from the 	
+	first repository in the chain in which it appears. Abstractly, the repository chain behaves as a single repository, but its content may mutate in quite a different way to 
+	the content of an individual external, watched, or remote repository.
+</p></div><div class="section" title="Grouping Bundles"><div class="titlepage"><div><div><h4 class="title"><a name="concepts.grouping"></a>Grouping Bundles</h4></div></div></div><p>Virgo provides a way of grouping together a collection
+of OSGi bundles and other artifacts which comprise a single application.
+These artifacts are placed in a JAR file with extension <span class="quote">&ldquo;<span class="quote"><code class="literal">.par</code></span>&rdquo;</span>. This is called a PAR file.</p><p>All the bundles in a PAR file are resolved together and so mutual dependencies are permitted.</p><p>At runtime a PAR file provides a <span class="emphasis"><em>scope</em></span> in the sense that bundles
+inside the PAR file may depend on packages and services outside the PAR file,
+but bundles outside the PAR file may not depend on packages and services
+provided by the PAR file.</p><p>Virgo also provides the plan artifact as another way of grouping bundles and other artifacts into an application.
+A <span class="emphasis"><em>plan</em></span> is a file (in XML format) listing a collection of artifacts.
+The artifacts referred to by a plan reside in the Virgo provisioning repository.
+</p><p>
+	In addition to PARs and plans, which are used for deploying groups of artifacts, Virgo provides libraries as a way of grouping together a collection
+	of bundles that	can then be imported into an application using the Virgo-specific <code class="literal">Import-Library</code> manifes header.
+</p></div><div class="section" title="Kernel and User Region"><div class="titlepage"><div><div><h4 class="title"><a name="kernel.user.region"></a>Kernel and User Region</h4></div></div></div><p>Conceptually, VTS can be divided into two separate subsystems, one of which actually encompases the other:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">The <span class="emphasis"><em>kernel</em></span>, which is the heart of VTS.  It makes up most of VTS, except for the part that supports Web applications.  In other words, the kernel provides full OSGi modular support for your applications, as long as they are not Web-based. 
+			<p>See <a class="link" href="ch02s04.html#kernel-overview" title="The Virgo Kernel">The Virgo Kernel</a> for additional information.</p></li><li class="listitem">The <span class="emphasis"><em>user region</em></span> is the subsystem that manages user applications. It deliberately isolates the kernel from both your applications and those of the VTS itself, such as the Admin Console, which protects the kernel from interference by applications. 
+			<p>See <a class="link" href="ch02s04.html#user-region-overview" title="The User Region">The User Region</a> for additional information.</p></li></ul></div><p>When you download and install Virgo Tomcat Server you get both the kernel and web server support (configured in the user region).  You can also <a class="ulink" href="http://www.eclipse.org/virgo/download/" target="_top">download and use the kernel</a> on its own if you do not plan on deploying Web applications or using the
+		web-based Admin Console and you'll get the kernel and a minimal user region (with no web support).</p><p>The following graphic shows how the kernel and user region make up VTS:</p><table cellpadding="0" cellspacing="0" summary="manufactured viewport for HTML img" border="0" width="885"><tr style="height: 805px"><td><img src="images/kernel-user-region.png" width="885"></td></tr></table><div class="section" title="The Virgo Kernel"><div class="titlepage"><div><div><h5 class="title"><a name="kernel-overview"></a>The Virgo Kernel</h5></div></div></div><p>
+		The Virgo Kernel encapsulates almost all of VTS except for the deployment of Web applications.  In sum, the kernel provides the following VTS features:
+		</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>
+			Deployment of non-Web artifacts, such as OSGi bundles, PARs, plans,
+			and configuration artifacts.
+			</p></li><li class="listitem"><p>
+			Local and hosted repositories
+			</p></li><li class="listitem"><p>
+			Scoping
+			</p></li><li class="listitem"><p>
+			Hot deployment
+			</p></li><li class="listitem"><p>
+			User region
+			</p></li><li class="listitem"><p>
+			Auto-provisioning
+			</p></li><li class="listitem"><p>
+			System and application tracing and dump support
+			</p></li><li class="listitem"><p>
+			Spring beans and Spring DM support
+			</p></li></ul></div><p>See <a class="link" href="ch11.html" title="Chapter&nbsp;11.&nbsp;Configuration">Configuring VTS</a> for details about configuring the kernel to better suit your environment. </p></div><div class="section" title="The User Region"><div class="titlepage"><div><div><h5 class="title"><a name="user-region-overview"></a>The User Region</h5></div></div></div><p>
+			The user region isolates the kernel from deployed applications,
+			including both your own user applications and the user-oriented
+			VTS applications such as the Admin Console. This means
+			that the kernel is mostly invisible to applications and to application
+			management. This is because most of the kernel bundles are not
+			installed in the user region (apart from a few needed for region
+			management). The necessary function to support the kernel runs in the
+			OSGi framework, but the user region applications cannot see it, except
+			for the services that are normally offered.
+		</p><p>This isolation has many benefits. For example, it is not necessary for the kernel and user applications to use the same version of the Spring Framework. In fact the kernel installs only those parts of the Spring Framework that it needs.  If you update the kernel, it is far less likely that you will also need to upgrade or adjust the applications to accomodate a new version of the kernel. The kernel implementation is therefore much more stable and resilient and applications are much more likely to survive kernel upgrades between releases.  </p><p>When you install VTS, the kernel creates a single user region.
+			The kernel and the user region are configured independently of each other; see <a class="link" href="ch11.html" title="Chapter&nbsp;11.&nbsp;Configuration">Configuring VTS</a> for details. 		
+		</p><p>Finally, the isolation provided by the user region together with scoped applications and plans solve common dependency problems that occur when using OSGi. </p></div></div></div></div></body></html>

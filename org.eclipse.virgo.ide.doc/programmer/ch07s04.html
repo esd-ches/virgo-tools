@@ -1,0 +1,11 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>JSP Tag Libraries</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="ch07.html" title="Chapter&nbsp;7.&nbsp;Working with Common Enterprise Libraries"><link rel="prev" href="ch07s03.html" title="Weaving and Instrumentation"><link rel="next" href="ch08.html" title="Chapter&nbsp;8.&nbsp;Known Issues"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="JSP Tag Libraries"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="common-libraries-tld"></a>JSP Tag Libraries</h2></div></div></div><p>
+			When using tag libraries within a WAR or WAB, be sure to include an <code class="literal">Import-Bundle</code> 
+			or <code class="literal">Import-Library</code> for the tag library bundle(s). This will ensure that your WAR or WAB 
+			can see the TLD definition and implementing types. For example, to use the Apache implementation of JSTL, 
+			add the following to your bundle&rsquo;s <code class="literal">/META-INF/MANIFEST.MF</code>:
+		</p><pre class="programlisting">
+<span class="bold"><strong>Import-Bundle</strong></span>: com.springsource.org.apache.taglibs.standard;version="1.1.2"
+</pre><p>
+			<code class="literal">Import-Package</code> can also be used but it is tedious to add all the imports as there are 
+			typically lots of tld definitions in a bundle providing them.
+		</p></div></body></html>

@@ -1,0 +1,21 @@
+<plugin>
+<extension point="org.eclipse.help.toc">
+<toc
+      category="virgo"
+      file="tooling/toc.xml"
+      primary="true"></toc>
+<toc
+      category="virgo"
+      file="user/toc.xml"
+      primary="true"></toc>
+      <toc
+      category="virgo"
+      file="programmer/toc.xml"
+      primary="true"></toc>
+</extension>
+<extension point="org.eclipse.help.index">
+<index file="tooling/index.xml"></index>
+<index file="user/index.xml"></index>
+<index file="programmer/index.xml"></index>
+</extension>
+</plugin>

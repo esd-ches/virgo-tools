@@ -1,0 +1,15 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Service Dumps</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo User Guide"><link rel="up" href="ch09.html" title="Chapter&nbsp;9.&nbsp;Serviceability and Diagnostics"><link rel="prev" href="ch09s02.html" title="(Trace) Logging"><link rel="next" href="ch10.html" title="Chapter&nbsp;10.&nbsp;Working with Applications"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Service Dumps"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="serviceability-info-dump"></a>Service Dumps</h2></div></div></div><p>
+        A service dump is triggered when one of the following events
+        occurs:
+      </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+            A failure is detected in the Virgo code, or
+          </p></li><li class="listitem"><p>
+            a thread deadlock is detected.
+          </p></li></ol></div><p>
+        A service dump contains a snapshot of all the important state from
+        the running Virgo instance. This snapshot is not intended
+        for end user consumption but is useful for service personnel.
+      </p><p>
+        By default, service dumps are created in
+        <code class="literal">$SERVER_HOME/serviceability/dump</code>.
+      </p></div></body></html>
