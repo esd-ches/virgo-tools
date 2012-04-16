@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<?compositeMetadataRepository version='1.0.0'?>
+<repository name='&quot;Eclipse Project Test Site&quot;'
+    type='org.eclipse.equinox.internal.p2.metadata.repository.CompositeMetadataRepository' version='1.0.0'>
+  <properties size='1'>
+    <property name='p2.timestamp' value='1334606143775'/>
+  </properties>
+ <children size='1'>
+    <child location='http://download.eclipse.org/virgo/milestone/IDE'/>
+    <child location='http://download.eclipse.org/virgo/milestone/BNDLR/1.1.0.M04/updatesite/'/>
+    <child location='http://download.eclipse.org/virgo/updatesite/3.5.0.M03'/>
+    <child location='http://download.eclipse.org/libra/milestones'/>
+  </children>
+</repository>
