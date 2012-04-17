@@ -1,22 +1,41 @@
 <html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Form Tags Shared Services WAR</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="ch06.html" title="Chapter&nbsp;6.&nbsp;Case Study: Migrating the Form Tags Sample Application"><link rel="prev" href="ch06s03.html" title="Form Tags Shared Libraries WAR"><link rel="next" href="ch06s05.html" title="Form Tags PAR"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Form Tags Shared Services WAR"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="formtags-case-study-war-shared-services"></a>Form Tags Shared Services WAR</h2></div></div></div><p>
-			The next step in the migration is to deploy the services as a separate
+			The next step in the migration is to deploy the services as a
+			separate
 			OSGi bundle which the WAR then references.
-			The Form Tags sample has a single service <code class="literal">UserManager</code>.
+			The Form Tags
+			sample has a single service
+			<code class="literal">UserManager</code>
+			.
 		</p><p>
-			This scenario has two separate deployables, the <code class="literal">service</code> bundle and the WAR file.
-			The following image shows the two separate source trees:
+			This scenario has two separate deployables, the
+			<code class="literal">service</code>
+			bundle and the WAR file.
+			The following image shows the two separate
+			source trees:
 		</p><p>
 			<img src="images/formtags-case-study-shared-services-eclipse.png">
-			</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>Note that the WAR does not contain the <code class="literal">.domain</code> or
-			<code class="literal">.service</code> packages as these will be imported from the separate service bundle.
+			</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
+				Note that the WAR does not contain the
+				<code class="literal">.domain</code>
+				or
+				<code class="literal">.service</code>
+				packages as these will be imported from the separate service bundle.
 			</div><p>
 		</p><div class="section" title="The Service Bundle"><div class="titlepage"><div><div><h3 class="title"><a name="formtags-case-study-war-shared-services-service"></a>The Service Bundle</h3></div></div></div><p>
-				The responsibility of the first bundle (<code class="literal">formtags-shared-services-service</code>)
-				is to provide the API of the formtags service.  This includes both the
-				domain and the service API.  In the same way that imports are defined
-				in the <code class="literal">/META-INF/MANIFEST.MF</code>, so are exports.
-				The following is the <code class="literal">/META-INF/MANIFEST.MF</code> listing from the service bundle.
-</p><pre class="programlisting">
+				The responsibility of the first bundle (
+				<code class="literal">formtags-shared-services-service</code>
+				)
+				is to provide the API of the formtags service. This includes both
+				the
+				domain and the service API. In the same way that imports are
+				defined
+				in the
+				<code class="literal">/META-INF/MANIFEST.MF</code>
+				, so are exports.
+				The following is the
+				<code class="literal">/META-INF/MANIFEST.MF</code>
+				listing from the service bundle.
+				</p><pre class="programlisting">
 Manifest-Version: 1.0
 Ant-Version: Apache Ant 1.7.0
 Created-By: 1.5.0_13-119 (Apple Inc.)
@@ -29,45 +48,82 @@ Import-Library: org.springframework.spring;version="[3.0.0,4.0.0)"
 </pre><p>
 			</p><p>
 				The symbolic name of this bundle is
-				<code class="literal">org.springframework.showcase.formtags.service-shared-services</code>.
+				<code class="literal">org.springframework.showcase.formtags.service-shared-services
+				</code>
+				.
 				Note that the name of the bundle typically describes the package
 				that the bundle primarily exports.
-				If you take a look at the <code class="literal">repository/bundles/ext</code> in the VTS
-				directory, you&rsquo;ll see that names are almost always indicative of the contents of the bundle.
+				If you take a look at the
+				<code class="literal">repository/bundles/ext</code>
+				in the VTS
+				directory, you&rsquo;ll see that
+				names are almost always indicative of the contents of the bundle.
 				For this example, however, we have also appended
-				"<code class="literal">-shared-services</code>"
-				in order to avoid possible clashes with other bundle symbolic names.
-				You will see later that the PAR also contains a service bundle.
+				"
+				<code class="literal">-shared-services</code>
+				"
+				in order to avoid possible clashes with other bundle symbolic
+				names.
+				You will see later that the PAR also contains a service
+				bundle.
 				</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
-					In OSGi, the combination of <code class="literal">Bundle-SymbolicName</code>
-					and <code class="literal">Bundle-Version</code> is used to uniquely identify
-					a bundle within the OSGi container. Furthermore, when you deploy
-					a bundle to the Virgo Tomcat Server, for example via the <code class="literal">pickup</code>
-					directory, a bundle&rsquo;s filename is also used to uniquely identify it for
-					the purpose of supporting <span class="emphasis"><em>hot deployment</em></span> via
+					In OSGi, the combination of
+					<code class="literal">Bundle-SymbolicName</code>
+					and
+					<code class="literal">Bundle-Version</code>
+					is used to uniquely identify
+					a bundle within the OSGi container.
+					Furthermore, when you deploy
+					a bundle to the Virgo Tomcat Server,
+					for example via the
+					<code class="literal">pickup</code>
+					directory, a bundle&rsquo;s filename is also used to uniquely
+					identify it for
+					the purpose of supporting
+					<span class="emphasis"><em>hot deployment</em></span>
+					via
 					the file system.
 				</div><p>
 			</p><p>
 				As well as exporting types (i.e. the domain classes and service
 				API), the service bundle also publishes an implementation of the
-				<code class="literal">UserManager</code>.  The actual implementation is
-				<code class="literal">StubUserManager</code>; however, that should remain an
-				implementation detail of this bundle.
+				<code class="literal">UserManager</code>
+				. The actual implementation is
+				<code class="literal">StubUserManager</code>
+				; however, that should remain an
+				implementation detail of this
+				bundle.
 			</p><p>
 				The fact that this bundle publishes a service is not captured in
-				the <code class="literal">/META-INF/MANIFEST.MF</code>, as it is a Spring-DM concept.
-				The following image is of <code class="literal">src/main/resources/spring</code>.
-			</p><p><img src="images/formtags-case-study-shared-services-service-resources.png"></p><p>
-				 As you can see there are two Spring configuration files: <code class="literal">module-context.xml</code> and
-				<code class="literal">osgi-context.xml</code>.
+				the
+				<code class="literal">/META-INF/MANIFEST.MF</code>
+				, as it is a Spring-DM concept.
+				The following image is of
+				<code class="literal">src/main/resources/spring</code>
+				.
+			</p><p>
+				<img src="images/formtags-case-study-shared-services-service-resources.png">
+			</p><p>
+				As you can see there are two Spring configuration files:
+				<code class="literal">module-context.xml</code>
+				and
+				<code class="literal">osgi-context.xml</code>
+				.
 				</p><div class="tip" title="Tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3>
-					These names are abitrary; however, they follow an informal convention:
-					<code class="literal">module-context.xml</code> typically bootstraps the Spring context
-					(usually delegating to smaller fine grained context files inside another directory), whilst
-					<code class="literal">osgi-context.xml</code> contains all the OSGi service exports and references.
+					These names are abitrary; however, they follow an informal
+					convention:
+					<code class="literal">module-context.xml</code>
+					typically bootstraps the Spring context
+					(usually delegating to
+					smaller fine grained context files inside another directory),
+					whilst
+					<code class="literal">osgi-context.xml</code>
+					contains all the OSGi service exports and references.
 				</div><p>
-				The following is a listing of <code class="literal">module-context.xml</code>.
-</p><pre class="programlisting">
+				The following is a listing of
+				<code class="literal">module-context.xml</code>
+				.
+				</p><pre class="programlisting">
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 
 &lt;beans xmlns="http://www.springframework.org/schema/beans"
@@ -79,11 +135,14 @@ Import-Library: org.springframework.spring;version="[3.0.0,4.0.0)"
 	&lt;bean id="userManager"
 		class="org.springframework.showcase.formtags.service.internal.StubUserManager"/&gt;
 
-&lt;/beans&gt;
-</pre><p>
-				As you can see, this simply defines a bean called <code class="literal">userManager</code>.
-				The following is a listing of <code class="literal">osgi-context.xml</code>.
-</p><pre class="programlisting">
+&lt;/beans&gt; </pre><p>
+				As you can see, this simply defines a bean called
+				<code class="literal">userManager</code>
+				.
+				The following is a listing of
+				<code class="literal">osgi-context.xml</code>
+				.
+				</p><pre class="programlisting">
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;beans:beans
 	xmlns="http://www.springframework.org/schema/osgi"
@@ -97,30 +156,47 @@ Import-Library: org.springframework.spring;version="[3.0.0,4.0.0)"
 	&lt;service ref="userManager"
 		interface="org.springframework.showcase.formtags.service.UserManager"/&gt;
 
-&lt;/beans:beans&gt;
-</pre><p>
-				This single bean definition exports the <code class="literal">userManager</code>
-				defined in <code class="literal">module-context.xml</code> to the
+&lt;/beans:beans&gt; </pre><p>
+				This single bean definition exports the
+				<code class="literal">userManager</code>
+				defined in
+				<code class="literal">module-context.xml</code>
+				to the
 				OSGi service registry and makes it available under the public
-				<code class="literal">org.springframework.showcase.formtags.service.UserManager</code> API.
+				<code class="literal">org.springframework.showcase.formtags.service.UserManager
+				</code>
+				API.
 			</p><p>
-				The service bundle should now be ready to deploy on the VTS.
-				So copy <code class="literal">/dist/formtags-shared-services-services*</code>
-				to the <code class="literal">SERVER_HOME/pickup</code> directory.
-				Output similar to the following should appear in the VTS&rsquo;s console:
-			</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The console output has been reformatted to fit this document.</p></div><pre class="programlisting">
+				The service bundle should now be ready to deploy on the
+				VTS.
+				So copy
+				<code class="literal">/dist/formtags-shared-services-services*</code>
+				to the
+				<code class="literal">SERVER_HOME/pickup</code>
+				directory.
+				Output similar to the following should appear in the
+				VTS&rsquo;s console:
+			</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The console output has been reformatted to fit this document.
+				</p></div><pre class="programlisting">
 [2009-07-01 15:05:03.511] fs-watcher
 	&lt;SPDE0048I&gt; Processing 'CREATED' event for file 'formtags-shared-services-service-2.0.0.RELEASE.jar'.
 [2009-07-01 15:05:03.688] fs-watcher
 	&lt;SPDE0010I&gt; Deployment of 'org.springframework.showcase.formtags.service_shared_services' version '2.0.0.RELEASE' completed.
 </pre></div><div class="section" title="Accessing the Service and Types from the WAR"><div class="titlepage"><div><div><h3 class="title"><a name="formtags-case-study-war-shared-services-war"></a>Accessing the Service and Types from the WAR</h3></div></div></div><p>
 				The WAR file now needs to access the types and service exported
-				by the service bundle. The following listing is the WAR&rsquo;s
-				<code class="literal">/META-INF/MANIFEST.MF</code> which imports the types
-				exported by the service bundle. The <code class="literal">Import-Bundle</code>
-				statement has also been extended to import <code class="literal">org.springframework.osgi.core</code>,
-				which is necessary in order to load an OSGi-enabled <code class="literal">WebApplicationContext</code>.
-</p><pre class="programlisting">
+				by
+				the service bundle. The following listing is the WAR&rsquo;s
+				<code class="literal">/META-INF/MANIFEST.MF</code>
+				which imports the types
+				exported by the service bundle. The
+				<code class="literal">Import-Bundle</code>
+				statement has also been extended to import
+				<code class="literal">org.springframework.osgi.core</code>
+				,
+				which is necessary in order to load an OSGi-enabled
+				<code class="literal">WebApplicationContext</code>
+				.
+				</p><pre class="programlisting">
 Manifest-Version: 1.0
 Ant-Version: Apache Ant 1.7.0
 Created-By: 1.5.0_13-119 (Apple Inc.)
@@ -135,27 +211,64 @@ Import-Bundle: com.springsource.org.apache.taglibs.standard;version="1
 </pre><p>
 			</p><p>
 				In addition to importing the exported types of the service bundle,
-				the WAR must also obtain a reference to the <code class="literal">UserManager</code>
-				published by the service bundle. The following image shows the directory
+				the WAR must also obtain a reference to the
+				<code class="literal">UserManager</code>
+				published by the service bundle. The following image shows the
+				directory
 				structure of the Shared Services WAR.
-			</p><p><img src="images/formtags-case-study-shared-services-war-resources.png"></p><p>
-				As you can see in the above image, the Form Tags Shared Services WAR&rsquo;s
-				<code class="literal">/WEB-INF/web.xml</code> directory contains a standard <code class="literal">web.xml</code>
-				deployment descriptor, <code class="literal">applicationContext.xml</code> which defines the configuration
-				for the <span class="emphasis"><em>root</em></span> <code class="literal">WebApplicationContext</code>, and
-				<code class="literal">formtags-servlet.xml</code> which defines the configuration specific to the
-				configured <span class="emphasis"><em>formtags</em></span> <code class="literal">DispatcherServlet</code>.
 			</p><p>
-				As is typical for Spring MVC based web applications, you configure a <code class="literal">ContextLoaderListener</code>
-				in <code class="literal">web.xml</code> to load your root <code class="literal">WebApplicationContext</code>; however, to enable your
-				<code class="literal">WebApplicationContext</code> to be able to reference services from the OSGi Service Registry,
-				you must explicitly set the <code class="literal">contextClass</code> Servlet context parameter to the fully qualified
-				class name of a <code class="literal">ConfigurableWebApplicationContext</code> which is OSGi-enabled. When deploying
-				Shared Services WARs to the Virgo Tomcat Server, you should use
-				<code class="literal">org.eclipse.virgo.web.dm.ServerOsgiBundleXmlWebApplicationContext</code>. This will
-				then enable the use of Spring-DM&rsquo;s <code class="literal">&lt;reference ... /&gt;</code> within your root
-				<code class="literal">WebApplicationContext</code> (i.e., in <code class="literal">applicationContext.xml</code>).
-				The following listing is an excerpt from <code class="literal">/WEB-INF/web.xml</code>.
+				<img src="images/formtags-case-study-shared-services-war-resources.png">
+			</p><p>
+				As you can see in the above image, the Form Tags Shared Services
+				WAR&rsquo;s
+				<code class="literal">/WEB-INF/web.xml</code>
+				directory contains a standard
+				<code class="literal">web.xml</code>
+				deployment descriptor,
+				<code class="literal">applicationContext.xml</code>
+				which defines the configuration
+				for the
+				<span class="emphasis"><em>root</em></span>
+				<code class="literal">WebApplicationContext</code>
+				, and
+				<code class="literal">formtags-servlet.xml</code>
+				which defines the configuration specific to the
+				configured
+				<span class="emphasis"><em>formtags</em></span>
+				<code class="literal">DispatcherServlet</code>
+				.
+			</p><p>
+				As is typical for Spring MVC based web applications, you configure a
+				<code class="literal">ContextLoaderListener</code>
+				in
+				<code class="literal">web.xml</code>
+				to load your root
+				<code class="literal">WebApplicationContext</code>
+				; however, to enable your
+				<code class="literal">WebApplicationContext</code>
+				to be able to reference services from the OSGi Service Registry,
+				you
+				must explicitly set the
+				<code class="literal">contextClass</code>
+				Servlet context parameter to the fully qualified
+				class name of a
+				<code class="literal">ConfigurableWebApplicationContext</code>
+				which is OSGi-enabled. When deploying
+				Shared Services WARs to the
+				Virgo Tomcat Server, you should use
+				<code class="literal">org.eclipse.virgo.web.dm.ServerOsgiBundleXmlWebApplicationContext
+				</code>.
+				This will
+				then enable the use of Spring-DM&rsquo;s
+				<code class="literal">&lt;reference ... /&gt;</code>
+				within your root
+				<code class="literal">WebApplicationContext</code>
+				(i.e., in
+				<code class="literal">applicationContext.xml</code>
+				).
+				The following listing is an excerpt from
+				<code class="literal">/WEB-INF/web.xml</code>
+				.
 			</p><pre class="programlisting">
 	&lt;context-param&gt;
 		&lt;param-name&gt;contextClass&lt;/param-name&gt;
@@ -166,20 +279,38 @@ Import-Bundle: com.springsource.org.apache.taglibs.standard;version="1
 		&lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
 	&lt;/listener&gt;
 </pre><p>
-				The Form Tags Shared Services WAR contains a <code class="literal">/WEB-INF/applicationContext.xml</code>
-				file which is the default configuration location used to create the <span class="emphasis"><em>root</em></span>
-				<code class="literal">WebApplicationContext</code> for Spring MVC&rsquo;s <code class="literal">ContextLoaderListener</code>.
+				The Form Tags Shared Services WAR contains a
+				<code class="literal">/WEB-INF/applicationContext.xml</code>
+				file which is the default configuration location used to create the
+				<span class="emphasis"><em>root</em></span>
+				<code class="literal">WebApplicationContext</code>
+				for Spring MVC&rsquo;s
+				<code class="literal">ContextLoaderListener</code>
+				.
 				</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
 					As already mentioned, in the OSGi world, bundle configuration
-					takes place in the root <code class="literal">/META-INF/</code> directory.
+					takes
+					place in the root
+					<code class="literal">/META-INF/</code>
+					directory.
 					Typically Spring-DM powered configuration files will live
-					there as well (e.g., in <code class="literal">/META-INF/spring/*.xml</code>).
-					In a WAR, however, the root <code class="literal">WebApplicationContext</code>
-					loaded by <code class="literal">ContextLoaderListener</code> and the <code class="literal">DispatcherServlet&rsquo;s</code>
-					application context typically live in <code class="literal">/WEB-INF/</code>.
+					there as well (e.g., in
+					<code class="literal">/META-INF/spring/*.xml</code>
+					).
+					In a WAR, however, the root
+					<code class="literal">WebApplicationContext</code>
+					loaded by
+					<code class="literal">ContextLoaderListener</code>
+					and the
+					<code class="literal">DispatcherServlet&rsquo;s</code>
+					application context typically live in
+					<code class="literal">/WEB-INF/</code>
+					.
 				</div><p>
-				The following is the listing of the WAR&rsquo;s <code class="literal">/WEB-INF/applicationContext.xml</code>.
-</p><pre class="programlisting">
+				The following is the listing of the WAR&rsquo;s
+				<code class="literal">/WEB-INF/applicationContext.xml</code>
+				.
+				</p><pre class="programlisting">
 &lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;beans:beans
    xmlns="http://www.springframework.org/schema/osgi"
@@ -193,40 +324,56 @@ Import-Bundle: com.springsource.org.apache.taglibs.standard;version="1
 	&lt;reference id="userManager"
 		interface="org.springframework.showcase.formtags.service.UserManager"/&gt;
 
-&lt;/beans:beans&gt;
-</pre><p>
+&lt;/beans:beans&gt; </pre><p>
 				The single bean declaration is retrieving a service that implements
-				the <code class="literal">org.springframework.showcase.formtags.service.UserManager</code>
+				the
+				<code class="literal">org.springframework.showcase.formtags.service.UserManager
+				</code>
 				API from the OSGi Service Registry.
 				</p><div class="tip" title="Tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3>
 					You might have been expecting a reference to the service bundle,
-					but that isn&rsquo;t how OSGi works.  OSGi provides a service
+					but that isn&rsquo;t how OSGi works. OSGi provides a service
 					registry, and this bean definition is accessing a service in that
 					registry that meets the specified restriction (i.e. implements
-					the specified interface).  This leads to a very loosely coupled
-					programming model: the WAR really doesn&rsquo;t care where the implementation
+					the
+					specified interface). This leads to a very loosely coupled
+					programming model: the WAR really doesn&rsquo;t care where the
+					implementation
 					comes from.
 				</div><p>
 				</p><div class="tip" title="Tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3>
 					What happens if there is no service at runtime?
-					What if there are multiple services that match the criteria?
-					Spring-DM provides a lot of configuration options, including
-					whether or not the reference is <span class="emphasis"><em>mandatory</em></span>,
+					What if there are
+					multiple services that match the criteria?
+					Spring-DM provides a lot
+					of configuration options, including
+					whether or not the reference is
+					<span class="emphasis"><em>mandatory</em></span>
+					,
 					how long to wait for a service reference, etc. Please consult the
 					<a class="ulink" href="http://www.springframework.org/osgi/" target="_top">Spring Dynamic Modules for OSGi</a>
 					home page for further information.
 				</div><p>
 				</p><p>
-					One of the benefits of programming to interfaces is that you are
-					decoupled from the actual implementation; Spring-DM provides a proxy.  This
-					has enormous benefits including the ability to dynamically refresh individual bundles without
-					cascading that refresh to unrelated bundles.
+					One of the benefits of programming to interfaces is that you
+					are
+					decoupled from the actual implementation; Spring-DM provides a
+					proxy. This
+					has enormous benefits including the ability to
+					dynamically refresh individual bundles without
+					cascading that
+					refresh to unrelated bundles.
 				</p><p>
 			</p><p>
-				To deploy the WAR, copy <code class="literal">/dist/formtags-shared-services-war*</code>
-				to the <code class="literal">SERVER_HOME/pickup</code> directory.
-				You should then see console output similar to the following:
-			</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The console output has been reformatted to fit this document.</p></div><pre class="programlisting">
+				To deploy the WAR, copy
+				<code class="literal">/dist/formtags-shared-services-war*</code>
+				to the
+				<code class="literal">SERVER_HOME/pickup</code>
+				directory.
+				You should then see console output similar to the
+				following:
+			</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The console output has been reformatted to fit this document.
+				</p></div><pre class="programlisting">
 [2009-07-01 15:09:19.819] fs-watcher
     &lt;SPDE0048I&gt; Processing 'CREATED' event for file 'formtags-shared-services-war-3.0.0.RELEASE.war'.
 [2009-07-01 15:09:20.167] fs-watcher

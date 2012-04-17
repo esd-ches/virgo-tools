@@ -1,8 +1,12 @@
 <html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;6.&nbsp;Case Study: Migrating the Form Tags Sample Application</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="index.html" title="Virgo Programmer Guide"><link rel="prev" href="ch05s02.html" title="Migrating to a Plan or a PAR"><link rel="next" href="ch06s02.html" title="Form Tags WAR"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" title="Chapter&nbsp;6.&nbsp;Case Study: Migrating the Form Tags Sample Application"><div class="titlepage"><div><div><h2 class="title"><a name="formtags-case-study"></a>Chapter&nbsp;6.&nbsp;Case Study: Migrating the Form Tags Sample Application</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="ch06.html#formtags-case-study-introduction">Overview of the Form Tags Sample Application</a></span></dt><dt><span class="section"><a href="ch06s02.html">Form Tags WAR</a></span></dt><dt><span class="section"><a href="ch06s03.html">Form Tags Shared Libraries WAR</a></span></dt><dt><span class="section"><a href="ch06s04.html">Form Tags Shared Services WAR</a></span></dt><dd><dl><dt><span class="section"><a href="ch06s04.html#formtags-case-study-war-shared-services-service">The Service Bundle</a></span></dt><dt><span class="section"><a href="ch06s04.html#formtags-case-study-war-shared-services-war">Accessing the Service and Types from the WAR</a></span></dt></dl></dd><dt><span class="section"><a href="ch06s05.html">Form Tags PAR</a></span></dt><dd><dl><dt><span class="section"><a href="ch06s05.html#formtags-case-study-par-granularity">Granularity of the PAR</a></span></dt><dt><span class="section"><a href="ch06s05.html#formtags-case-study-par-domain-and-service">Domain and Service Bundles</a></span></dt><dt><span class="section"><a href="ch06s05.html#formtags-case-study-par-par">Constructing the PAR</a></span></dt></dl></dd><dt><span class="section"><a href="ch06s06.html">Summary of the Form Tags Migration</a></span></dt><dt><span class="section"><a href="ch06s07.html">Form Tags as a Plan</a></span></dt></dl></div><p>
 		In this chapter we will walk through the steps needed to migrate the
-		Form Tags sample application from a standard Java EE WAR to a fully OSGi
-		compliant <span class="emphasis"><em>Shared Services WAR</em></span> within a PAR.
-		The migration involves four packaging and deployment formats:
+		Form Tags sample application from a standard Java EE WAR to a fully
+		OSGi
+		compliant
+		<span class="emphasis"><em>Shared Services WAR</em></span>
+		within a PAR.
+		The migration involves four packaging and deployment
+		formats:
 		</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
 					<a class="link" href="ch06s02.html" title="Form Tags WAR">Standard WAR</a>
 				</p></li><li class="listitem"><p>
@@ -14,42 +18,78 @@
 				</p></li></ol></div><p>
 	</p><p>
 		Each of these migration steps will produce a web application
-		that can be deployed and run on the VTS.
+		that
+		can be deployed and run on the VTS.
 	</p><p>
-		After summarising the process, an example <code class="literal">plan</code> is shown which is another way of 
+		After summarising the process, an example
+		<code class="literal">plan</code>
+		is shown which is another way of
 		packaging and deploying the application.
 	</p><p>
 		The following image displays the directory structure you should have
-		after installing the Form Tags sample. Note however that the release tag
-		will typically resemble <code class="literal">3.0.0.RELEASE</code>.
-	</p><p><img src="images/formtags-case-study-sample-layout.png"></p><p>
-		The <code class="literal">dist</code> directory contains the distributables,
-		and the <code class="literal">projects</code> directory contains the source code
+		after installing the Form Tags sample. Note however that the release
+		tag
+		will typically resemble
+		<code class="literal">3.0.0.RELEASE</code>
+		.
+	</p><p>
+		<img src="images/formtags-case-study-sample-layout.png">
+	</p><p>
+		The
+		<code class="literal">dist</code>
+		directory contains the distributables,
+		and the
+		<code class="literal">projects</code>
+		directory contains the source code
 		and build scripts.
 	</p><p>
-		For simplicity, this chapter will focus on the distributables&mdash;which are built using Virgo-Build
-		rather than on configuring a project in an IDE.
+		For simplicity, this chapter will focus on the distributables&mdash;which
+		are built using Virgo-Build
+		rather than on configuring a project in an
+		IDE.
 		</p><div class="tip" title="Tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3>
-			Pre-packaged distributables are made available in the <code class="literal">dist</code> directory;
-			however, if you would like to modify the samples or build them from scratch, you may
+			Pre-packaged distributables are made available in the
+			<code class="literal">dist</code>
+			directory;
+			however, if you would like to modify the samples or build
+			them from scratch, you may
 			do so using Virgo-Build. Take a look at
-			 the <code class="literal">README.TXT</code> file in each of the folders under
-			 the <code class="literal">projects</code> directory in the
-			 Form Tags sample for instructions.
+			the
+			<code class="literal">README.TXT</code>
+			file in each of the folders under
+			the
+			<code class="literal">projects</code>
+			directory in the
+			Form Tags sample for instructions.
 		</div><p>
 	</p><div class="section" title="Overview of the Form Tags Sample Application"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="formtags-case-study-introduction"></a>Overview of the Form Tags Sample Application</h2></div></div></div><p>
-			The sample that we will be using is the Form Tags show case sample
-			which was provided with Spring 2.0. The Form Tags application has
-			been removed from the official Spring 2.5.x distributions; however,
-			since it is relatively simple but still contains enough ingredients
-			to demonstrate the various considerations required during a migration,
+			The sample that we will be using is the Form Tags show case
+			sample
+			which was provided with Spring 2.0. The Form Tags application
+			has
+			been removed from the official Spring 2.5.x distributions;
+			however,
+			since it is relatively simple but still contains enough
+			ingredients
+			to demonstrate the various considerations required during
+			a migration,
 			we have chosen to use it for these examples.
 		</p><p>
 			The purpose of the Form Tags show case sample was to demonstrate how
-			the Spring specific <code class="literal">form:</code> tags, released
-			in Spring 2.0, make view development with JSPs and tag libraries easier.
-			The Form Tags application consists of a single <code class="literal">UserService</code> which returns a list
-			of <code class="literal">Users</code>. Furthermore, the application demonstrates how to list, view,
-			and edit <code class="literal">Users</code> in a simple Spring MVC based web application using JSP
+			the Spring specific
+			<code class="literal">form:</code>
+			tags, released
+			in Spring 2.0, make view development with JSPs and tag
+			libraries easier.
+			The Form Tags application consists of a single
+			<code class="literal">UserService</code>
+			which returns a list
+			of
+			<code class="literal">Users</code>
+			. Furthermore, the application demonstrates how to list, view,
+			and
+			edit
+			<code class="literal">Users</code>
+			in a simple Spring MVC based web application using JSP
 			and JSTL.
 		</p></div></div></body></html>

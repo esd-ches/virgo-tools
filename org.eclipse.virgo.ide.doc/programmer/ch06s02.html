@@ -1,27 +1,45 @@
 <html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Form Tags WAR</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="ch06.html" title="Chapter&nbsp;6.&nbsp;Case Study: Migrating the Form Tags Sample Application"><link rel="prev" href="ch06.html" title="Chapter&nbsp;6.&nbsp;Case Study: Migrating the Form Tags Sample Application"><link rel="next" href="ch06s03.html" title="Form Tags Shared Libraries WAR"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Form Tags WAR"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="formtags-case-study-war"></a>Form Tags WAR</h2></div></div></div><p>
 			We begin with a standard WAR deployment.
 			</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
-				The VTS supports the standard Java EE WAR packaging
-				and deployment format as a first-class citizen, and there are many
-				benefits to deploying a standard WAR file on the VTS including,
-				but not limited to: tooling support, runtime error diagnostics, FFDC
-				(first failure data capture), etc.
-				In addition, support for standard WAR deployment provides an easy on-ramp
-				for trying out the VTS with existing web applications.
+				The VTS supports the standard Java EE WAR
+				packaging
+				and deployment format as a first-class citizen, and there
+				are many
+				benefits to deploying a standard WAR file on the
+				VTS including,
+				but not limited to: tooling
+				support, runtime error diagnostics, FFDC
+				(first failure data
+				capture), etc.
+				In addition, support for standard WAR deployment
+				provides an easy on-ramp
+				for trying out the
+				VTS with existing web applications.
 			</div><p>
 		</p><p>
 			The following screen shot displays the directory structure of the
 			Form Tags application using the standard WAR format. As you can see,
 			there is no deviation from the standard structure and layout, and as
-			you would expect, all of the web application&rsquo;s third-party dependencies
-			(for example: Spring, Commons Logging) are packaged as JARs in
-			<code class="literal">WEB-INF/lib</code>.
-		</p><p><img src="images/formtags-case-study-exploded-war.png"></p><p>
-			To deploy this application, simply copy <code class="literal">dist/formtags-war-3.0.0.*.war</code> to
-			the <code class="literal">SERVER_HOME/pickup</code> directory for hot deployment.
+			you would expect, all of the web application&rsquo;s third-party
+			dependencies
+			(for example: Spring, Commons Logging) are packaged as
+			JARs in
+			<code class="literal">WEB-INF/lib</code>
+			.
 		</p><p>
-			You should then see the VTS produce console output similar to the following:
-		</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The console output has been reformatted to fit this document.</p></div><pre class="programlisting">
+			<img src="images/formtags-case-study-exploded-war.png">
+		</p><p>
+			To deploy this application, simply copy
+			<code class="literal">dist/formtags-war-3.0.0.*.war</code>
+			to
+			the
+			<code class="literal">SERVER_HOME/pickup</code>
+			directory for hot deployment.
+		</p><p>
+			You should then see the VTS produce
+			console output similar to the following:
+		</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The console output has been reformatted to fit this document.
+			</p></div><pre class="programlisting">
 [2009-07-01 14:54:45.135] fs-watcher
 	&lt;SPDE0048I&gt; Processing 'CREATED' event for file 'formtags-war-3.0.0.RELEASE.war'.
 [2009-07-01 14:54:45.797] fs-watcher
@@ -31,17 +49,26 @@
 [2009-07-01 14:54:46.380] Thread-20
 	&lt;SPWE0001I&gt; Started web bundle '/formtags-war-3.0.0.RELEASE'.
 </pre><p>
-			Navigate to <code class="literal">http://localhost:8080/</code> plus the web application context path,
+			Navigate to
+			<code class="literal">http://localhost:8080/</code>
+			plus the web application context path,
 			which in the above case is
-			<code class="literal">formtags-war-3.0.0.RELEASE</code>. Thus navigating to
+			<code class="literal">formtags-war-3.0.0.RELEASE</code>
+			. Thus navigating to
 			<code class="literal">http://localhost:8080/formtags-war-3.0.0.RELEASE</code>
-			should render the sample application&rsquo;s welcome page, as displayed in the screen
+			should render the sample application&rsquo;s welcome page, as
+			displayed in the screen
 			shot below.
 			</p><div class="tip" title="Tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3>
 				For WARs, the default web context path is the name of the WAR file
-				without the <code class="literal">.war</code> extension. You can optionally
-				specify a context path using the <code class="literal">Web-ContextPath</code> bundle
-				manifest header, which will be described in further detail later.
+				without the
+				<code class="literal">.war</code>
+				extension. You can optionally
+				specify a context path using the
+				<code class="literal">Web-ContextPath</code>
+				bundle
+				manifest header, which will be described in further detail
+				later.
 			</div><p>
 		</p><p>
 			<img src="images/formtags-case-study-war-webpage.png">

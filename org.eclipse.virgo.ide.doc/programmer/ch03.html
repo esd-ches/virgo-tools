@@ -17,7 +17,7 @@
 		explore all of these formats and their suitability later in this guide.</p><div class="section" title="Supported Deployment Formats"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="architecture-deployment-formats"></a>Supported Deployment Formats</h2></div></div></div><p> The Virgo Tomcat Server supports applications packaged in the following formats: </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p><a class="link" href="ch03.html#architecture-raw-osgi-bundles" title="Raw OSGi Bundles">Raw OSGi Bundles</a></p></li><li class="listitem"><p><a class="link" href="ch03.html#architecture-wars" title="WAR Deployment Formats">Java EE WAR</a></p></li><li class="listitem"><p><a class="link" href="ch03.html#architecture-war-gemini" title="WARs and the Gemini Web Container">Web Application Bundles</a></p></li><li class="listitem"><p><a class="link" href="ch03.html#architecture-pars" title="PAR">PARs</a></p></li><li class="listitem"><p><a class="link" href="ch03.html#architecture-plans" title="Plans">Plans</a></p></li><li class="listitem"><p><a class="link" href="ch03.html#architecture-configurations" title="Configurations">Configurations</a></p></li></ol></div><p> When you deploy an application to the VTS, each deployment artifact
 			(e.g., a single bundle, WAR, PAR, or plan) passes through a deployment pipeline. This
 			deployment pipeline is responsible for processing applications of certain types (i.e.,
-			application type). The ${bundle.version} release of the VTS natively
+			application type). The 1.0.0 release of the VTS natively
 			supports deployers analogous to each of the aforementioned packaging options. </p><p> Let&rsquo;s take a closer look now at each of the supported deployment and packaging
 			options to explore which one is best suited to your application.</p><div class="section" title="Raw OSGi Bundles"><div class="titlepage"><div><div><h3 class="title"><a name="architecture-raw-osgi-bundles"></a>Raw OSGi Bundles</h3></div></div></div><p> At its core, the Virgo Tomcat Server is an OSGi container. Thus any OSGi-compliant
 				bundle can be deployed directly on the VTS unmodified. You&rsquo;ll
@@ -101,7 +101,7 @@
 				familiar with Java EE, it is worth noting that a PAR can be considered a replacement
 				for an EAR (Enterprise Archive) within the context of an OSGi container. As an added
 				bonus, modules within a PAR can be refreshed independently and on-the-fly, for
-				example via the Virgo Tomcat Server Tool Suite (see <a class="xref" href="">???</a>). </p><p> Many of the benefits of the PAR format are due to the underlying OSGi
+				example via the Virgo Eclipse IDE Tooling (see the Virgo Tools Guide). </p><p> Many of the benefits of the PAR format are due to the underlying OSGi
 				infrastructure, including: </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p> Fundamentally modularized applications: instead of relying on fuzzy
 							boundaries between logical modules in a monolithic application, this
 							style promotes physically separated modules in the form of OSGi bundles.
