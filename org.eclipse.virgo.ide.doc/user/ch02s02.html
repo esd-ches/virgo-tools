@@ -1,4 +1,4 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>OSGi Concepts</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo User Guide"><link rel="up" href="ch02.html" title="Chapter&nbsp;2.&nbsp;Concepts"><link rel="prev" href="ch02.html" title="Chapter&nbsp;2.&nbsp;Concepts"><link rel="next" href="ch02s03.html" title="Spring DM Concepts"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="OSGi Concepts"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="concepts.osgi"></a>OSGi Concepts</h2></div></div></div><p>Modules in Virgo are represented using a standard Java
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>OSGi Concepts</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo User Guide"><link rel="up" href="ch02.html" title="Chapter&nbsp;2.&nbsp;Concepts"><link rel="prev" href="ch02.html" title="Chapter&nbsp;2.&nbsp;Concepts"><link rel="next" href="ch02s03.html" title="Spring DM and Blueprint Concepts"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="OSGi Concepts"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="concepts.osgi"></a>OSGi Concepts</h2></div></div></div><p>Modules in Virgo are represented using a standard Java
 module system known as <span class="emphasis"><em>OSGi</em></span>.
 Modules in OSGi are known as <span class="emphasis"><em>bundles</em></span>.
 Bundles consist of programs and resources organised by Java package together
@@ -19,7 +19,7 @@ another bundle.</p><p>
 	specifications, reference implementations, and compliance tests.
 	Virgo is built on the Equinox OSGi framework which is also
 	the reference implementation for the OSGi framework specification.
-</p><div class="section" title="Bundles"><div class="titlepage"><div><div><h3 class="title"><a name="N100A7"></a>Bundles</h3></div></div></div><p>
+</p><div class="section" title="Bundles"><div class="titlepage"><div><div><h3 class="title"><a name="N100B2"></a>Bundles</h3></div></div></div><p>
 Each bundle is stored in a file which conforms to the JAR file format and
 can contain Java classes, a manifest (in <code class="literal">META-INF/MANIFEST.MF</code>),
 and further resource files.</p><p>The OSGi framework enables bundles to be installed and run.</p><p>OSGi identifies bundles <span class="quote">&ldquo;<span class="quote">by name</span>&rdquo;</span> and <span class="quote">&ldquo;<span class="quote">by identifier</span>&rdquo;</span> (id).</p><p>The <span class="emphasis"><em>symbolic name</em></span> and 
@@ -54,7 +54,7 @@ can be <span class="emphasis"><em>satisfied</em></span> before the bundle runs. 
 loading.
 In OSGi, bundles and their packages do not appear on the application classpath.
 Instead, each bundle has a class loader which loads its own classes and loads classes belonging to each of its
-imported packages by deferring to the bundle class loader that exports the package.</p></div><div class="section" title="Life Cycle"><div class="titlepage"><div><div><h3 class="title"><a name="N10106"></a>Life Cycle</h3></div></div></div><p>The OSGi framework manages the <span class="emphasis"><em>life cycle</em></span> of each bundle. A bundle is
+imported packages by deferring to the bundle class loader that exports the package.</p></div><div class="section" title="Life Cycle"><div class="titlepage"><div><div><h3 class="title"><a name="N10111"></a>Life Cycle</h3></div></div></div><p>The OSGi framework manages the <span class="emphasis"><em>life cycle</em></span> of each bundle. A bundle is
 first of all <span class="emphasis"><em>install</em></span>ed and will be in the INSTALLED state.
 If a request is made to <span class="emphasis"><em>start</em></span> the bundle, the OSGi framework <span class="emphasis"><em>resolve</em></span>s the bundle
 and, if resolution was successful, will subsequently move the bundle to the ACTIVE state.
@@ -66,7 +66,7 @@ on the bundle before it was updated.
 A <span class="quote">&ldquo;<span class="quote">refresh packages</span>&rdquo;</span> operation may be performed to ripple the
 changes out to those bundles. (See <a class="xref" href="ch02s02.html#concepts.services" title="Services">Services concepts</a>.)</p><p>The life cycle of a bundle can be summarised by a state transition diagram.
 This diagram shows some more of the intermediate states of a bundle not described in the overview above:
-</p><div class="figure"><a name="N1012A"></a><p class="title"><b>Figure&nbsp;2.1.&nbsp;Bundle life cycle</b></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="images/concepts/bundle-lifecycle.png" align="middle" alt="Bundle life cycle"></div></div></div><p><br class="figure-break"></p></div><div class="section" title="Services"><div class="titlepage"><div><div><h3 class="title"><a name="concepts.services"></a>Services</h3></div></div></div><p>Bundles may publish Java objects, known as <span class="emphasis"><em>services</em></span>, 
+</p><div class="figure"><a name="N10135"></a><p class="title"><b>Figure&nbsp;2.1.&nbsp;Bundle life cycle</b></p><div class="figure-contents"><div class="mediaobject" align="center"><img src="images/concepts/bundle-lifecycle.png" align="middle" alt="Bundle life cycle"></div></div></div><p><br class="figure-break"></p></div><div class="section" title="Services"><div class="titlepage"><div><div><h3 class="title"><a name="concepts.services"></a>Services</h3></div></div></div><p>Bundles may publish Java objects, known as <span class="emphasis"><em>services</em></span>, 
 to a registry managed by the OSGi framework. Other bundles running in
 the same OSGi framework can then find and use those services. Services
 are typically instances of some shared Java interface. A bundle which
@@ -91,11 +91,11 @@ then publish this instance (as an instance of the interface <code class="literal
 </p><p>An OSGi framework publishes a number of standard services. For example, the 
 <span class="emphasis"><em>Package Admin</em></span> service provides the <span class="quote">&ldquo;<span class="quote">refresh packages</span>&rdquo;</span> life cycle operation
 mentioned above.</p><p>OSGi provides an <em class="glossterm">API</em> which can be used to publish and find services,
-but it is much simpler to use Spring DM to accomplish this. (See <a class="xref" href="ch02s03.html" title="Spring DM Concepts">Spring DM concepts</a>.)</p></div><div class="section" title="Versioning"><div class="titlepage"><div><div><h3 class="title"><a name="N10179"></a>Versioning</h3></div></div></div><p>
+but it is much simpler to use Spring DM or Blueprint to accomplish this. (See <a class="xref" href="ch02s03.html" title="Spring DM and Blueprint Concepts">Spring DM concepts</a>.)</p></div><div class="section" title="Versioning"><div class="titlepage"><div><div><h3 class="title"><a name="N10184"></a>Versioning</h3></div></div></div><p>
 	OSGi allows different versions of bundles, packages, and several
 	other entities, to co-exist in the same framework
 	and provides some mechanisms for managing these versions.
-</p><div class="section" title="Version Numbers"><div class="titlepage"><div><div><h4 class="title"><a name="N1017E"></a>Version Numbers</h4></div></div></div><p>An OSGi <span class="emphasis"><em>version number</em></span> consists of up to three numeric components, 
+</p><div class="section" title="Version Numbers"><div class="titlepage"><div><div><h4 class="title"><a name="N10189"></a>Version Numbers</h4></div></div></div><p>An OSGi <span class="emphasis"><em>version number</em></span> consists of up to three numeric components, 
 or exactly three
 numeric components followed by a string component. These components are
 separated by a period (<span class="quote">&ldquo;<span class="quote"><code class="literal">.</code></span>&rdquo;</span>) and
@@ -107,7 +107,7 @@ and a qualifier component <code class="literal">ga</code>. (There are restrictio
 a qualifier. For example: letters, digits, underscores and hyphens are allowed; periods and commas are not.)</p><p>Trailing components may be omitted along with their period (<code class="literal">.</code>). So, for example, the version
 numbers <code class="literal">2</code>, <code class="literal">2.0</code>, and <code class="literal">2.0.0</code>
 all denote the same version. This example demonstrates that <code class="literal">0</code> is assumed if a numeric component is omitted, 
-and the empty string is assumed for an omitted qualifier.</p></div><div class="section" title="Version Ranges"><div class="titlepage"><div><div><h4 class="title"><a name="N101C3"></a>Version Ranges</h4></div></div></div><p>Dependencies on bundles and packages have an associated <span class="emphasis"><em>version range</em></span>
+and the empty string is assumed for an omitted qualifier.</p></div><div class="section" title="Version Ranges"><div class="titlepage"><div><div><h4 class="title"><a name="N101CE"></a>Version Ranges</h4></div></div></div><p>Dependencies on bundles and packages have an associated <span class="emphasis"><em>version range</em></span>
 which is specified using an interval notation: a square bracket
 <span class="quote">&ldquo;<span class="quote"><code class="literal">[</code></span>&rdquo;</span> or <span class="quote">&ldquo;<span class="quote"><code class="literal">]</code></span>&rdquo;</span> denotes
 an <span class="emphasis"><em>inclusive</em></span> end of the range and a round bracket
@@ -126,7 +126,7 @@ to, <span class="emphasis"><em>but not including</em></span>, version <code clas
 </p></li><li class="listitem"><p>An <span class="quote">&ldquo;<span class="quote">unbounded</span>&rdquo;</span> version range, such as <code class="literal">1.2</code>, which
 denotes version <code class="literal">1.2</code> and <span class="emphasis"><em>all</em></span> later versions.</p></li></ul></div><p>
 
-</p></div><div class="section" title="Versioning Policies"><div class="titlepage"><div><div><h4 class="title"><a name="N10224"></a>Versioning Policies</h4></div></div></div><p>A <span class="emphasis"><em>versioning policy</em></span> is a way of using version numbers to indicate compatible
+</p></div><div class="section" title="Versioning Policies"><div class="titlepage"><div><div><h4 class="title"><a name="N1022F"></a>Versioning Policies</h4></div></div></div><p>A <span class="emphasis"><em>versioning policy</em></span> is a way of using version numbers to indicate compatible
 and incompatible changes.
 OSGi does not mandate a particular versioning policy.
 Instead, a specific versioning policy may be implemented using version ranges.</p><p>Strict and half-open version ranges are most useful in representing versioning
@@ -143,14 +143,14 @@ a version denote an incompatible change.
 Such a policy would employ version ranges such as <code class="literal">[1.2,2)</code> to capture this.</p><p>
 	The OSGi Alliance has published a <a class="ulink" href="http://www.osgi.org/wiki/uploads/Links/SemanticVersioning.pdf" target="_top">Semantic
 	Versioning white paper</a> which provides some recommendations and guidance on versioning policies.
-</p></div><div class="section" title="Bundle Version"><div class="titlepage"><div><div><h4 class="title"><a name="N10249"></a>Bundle Version</h4></div></div></div><p>Each bundle has a version.
+</p></div><div class="section" title="Bundle Version"><div class="titlepage"><div><div><h4 class="title"><a name="N10254"></a>Bundle Version</h4></div></div></div><p>Each bundle has a version.
 The bundle&rsquo;s version may be specified in the manifest using a
 <code class="literal">Bundle-Version</code> header:
 
 </p><div class="informalexample"><pre class="programlisting">Bundle-Version: 1.4.3.BUILD-20090302
 </pre></div><p>
 If not specified the bundle version is assumed to be <code class="literal">0</code>.
-</p></div><div class="section" title="Package Version"><div class="titlepage"><div><div><h4 class="title"><a name="N1025C"></a>Package Version</h4></div></div></div><p>Each exported package has a version.
+</p></div><div class="section" title="Package Version"><div class="titlepage"><div><div><h4 class="title"><a name="N10267"></a>Package Version</h4></div></div></div><p>Each exported package has a version.
 The exported package&rsquo;s version may be specified on the Export-Package manifest header. For example
 
 </p><div class="informalexample"><pre class="programlisting">Export-Package: org.foo;version="2.9",org.bar;version="1"
@@ -165,14 +165,14 @@ If interval notation is used, the version range must be enclosed in double quote
 seeks to import a package <code class="literal">org.foo</code> in the range <code class="literal">[2.0.0,3.0.0)</code> and a package
 <code class="literal">org.bar</code> with the (exact) version <code class="literal">1.0.0</code>.
 </p><p>If a version range is not specified on an import, the range <code class="literal">0</code> is assumed, meaning that 
-any version of this package would satisfy the import.</p></div><div class="section" title="Bundle Manifest Version"><div class="titlepage"><div><div><h4 class="title"><a name="N102A4"></a>Bundle Manifest Version</h4></div></div></div><p>Bundle manifests have a version which is <code class="literal">1</code> by default,
+any version of this package would satisfy the import.</p></div><div class="section" title="Bundle Manifest Version"><div class="titlepage"><div><div><h4 class="title"><a name="N102AF"></a>Bundle Manifest Version</h4></div></div></div><p>Bundle manifests have a version which is <code class="literal">1</code> by default,
 indicating OSGi Release 3 semantics.
 Virgo is based on OSGi Release 4 and therefore expects bundle manifests to be
 at version <code class="literal">2</code>, indicating OSGi Release 4 semantics.
 The bundle manifest&rsquo;s version should be specified on the Bundle-ManifestVersion manifest header, exactly as follows:
 </p><div class="informalexample"><pre class="programlisting">Bundle-ManifestVersion: 2
 </pre></div><p>
-</p></div><div class="section" title="Manifest Version"><div class="titlepage"><div><div><h4 class="title"><a name="N102B7"></a>Manifest Version</h4></div></div></div><p>Manifests themselves also have a version which <span class="emphasis"><em>must</em></span> be specified as <code class="literal">1.0</code>.
+</p></div><div class="section" title="Manifest Version"><div class="titlepage"><div><div><h4 class="title"><a name="N102C2"></a>Manifest Version</h4></div></div></div><p>Manifests themselves also have a version which <span class="emphasis"><em>must</em></span> be specified as <code class="literal">1.0</code>.
 This is not an OSGi definition but part of the 
 (<a class="ulink" href="http://java.sun.com/javase/6/docs/technotes/guides/jar/jar.html" target="_top">JAR file specification</a>).
 

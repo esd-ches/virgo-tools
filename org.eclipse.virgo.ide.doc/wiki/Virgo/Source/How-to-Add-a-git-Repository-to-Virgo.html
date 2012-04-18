@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>Source - How to Add a git Repository to Virgo</title>
+		<link type="text/css" rel="stylesheet" href="wiki/../../book.css"/>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">How to Add a git Repository to Virgo</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="wiki/How-to-Add-new-woven-project-to-Virgo.html" title="How to Add new woven project to Virgo">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="wiki/Archaeology.html" title="Archaeology">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">How to Add new woven project to Virgo</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Archaeology</td>
+			</tr>
+		</table><hr/>
+		<h1 id="How_to_Add_a_git_Repository_to_Virgo">How to Add a git Repository to Virgo</h1>
+		<p>While this information is mainly of use while the Virgo repositories are initially being populated, it may be useful later. It says how to trace back from Virgo to its origins, how to update a repository description, and what files to copy when a new repository is added. </p>
+		<p>1. Add the new repository to the git server (may require project lead privileges): </p>
+		<pre>&amp;gt;ssh &amp;lt;committer_id&amp;gt;@git.eclipse.org
+&amp;gt;initrepo /gitroot/virgo/org.eclipse.virgo.&amp;lt;reponame&amp;gt;.git
+&amp;lt;log out e.g. using Ctrl-D&amp;gt;
+</pre>
+		<p> 
+			2. Clone the new repository: </p>
+		<pre>&amp;gt;git clone ssh://&amp;lt;committer_id&amp;gt;@git.eclipse.org/gitroot/virgo/org.eclipse.virgo.&amp;lt;reponame&amp;gt;.git &amp;lt;repo dir&amp;gt;
+</pre>
+		<p> 
+			3. Create the directories of the new repository and any <tt>.gitignore</tt> file. For example: </p>
+		<pre>&amp;gt;cd &amp;lt;repo dir&amp;gt;
+&amp;gt;cp &amp;lt;source dir&amp;gt;/.gitignore .
+&amp;gt;cp -r &amp;lt;source dir&amp;gt;/o* .
+&amp;gt;cp -r &amp;lt;source dir&amp;gt;/b* .
+</pre>
+		<p>Make sure you get all the files -- some of them may not fall into these patterns.
+			4. If you are creating the new repository from an existing git repository, tag the existing repository and make a note of the tagged commit SHA. </p>
+		<pre>&amp;gt;cd &amp;lt;source dir&amp;gt;
+&amp;gt;git tag Virgo-checkin
+&amp;gt;git push origin master --tags
+&amp;gt;cd &amp;lt;repo dir&amp;gt;
+</pre>
+		<p> 
+			5. Add a submodule for Virgo build. </p>
+		<pre>&amp;gt;git submodule add git://git.eclipse.org/gitroot/virgo/org.eclipse.virgo.virgo-build.git virgo-build
+</pre>
+		<p> 
+			6. Stage all the above changes and push to master. </p>
+		<pre>&amp;gt;git add .
+&amp;gt;git commit -m "initial checkin from &amp;lt;existing repository&amp;gt; commit &amp;lt;tagged commit SHA&amp;gt;"
+&amp;gt;git push origin master
+</pre>
+		<p> 
+			7. Edit .git/description, making sure the file is a single line ending in a newline, and rsynch this (may require project lead privileges). </p>
+		<pre>&amp;gt;rsync .git/description &amp;lt;committer-id&amp;gt;@git.eclipse.org:/gitroot/virgo/org.eclipse.virgo.&amp;lt;reponame&amp;gt;.git/description
+</pre>
+		<p> 
+			8. Add the new repository to the table above.</p>
+		<p>9. Use the Foundation Portal to add the new repository to the list of source repositories in the project metadata. In particular, this 
+			<a href="wiki/https://bugs.eclipse.org/bugs/show_bug.cgi?id=332970#c16" target="doc_external">should</a> cause the repository to be mirrored on github.
+		</p>
+		<p>10. Don't forget to create 
+			<a href="wiki/http://wiki.eclipse.org/Hudson" title="Hudson" target="doc_external">Hudson</a> build jobs, if you need them, and close any bug which was tracking the creation of the new repository.
+		</p><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="wiki/How-to-Add-new-woven-project-to-Virgo.html" title="How to Add new woven project to Virgo">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center">
+					<a href="wiki/Source.html" title="Source">
+						<img alt="Source" border="0" src="../../images/home.gif"/>
+					</a>
+				</td>
+				<td style="width: 20%" align="right">
+					<a href="wiki/Archaeology.html" title="Archaeology">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">How to Add new woven project to Virgo</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Archaeology</td>
+			</tr>
+		</table>
+	</body>
+</html>

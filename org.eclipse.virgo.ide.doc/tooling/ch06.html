@@ -1,65 +1,46 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;6.&nbsp;Developing OSGi Bundles</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Eclipse Tools Guide"><link rel="up" href="index.html" title="Virgo Eclipse Tools Guide"><link rel="prev" href="ch05.html" title="Chapter&nbsp;5.&nbsp;Installation"><link rel="next" href="ch06s02.html" title="Editing the Manifest"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" title="Chapter&nbsp;6.&nbsp;Developing OSGi Bundles"><div class="titlepage"><div><div><h2 class="title"><a name="developing"></a>Chapter&nbsp;6.&nbsp;Developing OSGi Bundles</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="ch06.html#tooling-developing-resolving-bundle-dependencies">Resolving Bundle Dependencies</a></span></dt><dt><span class="section"><a href="ch06s02.html">Editing the Manifest</a></span></dt></dl></div><p>
-		The Tools provide functionality that makes developing OSGi bundles,
-		especially the editing of MANIFEST.MF files, easier.
-	</p><div class="section" title="Resolving Bundle Dependencies"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="tooling-developing-resolving-bundle-dependencies"></a>Resolving Bundle Dependencies</h2></div></div></div><p>
-			While working with OSGi bundles, one of the most interesting and
-			challenging aspects is defining
-			the package, bundle, and library imports in the manifest and then
-			keeping this in sync
-			with your compile classpath either in Ant and Maven or Eclipse. In most
-			cases you would typically
-			be required to manually set up the Eclipse classpath. Ultimately, the
-			Eclipse compile
-			classpath is still different from the bundle runtime classpath, as normally an
-			entire
-			JAR file is being made available on the Eclipse classpath but not
-			necessarily at runtime
-			due to the explicit visibility rules defined in
-			<code class="code">Import-Package</code>
-			headers.
-		</p><p>
-			The Tools address this problem by providing an Eclipse classpath
-			container that
-			uses an Virgo Tomcat Server-specific dependency resolution mechanism.
-			This classpath
-			container makes resolved dependencies available on the project&rsquo;s
-			classpath but allows
-			only access to those package that are imported explicitly (e.g., via
-			<code class="code">Import-Package</code>
-			)
-			or implicitly by using
-			<code class="code">Import-Library</code>
-			or
-			<code class="code">Import-Bundle</code>
-			.
-		</p><p>
-			To use the automatic dependency resolution, an OSGi bundle or PAR
-			project needs to be
-			targeted to a configured Virgo Tomcat Server instance. This can be done
-			from the project&rsquo;s
-			preferences by selecting the runtime on the "Targeted Runtimes" preference page.
-		</p><p>
-			</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
-				In most scenarios it is sufficient to target the PAR project to a
-				runtime. The nested
-				bundles will then automatically inherit this setting.
-			</div><p>
-		</p><p>
-			<img src="images/tooling-classpath.png">
-		</p><p>
-			After targeting the project or PAR you will see a "Bundle Dependencies"
-			classpath
-			container in your Java project. It is now safe to remove any manually
-			configured classpath
-			entries.
-		</p><p>
-			The classpath container will automatically attach Java source code to
-			the classpath
-			entries by looking for source JARs next to the binary JARs in the
-			Virgo Tomcat Server&rsquo;s
-			repository. You can also manually override the source code attachment by using
-			the
-			properties dialog on a single JAR entry. This manual attachment will always
-			override
-			the convention-based attachment.
-		</p></div></div></body></html>
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;6.&nbsp;Developing PARs</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Tools Guide"><link rel="up" href="index.html" title="Virgo Tools Guide"><link rel="prev" href="ch05s02.html" title="Editing the Manifest"><link rel="next" href="ch07.html" title="Chapter&nbsp;7.&nbsp;Deploying Applications"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" title="Chapter&nbsp;6.&nbsp;Developing PARs"><div class="titlepage"><div><div><h2 class="title"><a name="pars"></a>Chapter&nbsp;6.&nbsp;Developing PARs</h2></div></div></div><p>
+		In Virgo, applications consisting of multiple bundles can be
+		packaged as a PAR.
+	</p><p>
+		To create a PAR, right-click in the
+		<span class="emphasis"><em>Package Explorer</em></span>
+		and select
+		<span class="guimenu">New</span> &rarr; <span class="guimenuitem">Project&hellip;</span>
+		. In the dialog that opens select
+		<span class="guimenu">EclipseRT</span> &rarr; <span class="guimenuitem">PAR Project</span>
+		and press
+		<span class="emphasis"><em>Next</em></span>
+		:
+		</p><div class="mediaobject" align="center"><img src="images/new-par-project.png" align="middle"></div><p>
+	</p><p>
+		In the New PAR Project dialog, ensure the
+		<span class="emphasis"><em>Use default location</em></span>
+		option is unchecked,
+		enter a suitable name for the project, set the location to a suitable
+		directory,
+		and press
+		<span class="emphasis"><em>Next</em></span>
+		. For example, the Greenpages sample PAR project would look like this:
+		</p><div class="mediaobject" align="center"><img src="images/create-par-project.png" align="middle"></div><p>
+	</p><p>
+		In the next dialog, some of the PAR properties are pre-populated.
+		Set the Application Name and the Version as appropriate, then
+		ensure that the
+		<span class="emphasis"><em>Target Runtime</em></span>
+		is set to
+		<span class="emphasis"><em>Virgo Web Server (Runtime) ...</em></span>
+		and press
+		<span class="emphasis"><em>Next</em></span>
+		.
+		For example:
+		</p><div class="mediaobject" align="center"><img src="images/par-content.png" align="middle"></div><p>
+	</p><p>
+		In the next dialog, select the bundles so that they are contained in
+		the PAR and press
+		<span class="emphasis"><em>Finish</em></span>
+		.
+		For example:
+		</p><div class="mediaobject" align="center"><img src="images/bundle-references.png" align="middle"></div><p>
+	</p><p>
+		The PAR project is then created.
+	</p></div></body></html>

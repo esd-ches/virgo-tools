@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>Concepts - Regions</title>
+		<link type="text/css" rel="stylesheet" href="wiki/../../book.css"/>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">Regions</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="wiki/Kernel.html" title="Kernel">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="wiki/Scoping.html" title="Scoping">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Kernel</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Scoping</td>
+			</tr>
+		</table><hr/>
+		<h1 id="Regions">Regions</h1>
+		<p>The kernel uses the nested framework support in Equinox to isolate the kernel from application artifacts, including artifacts which implement servers. The Equinox support is being standardised, with some changes, in OSGi. As shown in the figure below, the kernel starts in a normal OSGi framework, known as the 
+			<i>kernel region</i>, and then creates a nested framework known as the 
+			<i>user region</i>. 
+		</p>
+		<p>
+			<img width="500" align="middle" border="0" src="images/Virgo_regions.png"/> 
+		</p>
+		<p>Region support was added to enable applications to run with a different version of Spring than that used by the kernel. A minimal set of Spring bundles is installed into the kernel region with very few optional dependencies which keeps the kernel footprint and startup time low. In principle, Spring could be entirely removed from the kernel region if the kernel was modified not to depend on Spring (most of these dependencies are because the kernel uses Spring DM to publish and find kernel services). </p>
+		<p>Certain packages and services are imported from the kernel region into the user region and certain services, but no packages, are exported from the user region to the kernel region. This isolates the kernel region from interference due to types and package wirings in the user region. The configuration file config/org.eclipse.virgo.kernel.userregion.properties controls the importing of packages and services into and the exporting of services out of the user region. </p>
+		<p>The content of the kernel region is controlled by the configuration file lib/org.eclipse.virgo.kernel.launch.properties. </p>
+		<p>So, apart from the basic principle that no packages are exported from the user region to the kernel region, there is a lot of flexibility for changing the contents of both kernel and user regions and for specifying which packages and services are shared between the regions. </p>
+		<p>In future, Virgo could be extended to support multiple user regions in order to isolate applications from each other.
+			<br/> 
+		</p><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="wiki/Kernel.html" title="Kernel">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center">
+					<a href="wiki/Concepts.html" title="Concepts">
+						<img alt="Concepts" border="0" src="../../images/home.gif"/>
+					</a>
+				</td>
+				<td style="width: 20%" align="right">
+					<a href="wiki/Scoping.html" title="Scoping">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Kernel</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Scoping</td>
+			</tr>
+		</table>
+	</body>
+</html>

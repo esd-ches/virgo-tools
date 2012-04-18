@@ -1,0 +1,9 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Using Equinox Launcher</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo User Guide"><link rel="up" href="ch07.html" title="Chapter&nbsp;7.&nbsp;Starting and Stopping Virgo Tomcat Server"><link rel="prev" href="ch07s07.html" title="Cleaning Virgo Tomcat Server without Starting it"><link rel="next" href="ch08.html" title="Chapter&nbsp;8.&nbsp;Equinox Console"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Using Equinox Launcher"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="equinox-launcher"></a>Using Equinox Launcher</h2></div></div></div><p>
+				Since version 3.5 Virgo uses the standard Equinox Launcher as its default launcher.
+				As a result in addition to all the launcher options described so far users can also pass arguments specific to the Equinox launcher.
+				</p><div class="important" title="Important" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Important</h3>The Equinox Launcher arguments must be placed at the end of the startup call. Here's an example
+				<pre class="screen">./startup.sh "virgo-args" "equinox-launcher-args"
+./startup.sh -clean -console 2222</pre></div><p>
+		    </p><p>
+				A full list of the accepted Equinox Launcher arguments is available at <a class="ulink" href="http://help.eclipse.org/indigo/index.jsp?topic=%2Forg.eclipse.platform.doc.isv%2Freference%2Fmisc%2Fruntime-options.html" target="_top">help.eclipse.org</a>.
+			</p></div></body></html>

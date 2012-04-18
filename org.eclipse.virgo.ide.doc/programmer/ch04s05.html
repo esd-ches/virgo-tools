@@ -1,13 +1,5 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Using Spring and Spring DM</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="ch04.html" title="Chapter&nbsp;4.&nbsp;Developing Applications"><link rel="prev" href="ch04s04.html" title="Creating and Using Configuration Artifacts"><link rel="next" href="ch04s06.html" title="Programmatic Access to the Servlet Context"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Using Spring and Spring DM"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="using-spring"></a>Using Spring and Spring DM</h2></div></div></div><p>
-			Virgo supports the use of Spring framework and Spring DM (specifically version 1.2.1) by application bundles.
-			For detailed information, please refer to the
-			<a class="ulink" href="http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/" target="_top">
-				Spring Framework Reference Documentation
-			</a>
-			and the
-			<a class="ulink" href="http://static.springframework.org/osgi/docs/current/reference/html/" target="_top">
-				Spring Dynamic Modules Reference Guide
-			</a>.
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Using Spring, Spring DM, and Blueprint</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="ch04.html" title="Chapter&nbsp;4.&nbsp;Developing Applications"><link rel="prev" href="ch04s04.html" title="Creating and Using Configuration Artifacts"><link rel="next" href="ch04s06.html" title="Programmatic Access to the Servlet Context"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Using Spring, Spring DM, and Blueprint"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="using-spring"></a>Using Spring, Spring DM, and Blueprint</h2></div></div></div><p>
+			Virgo supports the use of Spring framework and Spring DM (as supported by Gemini Blueprint) by application bundles.
 		</p><p>
 			Spring (and Spring DM) application context XML files should generally be placed in a bundle's <code class="literal">META-INF/spring</code> directory, but
 			for a web application, these files must be placed in the <code class="literal">WEB-INF</code> directory.
@@ -30,4 +22,8 @@
 		&lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
 	&lt;/listener&gt;
 </pre><p>
+		</p><p>
+			Virgo has Gemini Blueprint built-in and thereby supports the OSGi Blueprint standard in addition to Spring DM.
+		</p><p>
+			For detailed information on Spring Framework, Spring DM, and Blueprint, please see <a class="xref" href="ch01s02.html" title="References">References</a>.
 		</p></div></body></html>

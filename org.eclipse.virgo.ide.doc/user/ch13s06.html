@@ -1,0 +1,171 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Configuring the Kernel and User Region</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo User Guide"><link rel="up" href="ch13.html" title="Chapter&nbsp;13.&nbsp;Configuration"><link rel="prev" href="ch13s05.html" title="Configuring a Hosted Repository"><link rel="next" href="ch13s07.html" title="Configuring the Embedded Tomcat Servlet Container"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Configuring the Kernel and User Region"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="configuring-kernel"></a>Configuring the Kernel and User Region</h2></div></div></div><p>This section provides information about configuring the Virgo kernel and the User Region.</p><div class="section" title="Configuring the Kernel"><div class="titlepage"><div><div><h3 class="title"><a name="configuring-kernel-properties"></a>Configuring the Kernel</h3></div></div></div><p>To change any of the kernel properties, provide the new value to the startup script. The following table describes all properties.</p><div class="table"><a name="configuring-kernel-table"></a><p class="title"><b>Table&nbsp;13.7.&nbsp;Kernel Configuration Properties</b></p><div class="table-contents"><table summary="Kernel Configuration Properties" border="1"><colgroup><col><col><col></colgroup><thead><tr><th>
+								Property (prefixed by <code class="literal">org.eclipse.virgo</code>)
+							</th><th>
+								Description
+							</th><th>
+								Default Value
+							</th></tr></thead><tbody><tr><td>
+								<code class="literal">.kernel.home</code>
+							</td><td>
+								Specifies the location of the Virgo Kernel.
+							</td><td>
+								<code class="literal">$SERVER_HOME</code>
+							</td></tr><tr><td>
+								<code class="literal">.kernel.config</code>
+							</td><td>
+								Specifies the location of the Virgo Kernel and User Region <a class="link" href="ch13s06.html#configuring-kernel-files" title="Configuration Files">configuration files</a>. 		
+								The location of the configuration files can also be specified using
+								<a class="link" href="ch07s05.html" title="Starting with a Custom Configuration Directory"><code class="literal">-configDir</code> startup parameter</a>.
+							</td><td>
+								<code class="literal">$SERVER_HOME/configuration</code>
+							</td></tr><tr><td>
+								<code class="literal">.kernel.domain</code>
+							</td><td>
+								Specifies the <a class="ulink" href="http://download.oracle.com/javase/6/docs/api/javax/management/ObjectName.html" target="_top">JMX domain</a> that should be
+								used by the Virgo Kernel.
+							</td><td>
+								<code class="literal">org.eclipse.virgo.kernel</code>
+							</td></tr><tr><td>
+								<code class="literal">.kernel.startup.wait.limit</code>
+							</td><td>
+								Specifies the amount of time, in seconds, after which various operations time out out while trying to start the kernel.
+								See <a class="link" href="ch13.html#configuring-framework-properties" title="Configuring OSGi Framework Properties">Configuring OSGi Framework Properties</a> for the recommended way
+								to configure this parameter.
+							</td><td><code class="literal">180</code>
+							</td></tr></tbody></table></div></div><br class="table-break"></div><div class="section" title="Configuration Files"><div class="titlepage"><div><div><h3 class="title"><a name="configuring-kernel-files"></a>Configuration Files</h3></div></div></div><p>The configuration of the Virgo Kernel and User Region by default is located in the <code class="literal">$SERVER_HOME/configuration</code> directory:</p><div class="table"><a name="configuring-kernel-files-table"></a><p class="title"><b>Table&nbsp;13.8.&nbsp;Kernel Configuration Files </b></p><div class="table-contents"><table summary="Kernel Configuration Files " border="1"><colgroup><col><col></colgroup><thead><tr><th>Property File</th><th>Description</th></tr></thead><tbody><tr><td><code class="literal">org.eclipse.virgo.kernel.properties</code></td><td>Configures <a class="link" href="ch13s06.html#configuring-deployment" title="Configuring Deployment">deployment</a>. </td></tr><tr><td><code class="literal">org.eclipse.virgo.kernel.userregion.properties</code></td><td>Configures the <a class="link" href="ch13s06.html#configuring-user-region" title="Configuring the User Region">User Region</a> of Virgo.</td></tr><tr><td><code class="literal">org.eclipse.virgo.kernel.users.properties</code></td><td>Configures the <a class="link" href="ch13s06.html#configuring-authentication" title="Configuring Authentication">users that are allowed to access</a> the Admin Console, and roles to which they map. </td></tr><tr><td><code class="literal">org.eclipse.virgo.kernel.jmxremote.access.properties</code></td><td>Configures the <a class="link" href="ch13s06.html#configuring-authentication" title="Configuring Authentication">permissions for users</a> that are allowed to access the Admin Console. </td></tr><tr><td><code class="literal">org.eclipse.virgo.kernel.authentication.config</code></td><td>Configures the <a class="link" href="ch13s06.html#configuring-authentication" title="Configuring Authentication">Java Authentication and Authorization Service (JAAS)</a> for the Tomcat server users.</td></tr><tr><td><code class="literal">osgi.console.ssh.properties</code></td><td>Configures the kernel SSH console. See <a class="xref" href="ch08.html#admin-shell-enable" title="Enabling the Equinox Console">Enabling the Equinox Console</a>.</td></tr><tr><td><code class="literal">osgi.console.telnet.properties</code></td><td>Configures the kernel telnet console. See <a class="xref" href="ch08.html#admin-shell-enable" title="Enabling the Equinox Console">Enabling the Equinox Console</a>.</td></tr></tbody></table></div></div><br class="table-break"></div><div class="section" title="Configuring Deployment"><div class="titlepage"><div><div><h3 class="title"><a name="configuring-deployment"></a>Configuring Deployment</h3></div></div></div><p>You can configure two properties of deployment: the pickup directory into which you copy applications for hot-deployment and the deployment timeout.  </p><p>To change any of these properties, edit the <code class="literal">deployer.XXX</code> properties of the <code class="literal">$SERVER_HOME/configuration/org.eclipse.virgo.kernel.properties</code> file.  The following table describes these properties.  </p><div class="table"><a name="configuring-deployment-table"></a><p class="title"><b>Table&nbsp;13.9.&nbsp;Deployment Configuration Properties</b></p><div class="table-contents"><table summary="Deployment Configuration Properties" border="1"><colgroup><col><col><col></colgroup><thead><tr><th>
+						Property
+					</th><th>
+						Description
+					</th><th>
+						Default Value
+					</th></tr></thead><tbody><tr><td>
+						<code class="literal">deployer.pickupDirectory</code>
+					</td><td>
+						Specifies the absolute or relative path to the pickup directory to which you copy applications for hot-deployment.
+						Relative paths are relative to <code class="literal">$SERVER_HOME</code>.
+					</td><td>
+						<code class="literal">./pickup</code>
+					</td></tr><tr><td>
+						<code class="literal">deployer.timeout</code>
+					</td><td>
+						Specifies the amount of time, in seconds, after which Virgo times out while trying to deploy an artifact.
+						If you want to disable deployment timeout, specify <code class="literal">0</code>.
+					</td><td>
+						  <code class="literal">300</code>  
+					</td></tr></tbody></table></div></div><br class="table-break"><p>The following listing displays the default configuration distributed with Virgo; only relevant sections of the <code class="literal">org.eclipse.virgo.kernel.properties</code> file are shown. </p><pre class="programlisting">deployer.timeout=300
+deployer.pickupDirectory=pickup</pre><p>So the default deployment timeout is 300 seconds and the default pickup directory is <code class="literal">$SERVER_HOME/pickup</code>.
+            </p></div><div class="section" title="Configuring the User Region"><div class="titlepage"><div><div><h3 class="title"><a name="configuring-user-region"></a>Configuring the User Region</h3></div></div></div><p>
+			The User Region is the subsystem of Virgo that
+			supports deployed applications, both your own user applications and
+			those of the server itself, such as the Admin Console. The User Region
+			is deliberately isolated from the kernel, which protects the kernel from interference by applications.
+		</p><p>
+			You configure the User Region by updating properties in the
+			<code class="literal">$SERVER_HOME/configuration/org.eclipse.virgo.kernel.userregion.properties</code>
+			file; these properties are described in the following table.  
+		</p><p>
+			<span class="bold"><strong>WARNING:</strong></span>
+			We strongly recommend that you update only the
+			<code class="literal">initialArtifacts</code>
+			property; updating other properties could cause
+			Virgo to fail. These properties are documented for your
+			information.
+		</p><div class="table"><a name="configuring-user-region-table"></a><p class="title"><b>Table&nbsp;13.10.&nbsp;User Region Configuration Properties</b></p><div class="table-contents"><table summary="User Region Configuration Properties" border="1"><colgroup><col><col></colgroup><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody><tr><td><code class="literal">baseBundles</code></td><td>Specifies the hard-coded list of bundles that Virgo installs directly into the User Region.
+					Virgo does not perform any automatic dependency satisfaction for these bundles; in other words, you only get the bundles
+					in the list and nothing more. </td></tr><tr><td><code class="literal">bundleImports</code></td><td>
+					<p>
+						Specifies the bundles in the kernel that Virgo imports into the User Region so that they are visible to bundles in the User Region.
+						This property supports an optional <code class="literal">bundle-version</code> attribute which specifies a version range.
+						By default only the system bundle is imported.
+					</p>
+					<p>
+						Note that packages exported by these bundles are <span class="emphasis"><em>not</em></span> automatically made available in the User Region: these must be specified using the
+						<code class="literal">packageImports</code> property.
+					</p>
+				</td></tr><tr><td><code class="literal">packageImports</code></td><td>
+					<p>
+						Specifies the packages in the kernel that Virgo imports into the User Region so that they are in turn available to be
+						imported by bundles in the User Region.
+						This property supports a <code class="literal">.*</code> wildcard which is expanded based on the packages available in the kernel
+						when the User Region is created.
+						For example, <code class="literal">org.eclipse.virgo.util.*</code> will import all packages that start with
+						<code class="literal">org.eclipse.virgo.util.</code> (but <span class="emphasis"><em>not</em></span> the package <code class="literal">org.eclipse.virgo.util</code>
+						which would need to be specified separately to be imported).
+					</p>
+					<p>
+						The property also supports matching attributes such as <code class="literal">version</code>, <code class="literal">bundle-symbolic-name</code>,
+				 		<code class="literal">bundle-version</code>, and user-defined attributes. This can be used to import all the packages of a bundle imported using the
+						<code class="literal">bundleImports</code> property.
+						For example the following imports all the packages of the system bundle:
+						</p><pre class="programlisting">packageImports=*;bundle-symbolic-name="org.eclipse.osgi",\
+ ...</pre><p>
+						Note that if a package is specified more than once in <code class="literal">packageImports</code>, the last occurrence is used and the earlier
+						occurrences are ignored.
+						For this reason, it is recommended that imports specifying matching attributes are placed earlier in the list than other imports so that
+						if an import is	specified with and without matching attributes, the form without the matching attributes is used.
+					</p>
+				</td></tr><tr><td><code class="literal">serviceImports</code></td><td>Specifies the services in the kernel that are imported into the User Region so they are available to bundles in the User Region.  </td></tr><tr><td><code class="literal">serviceExports</code></td><td>Specifies the services in the User Region that are exported to the kernel so they are available to bundles in the kernel.  </td></tr><tr><td><code class="literal">initialArtifacts</code></td><td>
+					<p>
+						Specifies the artifacts that Virgo deploys into the User Region when the server starts.
+						Virgo performs dependency satisfaction when it deploys these artifacts.
+						This means that you only need to list the top-level artifacts that you care about; Virgo automatically installs,
+						from the repository, any other artifacts upon which they depend.
+					</p>
+					<p>
+						The artifacts are specified as a comma separated list of URI strings of the form:
+						</p><pre class="programlisting">repository://type/name[/version]</pre><p>
+						where <code class="literal">type</code> is the artifact type (e.g. "plan", "par", "bundle",
+						"configuration"), <code class="literal">name</code> is the (symbolic) name of the artifact, and, optionally,
+						<code class="literal">version</code> is the version of the artifact.
+						If <code class="literal">version</code> is omitted and there is at least one artifact in the repository with the given type and name, then the
+						artifact with the highest version is selected.
+						So, for example, the following entries are valid:
+						</p><pre class="programlisting">initialArtifacts=...,\
+ repository://plan/APlan,\
+ repository://bundle/ABundle/1.0</pre><p>
+					</p>
+				</td></tr></tbody></table></div></div><br class="table-break"><div class="section" title="Configurating User Region Consoles"><div class="titlepage"><div><div><h4 class="title"><a name="configuring-user-region-consoles"></a>Configurating User Region Consoles</h4></div></div></div><p>The configuration of the User Region consoles is located by default in the <code class="literal">$SERVER_HOME/repository/ext</code> directory:</p><div class="table"><a name="configuring-user-region-consoles-table"></a><p class="title"><b>Table&nbsp;13.11.&nbsp;User Region Console Configuration Files </b></p><div class="table-contents"><table summary="User Region Console Configuration Files " border="1"><colgroup><col><col></colgroup><thead><tr><th>Property File</th><th>Description</th></tr></thead><tbody><tr><td><code class="literal">osgi.console.ssh.properties</code></td><td>Configures the User Region SSH console. See <a class="xref" href="ch08.html#admin-shell-enable" title="Enabling the Equinox Console">Enabling the Equinox Console</a>.</td></tr><tr><td><code class="literal">osgi.console.telnet.properties</code></td><td>Configures the User Region telnet console. See <a class="xref" href="ch08.html#admin-shell-enable" title="Enabling the Equinox Console">Enabling the Equinox Console</a>.</td></tr></tbody></table></div></div><br class="table-break"></div></div><div class="section" title="Configuring Authentication"><div class="titlepage"><div><div><h3 class="title"><a name="configuring-authentication"></a>Configuring Authentication</h3></div></div></div><p>
+		Virgo uses the
+		<a class="ulink" href="http://java.sun.com/javase/6/docs/technotes/guides/security/jaas/JAASRefGuide.html" target="_top">Java Authentication and Authorization Service (JAAS)</a>
+		framework to authenticate the administration user that connects to Web
+		Servers using the Admin Console. This section describes
+		how the authentication mechanism is configured by default, and the
+		files that you need to update if you want to change the administration
+		user, change their password, and so on.
+	</p><p>The <code class="literal">$SERVER_HOME/configuration/org.eclipse.virgo.kernel.authentication.config</code> file configures the underlying authentication technology for Virgo.  The short file consists of the following entries:</p><pre class="programlisting">virgo-kernel {
+        org.eclipse.virgo.kernel.authentication.KernelLoginModule REQUIRED;
+};
+equinox_console {
+	org.eclipse.virgo.kernel.authentication.KernelLoginModule REQUIRED;
+};</pre><p>The entry named <code class="literal">virgo-kernel</code> corresponds to the <code class="literal">&lt;Realm&gt;</code> element in the <code class="literal">$SERVER_HOME/configuration/tomcat-server.xml</code> file that configures the JAAS authentication mechanism for the <code class="literal">Catalina</code> service of the <a class="link" href="ch13s07.html" title="Configuring the Embedded Tomcat Servlet Container">Tomcat servlet container</a>.  The <code class="literal">virgo-kernel</code> entry specifies that the JAAS LoginModule that Virgo uses to authenticate users is <code class="literal">org.eclipse.virgo.kernel.authentication.KernelLoginModule</code> and that this <code class="literal">KernelLoginModule</code> is required to "succeed" in order for authentication to be considered successful. The <code class="literal">KernelLoginModule</code> succeeds only if the name and password supplied by the user are the ones it expects.  The default administration username/password pair for VTS is <code class="literal">admin/springsource</code>. </p><p>
+			The entry named <code class="literal">equinox_console</code> controls ssh authentication for the Virgo shell. It also uses the <code class="literal">KernelLoginModule</code>.
+		</p><p>You configure the administration user in the <code class="literal">org.eclipse.virgo.kernel.users.properties</code> file.  The default file for a freshly installed Virgo is as follows:</p><pre class="programlisting">##################
+# User definitions
+##################
+user.admin=springsource
+
+##################
+# Role definitions
+##################
+role.admin=admin</pre><p>
+		The administration user that connect to the Admin Console must have the
+		<code class="literal">admin</code>
+		role. The preceding file shows how, by default, the
+		<code class="literal">admin</code>
+		role is assigned the
+		<code class="literal">admin</code>
+		user with password
+		<code class="literal">springsource</code>.
+	</p><p>If you want to change the administration user, update the <code class="literal">org.eclipse.virgo.kernel.users.properties</code> file.  For example, if you want the <code class="literal">juliet</code> user, with password <code class="literal">supersecret</code>, to be the new adminstration user, update the file as shown:</p><pre class="programlisting">##################
+# User definitions
+##################
+user.juliet=supersecret
+
+##################
+# Role definitions
+##################
+role.admin=juliet</pre><p>Be sure to restart Virgo after you make this change for it to take effect.</p><p>The final file involved in Virgo authentication is <code class="literal">$SERVER_HOME/configuration/org.eclipse.virgo.kernel.jmxremote.access.properties</code>.  This file specifies the JMX access privileges that the administration user has; by default they are read and write, as shown in the following listing:</p><pre class="programlisting">admin=readwrite</pre><p>
+		The only other value you can enter is
+		<code class="literal">readonly</code>, which means that the adminstration user would only be able to <span class="emphasis"><em>view</em></span>
+		information using the Admin Console.
+	</p></div></div></body></html>

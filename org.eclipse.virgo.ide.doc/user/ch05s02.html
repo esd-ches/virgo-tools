@@ -1,12 +1,17 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Starting in Clean Mode</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo User Guide"><link rel="up" href="ch05.html" title="Chapter&nbsp;5.&nbsp;Starting and Stopping Virgo Tomcat Server"><link rel="prev" href="ch05.html" title="Chapter&nbsp;5.&nbsp;Starting and Stopping Virgo Tomcat Server"><link rel="next" href="ch05s03.html" title="Starting in Debug Mode"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Starting in Clean Mode"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="N10544"></a>Starting in Clean Mode</h2></div></div></div><p>
-			When you start Virgo Tomcat Server in clean mode, the startup script removes the <code class="literal">SERVER_HOME/work</code> directory (and hence all
-			running applications) as well as all trace, log and dump files.  It leaves the
-			<code class="literal">SERVER_HOME/repository</code> and <code class="literal">SERVER_HOME/pickup</code> directories untouched,
-			which means that any applications previously hot deployed will be automatically reinstalled.
-	    </p><div class="section" title="Linux"><div class="titlepage"><div><div><h3 class="title"><a name="N10555"></a>Linux</h3></div></div></div><p>
-	        To start Virgo Tomcat Server in clean mode, open a terminal window and run <code class="literal">startup.sh -clean</code>:
-	      </p><pre class="screen">prompt$ cd $SERVER_HOME
-prompt$ bin/startup.sh -clean </pre></div><div class="section" title="Microsoft Windows"><div class="titlepage"><div><div><h3 class="title"><a name="N10561"></a>Microsoft Windows</h3></div></div></div><p>
-	        To start Virgo Tomcat Server in clean mode, open a command window and run <code class="literal">startup.bat -clean</code>:
-	      </p><pre class="screen">prompt&gt; cd %SERVER_HOME%
-prompt&gt; bin\startup.bat -clean</pre></div></div></body></html>
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Installing from the ZIP Download</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo User Guide"><link rel="up" href="ch05.html" title="Chapter&nbsp;5.&nbsp;Installing Virgo Kernel"><link rel="prev" href="ch05.html" title="Chapter&nbsp;5.&nbsp;Installing Virgo Kernel"><link rel="next" href="ch05s03.html" title="Installing from an update site"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Installing from the ZIP Download"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="kernel-installation-zip"></a>Installing from the ZIP Download</h2></div></div></div><div class="section" title="Downloading the ZIP file"><div class="titlepage"><div><div><h3 class="title"><a name="N105BA"></a>Downloading the ZIP file</h3></div></div></div><p>
+				Virgo Kernel is distributed as a ZIP file. This can be downloaded from 
+				<a class="ulink" href="http://www.eclipse.org/virgo/download/" target="_top">here</a>.
+			</p></div><div class="section" title="Installing"><div class="titlepage"><div><div><h3 class="title"><a name="kernel-installation-zip-installing"></a>Installing</h3></div></div></div><div class="section" title="Linux"><div class="titlepage"><div><div><h4 class="title"><a name="kernel-installation-zip-installing-linux"></a>Linux</h4></div></div></div><p>
+					To install the Virgo Kernel on Linux, unzip the distribution package to the desired installation directory. 
+					For example, to install into <code class="literal">/opt</code>:
+				</p><pre class="screen">prompt$ unzip virgo-kernel-1.0.0.zip -d /opt</pre><p>
+					This creates a directory called <code class="literal">virgo-kernel-1.0.0</code> under <code class="literal">/opt</code>.
+				</p><p>
+					Virgo Kernel requires write access to the installation directory, in this case <code class="literal">/opt/virgo-kernel-1.0.0</code>.
+					Typically this means it must be run as the user that installed it, or the installation directory&rsquo;s ownership must be changed.
+				</p></div><div class="section" title="Microsoft Windows"><div class="titlepage"><div><div><h4 class="title"><a name="kernel-installation-zip-installing-win"></a>Microsoft Windows</h4></div></div></div><p>
+					To install the Virgo Kernel on Windows, unzip the distribution package to the desired installation directory.
+					You should use a zip application such as 7zip, not the built-in folder decompression.  Note that both Windows and
+					Java have some issues with long file names and file paths, so we recommend installing to the root directory of
+					your chosen drive.
+				</p></div></div></div></body></html>

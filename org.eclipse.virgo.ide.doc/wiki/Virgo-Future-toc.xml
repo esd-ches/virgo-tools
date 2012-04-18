@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<toc topic="wiki/Virgo/Future/Future.html" label="Future">
+	<topic href="wiki/Virgo/Future/Future.html" label="Virgo Plan">
+		<topic href="wiki/Virgo/Future/Future.html#3.0.0_.28Maya.29_Release" label="3.0.0 (Maya) Release">
+			<topic href="wiki/Virgo/Future/Future.html#Required_CQs" label="Required CQs"></topic>
+		</topic>
+		<topic href="wiki/Virgo/Future/Future.html#3.5.0_.28Bondi.29_Release" label="3.5.0 (Bondi) Release">
+			<topic href="wiki/Virgo/Future/Future.html#Required_CQs_2" label="Required CQs"></topic>
+		</topic>
+		<topic href="wiki/Virgo/Future/Future.html#Nice_to_Have" label="Nice to Have"></topic>
+		<topic href="wiki/Virgo/Future/Future.html#Future_Releases" label="Future Releases"></topic>
+		<topic href="wiki/Virgo/Future/Future.html#Release_Branding" label="Release Branding"></topic>
+	</topic>
+	<topic href="wiki/Virgo/Future/Future-Features.html" label="Future Features">
+		<topic href="wiki/Virgo/Future/Future-Features.html#Jetty_Support" label="Jetty Support"></topic>
+	</topic>
+	<topic href="wiki/Virgo/Future/Prototypes.html" label="Prototypes">
+		<topic href="wiki/Virgo/Future/Prototypes.html#Snaps" label="Snaps"></topic>
+		<topic href="wiki/Virgo/Future/Prototypes.html#OSGi_Explorer" label="OSGi Explorer"></topic>
+	</topic>
+	<topic href="wiki/Virgo/Future/Updating-This-Document.html" label="Updating This Document"></topic>
+</toc>

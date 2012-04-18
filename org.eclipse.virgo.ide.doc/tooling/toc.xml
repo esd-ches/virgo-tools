@@ -1,1 +1,58 @@
-<toc topic="tooling/index.html" label="Virgo Eclipse Tools Guide"><topic href="tooling/ch01.html" label="Tooling"></topic><topic href="tooling/ch02.html" label="Installation"></topic><topic href="tooling/ch03.html" label="Running a Virgo Tomcat Server Instance Within Eclipse"></topic><topic href="tooling/ch04.html" label="Bundle and Library Provisioning"></topic><topic href="tooling/ch05.html" label="Installation"><topic href="tooling/ch05.html#N10103" label=""></topic></topic><topic href="tooling/ch06.html" label="Developing OSGi Bundles"><topic href="tooling/ch06.html#tooling-developing-resolving-bundle-dependencies" label="Resolving Bundle Dependencies"></topic><topic href="tooling/ch06s02.html" label="Editing the Manifest"></topic></topic><topic href="tooling/ch07.html" label="Developing PARs"></topic><topic href="tooling/ch08.html" label="Deploying Applications"></topic></toc>
+<toc topic="tooling/index.html" label="Virgo Tools Guide">
+	<topic href="tooling/ch01.html" label="Tooling"></topic>
+	<topic href="tooling/ch02.html" label="What's New">
+		<topic href="tooling/ch02.html#1.0.0_M3" label="1.0.0 M3"></topic>
+		<topic href="tooling/ch02s02.html" label="Improved Server Support"></topic>
+		<topic href="tooling/ch02s03.html" label="Documentation and Help"></topic>
+		<topic href="tooling/ch02s04.html" label="Installation Process"></topic>
+		<topic href="tooling/ch02s05.html" label="Quality"></topic>
+	</topic>
+	<topic href="tooling/ch03.html"
+		label="Running a Virgo Tomcat Server Instance Within Eclipse"></topic>
+	<topic href="tooling/ch04.html" label="Bundle and Library Provisioning"></topic>
+	<topic href="tooling/ch05.html" label="Developing OSGi Bundles">
+		<topic
+			href="tooling/ch05.html#tooling-developing-resolving-bundle-dependencies"
+			label="Resolving Bundle Dependencies"></topic>
+		<topic href="tooling/ch05s02.html" label="Editing the Manifest"></topic>
+	</topic>
+	<topic href="tooling/ch06.html" label="Developing PARs"></topic>
+	<topic href="tooling/ch07.html" label="Deploying Applications"></topic>
+	<topic href="tooling/ch08.html" label="Installation and Release Notes">
+		<topic href="tooling/ch08.html#Features" label="Features"></topic>
+		<topic href="tooling/ch08s02.html" label="Installation">
+			<topic href="tooling/ch08s02.html#Install_Eclipse" label="Install Eclipse"></topic>
+			<topic href="tooling/ch08s02.html#Install_Virgo" label="Install Virgo"></topic>
+			<topic href="tooling/ch08s02.html#Update_Sites" label="Update Sites"></topic>
+		</topic>
+		<topic href="tooling/ch08s03.html" label="Known Issues">
+			<topic href="tooling/ch08s03.html#Milestone_M3_.28Current.29"
+				label="Milestone M3 (Current)"></topic>
+			<topic href="tooling/ch08s03.html#Milestone_M2" label="Milestone M2">
+				<topic href="tooling/ch08s03.html#Version_Compatibility"
+					label="Version Compatibility"></topic>
+			</topic>
+		</topic>
+		<topic href="tooling/ch08s04.html" label="Notes">
+			<topic href="tooling/ch08s04.html#Web_Application_Bundles"
+				label="Web Application Bundles"></topic>
+			<topic href="tooling/ch08s04.html#Bundlor" label="Bundlor"></topic>
+			<topic href="tooling/ch08s04.html#PDE.2FEquinox_Bundles_not_supported_yet"
+				label="PDE/Equinox Bundles not supported yet"></topic>
+		</topic>
+		<topic href="tooling/ch08s05.html" label="Migration">
+			<topic href="tooling/ch08s05.html#Fron_Pre_M2_to_M3" label="Fron Pre M2 to M3">
+				<topic href="tooling/ch08s05.html#Server_Versions" label="Server Versions"></topic>
+			</topic>
+			<topic
+				href="tooling/ch08s05.html#From_Spring_Source_and_Virgo_2.x_Tooling"
+				label="From Spring Source and Virgo 2.x Tooling"></topic>
+		</topic>
+		<topic href="tooling/ch08s06.html" label="Maven plugin">
+			<topic href="tooling/ch08s06.html#Build" label="Build"></topic>
+			<topic href="tooling/ch08s06.html#Goals" label="Goals"></topic>
+			<topic href="tooling/ch08s06.html#Simple_example_POM" label="Simple example POM"></topic>
+		</topic>
+		<topic href="tooling/ch08s07.html" label="Importing Virgo Projects into Eclipse"></topic>
+	</topic>
+</toc>

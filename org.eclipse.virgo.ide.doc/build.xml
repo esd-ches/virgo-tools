@@ -9,23 +9,11 @@
 
 
 <project name="build-eclipse-documentation" default="build-all-books" basedir=".">
-
-	<macrodef name="git">
-		<attribute name="command" />
-		<attribute name="dir" default="" />
-		<element name="args" optional="true" />
-		<sequential>
-			<echo message="git @{command}" />
-			<exec executable="git" dir="@{dir}">
-				<arg value="@{command}" />
-				<args />
-			</exec>
-		</sequential>
-	</macrodef>
 	
 	<property name="bundle.version" value="1.0.0" />
 	<!--Assumes that documentation git repos is parallel to virgo.ide location. This will break on Hudson! We should replace with ant git.-->
 	<property name="virgo.docs.dir" value="../../org.eclipse.virgo.documentation" />
+	<property name="wiki.docs.dir" value="${virgo.docs.dir}/wiki-guide" />
 
 	<property name="book" value="tooling" />
 	<property name="current-loc" location="." />
@@ -65,6 +53,19 @@
 	<property name="fop.url" value="http://www.apache.org/dist//xmlgraphics/fop/binaries/fop-${fop.version}-bin.zip" />
 	<property name="jai.dir" value="ENTER_JAI_DIRECTORY" />
 
+	<macrodef name="git">
+		<attribute name="command" />
+		<attribute name="dir" default="" />
+		<element name="args" optional="true" />
+		<sequential>
+			<echo message="git @{command}" />
+			<exec executable="git" dir="@{dir}">
+				<arg value="@{command}" />
+				<args />
+			</exec>
+		</sequential>
+	</macrodef>
+	
 	<target name="init">
 		<mkdir dir="${download.dir}" />
 	</target>
@@ -144,7 +145,7 @@
 		<xinclude in="${temp.dir}/${book}/virgo-${book}-guide.xml" out="${temp.dir}/${book}/_combined.xml" />
 	</target>
 
-	<target name="build-book" depends="init, get-docbook-xsl, get-fop, get-extra-styles, copy-book, merge-book">
+	<target name="build-book" depends="init, get-docbook-xsl, get-fop, get-extra-styles, clean-book, copy-book, merge-book">
 		<echo>Building documentation into: ${basedir}/${book}</echo>
 		<copy todir="${basedir}/${book}" file="${current-loc}/styles/book.css" />
 		<xslt force="true" in="${temp.dir}/${book}/_combined.xml" out="${basedir}/${book}/test.xml" style="${docbook.dir}/eclipse/eclipsehelp.xsl">
@@ -162,17 +163,30 @@
 		<replace file="${basedir}/${book}/toc.xml" token="href=&quot;" value="href=&quot;${book}/" />
 		<replace file="${basedir}/${book}/toc.xml" token="topic=&quot;" value="topic=&quot;${book}/" />
 	</target>
+	
+	<fileset id="virgo.files" dir="${wiki.docs.dir}" erroronmissingdir="true">
+		<include name="*toc.xml" />
+		<include name="Virgo/**/**" />
+	</fileset>
+	
+	<fileset id="virgo.target.files" dir="${basedir}/wiki" erroronmissingdir="true">
+		<include name="*toc.xml" />
+		<include name="Virgo/**/**" />
+	</fileset>
 
 	<target name="build-all-books" depends="clean-temp">
-		<antcall target="build-book">
-			<param name="book" value="tooling" />
-		</antcall>
-		<antcall target="build-book">
-			<param name="book" value="user" />
-		</antcall>
-		<antcall target="build-book">
-			<param name="book" value="programmer" />
-		</antcall>
+		<copy todir="wiki">
+			<fileset refid="virgo.files"/>
+		</copy>
+		<replace token="href=&quot;" value="href=&quot;wiki/">
+			<fileset refid="virgo.target.files"/>
+		</replace>
+		<replace token="toc=&quot;" value="toc=&quot;wiki/">
+			<fileset refid="virgo.target.files"/>
+		</replace>
+		<replace token="topic=&quot;" value="topic=&quot;wiki/">
+			<fileset refid="virgo.target.files"/>
+		</replace>
 		<delete dir="${temp.dir}" />
 	</target>
 </project>

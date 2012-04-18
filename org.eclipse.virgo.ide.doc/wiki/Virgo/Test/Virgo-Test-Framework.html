@@ -1,0 +1,146 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>Test - Virgo Test Framework</title>
+		<link type="text/css" rel="stylesheet" href="wiki/../../book.css"/>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">Virgo Test Framework</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="wiki/Test.html" title="Test">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="wiki/build-properties.html" title="build.properties">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Test</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">build.properties</td>
+			</tr>
+		</table><hr/>
+		<h1 id="Virgo_Test_Framework">Virgo Test Framework</h1>
+		<p>The 
+			<i>Virgo Test Framework</i> is designed to ease the construction of integration tests that require an OSGi framework. It is maintained in its own 
+			<a href="wiki/http://wiki.eclipse.org/Virgo/Source#Virgo_git_Repositories" title="Virgo/Source#Virgo_git_Repositories" target="doc_external">git repository</a>. It is fairly primitive, providing just two test runners and an annotation.
+		</p>
+		<h2 id="Test_Runners">Test Runners</h2>
+		<p>The test framework provides the following test runners. </p>
+		<h3 id="OsgiTestRunner">OsgiTestRunner</h3>
+		<p>The OsgiTestRunner is for testing components that need a simple OSGi environment. It is invoked via the JUnit @RunWith class annotation, for example: </p>
+		<pre>import org.junit.runner.RunWith;
+import org.eclipse.virgo.test.framework.OsgiTestRunner;
+
+@RunWith(OsgiTestRunner.class)
+public class EventLogIntegrationTests { ...
+</pre>
+		<p> 
+			OsgiTestRunner launches Equinox, installs the project containing the testcase class as a bundle, starts the bundle, and then runs the testcase class from inside the bundle using a standard JUnit runner. </p>
+		<h3 id="DmKernelTestRunner">DmKernelTestRunner</h3>
+		<p>The DmKernelTestRunner, which should probably be renamed to VirgoKernelTestRunner, is for testing components that need a Virgo kernel environment complete with kernel and user regions. It must be used in combination with suitable configuration to launch the kernel bundles and the bundle on which the kernel depends. </p>
+		<p>It is invoked via the JUnit @RunWith class annotation, for example: </p>
+		<pre>import org.junit.runner.RunWith;
+import org.eclipse.virgo.test.framework.dmkernel.DmKernelTestRunner;
+ 
+@RunWith(DmKernelTestRunner.class)
+public abstract class AbstractKernelIntegrationTest { ...
+</pre>
+		<p> 
+			The DmKernelTestRunner extends the function of the OsgiTestRunner to wait for the user region to start before running the testcase. </p>
+		<h2 id="Annotations">Annotations</h2>
+		<table border="1" cellpadding="1" cellspacing="1" width="600">
+			<tr>
+				<td>+ Test Framework Annotations </td>
+			</tr>
+			<tr>
+				<th>
+					<b>Annotation</b> 
+				</th>
+				<th>
+					<b>Type</b> 
+				</th>
+				<th>
+					<b>Purpose</b> 
+				</th>
+				<th>
+					<b>Default Value</b>
+				</th>
+			</tr>
+			<tr>
+				<td>ConfigLocation </td>
+				<td>class </td>
+				<td>Specifies the location from which the test framework should load its configuration </td>
+				<td>META-INF/test.config.properties</td>
+			</tr>
+		</table>
+		<h2 id="Test_Configuration">Test Configuration</h2>
+		<p>The test configuration file specifies a list of bundles to be installed and optionally started as well as kernel and other properties. It is an extended form of the 
+			<a href="wiki/http://wiki.eclipse.org/Virgo/Concepts#Kernel" target="doc_external">kernel launch properties configuration file</a>. 
+		</p>
+		<p>The Virgo web layer has a fairly typical 
+			<a href="wiki/http://git.eclipse.org/c/virgo/org.eclipse.virgo.web.git/tree/org.eclipse.virgo.web.test/src/test/resources/META-INF/test.config.properties" target="doc_external">test configuration file</a>. 
+		</p>
+		<p>The following properties may be specified which would not normally appear in a non-test kernel launch properties configuration file. </p>
+		<p>
+			<br/> 
+		</p>
+		<table border="1" cellpadding="1" cellspacing="1" width="70%">
+			<tr>
+				<td>+ Test Kernel Launch Properties </td>
+			</tr>
+			<tr>
+				<th>
+					<b>Property name</b> 
+				</th>
+				<th>
+					<b>Definition</b> 
+				</th>
+				<th>
+					<b>Default value</b>
+				</th>
+			</tr>
+			<tr>
+				<td>A comma separated list of "file:" URLs relative to the current working directory each referring to a properties file. Properties files may provide property placeholders in other configuration files. </td>
+				<td>Empty list</td>
+			</tr>
+		</table>
+		<h2 id="Utilities">Utilities</h2>
+		<p>The standard OSGi utility class FrameworkUtil is used to obtain the test bundle context as in the following example: </p>
+		<pre>protected final BundleContext testBundleContext = FrameworkUtil.getBundle(getClass()).getBundleContext();
+</pre><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="wiki/Test.html" title="Test">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center">
+					<a href="wiki/Test.html" title="Test">
+						<img alt="Test" border="0" src="../../images/home.gif"/>
+					</a>
+				</td>
+				<td style="width: 20%" align="right">
+					<a href="wiki/build-properties.html" title="build.properties">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Test</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">build.properties</td>
+			</tr>
+		</table>
+	</body>
+</html>

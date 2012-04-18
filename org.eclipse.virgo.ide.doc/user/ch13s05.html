@@ -1,0 +1,41 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Configuring a Hosted Repository</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo User Guide"><link rel="up" href="ch13.html" title="Chapter&nbsp;13.&nbsp;Configuration"><link rel="prev" href="ch13s04.html" title="Configuring the Local Provisioning Repository"><link rel="next" href="ch13s06.html" title="Configuring the Kernel and User Region"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Configuring a Hosted Repository"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="configuring-hosted-repo"></a>Configuring a Hosted Repository</h2></div></div></div><p>You configure a VTS instance to host a repository 
+		by editing the <code class="literal">$SERVER_HOME/configuration/org.eclipse.virgo.apps.repository.properties</code> file; 
+		remote clients can then access the artifacts in this hosted repository and use them locally.
+		</p><p>When you specify a property in the file, use the format <code class="literal">repository-name.property=value</code>, where:
+             </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><code class="literal">repository-name</code> refers to the name of the hosted repository.</p></li><li class="listitem"><p><code class="literal">property</code> refers to the name of a particular property.</p></li><li class="listitem"><p><code class="literal">value</code> refers to the value of the property.</p></li></ul></div><p> 
+              </p><p>For example, <code class="literal">my-hosted-repo.type=external</code> specifies that the <code class="literal">type</code> property 
+             of the <code class="literal">my-hosted-repo</code> repository is <code class="literal">external</code>.
+             </p><p>The following table lists the properties that you can include in the <code class="literal">org.eclipse.virgo.apps.repository.properties</code> file. 
+		</p><div class="table"><a name="hosted-repository-properties-table"></a><p class="title"><b>Table&nbsp;13.6.&nbsp;Hosted Repository Properties</b></p><div class="table-contents"><table summary="Hosted Repository Properties" border="1"><colgroup><col><col></colgroup><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody><tr><td><span class="emphasis"><em><code class="literal">repository-name</code></em></span><code class="literal">.type</code></td><td>Specifies the type of path of the hosted repository.  
+				All paths are local to the current VTS instance. 
+				You can set this property to one of the following valid values:
+	<div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>
+    	<code class="literal">external</code>: Specifies that this path points to a number of directories that satisfy a given search pattern. 
+    	Use the <code class="literal">searchPattern</code> property to specify the directory search pattern.
+    	</p></li><li class="listitem"><p>
+	<code class="literal">watched</code>: Specifies that this path points to a single directory. 
+	Virgo regularly scans watched repositories so it automatically picks up any changes to the artifacts in the directory at runtime. 
+	Use the <code class="literal">watchDirectory</code> property to specify the actual watched directory and the <code class="literal">watchInterval</code> property 
+	to specify how often VTS checks the directory.
+	</p></li></ul></div>
+			  <p>See <a class="link" href="ch13s04.html#configuring-repository-watched-versus-external" title="Should I Configure a Watched or External Repository?">Watched or External Repository?</a> 
+			  for additional information about when to configure watched or external repositories for your particular environment.
+			  </p>
+				</td></tr><tr><td><span class="emphasis"><em><code class="literal">repository-name</code></em></span><code class="literal">.searchPattern</code></td><td> <p>Specifies the pattern that an external hosted repository uses when deciding which 
+			local directories it should search when identifying artifacts.  
+			Use this property when <code class="literal">repository-name.type=external</code>. 
+			See <a class="link" href="ch13s04.html#configuring-provisioning-repository-search-paths" title="Search Paths: Additional Information">Search Paths: Additional Information</a> 
+			for detailed information about specifying a search pattern.  
+			</p> </td></tr><tr><td><span class="emphasis"><em><code class="literal">repository-name</code></em></span><code class="literal">.watchDirectory</code></td><td> <p>Specifies the single directory of a watched hosted repository. 
+			You can specify either an absolute or relative pathname for the directory.  
+			If you specify a relative pathname, it is relative to the root of the VTS installation (<code class="literal">$SERVER_HOME</code>).  
+			Use this property when <code class="literal">repository-name.type=watched</code>.
+			</p></td></tr><tr><td><span class="emphasis"><em><code class="literal">repository-name</code></em></span><code class="literal">.watchInterval</code></td><td> <p>Specifies the interval in seconds between checks of a watched directory by a watched hosted repository.  
+			This property is optional.  Use this property when <code class="literal">repository-name.type=watched</code>. 
+			</p> </td></tr></tbody></table></div></div><br class="table-break"><p>The following sample shows a <code class="literal">org.eclipse.virgo.apps.repository.properties</code> file with a single external repository 
+		called <code class="literal">my-hosted-repo</code> with search pattern <code class="literal">$SERVER_HOME/repository/hosted/*</code>.
+		</p><pre class="programlisting">my-hosted-repo.type=external
+my-hosted-repo.searchPattern=repository/hosted/*</pre><p>
+		</p><p>See <a class="link" href="ch13s04.html#configuring-repository-examples-remote-watched" title="Add remote and watched repositories">Example of watched and remote repositories</a> 
+	for details on how a local repository can remotely access the artifacts in this hosted repository.
+	</p></div></body></html>

@@ -19,18 +19,19 @@
 		</p><p>
 			At the heart of the Virgo Tomcat Server is the Virgo Kernel or VK. 
 			The VK is an OSGi-based kernel that takes full advantage of the modularity 
-			and versioning of the OSGi platform. The VK builds on Equinox and extends its capabilities for
-			provisioning and library management, as well as providing core functionality for the VTS.
+			and versioning of the OSGi platform. The VK builds on a base version of Virgo Nano or VN and extends its capabilities for
+			provisioning and library management, as well as providing core functionality for the VTS. The VN maintains a minimal 
+			runtime footprint and startup time. It builds on top of a pure Equinox, extending it with more sophisticated diagnostics and supportability functionality. 
+			The VN supports full p2 provisioning. This feature is not included in the Virgo Nano Base that the VK is built on.
 		</p><p>
 			To maintain a minimal runtime footprint, OSGi bundles are installed on demand by the
-			VK. This allows for an application to be installed into a running
-			VTS and for its dependencies to be satisfied from an external repository. Not only
-			does this remove the need to manually install all your application dependencies, which
-			would be tedious, but it also keeps memory usage to a minimum.
+			VN. On subsequent restarts these core bundles are warm-started thus reducing the startup time. This allows for an application to be installed 
+			into a running VTS and for its dependencies to be satisfied from an external repository. Not only
+			does this remove the need to manually install all your application dependencies, which would be tedious, but it also keeps memory usage to a minimum.
 		</p><p>
-			As shown in the figure, VK runs on top of Equinox within a standard Java
+			As shown in the figure, VK runs on top of VN that extends Equinox within a standard Java
 			Virtual Machine. Above the VK further layers contribute functionality
-			to the VTS. Such as management, serviceability and web application support.
+			to the VTS. Such as management and web application support.
 		</p><p>
 			Version 1.0.0 of the Virgo Tomcat Server supports <span class="emphasis"><em>bundle</em></span>, 
 			<span class="emphasis"><em>plan</em></span>, <span class="emphasis"><em>PAR</em></span>, <span class="emphasis"><em>configuration</em></span>,
@@ -38,4 +39,15 @@
 			you to build sophisticated web applications. This includes support for
 			standard Java EE WARs, "shared library" WARs, and "shared services" WARs, each of
 			which will be covered in greater detail in <a class="xref" href="ch03.html" title="Chapter&nbsp;3.&nbsp;Deployment Architecture">Chapter&nbsp;3.&nbsp;<i>Deployment Architecture</i></a>.
-		</p></div></body></html>
+		</p><div class="important" title="Important" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Important</h3><p>
+			The Virgo Nano has a different provisioning system which isn't included in the Virgo Nano Base on which the 
+			VK and the VTS are built.
+		</p><p>
+			Version 1.0.0 of the Virgo Nano supports <span class="emphasis"><em>bundle</em></span>, 
+			<span class="emphasis"><em>p2 feature</em></span>, <span class="emphasis"><em>Web Application Bundle (WAB)</em></span>, and <span class="emphasis"><em>WAR</em></span> artifacts, which enable
+			you to build sophisticated web applications too, taking full advantage of p2's dependency resolution, automated download and fail-early mechanics.
+			The Virgo Nano does NOT support <span class="emphasis"><em>plan</em></span>, <span class="emphasis"><em>PAR</em></span> or <span class="emphasis"><em>configuration</em></span> artifacts.
+			New <span class="emphasis"><em>features</em></span> are provisioned via <span class="emphasis"><em>update sites</em></span> or <span class="emphasis"><em>p2 repositories</em></span>.
+			Brief overview of p2 and it's mechanics is available on <a class="ulink" href="http://bkapukaranov.wordpress.com/2011/07/12/rt-meets-p2/" target="_top">this blog</a>.
+			The VN's default web container implementation is Gemini Web.
+		</p></div></div></body></html>

@@ -1,5 +1,9 @@
 <plugin>
 <extension point="org.eclipse.help.toc">
+      <toc
+            file="wiki/toc.xml"
+            primary="true">
+      </toc>
 <toc
       category="virgo"
       file="tooling/toc.xml"

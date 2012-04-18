@@ -1,0 +1,96 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Configuring Serviceability and Diagnostics</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo User Guide"><link rel="up" href="ch13.html" title="Chapter&nbsp;13.&nbsp;Configuration"><link rel="prev" href="ch13s02.html" title="Configuring Framework Extensions and Fragments on the System Bundle"><link rel="next" href="ch13s04.html" title="Configuring the Local Provisioning Repository"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Configuring Serviceability and Diagnostics"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="configuring-serviceability"></a>Configuring Serviceability and Diagnostics</h2></div></div></div><p>The serviceability features of Virgo allow you to gather and view data and information that you can then use to diagnose problems and failures.  Serviceability data includes:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>
+		Service dumps: Contain a snapshot of all the important state from the running Virgo instance when an internal failure or thread deadlock is detected.
+		</p><p>You configure service dumps for Virgo using the <a class="link" href="ch13s03.html#configuring-serviceability-medic" title="The org.eclipse.virgo.medic.properties File">org.eclipse.virgo.medic.properties</a> file in the <code class="literal">$SERVER_HOME/configuration</code> directory.  This file also includes some additional logging configuration.</p></li><li class="listitem"><p>
+		Event logs and server/application (trace) logging: Logging support in Virgo is based on <a class="ulink" href="http://logback.qos.ch/" target="_top">Logback</a>.  This means that you have complete control over the format of log output and have the complete range of Logback's appenders available for your use.
+		</p><p>You configure logging for Virgo using the <a class="link" href="ch13s03.html#configuring-serviceability-logback" title="The serviceability.xml File">serviceability.xml</a> file in the <code class="literal">$SERVER_HOME/configuration</code> directory.  This file is essentially the Logback <code class="literal">logback.xml</code> (or <code class="literal">logback-test.xml</code>) configuration file but renamed for Virgo. </p></li></ul></div><p>For additional conceptual information about the serviceability subsystem, see <a class="xref" href="ch11.html" title="Chapter&nbsp;11.&nbsp;Serviceability and Diagnostics">Chapter&nbsp;11.&nbsp;<i>Serviceability and Diagnostics</i></a>. </p><div class="section" title="The org.eclipse.virgo.medic.properties File"><div class="titlepage"><div><div><h3 class="title"><a name="configuring-serviceability-medic"></a>The org.eclipse.virgo.medic.properties File</h3></div></div></div><p>The <code class="literal">$SERVER_HOME/configuration/org.eclipse.virgo.medic.properties</code> file configures Virgo service dumps and whether you want to capture <code class="literal">System.out</code> and <code class="literal">System.err</code> output to your application's trace file. </p><p>The following table describes the properties you can include in the <code class="literal">$SERVER_HOME/configuration/org.eclipse.virgo.medic.properties</code> file. This file configures serviceability properties that Virgo includes in addition to those supplied by the Logback, configured in the <code class="literal">serviceability.xml</code> file.</p><div class="table"><a name="medic-properties-table"></a><p class="title"><b>Table&nbsp;13.4.&nbsp;Serviceability Properties</b></p><div class="table-contents"><table summary="Serviceability Properties" border="1"><colgroup><col><col></colgroup><thead><tr><th>Property</th><th>Description</th></tr></thead><tbody><tr><td><code class="literal">dump.root.directory</code></td><td>Specifies the directory to which Virgo writes the service dumps.  The directory name is relative to <code class="literal">$SERVER_HOME</code>.  </td></tr><tr><td><code class="literal">log.wrapSysOut</code></td><td>Specifies whether you want to capture <code class="literal">System.out</code> output from your applications to the application trace file.  The output is logged by Virgo's root logger, which captures <code class="literal">INFO</code> level and above. 
+			<p>Valid values for this property are <code class="literal">true</code> to capture <code class="literal">System.out</code> output, or <code class="literal">false</code> to disable the capture.</p>
+			<p>For more information, see <a class="link" href="ch11s02.html#sysout-and-syserr" title="System.out and System.err">System.out and System.err</a>.</p>
+		  </td></tr><tr><td><code class="literal">log.wrapSysErr</code></td><td>Specifies whether you want to capture <code class="literal">System.err</code> output from your applications to the application trace file.  The output is logged by Virgo's root logger, which captures <code class="literal">INFO</code> level and above. 
+			<p>Valid values for this property are <code class="literal">true</code> to capture <code class="literal">System.err</code> output, or <code class="literal">false</code> to disable the capture.</p>
+			<p>For more information, see <a class="link" href="ch11s02.html#sysout-and-syserr" title="System.out and System.err">System.out and System.err</a>.</p>
+		  </td></tr><tr><td><code class="literal">log.jul.consoleHandler</code></td><td>Specifies whether you want to use the <code class="literal">ConsoleHandler</code> of Java Util Logging. The default JVM configuration uses the handler to write logs to <code class="literal">System.err</code>.
+                      <p>Valid values for this property are <code class="literal">true</code> to enable <code class="literal">ConsoleHandler</code> output, or <code class="literal">false</code> to disable it. The default value is <code class="literal">false</code>.</p>
+                      <p>For more information, see <a class="ulink" href="http://download.oracle.com/javase/6/docs/technotes/guides/logging/overview.html" target="_top">Java Logging Overview</a>.</p>
+                  </td></tr></tbody></table></div></div><br class="table-break"></div><div class="section" title="The serviceability.xml File"><div class="titlepage"><div><div><h3 class="title"><a name="configuring-serviceability-logback"></a>The serviceability.xml File</h3></div></div></div><p>Logging support in Virgo is based on <a class="ulink" href="http://logback.qos.ch/" target="_top">Logback</a>, which is a successor of the log4j project. The Logback logging framework is faster, more reliable, and easier to use than log4j and certain other logging systems.</p><p>You configure logging for Virgo using the <code class="literal">$SERVER_HOME/configuration/serviceability.xml</code> file.  This file is the standard Logback <code class="literal">logback.xml</code> or <code class="literal">logback-test.xml</code> configuration file, but renamed for Virgo. </p><p>The following listing shows the default <code class="literal">serviceability.xml</code> file in a freshly-installed Virgo; see the text after the listing for a brief overview of the file:</p><pre class="programlisting">&lt;configuration&gt;
+
+	&lt;contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator"/&gt;
+
+	&lt;appender name="SIFTED_LOG_FILE" class="ch.qos.logback.classic.sift.SiftingAppender"&gt;
+		&lt;discriminator&gt;
+			&lt;Key&gt;applicationName&lt;/Key&gt;
+			&lt;DefaultValue&gt;virgo-server&lt;/DefaultValue&gt;
+		&lt;/discriminator&gt;
+		&lt;sift&gt;
+			&lt;appender name="${applicationName}_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"&gt;
+				&lt;file&gt;serviceability/logs/${applicationName}/log.log&lt;/file&gt;
+				&lt;rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy"&gt;
+					&lt;FileNamePattern&gt;serviceability/logs/${applicationName}/log_%i.log&lt;/FileNamePattern&gt;
+					&lt;MinIndex&gt;1&lt;/MinIndex&gt;
+					&lt;MaxIndex&gt;4&lt;/MaxIndex&gt;
+				&lt;/rollingPolicy&gt;
+				&lt;triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy"&gt;
+					&lt;MaxFileSize&gt;10MB&lt;/MaxFileSize&gt;
+				&lt;/triggeringPolicy&gt;
+				&lt;encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"&gt;
+					&lt;Pattern&gt;[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level %-28.28thread %-64.64logger{64} %X{medic.eventCode} %msg %ex%n&lt;/Pattern&gt;
+				&lt;/encoder&gt;
+			&lt;/appender&gt;
+		&lt;/sift&gt;
+	&lt;/appender&gt;
+
+	&lt;appender name="LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"&gt;
+		&lt;file&gt;serviceability/logs/log.log&lt;/file&gt;
+		&lt;rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy"&gt;
+			&lt;FileNamePattern&gt;serviceability/logs/log_%i.log&lt;/FileNamePattern&gt;
+			&lt;MinIndex&gt;1&lt;/MinIndex&gt;
+			&lt;MaxIndex&gt;4&lt;/MaxIndex&gt;
+		&lt;/rollingPolicy&gt;
+		&lt;triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy"&gt;
+			&lt;MaxFileSize&gt;10MB&lt;/MaxFileSize&gt;
+		&lt;/triggeringPolicy&gt;
+		&lt;encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"&gt;
+			&lt;Pattern&gt;[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-5level %-28.28thread %-64.64logger{64} %X{medic.eventCode} %msg %ex%n&lt;/Pattern&gt;
+		&lt;/encoder&gt;
+	&lt;/appender&gt;
+
+	&lt;appender name="EVENT_LOG_STDOUT" class="org.eclipse.virgo.medic.log.logback.ReroutingAwareConsoleAppender"&gt;
+		&lt;encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"&gt;
+			&lt;Pattern&gt;[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread &amp;lt;%X{medic.eventCode}&amp;gt; %msg %ex%n&lt;/Pattern&gt;
+		&lt;/encoder&gt;
+	&lt;/appender&gt;
+
+	&lt;appender name="EVENT_LOG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender"&gt;
+		&lt;file&gt;serviceability/eventlogs/eventlog.log&lt;/file&gt;
+		&lt;rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy"&gt;
+			&lt;FileNamePattern&gt;serviceability/eventlogs/eventlog_%i.log&lt;/FileNamePattern&gt;
+			&lt;MinIndex&gt;1&lt;/MinIndex&gt;
+			&lt;MaxIndex&gt;4&lt;/MaxIndex&gt;
+		&lt;/rollingPolicy&gt;
+		&lt;triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy"&gt;
+			&lt;MaxFileSize&gt;10MB&lt;/MaxFileSize&gt;
+		&lt;/triggeringPolicy&gt;
+		&lt;encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder"&gt;
+			&lt;Pattern&gt;[%d{yyyy-MM-dd HH:mm:ss.SSS}] %-28.28thread &amp;lt;%X{medic.eventCode}&amp;gt; %msg %ex%n&lt;/Pattern&gt;
+		&lt;/encoder&gt;
+	&lt;/appender&gt;
+
+	&lt;logger level="INFO" additivity="false" name="org.eclipse.virgo.medic.eventlog.localized"&gt;
+		&lt;appender-ref ref="EVENT_LOG_STDOUT" /&gt;
+		&lt;appender-ref ref="EVENT_LOG_FILE" /&gt;
+	&lt;/logger&gt;
+
+	&lt;logger level="INFO" additivity="false" name="org.eclipse.virgo.medic.eventlog.default"&gt;
+		&lt;appender-ref ref="SIFTED_LOG_FILE" /&gt;
+		&lt;appender-ref ref="LOG_FILE" /&gt;
+	&lt;/logger&gt;
+
+	&lt;root level="INFO"&gt;
+		&lt;appender-ref ref="SIFTED_LOG_FILE" /&gt;
+		&lt;appender-ref ref="LOG_FILE" /&gt;
+	&lt;/root&gt;
+
+&lt;/configuration&gt;</pre><p>Logback allows Virgo to use logger, appender, and encoder (layout) objects to log messages according to message type and level and to format these messages and define where they are written.  The default <code class="literal">serviceability.xml</code> file shown above includes four appenders and three loggers (two user and one root.)</p><p>The main information to get from this file is that Virgo writes log messages to four different locations that map to the four appenders:</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>The <code class="literal">contextListener</code> propagates the changes made to the levels of logback loggers to Java Util Logging (JUL). For more information see <a class="ulink" href="http://logback.qos.ch/manual/configuration.html#LevelChangePropagator" target="_top">LevelChangePropagator</a> documentation.</p></li><li class="listitem"><p>The <code class="literal">SIFTED_LOG_FILE</code> appender logs both global and application-specific messages to the <code class="literal">$SERVER_HOME/serviceability/logs/</code><span class="emphasis"><em><code class="literal">applicationName</code></em></span><code class="literal">/log.log</code> file, where <span class="emphasis"><em><code class="literal">applicationName</code></em></span> refers to the name of the application.   The log messages for Virgo itself are logged to the <code class="literal">$SERVER_HOME/serviceability/logs/virgo-server/log.log</code> file. Because this appender creates different log files for each application, it is called a <span class="emphasis"><em>sifting appender</em></span>.   </p><p>
+			The default behaviour of these trace files is that, once <code class="literal">log.log</code> reaches a 10Mb limit, it rolls into a series of files named
+			<code class="literal">log_</code><span class="emphasis"><em>i</em></span><code class="literal">.log</code> where <span class="emphasis"><em>i</em></span> ranges from 1 to 4, and logging continues in
+			a new <code class="literal">log.log</code> file. This is called its <span class="emphasis"><em>rolling policy</em></span>.
+		</p><p>The <code class="literal">&lt;Pattern&gt;</code> element defines the format of each log message;  messages include the timestamp, the thread that generated the log message, the context-specific event code, and a stack trace of the exception, if any.  For example:</p><p><code class="literal">[2008-05-15 09:09:46.940] server-dm-2 org.apache.coyote.http11.Http11Protocol I Initializing Coyote HTTP/1.1 on http-48080</code></p></li><li class="listitem"><p>The <code class="literal">LOG_FILE</code> appender is very similar to the first one, but it logs <span class="emphasis"><em>all</em></span> log messages to the <code class="literal">$SERVER_HOME/serviceability/log/log.log</code> file rather than sifting application-specific messages to their own log file.  The rolling policy and message format for this appender is similar to that of the <code class="literal">SIFTED_LOG_FILE</code> appender.</p></li><li class="listitem"><p>The <code class="literal">EVENT_LOG_STDOUT</code> appender does not log messages to a file, but rather to the console window from which you started Virgo. For example:</p><p><code class="literal">[2010-10-25 16:20:49.367] Thread-3   &lt;WE0000I&gt; Starting web bundle 'org.eclipse.virgo.apps.admin.web' version '2.1.0.RELEASE' with context path '/admin'.</code></p></li><li class="listitem"><p>The <code class="literal">EVENT_LOG_FILE</code> appender logs only important events to the <code class="literal">$SERVER_HOME/serviceability/eventlogs/eventlog.log</code> file, and thus the volume of information is much lower than with the first two appenders. The rolling policy for the event log is the same as with the first two appenders, but the format of the messages is similar to that of the <code class="literal">EVENT_LOG_STDOUT</code> appender. </p></li></ul></div><p>The loggers and root logger specify the level of log that is written for each of the referenced appenders.</p><p>Typically, the default logging configuration as specified by the <code class="literal">serviceability.xml</code> file is adequate for all Virgo environments.  However, if you want to customize logging further, you can edit this file as well as the <code class="literal">org.eclipse.virgo.medic.properties</code>.  See the <a class="ulink" href="http://logback.qos.ch/manual/index.html" target="_top">logback documentation</a> for detailed information about the architecture and the configuration of Logback.</p></div></div></body></html>

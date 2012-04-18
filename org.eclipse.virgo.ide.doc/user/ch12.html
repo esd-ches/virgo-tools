@@ -1,0 +1,46 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;12.&nbsp;Working with Applications</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo User Guide"><link rel="up" href="index.html" title="Virgo User Guide"><link rel="prev" href="ch11s03.html" title="Service Dumps"><link rel="next" href="ch12s02.html" title="Undeploying Artifacts"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" title="Chapter&nbsp;12.&nbsp;Working with Applications"><div class="titlepage"><div><div><h2 class="title"><a name="deployment"></a>Chapter&nbsp;12.&nbsp;Working with Applications</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="ch12.html#deployment-deploying">Deploying Artifacts</a></span></dt><dd><dl><dt><span class="section"><a href="ch12.html#deployment-deploying-hot">Hot Deploy</a></span></dt><dt><span class="section"><a href="ch12.html#deployment-deploying-manual">Deploying Using the Admin Console</a></span></dt><dt><span class="section"><a href="ch12.html#deployment-deploying-happens">What Happens When You Deploy</a></span></dt><dt><span class="section"><a href="ch12.html#deployment-deploying-ordering">Deployment Ordering</a></span></dt><dt><span class="section"><a href="ch12.html#deployment-deploying-shared">Deploying Shared Artifacts</a></span></dt><dt><span class="section"><a href="ch12.html#deployment-deploying-restrictions">Restrictions</a></span></dt></dl></dd><dt><span class="section"><a href="ch12s02.html">Undeploying Artifacts</a></span></dt><dd><dl><dt><span class="section"><a href="ch12s02.html#deployment-undeploy-hot">Hot Undeploy</a></span></dt><dt><span class="section"><a href="ch12s02.html#deployment-undeploy-manual">Undeploying Using the Admin Console</a></span></dt><dt><span class="section"><a href="ch12s02.html#deployment-undeploying-shared">Undeploying Shared Artifacts</a></span></dt></dl></dd></dl></div><div class="section" title="Deploying Artifacts"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="deployment-deploying"></a>Deploying Artifacts</h2></div></div></div><p>
+			In the context of Virgo Tomcat Server, <span class="emphasis"><em>deploying</em></span> refers to installing an artifact to the server and then starting it to make it available to users.  Typically, when you install an artifact, VTS automatically starts it as long as the server is able to successfully resolve all its dependencies.  For this reason, the terms <span class="emphasis"><em>deploying</em></span> and <span class="emphasis"><em>installing</em></span> are often used interchangeably. 
+		</p><p>You deploy artifacts to Virgo Tomcat Server using either the hot-deploy directory on the file system or by using the Admin Console.  The artifacts that you can deploy to VTS are:
+		</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">Bundles, including Web Application Bundles</li><li class="listitem">WARs</li><li class="listitem">PARs</li><li class="listitem">Plans</li><li class="listitem">Configuration Files</li></ul></div><div class="section" title="Hot Deploy"><div class="titlepage"><div><div><h3 class="title"><a name="deployment-deploying-hot"></a>Hot Deploy</h3></div></div></div><p>
+				To hot deploy an artifact, copy it into the pickup directory (by default <code class="literal">$SERVER_HOME/pickup</code>):
+			</p><pre class="programlisting">prompt$ cd /home/applications
+prompt$ cp helloWorld.war $SERVER_HOME/pickup</pre><p>
+				When the artifact is hot deployed, messages similar to the following appear in the log file:
+			</p><pre class="screen">[2009-12-10 06:41:01.021] fs-watcher          &lt;HD0001I&gt; Hot deployer processing 'CREATED' event for file 'helloWorld.war'.
+[2009-12-10 06:41:01.087] fs-watcher          &lt;DE0000I&gt; Installing bundle 'helloWorld' version '0.0.0'.
+[2009-12-10 06:41:01.274] fs-watcher          &lt;DE0001I&gt; Installed bundle 'helloWorld' version '0.0.0'.
+[2009-12-10 06:41:01.397] fs-watcher          &lt;DE0004I&gt; Starting bundle 'helloWorld' version '0.0.0'.
+[2009-12-10 06:41:01.414] Thread-3            &lt;WE0000I&gt; Starting web bundle 'helloWorld' version '0.0.0' with context path '/helloWorld'.
+[2009-12-10 06:41:01.537] Thread-3            &lt;WE0001I&gt; Started web bundle 'helloWorld' version '0.0.0' with context path '/helloWorld'.
+[2009-12-10 06:41:01.550] start-signalling-1  &lt;DE0005I&gt; Started bundle 'helloWorld' version '0.0.0'.</pre><p>
+				If there is a problem with the deployment, such as the server being unable to resolve all dependencies, the console and log both show an error message to help you with troubleshooting.
+			</p><p>If there are no problems, VTS automatically starts the artifact so that it is immediately available to users.
+			</p></div><div class="section" title="Deploying Using the Admin Console"><div class="titlepage"><div><div><h3 class="title"><a name="deployment-deploying-manual"></a>Deploying Using the Admin Console</h3></div></div></div><p>
+				The Admin Console allows you to upload a file, which will be deployed automatically, from your local file system to the Virgo Tomcat Server. As soon as Virgo Tomcat Server deploys the artifact,  it appears in the list of artifacts in the Admin Console.  Note that the GUI for uploading varies according to the browser and operating system you use.
+			</p><p>See <a class="link" href="ch09s02.html#admin-console-install-artifacts" title="Installing a New Artifact">Installing a New Artifact</a> for details about using the Admin Console to install (deploy) an artifact.  See <a class="link" href="ch09.html" title="Chapter&nbsp;9.&nbsp;The Web Admin Console">The Web Admin Console</a> for general information about the Admin Console.</p></div><div class="section" title="What Happens When You Deploy"><div class="titlepage"><div><div><h3 class="title"><a name="deployment-deploying-happens"></a>What Happens When You Deploy</h3></div></div></div><p>
+				When you deploy an artifact, either using hot-deployment or the Admin Console, Web Server copies the file to its work directory (<code class="literal">SERVER_HOME/work</code>) and registers it in its internal registry. 
+				The server then checks any dependencies the artifact might have to see if
+				deployment can go ahead, and if all dependencies are resolved, Virgo Tomcat Server starts the artifact.
+				Because of all these additional internal activities, you should NOT simply copy the artifact into the <code class="literal">work</code> directory and assume it will be deployed, because Virgo Tomcat Server will not do so.
+			</p></div><div class="section" title="Deployment Ordering"><div class="titlepage"><div><div><h3 class="title"><a name="deployment-deploying-ordering"></a>Deployment Ordering</h3></div></div></div><p>
+				When deploying bundles that have dependencies, it is important 
+				that you deploy them in the correct order. Virgo Tomcat Server 
+				honors this ordering when it redeploys the artifacts on startup. 
+			</p><p>
+				If you use hot deployment to deploy your artifacts, be sure to copy the corresponding files into the pickup
+				directory one-by-one. Copying the files in one group, for example by using a single <code class="literal">cp</code> command, provides no guarantee of ordering.
+			</p></div><div class="section" title="Deploying Shared Artifacts"><div class="titlepage"><div><div><h3 class="title"><a name="deployment-deploying-shared"></a>Deploying Shared Artifacts</h3></div></div></div><p>
+				Artifacts may be shared by plans.
+				Sharing occurs when a plan is deployed which references an artifact that was previously deployed or is a child artifact
+				of a plan that was previously deployed.
+				Sharing also occurs when an artifact is deployed which is already a child of a deployed plan, but in this case the shared
+				artifact may <span class="emphasis"><em>not</em></span> appear as a top-level artifact, for example, in the Admin Console, in the shell,
+				and in JMX.
+			</p><p>
+				Sharing is taken into account when artifacts are stopped.
+				A shared artifact is stopped only when all the artifacts referencing the shared artifact have been stopped
+				and, if the shared artifact was deployed in its own right, the artifact itself has been stopped.
+			</p></div><div class="section" title="Restrictions"><div class="titlepage"><div><div><h3 class="title"><a name="deployment-deploying-restrictions"></a>Restrictions</h3></div></div></div><p>
+				Virgo Tomcat Server does not support deploying fragment bundles. Typically, fragment bundles should be placed in <code class="literal">$SERVER_HOME/repository/ext</code>
+				or <code class="literal">$SERVER_HOME/repository/usr</code> so that they will be installed automatically with their host bundles.
+			</p></div></div></div></body></html>

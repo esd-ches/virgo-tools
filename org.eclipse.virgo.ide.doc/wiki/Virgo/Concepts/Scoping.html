@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>Concepts - Scoping</title>
+		<link type="text/css" rel="stylesheet" href="wiki/../../book.css"/>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">Scoping</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="wiki/Regions.html" title="Regions">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="wiki/Pipeline.html" title="Pipeline">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Regions</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Pipeline</td>
+			</tr>
+		</table><hr/>
+		<h1 id="Scoping">Scoping</h1>
+		<p>Virgo adds the concept of scoping to OSGi. The main use case for scoping is where a group of bundles form an application which needs to avoid clashing with other applications and which needs reliable behaviour when it calls third party bundles which use thread context class loading. Clashes can occur because of bundles, packages, or services conflicting in some way. </p>
+		<h2 id="Metadata_Rewriting">Metadata Rewriting</h2>
+		<p>Virgo rewrites the metadata of bundles in a scope to prefix the bundle symbolic names with a scope-specific prefix and to add a mandatory matching attribute, with a scope-specific value, to packages exported by bundles in the scope. </p>
+		<p>Virgo also uses the standard OSGi service registry hooks to limit the visibility of services published by bundles in a scope. </p>
+		<p>However, a bundle in a scope may access bundles, packages, and services not provided in the scope but which are available outside the scope, that is from unscoped bundles. So a scope acts similarly to a programming language scope such as Java's curly braces: </p>
+		<pre>int x;
+// b is not visible here
+{
+    int b;
+    // both b and x are visible here
+}
+</pre>
+		<p> </p>
+		<h2 id="Synthetic_Context_Generation">Synthetic Context Generation</h2>
+		<p>To ensure reliable thread context class loading when third party bundles are called from a scope, Virgo generates a 
+			<i>synthetic context bundle</i> in the scope. The class loader of the synthetic context bundle is used as the thread context class loader when bundles in the scope make calls outside the scope. The synthetic bundle imports each of the other bundles in the scope using the Virgo import-bundle header. This is semantically equivalent to importing all the exported packages of the other bundles in the scope. So to make a package of a scoped application available for thread context class loading, it is simply necessary to export the package. 
+		</p>
+		<h2 id="Example_of_Scoping">Example of Scoping</h2>
+		<p>The figure below shows a scoped plan referring to two bundles A and B being deployed. The result is a scope containing the bundles A and B as well as the synthetic context bundle. Note that bundles inside the scope can access bundles, such as X, outside the scope. Also, bundles outside the scope, such as Y, cannot access bundles inside the scope. </p>
+		<p>
+			<img width="500" align="middle" border="0" src="images/Virgo_scoping.png"/>
+			<br/> 
+		</p><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="wiki/Regions.html" title="Regions">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center">
+					<a href="wiki/Concepts.html" title="Concepts">
+						<img alt="Concepts" border="0" src="../../images/home.gif"/>
+					</a>
+				</td>
+				<td style="width: 20%" align="right">
+					<a href="wiki/Pipeline.html" title="Pipeline">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Regions</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Pipeline</td>
+			</tr>
+		</table>
+	</body>
+</html>

@@ -1,17 +1,41 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Installing from the ZIP Download</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo User Guide"><link rel="up" href="ch03.html" title="Chapter&nbsp;3.&nbsp;Installing Virgo Tomcat Server"><link rel="prev" href="ch03.html" title="Chapter&nbsp;3.&nbsp;Installing Virgo Tomcat Server"><link rel="next" href="ch03s03.html" title="Post-installation steps"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Installing from the ZIP Download"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="installation-zip"></a>Installing from the ZIP Download</h2></div></div></div><div class="section" title="Downloading the ZIP file"><div class="titlepage"><div><div><h3 class="title"><a name="N103DA"></a>Downloading the ZIP file</h3></div></div></div><p>
-				Virgo Tomcat Server is distributed as a ZIP file. This can be downloaded from 
-				<a class="ulink" href="http://www.eclipse.org/virgo/download/" target="_top">here</a>.
-			</p></div><div class="section" title="Installing"><div class="titlepage"><div><div><h3 class="title"><a name="installation-zip-installing"></a>Installing</h3></div></div></div><div class="section" title="Linux"><div class="titlepage"><div><div><h4 class="title"><a name="installation-zip-installing-linux"></a>Linux</h4></div></div></div><p>
-					To install Virgo Tomcat Server on Linux, unzip the distribution package to the desired installation directory. 
-					For example, to install into <code class="literal">/opt</code>:
-				</p><pre class="screen">prompt$ unzip virgo-web-server-1.0.0.zip -d /opt</pre><p>
-					This creates a directory called <code class="literal">virgo-web-server-1.0.0</code> under <code class="literal">/opt</code>.
-				</p><p>
-					Virgo Tomcat Server requires write access to the installation directory, in this case <code class="literal">/opt/virgo-web-server-1.0.0</code>.
-					Typically this means it must be run as the user that installed it, or the installation directory&rsquo;s ownership must be changed.
-				</p></div><div class="section" title="Microsoft Windows"><div class="titlepage"><div><div><h4 class="title"><a name="installation-zip-installing-win"></a>Microsoft Windows</h4></div></div></div><p>
-					To install the Virgo Tomcat Server on Windows, unzip the distribution package to the desired installation directory.
-					You should use a zip application such as 7zip, not the built-in folder decompression.  Note that both Windows and
-					Java have some issues with long file names and file paths, so we recommend installing to the root directory of
-					your chosen drive.
-				</p></div></div></div></body></html>
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Installing with the p2 director from Eclipse</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo User Guide"><link rel="up" href="ch03.html" title="Chapter&nbsp;3.&nbsp;Using the p2 director"><link rel="prev" href="ch03.html" title="Chapter&nbsp;3.&nbsp;Using the p2 director"><link rel="next" href="ch04.html" title="Chapter&nbsp;4.&nbsp;Installing Virgo Tomcat Server"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Installing with the p2 director from Eclipse"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="using-director"></a>Installing with the p2 director from Eclipse</h2></div></div></div><p>
+				This section covers briefly using the p2 director for installing.
+				A helpful page is the p2 director's <a class="ulink" href="http://help.eclipse.org/indigo/index.jsp?topic=/org.eclipse.platform.doc.isv/guide/p2_director.html" target="_top">documentation at help.eclipse.org</a>. 
+				There you can find more information on the different supported arguments.
+			</p><p>
+				Here's how to use the GUI version of the director built-in Eclipse.
+			</p><p>
+				1. Go to the <span class="emphasis"><em>Run</em></span> context menu and select <span class="emphasis"><em>Run Configurations</em></span>
+			</p><p>
+				2. Create a new one and choose the director application as shown below, then switch to the <span class="emphasis"><em>Arguments</em></span> tab
+			</p><div class="important" title="Important" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Important</h3>In the image below the "Location:" text box's value is managed by your IDE, don't type anything in there.</div><p>	 
+				<img src="images/run_configuration.png">
+			</p><p>
+				In the <span class="emphasis"><em>Program Arguments</em></span> section append the director arguments. Here's an example I used:
+				</p><pre class="screen">-repository @p2repo@
+-installIU nano.product
+-tag InitialState
+-destination <span class="bold"><strong>/Users/&lt;youruser&gt;/install/virgo</strong></span>
+-profile VirgoProfile
+-roaming
+-p2.os ${target.os}
+-p2.ws ${target.ws}
+-p2.arch ${target.arch}
+				</pre><p>
+				</p><div class="important" title="Important" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Important</h3><p>The <span class="emphasis"><em>-repository</em></span> argument accepts any valid p2 repository.</p><p>The <span class="emphasis"><em>-destination</em></span> argument accepts any valid absolute location. It defines the location where your Virgo installation will be provisioned. 
+					If the directory does not exist, it will be created by the director.</p></div><p>
+				These arguments produce a Virgo Nano installation. For the <span class="emphasis"><em>p2.*</em></span> arguments use the same properties from the example above. Eclipse will substitute them later with real values. 
+			</p><p>
+				The passed value for <span class="emphasis"><em>-installIU</em></span> determines which Virgo product is going to be installed. Here's a list of all Virgo product install IUs:
+				</p><p><span class="emphasis"><em>nano.product</em></span> - Virgo Nano</p><p>
+				</p><p><span class="emphasis"><em>nano-full.product</em></span> - Virgo Nano Full (VN + p2 + GW)</p><p>
+				</p><p><span class="emphasis"><em>kernel.product</em></span> - Virgo Kernel</p><p>
+				</p><p><span class="emphasis"><em>tomcat-server.product</em></span> - Virgo Tomcat Server</p><p>
+				</p><p><span class="emphasis"><em>jetty-server.product</em></span> - Virgo Jetty Server</p><p>
+			</p><p>	 
+				<img src="images/director_args.png">
+			</p><p>
+				3. Finally, run the created configuration. You should see the following output in Eclipse's Console
+			</p><p>	 
+				<img src="images/director_result.png">
+			</p></div></body></html>

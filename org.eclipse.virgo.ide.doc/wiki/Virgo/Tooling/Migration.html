@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>Tooling - Migration</title>
+		<link type="text/css" rel="stylesheet" href="wiki/../../book.css"/>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">Migration</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="wiki/Notes.html" title="Notes">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="wiki/Maven-plugin.html" title="Maven plugin">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Notes</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Maven plugin</td>
+			</tr>
+		</table><hr/>
+		<h1 id="Migration">Migration</h1>
+		<h2 id="Fron_Pre_M2_to_M3">Fron Pre M2 to M3</h2>
+		<h3 id="Server_Versions">Server Versions</h3>
+		<p>The good news: We have done away with the need for managing multiple server versions. This also means that we won't have to support multiple WebTools Server Runtimes and Servers which will make adding new servers and variants much easier. See 
+			<a href="wiki/https://bugs.eclipse.org/bugs/show_bug.cgi?id=373453" target="doc_external">https://bugs.eclipse.org/bugs/show_bug.cgi?id=373453</a> for more details.
+		</p>
+		<p>The bad news: Any Server Runtimes that you already created for Virgo Server 3.5 will not work. But since Virgo Tooling didn't work with Virgo Server 3.5 *anyway*, this is sort of a moot issue.</p>
+		<p>What to do: If you have an existing (i.e., created using Virgo IDE installed before 10 March 2012) Virgo Server 3.5 Runtime defined, just delete it and replace it with a new Virgo Runtime in 
+			<i>Preferences:Server:Runtime Environments</i>. You'll see that the correct version is discovered automatically. Then, open any Servers that uses the old runtime and select the new one from the Runtime Environment popup menu.
+		</p>
+		<h2 id="From_Spring_Source_and_Virgo_2.x_Tooling">From Spring Source and Virgo 2.x Tooling</h2>
+		<p>Moving from the old tooling to the new requires some changes to your existing projects, these are documented here. </p>
+		<p>The Bundlor .settings file has a new name (
+			<i>com.springsource.server.ide.bundlor.core.prefs</i> -&gt; 
+			<i>org.eclipse.virgo.ide.bundlor.core.prefs</i>) and the property keys in it have new names as well. Currently these just need to be changed manually (replace 
+			<i>com.springsource.server</i> by 
+			<i>org.eclipse.virgo</i>) 
+			<b>or use the project properties pane to create new settings and delete the old one.</b> (recommended)
+		</p>
+		<p>The Bundle Dependencies classpath entry has a new name (
+			<i>com.springsource.server.ide.jdt.core.MANIFEST_CLASSPATH_CONTAINER</i> -&gt; 
+			<i>org.eclipse.virgo.ide.jdt.core.MANIFEST_CLASSPATH_CONTAINER</i>). This can be changed manually (in the .classpath file) or in the Java Build Path section of the project properties. 
+		</p>
+		<p>The attributes used to mark folders as test folders have been renamed (
+			<i>com.springsource.server.ide.jdt.core.test.classpathentry</i> -&gt; 
+			<i>org.eclipse.virgo.ide.jdt.core.test.classpathentry</i>). This can be changed manually (in the .classpath file). 
+		</p>
+		<p>The PAR and Bundle nature have been renamed (
+			<i>com.springsource.server.ide.facet.core.bundlenature</i> -&gt; 
+			<i>org.eclipse.virgo.ide.facet.core.bundlenature</i> and (
+			<i>com.springsource.server.ide.facet.core.parnature</i> -&gt; 
+			<i>org.eclipse.virgo.ide.facet.core.parnature</i>)). This can be changed manually (in the .project file). 
+		</p>
+		<p>The format and name of a PAR project changed. Rename 
+			<i>.settings/com.springsource.server.ide.runtime.core.par.xml</i> to 
+			<i>.settings/org.eclipse.virgo.ide.runtime.core.par.xml</i>. Inside the file rename occurences of 
+			<i>com.springsource.server</i> to 
+			<i>org.eclipse.virgo</i>. 
+		</p>
+		<p>
+			<b>Snapshot build change:</b> We've made a change in our tooling that will require modifying the org.eclipse.virgo.ide.runtime.core.par.xml file so that it points to the correct par.ecore URI. Rename 
+			<i>xmlns:com.springsource.server.ide.par="
+				<a href="wiki/http:///com/springsource/server/ide/par.ecore" target="doc_external">http:///com/springsource/server/ide/par.ecore</a>"
+			</i> to 
+			<i>"xmlns:org.eclipse.virgo.ide.par="
+				<a href="wiki/http://eclipse.org/virgo/par.ecore" target="doc_external">http://eclipse.org/virgo/par.ecore</a>"
+			</i>
+		</p>
+		<p>Inside the WST settings file (
+			<i>.settings/org.eclipse.wst.common.project.facet.core.xml</i>) rename occurences of 
+			<i>com.springsource.server.bundle</i> to 
+			<i>org.eclipse.virgo.server.bundle</i> and occurences of 
+			<i>com.springsource.server.par</i> to 
+			<i>org.eclipse.virgo.server.par</i>. 
+		</p>
+		<p>Most/all of the conversion should be done by the following script (it has only see marginal testing, use at your own risk): </p>
+		<pre>#!/bin/sh
+# NOTE1: Run this at your own risk&amp;nbsp;:)
+# NOTE2: I should quote more dots in sed expressions but I'm lazy.
+# TODO: Delete old com.springsource files after conversion
+if [&amp;nbsp;! -d "$1" ]; then 
+        echo "Please point me at an eclipse project"&amp;nbsp;; 
+        exit 1
+fi
+
+# Bundlor settings
+f="$1/.settings/com.springsource.server.ide.bundlor.core.prefs"
+[ -f "$f" ] &amp;amp;&amp;amp;  (
+        echo "$1: Converting bundlor preferences"
+        sed -e 's/com\.springsource\.server/org.eclipse.virgo/g' "$f" &amp;gt; "$(echo $f | sed -e s/com.springsource.server/org.eclipse.virgo/)"
+)
+
+# convert PAR
+f="$1/.settings/com.springsource.server.ide.runtime.core.par.xml"
+[ -f "$f" ] &amp;amp;&amp;amp;  (
+        echo "$1: Converting PAR project dependencies"
+        sed -e 's/com\.springsource\.server/org.eclipse.virgo/g' "$f" &amp;gt; "$(echo $f | sed -e s/com.springsource.server/org.eclipse.virgo/)"
+)
+
+# Fix classpaths        
+f="$1/.classpath"
+[ -f "$f" ] &amp;amp;&amp;amp; (
+        echo "$1: Converting classpath containers and entries"
+        sed -i \
+                -e 's/com.springsource.server.ide.jdt.core.MANIFEST_CLASSPATH_CONTAINER/org.eclipse.virgo.ide.jdt.core.MANIFEST_CLASSPATH_CONTAINER/g' \
+                -e 's/com.springsource.server.ide.jdt.core.test.classpathentry/org.eclipse.virgo.ide.jdt.core.test.classpathentry/g' \
+                "$f"
+)
+        
+# Fix natures..
+f="$1/.project"
+[ -f "$f" ] &amp;amp;&amp;amp; (
+        echo "$1: Converting project natures"
+        sed -i \
+                -e 's/com.springsource.server.ide.facet.core.bundlenature/org.eclipse.virgo.ide.facet.core.bundlenature/g' \
+                -e 's/com.springsource.server.ide.facet.core.parnature/org.eclipse.virgo.ide.facet.core.parnature/g' \
+                "$f"
+)
+
+# Fix the wst file, could also replace runtime name here
+f="$1/.settings/org.eclipse.wst.common.project.facet.core.xml"
+[ -f "$f" ] &amp;amp;&amp;amp; (
+        echo "$1: Converting org.eclipse.wst.common.project.facet.core.xml"
+        sed -i \
+                -e 's/com.springsource.server.bundle/org.eclipse.virgo.server.bundle/g'  \
+                -e 's/com.springsource.server.par/org.eclipse.virgo.server.par/g'  \
+                "$f"
+)
+
+
+</pre><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="wiki/Notes.html" title="Notes">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center">
+					<a href="wiki/Tooling.html" title="Tooling">
+						<img alt="Tooling" border="0" src="../../images/home.gif"/>
+					</a>
+				</td>
+				<td style="width: 20%" align="right">
+					<a href="wiki/Maven-plugin.html" title="Maven plugin">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Notes</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Maven plugin</td>
+			</tr>
+		</table>
+	</body>
+</html>

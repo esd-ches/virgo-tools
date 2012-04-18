@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>Source - Source Organisation</title>
+		<link type="text/css" rel="stylesheet" href="wiki/../../book.css"/>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">Source Organisation</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="wiki/Virgo-git-Repositories.html" title="Virgo git Repositories">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="wiki/How-to-Add-new-woven-project-to-Virgo.html" title="How to Add new woven project to Virgo">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Virgo git Repositories</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">How to Add new woven project to Virgo</td>
+			</tr>
+		</table><hr/>
+		<h1 id="Source_Organisation">Source Organisation</h1>
+		<p>A typical git repository is organised into the following files and directories: </p>
+		<pre>build-xxx/                         // top-level build directory
+build.properties                   // properties substituted during build
+build.versions                     // dependency version properties
+org.eclipse.virgo.xxx.y.z/         // a project
+...                                // more projects
+virgo-build/                       // git submodule
+</pre>
+		<p> 
+			Each project is organised into the following files and directories: </p>
+		<pre>.classpath                         // Eclipse build class path
+.project                           // Eclipse project metadata
+.settings/                         // Settings
+.springBeans                       // Spring tooling metadata
+build.xml                          // Ant build instructions
+ivy.xml                            // Ivy build dependencies
+src/main/java/                     // Runtime source
+src/main/resources/                // Runtime resources
+src/test/java/                     // Unit/integration test source
+src/test/resources/                // Unit/integration test resources
+template.mf                        // Bundlor template
+</pre><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="wiki/Virgo-git-Repositories.html" title="Virgo git Repositories">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center">
+					<a href="wiki/Source.html" title="Source">
+						<img alt="Source" border="0" src="../../images/home.gif"/>
+					</a>
+				</td>
+				<td style="width: 20%" align="right">
+					<a href="wiki/How-to-Add-new-woven-project-to-Virgo.html" title="How to Add new woven project to Virgo">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Virgo git Repositories</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">How to Add new woven project to Virgo</td>
+			</tr>
+		</table>
+	</body>
+</html>

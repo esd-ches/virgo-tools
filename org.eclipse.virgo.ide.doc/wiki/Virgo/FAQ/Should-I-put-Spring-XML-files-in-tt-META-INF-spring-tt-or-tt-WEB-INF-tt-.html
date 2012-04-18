@@ -1,0 +1,60 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>FAQ - Should I put Spring XML files in &lt;tt&gt;META-INF/spring&lt;/tt&gt; or &lt;tt&gt;WEB-INF&lt;/tt&gt;?</title>
+		<link type="text/css" rel="stylesheet" href="wiki/../../book.css"/>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">Should I put Spring XML files in &lt;tt&gt;META-INF/spring&lt;/tt&gt; or &lt;tt&gt;WEB-INF&lt;/tt&gt;?</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="wiki/My-Web-Application-Bundle-stopped-working-when-I-moved-to-Virgo-3-x-What-happened-.html" title="My Web Application Bundle stopped working when I moved to Virgo 3.x. What happened?">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="wiki/Why-is-there-both-a-config-and-a-configuration-directory-.html" title="Why is there both a config and a configuration directory?">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">My Web Application Bundle stopped working when I moved to Virgo 3.x. What happened?</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Why is there both a config and a configuration directory?</td>
+			</tr>
+		</table><hr/>
+		<h1 id="Should_I_put_Spring_XML_files_in_.3Ctt.3EMETA-INF.2Fspring.3C.2Ftt.3E_or_.3Ctt.3EWEB-INF.3C.2Ftt.3E.3F">Should I put Spring XML files in &lt;tt&gt;META-INF/spring&lt;/tt&gt; or &lt;tt&gt;WEB-INF&lt;/tt&gt;?</h1>
+		<p>You should put Spring application context XML configuration files in the <tt>WEB-INF</tt> directory of a web application bundle and in the <tt>META-INF/spring</tt> directory of a non-web bundle.</p>
+		<p>Putting these files in the <tt>META-INF/spring</tt> directory of a web application bundle is a common mistake and produces unpredictable results since Spring DM will attempt to build an application context independently of, and asynchronously from, the web application.</p><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="wiki/My-Web-Application-Bundle-stopped-working-when-I-moved-to-Virgo-3-x-What-happened-.html" title="My Web Application Bundle stopped working when I moved to Virgo 3.x. What happened?">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center">
+					<a href="wiki/FAQ.html" title="FAQ">
+						<img alt="FAQ" border="0" src="../../images/home.gif"/>
+					</a>
+				</td>
+				<td style="width: 20%" align="right">
+					<a href="wiki/Why-is-there-both-a-config-and-a-configuration-directory-.html" title="Why is there both a config and a configuration directory?">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">My Web Application Bundle stopped working when I moved to Virgo 3.x. What happened?</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Why is there both a config and a configuration directory?</td>
+			</tr>
+		</table>
+	</body>
+</html>

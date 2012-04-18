@@ -1,18 +1,11 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Undeploying Artifacts</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo User Guide"><link rel="up" href="ch10.html" title="Chapter&nbsp;10.&nbsp;Working with Applications"><link rel="prev" href="ch10.html" title="Chapter&nbsp;10.&nbsp;Working with Applications"><link rel="next" href="ch11.html" title="Chapter&nbsp;11.&nbsp;Configuration"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Undeploying Artifacts"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="deployment-undeploy"></a>Undeploying Artifacts</h2></div></div></div><p>
-			You undeploy artifacts from Virgo Tomcat Server by using either the hot-deploy directory on the file system, or the Admin Console.
-		</p><p><span class="bold"><strong>Note:</strong></span>  As with deploying, in this guide the terms <span class="emphasis"><em>undeploying</em></span> and <span class="emphasis"><em>uninstalling</em></span> are used interchangeably.</p><div class="section" title="Hot Undeploy"><div class="titlepage"><div><div><h3 class="title"><a name="deployment-undeploy-hot"></a>Hot Undeploy</h3></div></div></div><p>
-				To hot-undeploy an artifact, remove the corresponding file from the pickup directory (by default <code class="literal">$SERVER_HOME/pickup</code>):
-			</p><pre class="programlisting">prompt$ cd $SERVER_HOME/pickup
-prompt$ rm helloWorld.war</pre><p>
-				When Virgo Tomcat Server completes the undeployment of the artifact, messages similar to the following appear in the log:
-			</p><pre class="screen">[2009-12-10 06:46:33.254] fs-watcher   &lt;HD0001I&gt; Hot deployer processing 'DELETED' event for file 'helloWorld.war'.
-[2009-12-10 06:46:33.259] Thread-3     &lt;WE0002I&gt; Stopping web bundle 'helloWorld' version '0.0.0' with context path '/helloWorld'.
-[2009-12-10 06:46:33.285] Thread-3     &lt;WE0003I&gt; Stopped web bundle 'helloWorld' version '0.0.0' with context path '/helloWorld'.
-[2009-12-10 06:46:33.290] fs-watcher   &lt;DE0010I&gt; Stopping bundle 'helloWorld' version '0.0.0'.
-[2009-12-10 06:46:33.295] fs-watcher   &lt;DE0011I&gt; Stopped bundle 'helloWorld' version '0.0.0'.
-[2009-12-10 06:46:33.302] fs-watcher   &lt;DE0013I&gt; Uninstalling bundle 'helloWorld' version '0.0.0'.
-[2009-12-10 06:46:33.319] fs-watcher   &lt;DE0014I&gt; Uninstalled bundle 'helloWorld' version '0.0.0'.</pre></div><div class="section" title="Undeploying Using the Admin Console"><div class="titlepage"><div><div><h3 class="title"><a name="deployment-undeploy-manual"></a>Undeploying Using the Admin Console</h3></div></div></div><p>
-				You can undeploy only whole artifacts from the Admin Console, or in other words, you cannot undeploy the separate modules or bundles that make up an artifact.</p><p>
-				The only artifact that you cannot undeploy from the Admin Console is the Admin Console itself. If you need to undeploy this application, you must remove it from the pickup directory (by default <code class="literal">SERVER_HOME/pickup</code>); the name of the artifact is
-				<code class="literal">org.eclipse.virgo.server.admin-2.1.0.RELEASE.plan</code>.
-			</p><p>See <a class="link" href="ch07s02.html#admin-console-manage-artifacts" title="Viewing and Managing the Lifecycle of Deployed Artifacts">Viewing and Managing the Lifecycle of Deployed Artifacts</a> for details about uninstalling (undeploying) an artifact using the Admin Console.  The high-level steps are to highlight the artifact in the artifact tree then click <code class="literal">Uninstall</code>. </p></div></div></body></html>
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Downloading Bundles from the SpringSource Enterprise Bundle Repository</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo User Guide"><link rel="up" href="ch10.html" title="Chapter&nbsp;10.&nbsp;The Provisioning Repository"><link rel="prev" href="ch10.html" title="Chapter&nbsp;10.&nbsp;The Provisioning Repository"><link rel="next" href="ch10s03.html" title="Configuring the Repository"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Downloading Bundles from the SpringSource Enterprise Bundle Repository"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="repository-brits"></a>Downloading Bundles from the SpringSource Enterprise Bundle Repository</h2></div></div></div><p>
+		    The SpringSource Enterprise Bundle Repository is a public collection of open source libraries commonly used for developing enterprise Java applications with the Spring Framework and Virgo.  It contains hundreds of the most popular enterprise Java libraries made available for general use in an OSGi-ready format.  You can browse the collection and then download the bundles that you need into your own local repository.
+		</p><p>
+			The SpringSource Enterprise Bundle Repository is located <a class="ulink" href="http://www.springsource.com/repository" target="_top">here</a>.
+		</p><p>
+			<img src="images/bundle-repository.png">
+		</p><p>
+			You can find bundles in the repository using a number of options.  You use the &lsquo;Search&rsquo; facility by typing in a keyword.  The matching criteria returned can be explored by name, symbolic name, class, package or resource.
+		</p><p>
+			There is also the option of clicking on &lsquo;Browse by Bundle&rsquo;.  This gives an alphabetical list of bundles.  You can select the desired bundle to see details and find the download link.  Finally, you can also choose to &lsquo;Browse by Library&rsquo;, which allows you to browse the alphabetical list of libraries in the repository.
+		</p></div></body></html>
