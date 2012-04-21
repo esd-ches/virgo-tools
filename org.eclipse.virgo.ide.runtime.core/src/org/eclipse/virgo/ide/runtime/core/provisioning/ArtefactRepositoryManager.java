@@ -44,6 +44,8 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactRepository;
 import org.eclipse.virgo.ide.bundlerepository.domain.BundleArtefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.BundleImport;
+import org.eclipse.virgo.ide.bundlerepository.domain.IArtefact;
+import org.eclipse.virgo.ide.bundlerepository.domain.IArtefactTyped;
 import org.eclipse.virgo.ide.bundlerepository.domain.LibraryArtefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 import org.eclipse.virgo.ide.bundlerepository.domain.PackageExport;
@@ -100,7 +102,7 @@ public class ArtefactRepositoryManager {
 		List<OsgiVersion> versions = new ArrayList<OsgiVersion>();
 		try {
 			r.lock();
-			for (BundleArtefact bundle : artefactRepository.getBundles()) {
+			for (IArtefact bundle : artefactRepository.getBundles()) {
 				if (bundle.getSymbolicName().equals(symbolicName)) {
 					versions.add(bundle.getVersion());
 				}
@@ -240,9 +242,9 @@ public class ArtefactRepositoryManager {
 	private BundleArtefact getBundle(String symbolicName, OsgiVersion version) {
 		try {
 			r.lock();
-			for (BundleArtefact bundle : artefactRepository.getBundles()) {
+			for (IArtefact bundle : artefactRepository.getBundles()) {
 				if (bundle.getSymbolicName().equals(symbolicName) && bundle.getVersion().equals(version)) {
-					return bundle;
+					return (BundleArtefact) bundle;
 				}
 			}
 			return null;
@@ -327,8 +329,8 @@ public class ArtefactRepositoryManager {
 
 	private List<PackageExport> findPackagesWithExactName(String name) {
 		List<PackageExport> exports = new ArrayList<PackageExport>();
-		for (BundleArtefact bundle : artefactRepository.getBundles()) {
-			for (PackageExport e : bundle.getExports()) {
+		for (IArtefactTyped bundle : artefactRepository.getBundles()) {
+			for (PackageExport e : ((BundleArtefact) bundle).getExports()) {
 				if (e.getName().equals(name)) {
 					exports.add(e);
 				}

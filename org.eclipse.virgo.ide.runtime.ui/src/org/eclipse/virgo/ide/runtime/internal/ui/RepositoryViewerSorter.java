@@ -12,13 +12,11 @@ package org.eclipse.virgo.ide.runtime.internal.ui;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.virgo.ide.bundlerepository.domain.BundleArtefact;
-import org.eclipse.virgo.ide.bundlerepository.domain.LibraryArtefact;
-import org.eclipse.virgo.ide.runtime.internal.ui.RepositoryViewerUtils.Bundles;
-import org.eclipse.virgo.ide.runtime.internal.ui.RepositoryViewerUtils.Libraries;
-import org.eclipse.virgo.ide.runtime.internal.ui.RepositoryViewerUtils.LocationAwareBundles;
-import org.eclipse.virgo.ide.runtime.internal.ui.RepositoryViewerUtils.LocationAwareLibraries;
-
+import org.eclipse.virgo.ide.bundlerepository.domain.Artefact;
+import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactSet;
+import org.eclipse.virgo.ide.bundlerepository.domain.IArtefactTyped;
+import org.eclipse.virgo.ide.bundlerepository.domain.ILocalEntity;
+import org.eclipse.virgo.ide.bundlerepository.domain.LocalArtefactSet;
 
 /**
  * @author Christian Dupuis
@@ -27,46 +25,30 @@ public class RepositoryViewerSorter extends ViewerSorter {
 
 	@Override
 	public int category(Object element) {
-		if (element instanceof Bundles) {
-			return 1;
+		int category = 0;
+		if (element instanceof IArtefactTyped) {
+			IArtefactTyped typed = (IArtefactTyped) element;
+			category = typed.getArtefactType().getOrdering();
 		}
-		else if (element instanceof Libraries) {
-			return 2;
+		if (element instanceof ArtefactSet) {
+			category += 10;
 		}
-		else if (element instanceof BundleArtefact) {
-			return 3;
-		}
-		else if (element instanceof LibraryArtefact) {
-			return 4;
+		if (category > 0) {
+			return category;
 		}
 		return super.category(element);
 	}
 
 	@Override
 	public int compare(Viewer viewer, Object e1, Object e2) {
-		if (e1 instanceof LocationAwareBundles && e2 instanceof LocationAwareBundles) {
-			return ((LocationAwareBundles) e1).getLocation().compareTo(
-					((LocationAwareBundles) e2).getLocation());
-		}
-		else if (e1 instanceof LocationAwareLibraries && e2 instanceof LocationAwareLibraries) {
-			return ((LocationAwareLibraries) e1).getLocation().compareTo(
-					((LocationAwareLibraries) e2).getLocation());
-		}
-		else if (e1 instanceof BundleArtefact && e2 instanceof BundleArtefact) {
-			String st1 = ((BundleArtefact) e1).getSymbolicName() + ";"
-					+ ((BundleArtefact) e1).getVersion();
-			String st2 = ((BundleArtefact) e2).getSymbolicName() + ";"
-					+ ((BundleArtefact) e2).getVersion();
-			return super.compare(viewer, st1, st2);
-		}
-		else if (e1 instanceof LibraryArtefact && e2 instanceof LibraryArtefact) {
-			String st1 = ((LibraryArtefact) e1).getSymbolicName() + ";"
-					+ ((LibraryArtefact) e1).getVersion();
-			String st2 = ((LibraryArtefact) e2).getSymbolicName() + ";"
-					+ ((LibraryArtefact) e2).getVersion();
+		if (e1 instanceof LocalArtefactSet && e2 instanceof LocalArtefactSet) {
+			return ((ILocalEntity) e1).getFile().compareTo(((ILocalEntity) e2).getFile());
+		} else if (e1 instanceof Artefact && e2 instanceof Artefact) {
+			String st1 = ((Artefact) e1).getSymbolicName() + ";" + ((Artefact) e1).getVersion();
+			String st2 = ((Artefact) e2).getSymbolicName() + ";" + ((Artefact) e2).getVersion();
 			return super.compare(viewer, st1, st2);
 		}
 		return super.compare(viewer, e1, e2);
 	}
-	
+
 }

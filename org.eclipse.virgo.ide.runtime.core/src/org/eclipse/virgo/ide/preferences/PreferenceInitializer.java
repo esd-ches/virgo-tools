@@ -12,7 +12,6 @@ package org.eclipse.virgo.ide.preferences;
 
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
-
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 
 /**

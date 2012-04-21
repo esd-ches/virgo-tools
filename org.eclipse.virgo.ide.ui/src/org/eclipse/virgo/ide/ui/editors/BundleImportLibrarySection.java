@@ -33,6 +33,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.virgo.ide.bundlerepository.domain.Artefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactRepository;
+import org.eclipse.virgo.ide.bundlerepository.domain.IArtefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.LibraryArtefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 import org.eclipse.virgo.ide.manifest.core.IHeaderConstants;
@@ -91,26 +92,27 @@ public class BundleImportLibrarySection extends AbstractImportSection {
 
 	private void setElements(ImportListSelectionDialog dialog, boolean addRemote) {
 		IProject project = ((BundleManifestEditor) this.getPage().getEditor()).getCommonProject();
-		Collection<LibraryArtefact> libraries = null;
+		IArtefact[] libraries = null;
 		if (addRemote) {
 			ArtefactRepository bundleRepository = RepositoryUtils.searchForArtifacts("", false, true);
-			libraries = bundleRepository.getLibraries();
+			libraries = bundleRepository.getLibrarySet().toArray();
 		}
 		else {
-			libraries = RepositoryUtils.getImportLibraryProposals(project, "");
-			removeExistingLibraries(libraries);
+			Collection<Artefact> libraryList = RepositoryUtils.getImportLibraryProposals(project, "");
+			removeExistingLibraries(libraryList);
+			libraries = libraryList.toArray(new IArtefact[]{});
 		}
-		dialog.setElements(libraries.toArray());
+		dialog.setElements(libraries);
 	}
 
-	private void removeExistingLibraries(Collection<LibraryArtefact> bundles) {
+	private void removeExistingLibraries(Collection<Artefact> bundles) {
 		ImportLibraryHeader header = (ImportLibraryHeader) getBundle().getManifestHeader(
 				IHeaderConstants.IMPORT_LIBRARY);
-		Set<LibraryArtefact> filteredElements = new HashSet<LibraryArtefact>();
+		Set<Artefact> filteredElements = new HashSet<Artefact>();
 
 		if (header != null) {
 			ImportLibraryObject[] filter = header.getImportedLibraries();
-			for (LibraryArtefact proposal : bundles) {
+			for (Artefact proposal : bundles) {
 				for (ImportLibraryObject imported : filter) {
 					if (proposal.getSymbolicName().equalsIgnoreCase(imported.getId())) {
 						filteredElements.add(proposal);

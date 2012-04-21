@@ -22,6 +22,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.virgo.ide.bundlerepository.domain.Artefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.BundleArtefact;
+import org.eclipse.virgo.ide.bundlerepository.domain.IArtefactTyped;
 import org.eclipse.virgo.ide.bundlerepository.domain.LibraryArtefact;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.virgo.ide.runtime.internal.core.VirgoServerRuntime;
@@ -158,7 +159,7 @@ public class RepositoryProvisioningJob extends Job {
 	}
 
 	protected void downloadBinary(IProgressMonitor monitor, File bundlesFile, File libraryFile,
-			Artefact artifact) {
+			IArtefactTyped artifact) {
 		if (artifact instanceof BundleArtefact) {
 			WebDownloadUtils.downloadFile(RepositoryUtils.getResourceUrl((BundleArtefact) artifact,
 					RepositoryUtils.DOWNLOAD_TYPE_BINARY), bundlesFile, monitor);

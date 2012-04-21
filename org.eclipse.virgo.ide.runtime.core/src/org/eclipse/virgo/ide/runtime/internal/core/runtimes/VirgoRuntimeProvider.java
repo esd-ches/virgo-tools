@@ -30,8 +30,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.libra.framework.editor.core.model.IBundle;
-import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator;
-import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator.JavaVersion;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;

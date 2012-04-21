@@ -23,7 +23,8 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.text.IDocument;
 import org.eclipse.jface.text.contentassist.CompletionProposal;
-import org.eclipse.virgo.ide.bundlerepository.domain.BundleArtefact;
+import org.eclipse.virgo.ide.bundlerepository.domain.Artefact;
+import org.eclipse.virgo.ide.bundlerepository.domain.IArtefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryUtils;
 import org.eclipse.virgo.ide.ui.ServerIdeUiPlugin;
@@ -72,8 +73,8 @@ public class PlanContentAssistProcessor extends DefaultXMLCompletionProposalComp
 		if (type == null || "bundle".equals(type)) {
 			IFile file = getFile(request);
 			if (file != null) {
-				Set<BundleArtefact> bundles = RepositoryUtils.getImportBundleProposals(file.getProject(), prefix);
-				for (BundleArtefact bundle : bundles) {
+				Set<Artefact> bundles = RepositoryUtils.getImportBundleProposals(file.getProject(), prefix);
+				for (IArtefact bundle : bundles) {
 					String value = "\"" + bundle.getSymbolicName() + "\"";
 					request.addProposal(new CompletionProposal(value, request.getReplacementBeginPosition(), request
 							.getReplacementLength(), value.length(), ServerIdeUiPlugin
@@ -103,8 +104,8 @@ public class PlanContentAssistProcessor extends DefaultXMLCompletionProposalComp
 		if (type == null || "bundle".equals(type)) {
 			IFile file = getFile(request);
 			if (file != null) {
-				Set<BundleArtefact> bundles = RepositoryUtils.getImportBundleProposals(file.getProject(), bundleId);
-				for (BundleArtefact element : bundles) {
+				Set<Artefact> bundles = RepositoryUtils.getImportBundleProposals(file.getProject(), bundleId);
+				for (IArtefact element : bundles) {
 					if (element.getSymbolicName().equalsIgnoreCase(bundleId)) {
 						List<String> proposalValues = getVersionProposals(element.getVersion());
 						for (String proposalValue : proposalValues) {

@@ -14,6 +14,7 @@ import java.io.File;
 import java.net.URI;
 
 import org.eclipse.virgo.ide.bundlerepository.domain.BundleArtefact;
+import org.eclipse.virgo.ide.bundlerepository.domain.ILocalArtefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.LibraryArtefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 
@@ -23,7 +24,7 @@ import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
  * @author Christian Dupuis
  * @since 1.0.0
  */
-public class LocalLibraryArtefact extends LibraryArtefact {
+public class LocalLibraryArtefact extends LibraryArtefact implements ILocalArtefact  {
 
 	private static final long serialVersionUID = 2752279714525304374L;
 

@@ -17,7 +17,7 @@ import org.eclipse.virgo.ide.runtime.core.provisioning.ArtefactRepositoryManager
  * @author adriancolyer
  * 
  */
-public abstract class Artefact {
+public abstract class Artefact implements IArtefact {
 
 	private byte[] name; // human readable name of the artefact
 
@@ -52,65 +52,75 @@ public abstract class Artefact {
 	}
 
 	/**
-	 * The human-readable name of the artefact
+	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#getName()
 	 */
 	public String getName() {
 		return (name != null ? new String(name) : null);
 	}
 
 	/**
-	 * The symbolic name of the artefact
+	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#getSymbolicName()
 	 */
 	public String getSymbolicName() {
 		return (symbolicName != null ? new String(symbolicName) : null);
 	}
 
 	/**
-	 * The version of the artefact
+	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#getVersion()
 	 */
 	public OsgiVersion getVersion() {
 		return version;
 	}
 
 	/**
-	 * The organisation name as used in ivy.xml (groupId name for maven)
+	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#getOrganisationName()
 	 */
 	public String getOrganisationName() {
 		return (organisationName != null ? new String(organisationName) : null);
 	}
 
 	/**
-	 * The module name as used in ivy.xml (artefactId for maven)
+	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#getModuleName()
 	 */
 	public String getModuleName() {
 		return (moduleName != null ? new String(moduleName) : null);
 	}
 
 	/**
-	 * Is source code available
+	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#isSourceAvailable()
 	 */
 	public boolean isSourceAvailable() {
 		return this.sourceAvailable;
 	}
 
 	/**
-	 * Set if source code is available
+	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#setSourceAvailable(boolean)
 	 */
 	public void setSourceAvailable(boolean sourceAvailable) {
 		this.sourceAvailable = sourceAvailable;
 	}
-
+	
 	/**
-	 * Get the relative URL path for downloading this artefact from S3
+	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#getRelativeUrlPath()
 	 */
 	public abstract String getRelativeUrlPath();
 
 	/**
-	 * Get the relative URL path for displaying the license file for this artefact
+	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#getRelativeLicenseUrlPath()
 	 */
 	public String getRelativeLicenseUrlPath() {
 		return "/" + getOrganisationName() + "/" + getModuleName() + "/" + getVersion() + "/license-" + getVersion()
 				+ ".txt";
 	}
 
+	public String getSignature() {
+		return getSymbolicName() + ";" + getVersion() + ";" + getArtefactType().getLabel();
+	}
+	
+	/**
+	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#isMatch(org.eclipse.virgo.ide.bundlerepository.domain.IArtefact)
+	 */
+	public boolean isMatch(IArtefact artefact) {
+		return getSignature().equals(artefact.getSignature());
+	}
 }

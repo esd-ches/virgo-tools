@@ -14,6 +14,7 @@ import java.io.File;
 import java.net.URI;
 
 import org.eclipse.virgo.ide.bundlerepository.domain.BundleArtefact;
+import org.eclipse.virgo.ide.bundlerepository.domain.ILocalArtefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 
 
@@ -22,23 +23,21 @@ import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
  * @author Christian Dupuis
  * @since 1.0.0
  */
-public class LocalBundleArtefact extends BundleArtefact {
-
-	private static final long serialVersionUID = -6694481554205917720L;
+public class LocalBundleArtefact extends BundleArtefact implements ILocalArtefact {
 
 	private final boolean hasDownloadedSources;
 
 	private final File file;
 
 	public LocalBundleArtefact(String name, String symbolicName, OsgiVersion version,
-			boolean hasDownloadedSources, URI file) {
+			boolean hasDownloadedSources, URI fileURI) {
 		super(name, symbolicName, version, symbolicName, symbolicName);
 		this.hasDownloadedSources = hasDownloadedSources;
-		this.file = (file != null ? new File(file) : null);
+		this.file = (fileURI != null ? new File(fileURI) : null);
 	}
 
-	public boolean hasDownloadedSource() {
-		return this.hasDownloadedSources;
+	public boolean isSourceDownloaded() {
+		return hasDownloadedSources;
 	}
 
 	public File getFile() {

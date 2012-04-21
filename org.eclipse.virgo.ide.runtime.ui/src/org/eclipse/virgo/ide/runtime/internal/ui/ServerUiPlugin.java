@@ -29,6 +29,8 @@ public class ServerUiPlugin extends AbstractUIPlugin {
 	public static final String PLUGIN_ID = "org.eclipse.virgo.ide.runtime.ui";
 
 	private static final String RESOURCE_NAME = "org.eclipse.virgo.ide.runtime.internal.ui.messages";
+	
+	public static final String REPOSITORY_PAGE_ID = "org.eclipse.virgo.ide.server.ui.configuration.editor.repository";
 
 	public static final String PREF_DOWNLOAD_MESSAGE_KEY = PLUGIN_ID + "..download.message";
 
@@ -37,6 +39,8 @@ public class ServerUiPlugin extends AbstractUIPlugin {
 
 	/** Resource bundle */
 	private ResourceBundle resourceBundle;
+
+	public static final String VIRGO_SERVER_ID = "org.eclipse.virgo.server.virgo";
 
 	/**
 	 * The constructor

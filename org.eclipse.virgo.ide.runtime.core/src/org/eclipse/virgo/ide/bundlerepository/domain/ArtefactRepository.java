@@ -10,20 +10,66 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.bundlerepository.domain;
 
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * @author Christian Dupuis
+ * @author Miles Parker
  * @since 2.2.7
  */
 public class ArtefactRepository {
 
-	private Set<BundleArtefact> bundles = new HashSet<BundleArtefact>();
+	ArtefactSet bundles;
+	ArtefactSet libraries;
+	ArtefactSet allArtefacts;
+	
+	public ArtefactRepository() {
+		bundles = createArtefactSet(ArtefactType.BUNDLE);
+		libraries = createArtefactSet(ArtefactType.LIBRARY);
+		allArtefacts = new ArtefactSet(this, ArtefactType.COMBINED);
+	}
 
-	private Set<LibraryArtefact> libraries = new HashSet<LibraryArtefact>();
+	protected ArtefactSet createArtefactSet(ArtefactType type) {
+		return new ArtefactSet(this, type) {
+			@Override
+			public boolean add(IArtefact artefact) {
+				return super.add(artefact) && allArtefacts.add(artefact);
+			}
+		};
+	}
+	
+	public Iterable<IArtefact> getBundles() {
+		return bundles.getArtefacts();
+	}
 
-	public Set<BundleArtefact> getBundles() {
+	public ArtefactSet getArtefactSet(ArtefactType artefactType) {
+		if (artefactType == ArtefactType.BUNDLE) {
+			return bundles;
+		} else if (artefactType == ArtefactType.LIBRARY) {
+			return libraries;
+		}
+		throw new RuntimeException("Internal error, bad artifact type: " + artefactType);
+	}
+
+	/**
+	 * Returns the appropriate set for the artefact.
+	 * This set may or may not actually contain the supplied artefact.
+	 */
+	public ArtefactSet getMatchingArtefactSet(IArtefactTyped artefact) {
+		return getArtefactSet(artefact.getArtefactType());
+	}
+	
+	/**
+	 * Adds the artefact to the appropriate and common set.
+	 */
+	public void add(IArtefact artefact) {
+		getMatchingArtefactSet(artefact).add(artefact);
+	}
+
+	public ArtefactSet getLibrarySet() {
+		return libraries;
+	}
+
+	public ArtefactSet getBundleSet() {
 		return bundles;
 	}
 
@@ -31,12 +77,25 @@ public class ArtefactRepository {
 		this.bundles.add(bundle);
 	}
 
-	public Set<LibraryArtefact> getLibraries() {
-		return libraries;
+	public Iterable<IArtefact> getLibraries() {
+		return libraries.getArtefacts();
 	}
 
 	public void addLibrary(LibraryArtefact library) {
 		this.libraries.add(library);
+	}
+	
+	public ArtefactSet getAllArtefacts() {
+		return allArtefacts;
+	}
+
+	public boolean contains(IArtefact artefact) {
+		for (IArtefact repositoryArtefact : getMatchingArtefactSet(artefact).getArtefacts()) {
+			if (artefact.isMatch(repositoryArtefact)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

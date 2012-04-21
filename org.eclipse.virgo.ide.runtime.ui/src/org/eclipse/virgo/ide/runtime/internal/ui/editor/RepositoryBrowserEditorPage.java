@@ -12,17 +12,12 @@ package org.eclipse.virgo.ide.runtime.internal.ui.editor;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -44,10 +39,8 @@ import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.KeyEvent;
@@ -81,23 +74,21 @@ import org.eclipse.ui.progress.IProgressConstants;
 import org.eclipse.virgo.ide.bundlerepository.domain.Artefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactRepository;
 import org.eclipse.virgo.ide.bundlerepository.domain.BundleArtefact;
+import org.eclipse.virgo.ide.bundlerepository.domain.IArtefact;
+import org.eclipse.virgo.ide.bundlerepository.domain.IArtefactTyped;
 import org.eclipse.virgo.ide.bundlerepository.domain.LibraryArtefact;
 import org.eclipse.virgo.ide.runtime.core.IServerWorkingCopy;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
-import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.virgo.ide.runtime.core.provisioning.ArtefactRepositoryManager;
 import org.eclipse.virgo.ide.runtime.core.provisioning.LocalBundleArtefact;
-import org.eclipse.virgo.ide.runtime.core.provisioning.LocalLibraryArtefact;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryProvisioningJob;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositorySourceProvisiongJob;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryUtils;
-import org.eclipse.virgo.ide.runtime.internal.ui.BasicRepositoryLabelProvider;
+import org.eclipse.virgo.ide.runtime.internal.ui.ArtefactLabelProvider;
 import org.eclipse.virgo.ide.runtime.internal.ui.RepositorySearchResultContentProvider;
 import org.eclipse.virgo.ide.runtime.internal.ui.RepositoryViewerSorter;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiImages;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
-import org.eclipse.virgo.ide.runtime.internal.ui.RepositoryViewerUtils.LocationAwareBundles;
-import org.eclipse.virgo.ide.runtime.internal.ui.RepositoryViewerUtils.LocationAwareLibraries;
 import org.eclipse.virgo.ide.ui.editors.BundleManifestEditor;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.ui.editor.ServerEditorPart;
@@ -129,7 +120,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 
 	private PropertyChangeListener listener;
 
-	private RepositoryContentProvider repositoryContentProvider = new RepositoryContentProvider();
+	private RepositoryContentProvider repositoryContentProvider;
 
 	private Tree repositoryTable;
 
@@ -155,7 +146,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 
 	private Link update;
 
-	private static String PROXY_PREF_PAGE_ID = "org.eclipse.ui.net.NetPreferences";
+	private static String PROXY_PREF_PAGE_ID = Messages.RepositoryBrowserEditorPage_0;
 
 	public void createPartControl(Composite parent) {
 
@@ -165,7 +156,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 
 		ScrolledForm form = toolkit.createScrolledForm(parent);
 		toolkit.decorateFormHeading(form.getForm());
-		form.setText("Bundle Repository Browser");
+		form.setText(Messages.RepositoryBrowserEditorPage_BundleBrowserLabel);
 		form.setImage(getFormImage());
 		GridLayout layout = new GridLayout(2, true);
 		layout.marginTop = 6;
@@ -214,9 +205,9 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		GridLayout layout;
 		Section leftSection = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR
 				| Section.DESCRIPTION);
-		leftSection.setText("Search for Bundles and Libraries");
+		leftSection.setText(Messages.RepositoryBrowserEditorPage_SearchBundlesAndLibraries);
 		leftSection
-				.setDescription("Search for bundles and libraries by names, symbolic names, classes or packages. Wildcards such as * and ? are supported. Bundles and Libraries that appear in gray color are already installed.");
+				.setDescription(Messages.RepositoryBrowserEditorPage_SearchBundlesAndLibrariesByName);
 		leftSection.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		Composite leftComposite = toolkit.createComposite(leftSection);
@@ -227,7 +218,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		toolkit.paintBordersFor(leftComposite);
 		leftSection.setClient(leftComposite);
 
-		searchText = toolkit.createText(leftComposite, "");
+		searchText = toolkit.createText(leftComposite, Messages.RepositoryBrowserEditorPage_4);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 		searchText.setLayoutData(data);
 		searchText.addKeyListener(new KeyListener() {
@@ -247,7 +238,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		data = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
 		searchButtonComposite.setLayoutData(data);
 
-		searchButton = toolkit.createButton(searchButtonComposite, "&Search", SWT.PUSH);
+		searchButton = toolkit.createButton(searchButtonComposite, Messages.RepositoryBrowserEditorPage_Search, SWT.PUSH);
 		searchButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				handleSearch();
@@ -262,7 +253,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 
 		searchResultTableViewer = new CheckboxTreeViewer(searchResultTable);
 		searchResultTableViewer.setContentProvider(contentProvider);
-		searchResultTableViewer.setLabelProvider(new ColoredRespositoryLabelProvider());
+		searchResultTableViewer.setLabelProvider(new ColoredRespositoryLabelProvider(server.getRuntime()));
 		searchResultTableViewer.setInput(this); // activate content provider
 		searchResultTableViewer.setSorter(new RepositoryViewerSorter());
 		searchResultTableViewer.addCheckStateListener(new ICheckStateListener() {
@@ -295,7 +286,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 				ISelection selection = searchResultTableViewer.getSelection();
 				if (selection instanceof IStructuredSelection) {
 					Object element = ((IStructuredSelection) selection).getFirstElement();
-					if (element instanceof Artefact) {
+					if (element instanceof IArtefact) {
 						anaylseButton.setEnabled(true);
 						licenseButton.setEnabled(true);
 					}
@@ -314,9 +305,9 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.widthHint = 100;
-		Button selectAllButton = toolkit.createButton(buttonComposite, "Select &All", SWT.PUSH);
+		Button selectAllButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_SelectAll, SWT.PUSH);
 		selectAllButton.setLayoutData(data);
-		selectAllButton.setToolTipText("Select all bundles and libraries.");
+		selectAllButton.setToolTipText(Messages.RepositoryBrowserEditorPage_SelectAllBundlesAndLibraries);
 		selectAllButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				searchResultTableViewer.setCheckedElements(contentProvider
@@ -324,8 +315,8 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 			}
 		});
 
-		Button deselectAllButton = toolkit.createButton(buttonComposite, "Dese&lect All", SWT.PUSH);
-		deselectAllButton.setToolTipText("Deselect all bundles and libraries.");
+		Button deselectAllButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_DeselectAllBundlesAndLibraries, SWT.PUSH);
+		deselectAllButton.setToolTipText(Messages.RepositoryBrowserEditorPage_9);
 		deselectAllButton.setLayoutData(data);
 		deselectAllButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent selectionEvent) {
@@ -334,28 +325,28 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		});
 
 		// insert vertical space to make the download button stand out
-		toolkit.createLabel(buttonComposite, "");
+		toolkit.createLabel(buttonComposite, Messages.RepositoryBrowserEditorPage_10);
 
-		anaylseButton = toolkit.createButton(buttonComposite, "Anal&yse", SWT.PUSH);
+		anaylseButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_Analyse, SWT.PUSH);
 		anaylseButton.setEnabled(false);
 		anaylseButton.setLayoutData(data);
-		anaylseButton.setToolTipText("Analyze the selected bundle or library.");
+		anaylseButton.setToolTipText(Messages.RepositoryBrowserEditorPage_AnalyseSelected);
 		anaylseButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				ISelection selection = searchResultTableViewer.getSelection();
 				if (selection instanceof IStructuredSelection) {
 					Object element = ((IStructuredSelection) selection).getFirstElement();
-					if (element instanceof Artefact) {
-						WebUiUtils.openUrl(RepositoryUtils.getRepositoryUrl((Artefact) element));
+					if (element instanceof IArtefact) {
+						WebUiUtils.openUrl(RepositoryUtils.getRepositoryUrl((IArtefact) element));
 					}
 				}
 			}
 		});
 
-		licenseButton = toolkit.createButton(buttonComposite, "View &License", SWT.PUSH);
+		licenseButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_ViewLicense, SWT.PUSH);
 		licenseButton.setEnabled(false);
 		licenseButton.setLayoutData(data);
-		licenseButton.setToolTipText("Open the bundle or library license file.");
+		licenseButton.setToolTipText(Messages.RepositoryBrowserEditorPage_OpenLicense);
 		licenseButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				ISelection selection = searchResultTableViewer.getSelection();
@@ -374,40 +365,40 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		});
 
 		// insert vertical space to make the download button stand out
-		toolkit.createLabel(buttonComposite, "");
+		toolkit.createLabel(buttonComposite, ""); //$NON-NLS-1$
 
-		downloadButton = toolkit.createButton(buttonComposite, "Download", SWT.PUSH);
+		downloadButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_Download, SWT.PUSH);
 		downloadButton.setEnabled(false);
 		downloadButton.setLayoutData(data);
-		downloadButton.setToolTipText("Download selected bundles and libraries.");
+		downloadButton.setToolTipText(Messages.RepositoryBrowserEditorPage_DownloadSelected);
 		downloadButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				Set<Artefact> artifacts = new LinkedHashSet<Artefact>();
 				Object[] selections = searchResultTableViewer.getCheckedElements();
 				for (Object selection : selections) {
-					if (selection instanceof Artefact) {
+					if (selection instanceof IArtefact) {
 						artifacts.add((Artefact) selection);
 					}
 				}
 
 				boolean showDialog = ServerUiPlugin.getDefault().getPreferenceStore().getBoolean(
-						ServerUiPlugin.PLUGIN_ID + ".download.message");
+						ServerUiPlugin.PLUGIN_ID + ".download.message"); //$NON-NLS-1$
 
 				if (!showDialog) {
 					MessageDialogWithToggle dialog = MessageDialogWithToggle
 							.openOkCancelConfirm(
 									shell,
-									"Download Bundles and Libraries",
-									"A download job will be triggered to run in background.\n\nDo you want to proceed?",
-									"Don't show this dialog next time.", false, ServerUiPlugin
+									Messages.RepositoryBrowserEditorPage_DownloadBundlesAndLibraries,
+									Messages.RepositoryBrowserEditorPage_DownloadTriggerMessage,
+									Messages.RepositoryBrowserEditorPage_DontShowDialog, false, ServerUiPlugin
 											.getDefault().getPreferenceStore(),
-									ServerUiPlugin.PLUGIN_ID + ".download.message");
+									ServerUiPlugin.PLUGIN_ID + ".download.message"); //$NON-NLS-1$
 					if (dialog.getReturnCode() != Dialog.OK) {
 						return;
 					}
 					else {
 						ServerUiPlugin.getDefault().getPreferenceStore().setValue(
-								ServerUiPlugin.PLUGIN_ID + ".download.message",
+								ServerUiPlugin.PLUGIN_ID + ".download.message", //$NON-NLS-1$
 								new Boolean(dialog.getToggleState()));
 					}
 				}
@@ -438,18 +429,18 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(wrappedComposite);
 
 		downloadSourcesCheckbox = toolkit.createButton(wrappedComposite,
-				"Download source jars from repository", SWT.CHECK | SWT.WRAP);
+				Messages.RepositoryBrowserEditorPage_DownloadSourceJars, SWT.CHECK | SWT.WRAP);
 		downloadSourcesCheckbox.setSelection(true);
 		downloadSourcesCheckbox.setLayoutData(new TableWrapData(TableWrapData.LEFT,
 				TableWrapData.TOP));
 
 		Link repoLink = new Link(wrappedComposite, SWT.WRAP);
 		repoLink
-				.setText("The repository is also available for browsing at <A HREF=\"repo\">http://www.springsource.com/repository</A>.");
+				.setText(Messages.RepositoryBrowserEditorPage_SourceReposMessage);
 		repoLink.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				WebUiUtils.openUrl("http://www.springsource.com/repository");
+				WebUiUtils.openUrl(Messages.RepositoryBrowserEditorPage_SourceRepos);
 			}
 		});
 		repoLink.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP));
@@ -461,8 +452,8 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 				if (MessageDialog
 						.openQuestion(
 								shell,
-								"Update local bundle and library repository index",
-								"Do you really want to update your local index of available bundles and libraries from the online SpringSource Enterprise Bundle Repository?")) {
+								Messages.RepositoryBrowserEditorPage_UpdateLocalBundles,
+								Messages.RepositoryBrowserEditorPage_ConfirmIndexMessage)) {
 					ServerCorePlugin.getArtefactRepositoryManager().update();
 				}
 
@@ -472,7 +463,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		update.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP));
 
 		Hyperlink disclaimer = toolkit.createHyperlink(wrappedComposite,
-				"Firewall and proxy should be appropriately configured.", SWT.WRAP);
+				Messages.RepositoryBrowserEditorPage_FirewallConfigureMessage, SWT.WRAP);
 		disclaimer.addHyperlinkListener(new HyperlinkAdapter() {
 			public void linkActivated(HyperlinkEvent e) {
 				PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(null,
@@ -489,21 +480,21 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		Date date = ServerCorePlugin.getArtefactRepositoryManager().getArtefactRepositoryDate();
 		String dateString = dateFormat.format(date);
 		update
-				.setText("<A HREF=\"update\">Update local bundle and library repository index.</A> (Last update: "
-						+ dateString + ")");
+				.setText(Messages.RepositoryBrowserEditorPage_UpdateURL
+						+ dateString + ")"); //$NON-NLS-1$
 	}
 	
 	protected String getServerName() {
-		return "SpringSource dm Server";
+		return Messages.RepositoryBrowserEditorPage_ServerName;
 	}
 
 	private Section createRightSection(FormToolkit toolkit, ScrolledForm form) {
 		GridLayout layout;
 		Section leftSection = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR
 				| Section.DESCRIPTION);
-		leftSection.setText("Installed Bundles and Libraries");
+		leftSection.setText(Messages.RepositoryBrowserEditorPage_InstalledBundlesAndLibraries);
 		leftSection
-				.setDescription("The following bundles and libraries are currently installed in the " + getServerName() + ".");
+				.setDescription(Messages.RepositoryBrowserEditorPage_InstalledBundlesAndLibrariesMessage + getServerName() + "."); //$NON-NLS-2$
 		leftSection.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		Composite leftComposite = toolkit.createComposite(leftSection);
@@ -542,8 +533,9 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		});
 
 		repositoryTableViewer = new CheckboxTreeViewer(repositoryTable);
+		repositoryContentProvider = new RepositoryContentProvider();
 		repositoryTableViewer.setContentProvider(repositoryContentProvider);
-		repositoryTableViewer.setLabelProvider(new RepositoryLabelProvider());
+		repositoryTableViewer.setLabelProvider(new ArtefactLabelProvider(server.getRuntime()));
 		repositoryTableViewer.setSorter(new RepositoryViewerSorter());
 		repositoryTableViewer.addCheckStateListener(new ICheckStateListener() {
 			public void checkStateChanged(CheckStateChangedEvent event) {
@@ -562,19 +554,19 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.widthHint = 100;
-		refreshButton = toolkit.createButton(buttonComposite, "&Refresh", SWT.PUSH);
+		refreshButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_Refresh, SWT.PUSH);
 		refreshButton.setLayoutData(data);
-		refreshButton.setToolTipText("Refresh installed bundles and libraries.");
+		refreshButton.setToolTipText(Messages.RepositoryBrowserEditorPage_RefreshMessage);
 		refreshButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				refreshBundleRepository();
 			}
 		});
 
-		downloadSourcesButton = toolkit.createButton(buttonComposite, "&Install Sources", SWT.PUSH);
+		downloadSourcesButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_InstallSources, SWT.PUSH);
 		downloadSourcesButton.setLayoutData(data);
 		downloadSourcesButton
-				.setToolTipText("Download sources of installed bundles and libraries.");
+				.setToolTipText(Messages.RepositoryBrowserEditorPage_InstallSourcesMessage);
 		downloadSourcesButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				downloadSources();
@@ -582,11 +574,11 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		});
 
 		// insert vertical space to make the download button stand out
-		toolkit.createLabel(buttonComposite, "");
+		toolkit.createLabel(buttonComposite, Messages.RepositoryBrowserEditorPage_40);
 
-		openManifestButton = toolkit.createButton(buttonComposite, "&Open Manifest", SWT.PUSH);
+		openManifestButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_OpenManifest, SWT.PUSH);
 		openManifestButton.setLayoutData(data);
-		openManifestButton.setToolTipText("Open Bundle or Library Manifest.");
+		openManifestButton.setToolTipText(Messages.RepositoryBrowserEditorPage_OpenManifestMessage);
 		openManifestButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				ISelection selection = repositoryTableViewer.getSelection();
@@ -594,7 +586,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 					Object element = ((IStructuredSelection) selection).getFirstElement();
 					if (element instanceof LocalBundleArtefact) {
 						BundleManifestEditor.openExternalPlugin(((LocalBundleArtefact) element)
-								.getFile(), "META-INF/MANIFEST.MF");
+								.getFile(), "META-INF/MANIFEST.MF"); //$NON-NLS-1$
 					}
 				}
 			}
@@ -614,7 +606,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 
 		Link repoLink = new Link(wrappedComposite, SWT.WRAP);
 		repoLink
-				.setText("New bundles or libraries added to the file system outside of Eclipse are not picked up automatically. <A HREF=\"update\" >Update the bundle and library index.</A>");
+				.setText(Messages.RepositoryBrowserEditorPage_NewBundlesMessage);
 		repoLink.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -632,7 +624,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 
 			public void run(final IProgressMonitor monitor) throws InvocationTargetException,
 					InterruptedException {
-				monitor.subTask("Refreshing installed Bundles and Libraries from file system");
+				monitor.subTask(Messages.RepositoryBrowserEditorPage_RefreshingBundlesMessage);
 
 				ServerCorePlugin.getArtefactRepositoryManager().refreshBundleRepository(
 						getServer().getRuntime());
@@ -660,10 +652,11 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 
 	protected void downloadSources() {
 		Set<Artefact> artifacts = new LinkedHashSet<Artefact>();
+		ArtefactRepository repository = repositoryContentProvider.getRepository();
 
-		for (BundleArtefact bundle : this.repositoryContentProvider.getRepository().getBundles()) {
+		for (IArtefactTyped bundle : repository.getBundles()) {
 			if (bundle instanceof LocalBundleArtefact) {
-				if (!((LocalBundleArtefact) bundle).hasDownloadedSource()) {
+				if (!((LocalBundleArtefact) bundle).isSourceDownloaded()) {
 					artifacts.add((LocalBundleArtefact) bundle);
 				}
 			}
@@ -784,115 +777,12 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		}
 	}
 
-	private final class RepositoryContentProvider implements ITreeContentProvider {
-
-		private ArtefactRepository repository = null;
-
-		private Map<File, LocationAwareBundles> bundles;
-
-		private Map<File, LocationAwareLibraries> libraries;
-
-		public Object[] getElements(Object inputElement) {
-			if (inputElement instanceof IRuntime) {
-				repository = RepositoryUtils.getRepositoryContents((IRuntime) inputElement);
-				List<Object> children = new ArrayList<Object>();
-
-				bundles = new HashMap<File, LocationAwareBundles>();
-				libraries = new HashMap<File, LocationAwareLibraries>();
-
-				for (BundleArtefact bundle : repository.getBundles()) {
-					if (bundle instanceof LocalBundleArtefact) {
-						File file = ((LocalBundleArtefact) bundle).getFile().getParentFile();
-						if (file.getParentFile().getName().equals("subsystems")) {
-							file = file.getParentFile();
-						}
-						if (bundles.containsKey(file)) {
-							bundles.get(file).getBundles().add(bundle);
-						}
-						else {
-							Set<BundleArtefact> nb = new HashSet<BundleArtefact>();
-							nb.add(bundle);
-							bundles.put(file, new LocationAwareBundles(nb, file));
-						}
-					}
-				}
-
-				for (LibraryArtefact bundle : repository.getLibraries()) {
-					if (bundle instanceof LocalLibraryArtefact) {
-						File file = ((LocalLibraryArtefact) bundle).getFile().getParentFile();
-						if (libraries.containsKey(file)) {
-							libraries.get(file).getLibraries().add(bundle);
-						}
-						else {
-							Set<LibraryArtefact> nb = new HashSet<LibraryArtefact>();
-							nb.add(bundle);
-							libraries.put(file, new LocationAwareLibraries(nb, file));
-						}
-					}
-				}
-				children.addAll(bundles.values());
-				children.addAll(libraries.values());
-				return children.toArray();
-			}
-			return new Object[0];
-		}
-
-		public ArtefactRepository getRepository() {
-			return repository;
-		}
-
-		public Object[] getChildren(Object parentElement) {
-			if (parentElement instanceof LocationAwareBundles) {
-				return ((LocationAwareBundles) parentElement).getBundles().toArray();
-			}
-			else if (parentElement instanceof LocationAwareLibraries) {
-				return ((LocationAwareLibraries) parentElement).getLibraries().toArray();
-			}
-			return new Object[0];
-		}
-
-		public Object getParent(Object element) {
-			return null;
-		}
-
-		public boolean hasChildren(Object element) {
-			return getChildren(element).length > 0;
-		}
-
-		public void dispose() {
-		}
-
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		}
-
-	}
-
-	private class RepositoryLabelProvider extends BasicRepositoryLabelProvider {
-
-		public String getText(Object parentElement) {
-			if (parentElement instanceof LocationAwareBundles) {
-				String home = ServerUtils.getServerHome(getServer().getRuntime());
-				String fileName = ((LocationAwareBundles) parentElement).getLocation().toString();
-				if (fileName.startsWith(home)) {
-					fileName = fileName.substring(home.length() + 1);
-				}
-				return "Bundles - " + fileName;
-			}
-			else if (parentElement instanceof LocationAwareLibraries) {
-				String home = ServerUtils.getServerHome(getServer().getRuntime());
-				String fileName = ((LocationAwareLibraries) parentElement).getLocation().toString();
-				if (fileName.startsWith(home)) {
-					fileName = fileName.substring(home.length() + 1);
-				}
-				return "Libraries - " + fileName;
-			}
-			return super.getText(parentElement);
-		}
-
-	}
-
-	private class ColoredRespositoryLabelProvider extends RepositoryLabelProvider implements
+	private class ColoredRespositoryLabelProvider extends ArtefactLabelProvider implements
 			IColorProvider {
+
+		ColoredRespositoryLabelProvider(IRuntime runtime) {
+			super(runtime);
+		}
 
 		public Color getBackground(Object element) {
 			return null;
@@ -900,9 +790,8 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 
 		public Color getForeground(Object element) {
 			if (repositoryContentProvider.getRepository() != null
-					&& element instanceof Artefact
-					&& RepositoryUtils.containsArtifact((Artefact) element,
-							repositoryContentProvider.getRepository())) {
+					&& element instanceof IArtefact
+					&& repositoryContentProvider.getRepository().contains((IArtefact) element)) {
 				return grayColor;
 			}
 			return null;

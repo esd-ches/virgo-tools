@@ -34,6 +34,7 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.virgo.ide.bundlerepository.domain.Artefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactRepository;
 import org.eclipse.virgo.ide.bundlerepository.domain.BundleArtefact;
+import org.eclipse.virgo.ide.bundlerepository.domain.IArtefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 import org.eclipse.virgo.ide.manifest.core.IHeaderConstants;
 import org.eclipse.virgo.ide.manifest.core.editor.model.ImportBundleHeader;
@@ -91,28 +92,25 @@ public class BundleImportSection extends AbstractImportSection {
 
 	private void setElements(ImportListSelectionDialog dialog, boolean addRemote) {
 		IProject project = ((BundleManifestEditor) this.getPage().getEditor()).getCommonProject();
-		Collection<BundleArtefact> bundles = null;
+		IArtefact[] bundles = null;
 		if (addRemote) {
-			ArtefactRepository bundleRepository = RepositoryUtils.searchForArtifacts("", true, false);
-			bundles = bundleRepository.getBundles();
+			ArtefactRepository bundleRepository = RepositoryUtils.searchForArtifacts("", false, true);
+			bundles = bundleRepository.getLibrarySet().toArray();
 		}
 		else {
-			bundles = RepositoryUtils.getImportBundleProposals(project, "");
-			removeExistingImports(bundles);
+			Collection<Artefact> bundleList = RepositoryUtils.getImportLibraryProposals(project, "");
+			bundles = bundleList.toArray(new IArtefact[]{});
 		}
-
-		Set<Artefact> artifacts = new HashSet<Artefact>(bundles.size());
-		artifacts.addAll(bundles);
-		dialog.setElements(artifacts.toArray());
+		dialog.setElements(bundles);
 	}
 
-	private void removeExistingImports(Collection<BundleArtefact> bundles) {
+	private void removeExistingImports(Collection<Artefact> bundles) {
 		ImportBundleHeader header = (ImportBundleHeader) getBundle().getManifestHeader(IHeaderConstants.IMPORT_BUNDLE);
-		Set<BundleArtefact> filteredElements = new HashSet<BundleArtefact>();
+		Set<Artefact> filteredElements = new HashSet<Artefact>();
 
 		if (header != null) {
 			ImportBundleObject[] filter = header.getImportedBundles();
-			for (BundleArtefact proposal : bundles) {
+			for (Artefact proposal : bundles) {
 				for (ImportBundleObject imported : filter) {
 					if (proposal.getSymbolicName().equalsIgnoreCase(imported.getId())) {
 						filteredElements.add(proposal);

@@ -129,4 +129,12 @@ public class BundleArtefact extends Artefact {
 		// }
 		return builder.toString();
 	}
+
+	/**
+	 * Returns BUNDLE;
+	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#getType()
+	 */
+	public ArtefactType getArtefactType() {
+		return ArtefactType.BUNDLE;
+	}
 }

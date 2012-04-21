@@ -39,14 +39,12 @@ import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator;
 import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator.JavaVersion;
 import org.eclipse.virgo.ide.runtime.internal.core.Server;
 import org.eclipse.virgo.ide.runtime.internal.core.ServerBehaviour;
-import org.eclipse.virgo.ide.runtime.internal.core.VirgoServerRuntime;
 import org.eclipse.virgo.ide.runtime.internal.core.ServerRuntimeUtils;
-import org.eclipse.virgo.ide.runtime.internal.core.runtimes.RuntimeProviders;
+import org.eclipse.virgo.ide.runtime.internal.core.VirgoServerRuntime;
 import org.eclipse.virgo.ide.runtime.internal.core.utils.StatusUtil;
 import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocator;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.wst.server.core.IRuntime;
-import org.eclipse.wst.server.core.IRuntimeWorkingCopy;
 import org.eclipse.wst.server.core.util.PublishUtil;
 import org.osgi.framework.Constants;
 

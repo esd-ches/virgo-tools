@@ -111,4 +111,12 @@ public class LibraryArtefact extends Artefact implements Comparable<LibraryArtef
 			return this.getSymbolicName().compareTo(other.getSymbolicName());
 		}
 	}
+
+	/**
+	 * Returns LIBRARY;
+	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#getType()
+	 */
+	public ArtefactType getArtefactType() {
+		return ArtefactType.LIBRARY;
+	}
 }

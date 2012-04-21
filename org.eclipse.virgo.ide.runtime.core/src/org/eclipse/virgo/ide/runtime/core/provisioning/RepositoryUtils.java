@@ -32,6 +32,8 @@ import org.eclipse.ui.internal.misc.StringMatcher;
 import org.eclipse.virgo.ide.bundlerepository.domain.Artefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactRepository;
 import org.eclipse.virgo.ide.bundlerepository.domain.BundleArtefact;
+import org.eclipse.virgo.ide.bundlerepository.domain.IArtefact;
+import org.eclipse.virgo.ide.bundlerepository.domain.IArtefactTyped;
 import org.eclipse.virgo.ide.bundlerepository.domain.LibraryArtefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 import org.eclipse.virgo.ide.bundlerepository.domain.PackageMember;
@@ -39,8 +41,8 @@ import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
-import org.eclipse.virgo.ide.runtime.internal.core.VirgoServerRuntime;
 import org.eclipse.virgo.ide.runtime.internal.core.ServerRuntimeUtils;
+import org.eclipse.virgo.ide.runtime.internal.core.VirgoServerRuntime;
 import org.eclipse.virgo.kernel.repository.BundleRepository;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.virgo.util.osgi.manifest.ExportedPackage;
@@ -48,8 +50,10 @@ import org.eclipse.wst.server.core.IRuntime;
 import org.osgi.framework.Version;
 
 /**
- * Utility class that is able to create {@link Repository} instances from either the remote
- * enterprise bundle repository or from a local installed dm Server instance.
+ * Utility class that is able to create {@link Repository} instances from either
+ * the remote enterprise bundle repository or from a local installed dm Server
+ * instance.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
@@ -75,40 +79,10 @@ public class RepositoryUtils {
 	private static final String DOWNLOAD_BASE = "http://repository.springsource.com/ivy";
 
 	/**
-	 * Checks if a given version of an artifact (either a bundle or a library) is installed in the
-	 * repository.
-	 */
-	public static boolean containsArtifact(Artefact artifact, ArtefactRepository repository) {
-		if (artifact instanceof BundleArtefact) {
-			for (BundleArtefact repositoryArtifact : repository.getBundles()) {
-				if (repositoryArtifact.getSymbolicName().equals(
-						((BundleArtefact) artifact).getSymbolicName())) {
-					if (repositoryArtifact.getVersion().equals(
-							((BundleArtefact) artifact).getVersion())) {
-						return true;
-					}
-				}
-			}
-		}
-		else if (artifact instanceof LibraryArtefact) {
-			for (LibraryArtefact repositoryArtifact : repository.getLibraries()) {
-				if (repositoryArtifact.getSymbolicName().equals(
-						((LibraryArtefact) artifact).getSymbolicName())) {
-					if (repositoryArtifact.getVersion().equals(
-							((LibraryArtefact) artifact).getVersion())) {
-						return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-
-	/**
 	 * Downloads the given <code>artifacts</code>.
 	 */
-	public static void downloadArifacts(final Set<Artefact> artifacts, final IProject project,
-			final Shell shell, boolean resolveDependencies) {
+	public static void downloadArifacts(final Set<Artefact> artifacts, final IProject project, final Shell shell,
+			boolean resolveDependencies) {
 
 		if (resolveDependencies) {
 			artifacts.addAll(resolveDependencies(artifacts, false));
@@ -128,10 +102,8 @@ public class RepositoryUtils {
 
 			IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
-				public void run(IProgressMonitor monitor) throws InvocationTargetException,
-						InterruptedException {
-					RepositoryProvisioningJob job = new RepositoryProvisioningJob(runtimes,
-							artifacts, true);
+				public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+					RepositoryProvisioningJob job = new RepositoryProvisioningJob(runtimes, artifacts, true);
 					job.run(monitor);
 				}
 			};
@@ -139,10 +111,8 @@ public class RepositoryUtils {
 			try {
 				IRunnableContext context = new ProgressMonitorDialog(shell);
 				context.run(true, true, runnable);
-			}
-			catch (InvocationTargetException e1) {
-			}
-			catch (InterruptedException e2) {
+			} catch (InvocationTargetException e1) {
+			} catch (InterruptedException e2) {
 			}
 		}
 	}
@@ -150,26 +120,23 @@ public class RepositoryUtils {
 	/**
 	 * Returns a BundleDefinition for the given bundle symbolic name and version
 	 */
-	public static org.eclipse.virgo.kernel.repository.BundleDefinition getBundleDefinition(
-			final String bundle, final String version, IProject project) {
+	public static org.eclipse.virgo.kernel.repository.BundleDefinition getBundleDefinition(final String bundle,
+			final String version, IProject project) {
 		final List<org.eclipse.virgo.kernel.repository.BundleDefinition> bundles = new ArrayList<org.eclipse.virgo.kernel.repository.BundleDefinition>();
 
 		ServerRuntimeUtils.execute(project, new ServerRuntimeUtils.ServerRuntimeCallback() {
 
 			public boolean doWithRuntime(VirgoServerRuntime runtime) {
 				try {
-					BundleRepository bundleRepository = ServerCorePlugin
-							.getArtefactRepositoryManager().getBundleRepository(
-									runtime.getRuntime());
+					BundleRepository bundleRepository = ServerCorePlugin.getArtefactRepositoryManager()
+							.getBundleRepository(runtime.getRuntime());
 					org.eclipse.virgo.kernel.repository.BundleDefinition bundleDefinition = bundleRepository
-							.findBySymbolicName(bundle,
-									new org.eclipse.virgo.util.osgi.manifest.VersionRange(version));
+							.findBySymbolicName(bundle, new org.eclipse.virgo.util.osgi.manifest.VersionRange(version));
 					if (bundleDefinition != null) {
 						bundles.add(bundleDefinition);
 						return false;
 					}
-				}
-				catch (Exception e) {
+				} catch (Exception e) {
 
 				}
 				return true;
@@ -183,30 +150,25 @@ public class RepositoryUtils {
 	}
 
 	/**
-	 * Returns {@link BundleArtefact}s which bundle symbolic name matches the given
-	 * <code>value</code>.
+	 * Returns {@link BundleArtefact}s which bundle symbolic name matches the
+	 * given <code>value</code>.
 	 */
-	public static Set<BundleArtefact> getImportBundleProposals(final IProject project,
-			final String value) {
-		final Set<BundleArtefact> packages = new TreeSet<BundleArtefact>(
-				new Comparator<BundleArtefact>() {
+	public static Set<Artefact> getImportBundleProposals(final IProject project, final String value) {
+		final Set<Artefact> packages = new TreeSet<Artefact>(new Comparator<Artefact>() {
 
-					public int compare(BundleArtefact o1, BundleArtefact o2) {
-						if (o1.getName() != null && o1.getName().equals(o2.getName())) {
-							return o1.getVersion().compareTo(o2.getVersion());
-						}
-						else if (o1.getName() != null && o2.getName() != null) {
-							return o1.getName().compareTo(o2.getName());
-						}
-						else if (o1.getSymbolicName() != null && o1.getSymbolicName().equals(o2.getSymbolicName())) {
-							return o1.getVersion().compareTo(o2.getVersion());
-						}
-						else if (o1.getSymbolicName() != null) {
-							return o1.getSymbolicName().compareTo(o2.getSymbolicName());
-						}
-						return 0;
-					}
-				});
+			public int compare(Artefact o1, Artefact o2) {
+				if (o1.getName() != null && o1.getName().equals(o2.getName())) {
+					return o1.getVersion().compareTo(o2.getVersion());
+				} else if (o1.getName() != null && o2.getName() != null) {
+					return o1.getName().compareTo(o2.getName());
+				} else if (o1.getSymbolicName() != null && o1.getSymbolicName().equals(o2.getSymbolicName())) {
+					return o1.getVersion().compareTo(o2.getVersion());
+				} else if (o1.getSymbolicName() != null) {
+					return o1.getSymbolicName().compareTo(o2.getSymbolicName());
+				}
+				return 0;
+			}
+		});
 
 		ServerRuntimeUtils.execute(project, new ServerRuntimeUtils.ServerRuntimeCallback() {
 
@@ -221,24 +183,21 @@ public class RepositoryUtils {
 	}
 
 	/**
-	 * Returns {@link LibraryArtefact}s which library symbolic name matches the given
-	 * <code>value</code>.
+	 * Returns {@link LibraryArtefact}s which library symbolic name matches the
+	 * given <code>value</code>.
 	 */
-	public static Set<LibraryArtefact> getImportLibraryProposals(final IProject project,
-			final String value) {
-		final Set<LibraryArtefact> packages = new TreeSet<LibraryArtefact>(
-				new Comparator<LibraryArtefact>() {
+	public static Set<Artefact> getImportLibraryProposals(final IProject project, final String value) {
+		final Set<Artefact> packages = new TreeSet<Artefact>(new Comparator<Artefact>() {
 
-					public int compare(LibraryArtefact o1, LibraryArtefact o2) {
-						if (o1.getName() != null && o1.getName().equals(o2.getName())) {
-							return o1.getVersion().compareTo(o2.getVersion());
-						}
-						else if (o1.getName() != null) {
-							return o1.getName().compareTo(o2.getName());
-						}
-						return 0;
-					}
-				});
+			public int compare(Artefact o1, Artefact o2) {
+				if (o1.getName() != null && o1.getName().equals(o2.getName())) {
+					return o1.getVersion().compareTo(o2.getVersion());
+				} else if (o1.getName() != null) {
+					return o1.getName().compareTo(o2.getName());
+				}
+				return 0;
+			}
+		});
 
 		ServerRuntimeUtils.execute(project, new ServerRuntimeUtils.ServerRuntimeCallback() {
 
@@ -253,22 +212,23 @@ public class RepositoryUtils {
 	}
 
 	/**
-	 * Returns {@link org.eclipse.virgo.ide.bundlerepository.domain.PackageExport}s which name matches the given
-	 * <code>value</code>.
+	 * Returns
+	 * {@link org.eclipse.virgo.ide.bundlerepository.domain.PackageExport}s
+	 * which name matches the given <code>value</code>.
 	 */
 	public static Set<org.eclipse.virgo.ide.bundlerepository.domain.PackageExport> getImportPackageProposals(
 			final IProject project, final String value) {
 		final Set<org.eclipse.virgo.ide.bundlerepository.domain.PackageExport> packages = new TreeSet<org.eclipse.virgo.ide.bundlerepository.domain.PackageExport>(
-				new Comparator<org.eclipse.virgo.ide.bundlerepository.domain.PackageExport>() {
+			new Comparator<org.eclipse.virgo.ide.bundlerepository.domain.PackageExport>() {
 
-					public int compare(org.eclipse.virgo.ide.bundlerepository.domain.PackageExport o1,
-							org.eclipse.virgo.ide.bundlerepository.domain.PackageExport o2) {
-						if (o1.getName().equals(o2.getName())) {
-							return o1.getVersion().compareTo(o2.getVersion());
-						}
-						return o1.getName().compareTo(o2.getName());
+				public int compare(org.eclipse.virgo.ide.bundlerepository.domain.PackageExport o1,
+						org.eclipse.virgo.ide.bundlerepository.domain.PackageExport o2) {
+					if (o1.getName().equals(o2.getName())) {
+						return o1.getVersion().compareTo(o2.getVersion());
 					}
-				});
+					return o1.getName().compareTo(o2.getName());
+				}
+			});
 
 		ServerRuntimeUtils.execute(project, new ServerRuntimeUtils.ServerRuntimeCallback() {
 
@@ -292,43 +252,38 @@ public class RepositoryUtils {
 		BundleRepository bundleRepository = ServerCorePlugin.getArtefactRepositoryManager()
 				.getBundleRepository(runtime);
 
-		for (org.eclipse.virgo.kernel.repository.BundleDefinition bundleDefinition : bundleRepository
-				.getBundles()) {
+		for (org.eclipse.virgo.kernel.repository.BundleDefinition bundleDefinition : bundleRepository.getBundles()) {
 			if (bundleDefinition.getManifest() != null
-					&& bundleDefinition.getManifest().getBundleSymbolicName() != null
-					&& bundleDefinition.getManifest().getBundleSymbolicName().getSymbolicName() != null) {
+				&& bundleDefinition.getManifest().getBundleSymbolicName() != null
+				&& bundleDefinition.getManifest().getBundleSymbolicName().getSymbolicName() != null) {
 				BundleManifest manifest = bundleDefinition.getManifest();
-				boolean sourcefileExists = (ServerUtils.getSourceFile(bundleDefinition
-						.getLocation()) != null && ServerUtils.getSourceFile(
-						bundleDefinition.getLocation()).exists());
+				boolean sourcefileExists = (ServerUtils.getSourceFile(bundleDefinition.getLocation()) != null && ServerUtils
+						.getSourceFile(bundleDefinition.getLocation()).exists());
 				OsgiVersion version = null;
 				if (manifest.getBundleVersion() != null) {
 					version = new OsgiVersion(manifest.getBundleVersion());
 				}
-				artifacts.addBundle(new LocalBundleArtefact(manifest.getBundleName(), manifest
-						.getBundleSymbolicName().getSymbolicName(), version, sourcefileExists,
-						bundleDefinition.getLocation()));
+				artifacts.addBundle(new LocalBundleArtefact(manifest.getBundleName(), manifest.getBundleSymbolicName()
+						.getSymbolicName(), version, sourcefileExists, bundleDefinition.getLocation()));
 			}
 
 		}
-		for (org.eclipse.virgo.kernel.repository.LibraryDefinition libraryDefinition : bundleRepository
-				.getLibraries()) {
+		for (org.eclipse.virgo.kernel.repository.LibraryDefinition libraryDefinition : bundleRepository.getLibraries()) {
 			if (libraryDefinition.getSymbolicName() != null) {
-				artifacts.addLibrary(new LocalLibraryArtefact(libraryDefinition.getName(),
-						libraryDefinition.getSymbolicName(), new OsgiVersion(libraryDefinition
-								.getVersion()), libraryDefinition.getLocation()));
+				artifacts.addLibrary(new LocalLibraryArtefact(libraryDefinition.getName(), libraryDefinition
+						.getSymbolicName(), new OsgiVersion(libraryDefinition.getVersion()), libraryDefinition
+						.getLocation()));
 			}
 		}
 
 		return artifacts;
 	}
 
-	public static String getRepositoryUrl(Artefact artefact) {
+	public static String getRepositoryUrl(IArtefact artefact) {
 		StringBuilder url = new StringBuilder(BRITS_BASE);
 		if (artefact instanceof BundleArtefact) {
 			url.append("/bundle/version/detail?name=");
-		}
-		else if (artefact instanceof LibraryArtefact) {
+		} else if (artefact instanceof LibraryArtefact) {
 			url.append("/library/version/detail?name=");
 		}
 		url.append(artefact.getSymbolicName());
@@ -343,17 +298,13 @@ public class RepositoryUtils {
 		url.append(getCategory(bundle));
 		if (DOWNLOAD_TYPE_SOURCE.equals(downloadType)) {
 			url.append(bundle.getRelativeSourceUrlPath());
-		}
-		else if (DOWNLOAD_TYPE_SOURCE_HASH.equals(downloadType)) {
+		} else if (DOWNLOAD_TYPE_SOURCE_HASH.equals(downloadType)) {
 			url.append(bundle.getRelativeSourceUrlPath()).append(".sha1");
-		}
-		else if (DOWNLOAD_TYPE_LICENSE.equals(downloadType)) {
+		} else if (DOWNLOAD_TYPE_LICENSE.equals(downloadType)) {
 			url.append(bundle.getRelativeLicenseUrlPath());
-		}
-		else if (DOWNLOAD_TYPE_BINARY_HASH.equals(downloadType)) {
+		} else if (DOWNLOAD_TYPE_BINARY_HASH.equals(downloadType)) {
 			url.append(bundle.getRelativeUrlPath()).append(".sha1");
-		}
-		else {
+		} else {
 			url.append(bundle.getRelativeUrlPath());
 		}
 		return url.toString();
@@ -365,19 +316,17 @@ public class RepositoryUtils {
 		url.append(getCategory(library));
 		if (DOWNLOAD_TYPE_LICENSE.equals(downloadType)) {
 			url.append(library.getRelativeLicenseUrlPath());
-		}
-		else if (DOWNLOAD_TYPE_LIBRARY_HASH.equals(downloadType)) {
+		} else if (DOWNLOAD_TYPE_LIBRARY_HASH.equals(downloadType)) {
 			url.append(library.getRelativeUrlPath()).append(".sha1");
-		}
-		else {
+		} else {
 			url.append(library.getRelativeUrlPath());
 		}
 		return url.toString();
 	}
 
 	/**
-	 * Returns proposals for version content assist requests. 2.5.4 -> 2.5.4 [2.5.4,2.6.0)
-	 * [2.5.4,2.5.4] [2.5.4,3.0.0)
+	 * Returns proposals for version content assist requests. 2.5.4 -> 2.5.4
+	 * [2.5.4,2.6.0) [2.5.4,2.5.4] [2.5.4,3.0.0)
 	 */
 	@SuppressWarnings("unchecked")
 	public static List<String> getVersionProposals(Set<String> versionStrings) {
@@ -392,19 +341,20 @@ public class RepositoryUtils {
 		// Now add version ranges to the version
 		List<String> versionRanges = new ArrayList<String>();
 		for (Version version : versions) {
-			// 2.5.4 - removed as we don't want to make people use the completion
+			// 2.5.4 - removed as we don't want to make people use the
+			// completion
 			// versionRanges.add(version.toString());
 
 			// [2.5.4,2.6.0)
-			versionRanges.add(new VersionRange(version, true, new Version(version.getMajor(),
-					version.getMinor() + 1, 0, null), false).toString());
+			versionRanges.add(new VersionRange(version, true, new Version(version.getMajor(), version.getMinor() + 1,
+				0, null), false).toString());
 
 			// [2.5.4,2.5.4]
 			versionRanges.add(new VersionRange(version, true, version, true).toString());
 
 			// [2.5.4,3.0.0)
-			versionRanges.add(new VersionRange(version, true, new Version(version.getMajor() + 1,
-					0, 0, null), false).toString());
+			versionRanges.add(new VersionRange(version, true, new Version(version.getMajor() + 1, 0, 0, null), false)
+					.toString());
 
 		}
 
@@ -412,13 +362,14 @@ public class RepositoryUtils {
 	}
 
 	/**
-	 * Resolves dependencies of given <code>artefacts</code>. Currently this implementation only
-	 * resolves direct bundle dependencies of {@link LibraryArtefact}s.
+	 * Resolves dependencies of given <code>artefacts</code>. Currently this
+	 * implementation only resolves direct bundle dependencies of
+	 * {@link LibraryArtefact}s.
 	 */
 	public static Set<Artefact> resolveDependencies(Set<Artefact> artifacts, boolean includeOptional) {
 		Set<Artefact> resolvedArtefacts = new HashSet<Artefact>(artifacts);
 		// resolve library dependencies
-		for (Artefact artefact : artifacts) {
+		for (IArtefactTyped artefact : artifacts) {
 			if (artefact instanceof LibraryArtefact) {
 				resolvedArtefacts.addAll(ServerCorePlugin.getArtefactRepositoryManager()
 						.findLibraryDependencies((LibraryArtefact) artefact, includeOptional));
@@ -428,23 +379,26 @@ public class RepositoryUtils {
 	}
 
 	/**
-	 * Searches the remote bundle repository for matches of a given search string.
+	 * Searches the remote bundle repository for matches of a given search
+	 * string.
 	 */
 	public static ArtefactRepository searchForArtifacts(final String search) {
 		return searchForArtifacts(search, true, true);
 	}
 
 	/**
-	 * Searches the remote bundle repository for matches of a given search string.
+	 * Searches the remote bundle repository for matches of a given search
+	 * string.
 	 */
-	public static ArtefactRepository searchForArtifacts(final String search,
-			boolean includeBundles, boolean includesLibraries) {
+	public static ArtefactRepository searchForArtifacts(final String search, boolean includeBundles,
+			boolean includesLibraries) {
 		StringMatcher matcher = new StringMatcher("*" + search + "*", true, false);
 
 		ArtefactRepository repository = new ArtefactRepository();
 		if (includeBundles) {
-			for (BundleArtefact bundle : ServerCorePlugin.getArtefactRepositoryManager()
-					.getArtefactRepository().getBundles()) {
+			for (IArtefactTyped artefact : ServerCorePlugin.getArtefactRepositoryManager().getArtefactRepository()
+					.getBundles()) {
+				BundleArtefact bundle = (BundleArtefact) artefact;
 				// check symbolic name and name
 				if (matcher.match(bundle.getSymbolicName()) || matcher.match(bundle.getName())) {
 					repository.addBundle(bundle);
@@ -467,28 +421,28 @@ public class RepositoryUtils {
 			}
 		}
 		if (includesLibraries) {
-			for (LibraryArtefact library : ServerCorePlugin.getArtefactRepositoryManager()
-					.getArtefactRepository().getLibraries()) {
+			for (IArtefact library : ServerCorePlugin.getArtefactRepositoryManager().getArtefactRepository()
+					.getLibraries()) {
 				// check symbolic name and name
 				if (matcher.match(library.getSymbolicName()) || matcher.match(library.getName())) {
-					repository.addLibrary(library);
+					repository.addLibrary((LibraryArtefact) library);
 				}
 			}
 		}
 		return repository;
 	}
 
-	private static void addImportBundleProposalsFromManifest(Set<BundleArtefact> bundles,
-			BundleManifest manifest, String value) {
+	private static void addImportBundleProposalsFromManifest(Set<BundleArtefact> bundles, BundleManifest manifest,
+			String value) {
 		if (manifest != null && manifest.getBundleSymbolicName() != null
-				&& manifest.getBundleSymbolicName().getSymbolicName() != null
-				&& manifest.getBundleSymbolicName().getSymbolicName().startsWith(value)) {
+			&& manifest.getBundleSymbolicName().getSymbolicName() != null
+			&& manifest.getBundleSymbolicName().getSymbolicName().startsWith(value)) {
 			OsgiVersion version = null;
 			if (manifest.getBundleVersion() != null) {
 				version = new OsgiVersion(manifest.getBundleVersion());
 			}
-			bundles.add(new LocalBundleArtefact(manifest.getBundleName(), manifest
-					.getBundleSymbolicName().getSymbolicName(), version, false, null));
+			bundles.add(new LocalBundleArtefact(manifest.getBundleName(), manifest.getBundleSymbolicName()
+					.getSymbolicName(), version, false, null));
 		}
 	}
 
@@ -502,30 +456,27 @@ public class RepositoryUtils {
 					OsgiVersion v = null;
 					if (version != null) {
 						v = new OsgiVersion(version.toString());
-					}
-					else {
+					} else {
 						v = new OsgiVersion(Version.emptyVersion);
 					}
-					packages.add(new org.eclipse.virgo.ide.bundlerepository.domain.PackageExport(null, packageName,
-							v));
+					packages.add(new org.eclipse.virgo.ide.bundlerepository.domain.PackageExport(null, packageName, v));
 				}
 			}
 		}
 	}
 
-	private static String getCategory(Artefact artefact) {
+	private static String getCategory(IArtefact artefact) {
 		if (artefact.getOrganisationName() != null
-				&& (artefact.getOrganisationName().startsWith("com.springsource") || artefact
-						.getOrganisationName().startsWith("org.springframework"))) {
+			&& (artefact.getOrganisationName().startsWith("com.springsource") || artefact.getOrganisationName()
+					.startsWith("org.springframework"))) {
 			return "/release";
-		}
-		else {
+		} else {
 			return "/external";
 		}
 	}
 
-	private static Set<BundleArtefact> getImportBundleProposalsForRuntime(VirgoServerRuntime runtime,
-			IProject project, String value) {
+	private static Set<BundleArtefact> getImportBundleProposalsForRuntime(VirgoServerRuntime runtime, IProject project,
+			String value) {
 		if (value == null) {
 			value = "";
 		}
@@ -534,8 +485,7 @@ public class RepositoryUtils {
 		BundleRepository bundleRepository = ServerCorePlugin.getArtefactRepositoryManager()
 				.getBundleRepository(runtime.getRuntime());
 
-		for (org.eclipse.virgo.kernel.repository.BundleDefinition definition : bundleRepository
-				.getBundles()) {
+		for (org.eclipse.virgo.kernel.repository.BundleDefinition definition : bundleRepository.getBundles()) {
 			if (definition.getManifest() != null) {
 				BundleManifest manifest = definition.getManifest();
 				addImportBundleProposalsFromManifest(bundles, manifest, value);
@@ -564,13 +514,10 @@ public class RepositoryUtils {
 		BundleRepository bundleRepository = ServerCorePlugin.getArtefactRepositoryManager()
 				.getBundleRepository(runtime.getRuntime());
 
-		for (org.eclipse.virgo.kernel.repository.LibraryDefinition definition : bundleRepository
-				.getLibraries()) {
-			if (definition.getSymbolicName() != null
-					&& definition.getSymbolicName().startsWith(value)) {
-				libraries.add(new LibraryArtefact(definition.getName(), definition
-						.getSymbolicName(), new OsgiVersion(definition.getVersion()), definition
-						.getSymbolicName(), definition.getSymbolicName()));
+		for (org.eclipse.virgo.kernel.repository.LibraryDefinition definition : bundleRepository.getLibraries()) {
+			if (definition.getSymbolicName() != null && definition.getSymbolicName().startsWith(value)) {
+				libraries.add(new LibraryArtefact(definition.getName(), definition.getSymbolicName(), new OsgiVersion(
+					definition.getVersion()), definition.getSymbolicName(), definition.getSymbolicName()));
 			}
 		}
 		return libraries;
@@ -586,8 +533,7 @@ public class RepositoryUtils {
 		BundleRepository bundleRepository = ServerCorePlugin.getArtefactRepositoryManager()
 				.getBundleRepository(runtime.getRuntime());
 
-		for (org.eclipse.virgo.kernel.repository.BundleDefinition definition : bundleRepository
-				.getBundles()) {
+		for (org.eclipse.virgo.kernel.repository.BundleDefinition definition : bundleRepository.getBundles()) {
 			if (definition.getManifest() != null) {
 				BundleManifest manifest = definition.getManifest();
 				addImportPackageProposalsFromManifest(value, packages, manifest);

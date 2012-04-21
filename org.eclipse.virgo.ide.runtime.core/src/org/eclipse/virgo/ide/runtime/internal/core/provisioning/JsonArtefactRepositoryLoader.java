@@ -11,12 +11,7 @@
 package org.eclipse.virgo.ide.runtime.internal.core.provisioning;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.runtime.IPath;
@@ -36,7 +31,6 @@ import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
 
 /**
  * @author Christian Dupuis

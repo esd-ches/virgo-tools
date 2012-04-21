@@ -32,8 +32,8 @@ import org.eclipse.pde.internal.ui.PDEPluginImages;
 import org.eclipse.pde.internal.ui.editor.PDEFormEditor;
 import org.eclipse.pde.internal.ui.editor.PDESourcePage;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.virgo.ide.bundlerepository.domain.BundleArtefact;
-import org.eclipse.virgo.ide.bundlerepository.domain.LibraryArtefact;
+import org.eclipse.virgo.ide.bundlerepository.domain.Artefact;
+import org.eclipse.virgo.ide.bundlerepository.domain.IArtefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 import org.eclipse.virgo.ide.bundlerepository.domain.PackageExport;
 import org.eclipse.virgo.ide.manifest.core.IHeaderConstants;
@@ -216,8 +216,8 @@ public class BundleManifestContentAssistProcessor extends AbstractPdeManifestCon
 			set.remove(value);
 			ArrayList<BundleTypeCompletionProposal> completions = new ArrayList<BundleTypeCompletionProposal>();
 
-			Set<BundleArtefact> bundles = RepositoryUtils.getImportBundleProposals(getProject(), value);
-			for (BundleArtefact proposal : bundles) {
+			Set<Artefact> bundles = RepositoryUtils.getImportBundleProposals(getProject(), value);
+			for (IArtefact proposal : bundles) {
 				if (!set.contains(proposal.getSymbolicName())) {
 					completions.add(new BundleTypeCompletionProposal(proposal.getSymbolicName(),
 							getImage(F_TYPE_BUNDLE), proposal.getSymbolicName(), offset - length, length));
@@ -260,8 +260,8 @@ public class BundleManifestContentAssistProcessor extends AbstractPdeManifestCon
 			set.remove(value);
 			ArrayList<BundleTypeCompletionProposal> completions = new ArrayList<BundleTypeCompletionProposal>();
 
-			Set<LibraryArtefact> libraries = RepositoryUtils.getImportLibraryProposals(getProject(), value);
-			for (LibraryArtefact proposal : libraries) {
+			Set<Artefact> libraries = RepositoryUtils.getImportLibraryProposals(getProject(), value);
+			for (IArtefact proposal : libraries) {
 				if (!set.contains(proposal.getSymbolicName())) {
 					completions.add(new BundleTypeCompletionProposal(proposal.getSymbolicName(), getImage(F_TYPE_LIB),
 							proposal.getSymbolicName(), offset - length, length));
@@ -318,8 +318,8 @@ public class BundleManifestContentAssistProcessor extends AbstractPdeManifestCon
 			set.remove(value);
 			ArrayList<BundleTypeCompletionProposal> completions = new ArrayList<BundleTypeCompletionProposal>();
 
-			Set<BundleArtefact> bundles = RepositoryUtils.getImportBundleProposals(getProject(), value);
-			for (BundleArtefact proposal : bundles) {
+			Set<Artefact> bundles = RepositoryUtils.getImportBundleProposals(getProject(), value);
+			for (IArtefact proposal : bundles) {
 				if (!set.contains(proposal.getSymbolicName())) {
 					completions.add(new BundleTypeCompletionProposal(proposal.getSymbolicName(),
 							getImage(F_TYPE_BUNDLE), proposal.getSymbolicName(), offset - length, length));
@@ -371,8 +371,8 @@ public class BundleManifestContentAssistProcessor extends AbstractPdeManifestCon
 			set.remove(value);
 			ArrayList<BundleTypeCompletionProposal> completions = new ArrayList<BundleTypeCompletionProposal>();
 
-			Set<BundleArtefact> bundles = RepositoryUtils.getImportBundleProposals(getProject(), value);
-			for (BundleArtefact proposal : bundles) {
+			Set<Artefact> bundles = RepositoryUtils.getImportBundleProposals(getProject(), value);
+			for (IArtefact proposal : bundles) {
 				if (!set.contains(proposal.getSymbolicName())) {
 					completions.add(new BundleTypeCompletionProposal(proposal.getSymbolicName(),
 							getImage(F_TYPE_BUNDLE), proposal.getSymbolicName(), offset - length, length));
@@ -425,11 +425,11 @@ public class BundleManifestContentAssistProcessor extends AbstractPdeManifestCon
 
 	private ICompletionProposal[] getSpringBundleVersionCompletions(String bundleId, String existingValue, int offset) {
 		bundleId = getSymbolicName(bundleId);
-		Set<BundleArtefact> bundles = RepositoryUtils.getImportBundleProposals(getProject(), bundleId);
+		Set<Artefact> bundles = RepositoryUtils.getImportBundleProposals(getProject(), bundleId);
 		if (bundles.size() > 0) {
 			ArrayList<BundleTypeCompletionProposal> proposals = new ArrayList<BundleTypeCompletionProposal>(
 					bundles.size());
-			for (BundleArtefact element : bundles) {
+			for (IArtefact element : bundles) {
 				if (element.getSymbolicName().equalsIgnoreCase(bundleId)) {
 					List<String> proposalValues = getVersionProposals(element.getVersion());
 					for (String proposalValue : proposalValues) {
@@ -451,11 +451,11 @@ public class BundleManifestContentAssistProcessor extends AbstractPdeManifestCon
 
 	private ICompletionProposal[] getLibraryVersionCompletions(String libraryId, String existingValue, int offset) {
 		libraryId = getSymbolicName(libraryId);
-		Set<LibraryArtefact> libraries = RepositoryUtils.getImportLibraryProposals(getProject(), libraryId);
+		Set<Artefact> libraries = RepositoryUtils.getImportLibraryProposals(getProject(), libraryId);
 		if (libraries.size() > 0) {
 			ArrayList<BundleTypeCompletionProposal> proposals = new ArrayList<BundleTypeCompletionProposal>(
 					libraries.size());
-			for (LibraryArtefact element : libraries) {
+			for (IArtefact element : libraries) {
 				if (element.getSymbolicName().equalsIgnoreCase(libraryId)) {
 					List<String> proposalValues = getVersionProposals(element.getVersion());
 					for (String proposalValue : proposalValues) {

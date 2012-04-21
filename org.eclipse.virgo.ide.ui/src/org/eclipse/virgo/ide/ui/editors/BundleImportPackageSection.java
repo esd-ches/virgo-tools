@@ -50,6 +50,8 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.virgo.ide.bundlerepository.domain.Artefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactRepository;
 import org.eclipse.virgo.ide.bundlerepository.domain.BundleArtefact;
+import org.eclipse.virgo.ide.bundlerepository.domain.IArtefact;
+import org.eclipse.virgo.ide.bundlerepository.domain.IArtefactTyped;
 import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 import org.eclipse.virgo.ide.bundlerepository.domain.PackageExport;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryUtils;
@@ -103,13 +105,13 @@ public class BundleImportPackageSection extends AbstractImportSection {
 	}
 
 	protected void setElementsRemote(ImportListSelectionDialog dialog) {
-		Collection<BundleArtefact> bundles = null;
+		Iterable<IArtefact> bundles = null;
 		ArtefactRepository bundleRepository = RepositoryUtils.searchForArtifacts("", true, false);
 		bundles = bundleRepository.getBundles();
 
 		Set<PackageExport> allPackageExports = new HashSet<PackageExport>();
-		for (BundleArtefact currBundleArtefact : bundles) {
-			allPackageExports.addAll(currBundleArtefact.getExports());
+		for (IArtefactTyped currBundleArtefact : bundles) {
+			allPackageExports.addAll(((BundleArtefact) currBundleArtefact).getExports());
 		}
 
 		dialog.setElements(allPackageExports.toArray());

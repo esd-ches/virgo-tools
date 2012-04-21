@@ -19,7 +19,6 @@ import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator.JavaV
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
-import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocatorVirgo;
 import org.eclipse.virgo.kernel.osgi.provisioning.tools.Pre35DependencyLocatorVirgo;
 import org.eclipse.wst.server.core.IRuntime;
 
