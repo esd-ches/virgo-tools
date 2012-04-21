@@ -94,11 +94,11 @@ public class BundleImportSection extends AbstractImportSection {
 		IProject project = ((BundleManifestEditor) this.getPage().getEditor()).getCommonProject();
 		IArtefact[] bundles = null;
 		if (addRemote) {
-			ArtefactRepository bundleRepository = RepositoryUtils.searchForArtifacts("", false, true);
-			bundles = bundleRepository.getLibrarySet().toArray();
+			ArtefactRepository bundleRepository = RepositoryUtils.searchForArtifacts("", true, false);
+			bundles = bundleRepository.getBundleSet().toArray();
 		}
 		else {
-			Collection<Artefact> bundleList = RepositoryUtils.getImportLibraryProposals(project, "");
+			Collection<Artefact> bundleList = RepositoryUtils.getImportBundleProposals(project, "");
 			bundles = bundleList.toArray(new IArtefact[]{});
 		}
 		dialog.setElements(bundles);
