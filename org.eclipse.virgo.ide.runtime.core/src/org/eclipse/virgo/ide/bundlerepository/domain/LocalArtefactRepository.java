@@ -13,6 +13,8 @@ package org.eclipse.virgo.ide.bundlerepository.domain;
 
 import java.io.File;
 
+import org.apache.commons.lang.ObjectUtils;
+
 /**
  * 
  * @author Miles Parker
@@ -43,5 +45,17 @@ public class LocalArtefactRepository extends ArtefactRepository implements ILoca
 	 */
 	public File getFile() {
 		return file;
+	}
+
+	/**
+	 * Assumes one and only one repository at each file.
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object other) {
+		if (other instanceof LocalArtefactRepository) {
+			LocalArtefactRepository otherRepos = (LocalArtefactRepository) other;
+			return ObjectUtils.equals(file, otherRepos.file);
+		}
+		return false;
 	}
 }

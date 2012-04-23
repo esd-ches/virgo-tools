@@ -21,6 +21,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.pde.internal.ui.PDEPlugin;
 import org.eclipse.pde.internal.ui.PDEPluginImages;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.virgo.ide.bundlerepository.domain.Artefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactSet;
 import org.eclipse.virgo.ide.bundlerepository.domain.IArtefact;
 import org.eclipse.virgo.ide.runtime.internal.ui.ArtefactLabelProvider;
@@ -32,6 +33,7 @@ import org.eclipse.wst.server.core.IServerType;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.ui.internal.editor.IServerEditorPartFactory;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorCore;
+import org.eclipse.wst.server.ui.internal.editor.ServerEditorPartFactory;
 
 /**
  * 
@@ -39,13 +41,16 @@ import org.eclipse.wst.server.ui.internal.editor.ServerEditorCore;
  * @author Miles Parker
  * 
  */
+@SuppressWarnings("restriction")
 public class ServerEditorContentLabelProvider implements ITreeContentProvider, ILabelProvider {
 
-	IServer server;
+	private IServer server;
 
-	IServerEditorPartFactory[] pageFactories;
+	private IServerEditorPartFactory[] pageFactories;
 	
-	IServerEditorPartFactory repositoryPageFactory;
+	private int repositoryPage;
+	
+	private IServerEditorPartFactory repositoryPageFactory;
 
 	RepositoryContentProvider repositoryContentProvider;
 	ArtefactLabelProvider repositoryLabelProvider;
@@ -54,8 +59,9 @@ public class ServerEditorContentLabelProvider implements ITreeContentProvider, I
 		this.server = server;
 		IServerType serverType = server.getServerType();
 		IServerWorkingCopy serverWorking = server.createWorkingCopy();
-		Iterator iterator = ServerEditorCore.getServerEditorPageFactories().iterator();
+		Iterator<ServerEditorPartFactory> iterator = ServerEditorCore.getServerEditorPageFactories().iterator();
 		List<IServerEditorPartFactory> pageTexts = new ArrayList<IServerEditorPartFactory>();
+		int i = 0;
 		while (iterator.hasNext()) {
 			IServerEditorPartFactory factory = (IServerEditorPartFactory) iterator.next();
 			if (factory.supportsType(serverType.getId()) && factory.shouldCreatePage(serverWorking)) {
@@ -63,7 +69,9 @@ public class ServerEditorContentLabelProvider implements ITreeContentProvider, I
 			}
 			if (factory.getId().equals(ServerUiPlugin.REPOSITORY_PAGE_ID)) {
 				repositoryPageFactory = factory;
+				repositoryPage = i;
 			}
+			i++;
 		}
 		repositoryContentProvider = new RepositoryContentProvider();
 		repositoryLabelProvider = new ArtefactLabelProvider(server.getRuntime());
@@ -164,6 +172,9 @@ public class ServerEditorContentLabelProvider implements ITreeContentProvider, I
 					return i;
 				}
 			}
+		}
+		if (object instanceof Artefact || object instanceof ArtefactSet) {
+			return repositoryPage;
 		}
 		Object parent = getParent(object);
 		if (parent != null) {

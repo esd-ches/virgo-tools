@@ -14,9 +14,12 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -38,9 +41,15 @@ import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
 import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.ITreeViewerListener;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
+import org.eclipse.jface.viewers.TreePath;
+import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.KeyEvent;
@@ -73,6 +82,7 @@ import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.eclipse.virgo.ide.bundlerepository.domain.Artefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactRepository;
+import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactSet;
 import org.eclipse.virgo.ide.bundlerepository.domain.BundleArtefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.IArtefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.IArtefactTyped;
@@ -93,16 +103,17 @@ import org.eclipse.virgo.ide.ui.editors.BundleManifestEditor;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.ui.editor.ServerEditorPart;
 
-
 /**
- * {@link ServerEditorPart} that allows to browse the local and remote bundle repository.
+ * {@link ServerEditorPart} that allows to browse the local and remote bundle
+ * repository.
+ * 
  * @author Christian Dupuis
+ * @author Miles Parker
  * @since 1.0.0
  */
-public class RepositoryBrowserEditorPage extends ServerEditorPart {
+public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISelectionChangedListener {
 
-	private static final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.LONG, Locale
-			.getDefault());
+	private static final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.LONG, Locale.getDefault());
 
 	private Button anaylseButton;
 
@@ -167,12 +178,13 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		createRightSection(toolkit, form);
 
 		form.setContent(leftSection);
-		// This reflow breaks the TableWrapLayout around the repository hyperlink
+		// This reflow breaks the TableWrapLayout around the repository
+		// hyperlink
 		// form.reflow(true);
 
 		initialize();
 	}
-	
+
 	protected Image getFormImage() {
 		return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_SPRINGSOURCE);
 	}
@@ -189,8 +201,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
 
-		IServerWorkingCopy ts = (IServerWorkingCopy) server.loadAdapter(IServerWorkingCopy.class,
-				null);
+		IServerWorkingCopy ts = (IServerWorkingCopy) server.loadAdapter(IServerWorkingCopy.class, null);
 		dmServer = ts;
 		addChangeListener();
 		initialize();
@@ -203,11 +214,10 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 
 	private Section createLeftSection(FormToolkit toolkit, ScrolledForm form) {
 		GridLayout layout;
-		Section leftSection = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR
-				| Section.DESCRIPTION);
+		Section leftSection = toolkit
+				.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.DESCRIPTION);
 		leftSection.setText(Messages.RepositoryBrowserEditorPage_SearchBundlesAndLibraries);
-		leftSection
-				.setDescription(Messages.RepositoryBrowserEditorPage_SearchBundlesAndLibrariesByName);
+		leftSection.setDescription(Messages.RepositoryBrowserEditorPage_SearchBundlesAndLibrariesByName);
 		leftSection.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		Composite leftComposite = toolkit.createComposite(leftSection);
@@ -238,7 +248,8 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		data = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
 		searchButtonComposite.setLayoutData(data);
 
-		searchButton = toolkit.createButton(searchButtonComposite, Messages.RepositoryBrowserEditorPage_Search, SWT.PUSH);
+		searchButton = toolkit.createButton(searchButtonComposite, Messages.RepositoryBrowserEditorPage_Search,
+											SWT.PUSH);
 		searchButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				handleSearch();
@@ -248,8 +259,8 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		data.widthHint = 100;
 		searchButton.setLayoutData(data);
 
-		searchResultTable = toolkit.createTree(leftComposite, SWT.V_SCROLL | SWT.MULTI
-				| SWT.FULL_SELECTION | SWT.CHECK);
+		searchResultTable = toolkit
+				.createTree(leftComposite, SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION | SWT.CHECK);
 
 		searchResultTableViewer = new CheckboxTreeViewer(searchResultTable);
 		searchResultTableViewer.setContentProvider(contentProvider);
@@ -271,8 +282,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 				if (searchResultTableViewer.getGrayed(element) == false) {
 					BusyIndicator.showWhile(shell.getDisplay(), new Runnable() {
 						public void run() {
-							setSubtreeChecked(element, searchResultTableViewer.getChecked(element),
-									false);
+							setSubtreeChecked(element, searchResultTableViewer.getChecked(element), false);
 						}
 					});
 				}
@@ -289,8 +299,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 					if (element instanceof IArtefact) {
 						anaylseButton.setEnabled(true);
 						licenseButton.setEnabled(true);
-					}
-					else {
+					} else {
 						anaylseButton.setEnabled(false);
 						licenseButton.setEnabled(false);
 					}
@@ -305,17 +314,21 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.widthHint = 100;
-		Button selectAllButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_SelectAll, SWT.PUSH);
+		Button selectAllButton = toolkit.createButton(	buttonComposite,
+														Messages.RepositoryBrowserEditorPage_SelectAll,
+														SWT.PUSH);
 		selectAllButton.setLayoutData(data);
 		selectAllButton.setToolTipText(Messages.RepositoryBrowserEditorPage_SelectAllBundlesAndLibraries);
 		selectAllButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent selectionEvent) {
-				searchResultTableViewer.setCheckedElements(contentProvider
-						.getElements(searchResultTableViewer.getInput()));
+				searchResultTableViewer.setCheckedElements(contentProvider.getElements(searchResultTableViewer
+						.getInput()));
 			}
 		});
 
-		Button deselectAllButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_DeselectAllBundlesAndLibraries, SWT.PUSH);
+		Button deselectAllButton = toolkit
+				.createButton(	buttonComposite, Messages.RepositoryBrowserEditorPage_DeselectAllBundlesAndLibraries,
+								SWT.PUSH);
 		deselectAllButton.setToolTipText(Messages.RepositoryBrowserEditorPage_9);
 		deselectAllButton.setLayoutData(data);
 		deselectAllButton.addSelectionListener(new SelectionAdapter() {
@@ -343,7 +356,8 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 			}
 		});
 
-		licenseButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_ViewLicense, SWT.PUSH);
+		licenseButton = toolkit.createButton(	buttonComposite, Messages.RepositoryBrowserEditorPage_ViewLicense,
+												SWT.PUSH);
 		licenseButton.setEnabled(false);
 		licenseButton.setLayoutData(data);
 		licenseButton.setToolTipText(Messages.RepositoryBrowserEditorPage_OpenLicense);
@@ -353,12 +367,11 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 				if (selection instanceof IStructuredSelection) {
 					Object element = ((IStructuredSelection) selection).getFirstElement();
 					if (element instanceof LibraryArtefact) {
-						WebUiUtils.openUrl(RepositoryUtils.getResourceUrl(
-								(LibraryArtefact) element, RepositoryUtils.DOWNLOAD_TYPE_LICENSE));
-					}
-					else if (element instanceof BundleArtefact) {
-						WebUiUtils.openUrl(RepositoryUtils.getResourceUrl((BundleArtefact) element,
-								RepositoryUtils.DOWNLOAD_TYPE_LICENSE));
+						WebUiUtils.openUrl(RepositoryUtils.getResourceUrl(	(LibraryArtefact) element,
+																			RepositoryUtils.DOWNLOAD_TYPE_LICENSE));
+					} else if (element instanceof BundleArtefact) {
+						WebUiUtils.openUrl(RepositoryUtils.getResourceUrl(	(BundleArtefact) element,
+																			RepositoryUtils.DOWNLOAD_TYPE_LICENSE));
 					}
 				}
 			}
@@ -381,35 +394,31 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 					}
 				}
 
-				boolean showDialog = ServerUiPlugin.getDefault().getPreferenceStore().getBoolean(
-						ServerUiPlugin.PLUGIN_ID + ".download.message"); //$NON-NLS-1$
+				boolean showDialog = ServerUiPlugin.getDefault().getPreferenceStore()
+						.getBoolean(ServerUiPlugin.PLUGIN_ID + ".download.message"); //$NON-NLS-1$
 
 				if (!showDialog) {
 					MessageDialogWithToggle dialog = MessageDialogWithToggle
-							.openOkCancelConfirm(
-									shell,
-									Messages.RepositoryBrowserEditorPage_DownloadBundlesAndLibraries,
-									Messages.RepositoryBrowserEditorPage_DownloadTriggerMessage,
-									Messages.RepositoryBrowserEditorPage_DontShowDialog, false, ServerUiPlugin
-											.getDefault().getPreferenceStore(),
-									ServerUiPlugin.PLUGIN_ID + ".download.message"); //$NON-NLS-1$
+							.openOkCancelConfirm(	shell,
+													Messages.RepositoryBrowserEditorPage_DownloadBundlesAndLibraries,
+													Messages.RepositoryBrowserEditorPage_DownloadTriggerMessage,
+													Messages.RepositoryBrowserEditorPage_DontShowDialog, false,
+													ServerUiPlugin.getDefault().getPreferenceStore(),
+													ServerUiPlugin.PLUGIN_ID + ".download.message"); //$NON-NLS-1$
 					if (dialog.getReturnCode() != Dialog.OK) {
 						return;
-					}
-					else {
-						ServerUiPlugin.getDefault().getPreferenceStore().setValue(
-								ServerUiPlugin.PLUGIN_ID + ".download.message", //$NON-NLS-1$
-								new Boolean(dialog.getToggleState()));
+					} else {
+						ServerUiPlugin.getDefault().getPreferenceStore()
+								.setValue(ServerUiPlugin.PLUGIN_ID + ".download.message", //$NON-NLS-1$
+											new Boolean(dialog.getToggleState()));
 					}
 				}
 
 				Set<IRuntime> runtimes = new HashSet<IRuntime>();
 				runtimes.add(getServer().getRuntime());
-				RepositoryProvisioningJob operation = new RepositoryProvisioningJob(runtimes,
-						RepositoryUtils.resolveDependencies(artifacts, false),
-						downloadSourcesCheckbox.getSelection());
-				operation.setProperty(IProgressConstants.ICON_PROPERTY,
-						ServerUiImages.DESC_OBJ_BUNDLE);
+				RepositoryProvisioningJob operation = new RepositoryProvisioningJob(runtimes, RepositoryUtils
+						.resolveDependencies(artifacts, false), downloadSourcesCheckbox.getSelection());
+				operation.setProperty(IProgressConstants.ICON_PROPERTY, ServerUiImages.DESC_OBJ_BUNDLE);
 				operation.schedule();
 
 				// reset checked state
@@ -428,15 +437,14 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		wrappedComposite.setLayout(twLayout);
 		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(wrappedComposite);
 
-		downloadSourcesCheckbox = toolkit.createButton(wrappedComposite,
-				Messages.RepositoryBrowserEditorPage_DownloadSourceJars, SWT.CHECK | SWT.WRAP);
+		downloadSourcesCheckbox = toolkit.createButton(	wrappedComposite,
+														Messages.RepositoryBrowserEditorPage_DownloadSourceJars,
+														SWT.CHECK | SWT.WRAP);
 		downloadSourcesCheckbox.setSelection(true);
-		downloadSourcesCheckbox.setLayoutData(new TableWrapData(TableWrapData.LEFT,
-				TableWrapData.TOP));
+		downloadSourcesCheckbox.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP));
 
 		Link repoLink = new Link(wrappedComposite, SWT.WRAP);
-		repoLink
-				.setText(Messages.RepositoryBrowserEditorPage_SourceReposMessage);
+		repoLink.setText(Messages.RepositoryBrowserEditorPage_SourceReposMessage);
 		repoLink.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -449,11 +457,8 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		update.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (MessageDialog
-						.openQuestion(
-								shell,
-								Messages.RepositoryBrowserEditorPage_UpdateLocalBundles,
-								Messages.RepositoryBrowserEditorPage_ConfirmIndexMessage)) {
+				if (MessageDialog.openQuestion(	shell, Messages.RepositoryBrowserEditorPage_UpdateLocalBundles,
+												Messages.RepositoryBrowserEditorPage_ConfirmIndexMessage)) {
 					ServerCorePlugin.getArtefactRepositoryManager().update();
 				}
 
@@ -462,12 +467,13 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		setRepositoryDateString();
 		update.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP));
 
-		Hyperlink disclaimer = toolkit.createHyperlink(wrappedComposite,
-				Messages.RepositoryBrowserEditorPage_FirewallConfigureMessage, SWT.WRAP);
+		Hyperlink disclaimer = toolkit.createHyperlink(	wrappedComposite,
+														Messages.RepositoryBrowserEditorPage_FirewallConfigureMessage,
+														SWT.WRAP);
 		disclaimer.addHyperlinkListener(new HyperlinkAdapter() {
 			public void linkActivated(HyperlinkEvent e) {
-				PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(null,
-						PROXY_PREF_PAGE_ID, null, null);
+				PreferenceDialog dialog = PreferencesUtil
+						.createPreferenceDialogOn(null, PROXY_PREF_PAGE_ID, null, null);
 				dialog.open();
 			}
 		});
@@ -479,22 +485,20 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 	private void setRepositoryDateString() {
 		Date date = ServerCorePlugin.getArtefactRepositoryManager().getArtefactRepositoryDate();
 		String dateString = dateFormat.format(date);
-		update
-				.setText(Messages.RepositoryBrowserEditorPage_UpdateURL
-						+ dateString + ")"); //$NON-NLS-1$
+		update.setText(Messages.RepositoryBrowserEditorPage_UpdateURL + dateString + ")"); //$NON-NLS-1$
 	}
-	
+
 	protected String getServerName() {
 		return Messages.RepositoryBrowserEditorPage_ServerName;
 	}
 
 	private Section createRightSection(FormToolkit toolkit, ScrolledForm form) {
 		GridLayout layout;
-		Section leftSection = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR
-				| Section.DESCRIPTION);
+		Section leftSection = toolkit
+				.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.DESCRIPTION);
 		leftSection.setText(Messages.RepositoryBrowserEditorPage_InstalledBundlesAndLibraries);
-		leftSection
-				.setDescription(Messages.RepositoryBrowserEditorPage_InstalledBundlesAndLibrariesMessage + getServerName() + "."); //$NON-NLS-2$
+		leftSection.setDescription(Messages.RepositoryBrowserEditorPage_InstalledBundlesAndLibrariesMessage
+			+ getServerName() + "."); //$NON-NLS-2$
 		leftSection.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		Composite leftComposite = toolkit.createComposite(leftSection);
@@ -515,8 +519,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		composite2.setLayoutData(new GridData(GridData.FILL_BOTH));
 		toolkit.paintBordersFor(composite2);
 
-		repositoryTable = toolkit.createTree(composite2, SWT.V_SCROLL | SWT.MULTI
-				| SWT.FULL_SELECTION);
+		repositoryTable = toolkit.createTree(composite2, SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
 		repositoryTable.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				ISelection selection = repositoryTableViewer.getSelection();
@@ -524,8 +527,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 					Object element = ((IStructuredSelection) selection).getFirstElement();
 					if (element instanceof LocalBundleArtefact) {
 						openManifestButton.setEnabled(true);
-					}
-					else {
+					} else {
 						openManifestButton.setEnabled(false);
 					}
 				}
@@ -563,10 +565,10 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 			}
 		});
 
-		downloadSourcesButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_InstallSources, SWT.PUSH);
+		downloadSourcesButton = toolkit.createButton(	buttonComposite,
+														Messages.RepositoryBrowserEditorPage_InstallSources, SWT.PUSH);
 		downloadSourcesButton.setLayoutData(data);
-		downloadSourcesButton
-				.setToolTipText(Messages.RepositoryBrowserEditorPage_InstallSourcesMessage);
+		downloadSourcesButton.setToolTipText(Messages.RepositoryBrowserEditorPage_InstallSourcesMessage);
 		downloadSourcesButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				downloadSources();
@@ -576,7 +578,8 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		// insert vertical space to make the download button stand out
 		toolkit.createLabel(buttonComposite, Messages.RepositoryBrowserEditorPage_40);
 
-		openManifestButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_OpenManifest, SWT.PUSH);
+		openManifestButton = toolkit.createButton(	buttonComposite, Messages.RepositoryBrowserEditorPage_OpenManifest,
+													SWT.PUSH);
 		openManifestButton.setLayoutData(data);
 		openManifestButton.setToolTipText(Messages.RepositoryBrowserEditorPage_OpenManifestMessage);
 		openManifestButton.addSelectionListener(new SelectionAdapter() {
@@ -585,8 +588,8 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 				if (selection instanceof IStructuredSelection) {
 					Object element = ((IStructuredSelection) selection).getFirstElement();
 					if (element instanceof LocalBundleArtefact) {
-						BundleManifestEditor.openExternalPlugin(((LocalBundleArtefact) element)
-								.getFile(), "META-INF/MANIFEST.MF"); //$NON-NLS-1$
+						BundleManifestEditor.openExternalPlugin(((LocalBundleArtefact) element).getFile(),
+																"META-INF/MANIFEST.MF"); //$NON-NLS-1$
 					}
 				}
 			}
@@ -605,8 +608,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(wrappedComposite);
 
 		Link repoLink = new Link(wrappedComposite, SWT.WRAP);
-		repoLink
-				.setText(Messages.RepositoryBrowserEditorPage_NewBundlesMessage);
+		repoLink.setText(Messages.RepositoryBrowserEditorPage_NewBundlesMessage);
 		repoLink.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -622,12 +624,10 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 	private void refreshBundleRepository() {
 		IRunnableWithProgress runnable = new IRunnableWithProgress() {
 
-			public void run(final IProgressMonitor monitor) throws InvocationTargetException,
-					InterruptedException {
+			public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
 				monitor.subTask(Messages.RepositoryBrowserEditorPage_RefreshingBundlesMessage);
 
-				ServerCorePlugin.getArtefactRepositoryManager().refreshBundleRepository(
-						getServer().getRuntime());
+				ServerCorePlugin.getArtefactRepositoryManager().refreshBundleRepository(getServer().getRuntime());
 
 				shell.getDisplay().asyncExec(new Runnable() {
 					public void run() {
@@ -643,10 +643,8 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		try {
 			IRunnableContext context = new ProgressMonitorDialog(shell);
 			context.run(true, true, runnable);
-		}
-		catch (InvocationTargetException e1) {
-		}
-		catch (InterruptedException e2) {
+		} catch (InvocationTargetException e1) {
+		} catch (InterruptedException e2) {
 		}
 	}
 
@@ -663,8 +661,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		}
 		Set<IRuntime> runtimes = new HashSet<IRuntime>();
 		runtimes.add(getServer().getRuntime());
-		RepositorySourceProvisiongJob operation = new RepositorySourceProvisiongJob(runtimes,
-				artifacts);
+		RepositorySourceProvisiongJob operation = new RepositorySourceProvisiongJob(runtimes, artifacts);
 		operation.setProperty(IProgressConstants.ICON_PROPERTY, ServerUiImages.DESC_OBJ_BUNDLE);
 		operation.schedule();
 	}
@@ -687,15 +684,14 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		for (int i = members.length - 1; i >= 0; i--) {
 			Object element = members[i];
 			boolean elementGrayChecked = searchResultTableViewer.getGrayed(element)
-					|| searchResultTableViewer.getChecked(element);
+				|| searchResultTableViewer.getChecked(element);
 			if (state) {
 				searchResultTableViewer.setChecked(element, true);
 				searchResultTableViewer.setGrayed(element, false);
-			}
-			else {
+			} else {
 				searchResultTableViewer.setGrayChecked(element, false);
 			} // unchecked state only
-			// needs
+				// needs
 			if ((state || elementGrayChecked)) {
 				setSubtreeChecked(element, state, true);
 			}
@@ -710,8 +706,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		boolean childChecked = false;
 		Object[] members = contentProvider.getChildren(parent);
 		for (int i = members.length - 1; i >= 0; i--) {
-			if (searchResultTableViewer.getChecked(members[i])
-					|| searchResultTableViewer.getGrayed(members[i])) {
+			if (searchResultTableViewer.getChecked(members[i]) || searchResultTableViewer.getGrayed(members[i])) {
 				childChecked = true;
 				break;
 			}
@@ -755,8 +750,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 
 		public void done(IJobChangeEvent event) {
 			if (event.getJob() instanceof RepositoryProvisioningJob) {
-				if (((RepositoryProvisioningJob) event.getJob()).getRuntimes().contains(
-						getServer().getRuntime())) {
+				if (((RepositoryProvisioningJob) event.getJob()).getRuntimes().contains(getServer().getRuntime())) {
 					shell.getDisplay().asyncExec(new Runnable() {
 						public void run() {
 							repositoryTableViewer.setInput(getServer().getRuntime());
@@ -766,8 +760,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 						}
 					});
 				}
-			}
-			else if (event.getJob() instanceof ArtefactRepositoryManager.ArtefactRepositoryUpdateJob) {
+			} else if (event.getJob() instanceof ArtefactRepositoryManager.ArtefactRepositoryUpdateJob) {
 				shell.getDisplay().asyncExec(new Runnable() {
 					public void run() {
 						setRepositoryDateString();
@@ -777,8 +770,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		}
 	}
 
-	private class ColoredRespositoryLabelProvider extends ArtefactLabelProvider implements
-			IColorProvider {
+	private class ColoredRespositoryLabelProvider extends ArtefactLabelProvider implements IColorProvider {
 
 		ColoredRespositoryLabelProvider(IRuntime runtime) {
 			super(runtime);
@@ -789,9 +781,8 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 		}
 
 		public Color getForeground(Object element) {
-			if (repositoryContentProvider.getRepository() != null
-					&& element instanceof IArtefact
-					&& repositoryContentProvider.getRepository().contains((IArtefact) element)) {
+			if (repositoryContentProvider.getRepository() != null && element instanceof IArtefact
+				&& repositoryContentProvider.getRepository().contains((IArtefact) element)) {
 				return grayColor;
 			}
 			return null;
@@ -799,4 +790,19 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart {
 
 	}
 
+	public Object getAdapter(Class adapter) {
+		if (adapter == ISelectionChangedListener.class) {
+			return this;
+		}
+		return super.getAdapter(adapter);
+	}
+
+	/**
+	 * @see org.eclipse.jface.viewers.ISelectionChangedListener#selectionChanged(org.eclipse.jface.viewers.SelectionChangedEvent)
+	 */
+	public void selectionChanged(SelectionChangedEvent event) {
+		IStructuredSelection sel = (IStructuredSelection) event.getSelection();
+		repositoryTableViewer.collapseAll();
+		repositoryTableViewer.setSelection(sel, true);
+	}
 }

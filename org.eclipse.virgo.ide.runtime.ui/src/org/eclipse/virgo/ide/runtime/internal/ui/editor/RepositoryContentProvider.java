@@ -18,6 +18,7 @@ import java.util.Map;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.virgo.ide.bundlerepository.domain.Artefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactRepository;
 import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactSet;
 import org.eclipse.virgo.ide.bundlerepository.domain.IArtefact;
@@ -79,6 +80,10 @@ public class RepositoryContentProvider implements ITreeContentProvider {
 	}
 
 	public Object getParent(Object element) {
+		if (element instanceof Artefact) {
+			Artefact artefact = (Artefact) element;
+			return artefact.getSet();
+		}
 		return null;
 	}
 

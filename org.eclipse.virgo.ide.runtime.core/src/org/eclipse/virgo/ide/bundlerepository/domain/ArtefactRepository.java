@@ -63,6 +63,7 @@ public class ArtefactRepository {
 	 */
 	public void add(IArtefact artefact) {
 		getMatchingArtefactSet(artefact).add(artefact);
+		artefact.setRepository(this);
 	}
 
 	public ArtefactSet getLibrarySet() {
@@ -74,15 +75,19 @@ public class ArtefactRepository {
 	}
 
 	public void addBundle(BundleArtefact bundle) {
+		//Add to all handled through set
 		this.bundles.add(bundle);
+		bundle.setRepository(this);
 	}
 
 	public Iterable<IArtefact> getLibraries() {
+		//Add to all handled through set
 		return libraries.getArtefacts();
 	}
 
 	public void addLibrary(LibraryArtefact library) {
 		this.libraries.add(library);
+		library.setRepository(this);
 	}
 	
 	public ArtefactSet getAllArtefacts() {
@@ -97,5 +102,4 @@ public class ArtefactRepository {
 		}
 		return false;
 	}
-
 }

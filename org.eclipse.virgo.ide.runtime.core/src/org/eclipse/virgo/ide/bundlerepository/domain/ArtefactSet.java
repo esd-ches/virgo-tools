@@ -14,6 +14,8 @@ package org.eclipse.virgo.ide.bundlerepository.domain;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang.ObjectUtils;
+
 /**
  * Safely encapsulates artefact interactions.
  * 
@@ -38,28 +40,43 @@ public class ArtefactSet implements IArtefactTyped {
 	}
 
 	public IArtefact[] toArray() {
-		return artefacts.toArray(new IArtefact[]{});
+		return artefacts.toArray(new IArtefact[] {});
 	}
 
 	public boolean add(IArtefact artefact) {
 		if (artefact.getArtefactType() == artefactType || artefactType == ArtefactType.COMBINED) {
 			return artefacts.add(artefact);
 		}
+		artefact.setSet(this);
 		throw new RuntimeException("Tried to add non-matching artefact to " + artefactType.name() + ": " + artefact);
 	}
 
 	public ArtefactType getArtefactType() {
 		return artefactType;
 	}
-	
+
 	public ArtefactRepository getRepository() {
 		return repository;
 	}
-	
+
 	/**
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString() {
 		return artefactType.getPluralLabel();
+	}
+
+	/**
+	 * Assumes that there is one and only one artefact set of a given type for
+	 * each set.
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object obj) {
+		if (obj instanceof ArtefactSet) {
+			ArtefactSet set = (ArtefactSet) obj;
+			return (getArtefactType() == set.getArtefactType() && ObjectUtils.equals(getRepository(), set.getRepository()));
+		}
+		return super.equals(obj);
 	}
 }

@@ -31,6 +31,10 @@ public abstract class Artefact implements IArtefact {
 
 	private boolean sourceAvailable = false; // indicates if source code is available
 
+	private ArtefactRepository repository;
+
+	private ArtefactSet set;
+	
 	/** for persistence use only */
 	protected Artefact() {
 	}
@@ -122,5 +126,32 @@ public abstract class Artefact implements IArtefact {
 	 */
 	public boolean isMatch(IArtefact artefact) {
 		return getSignature().equals(artefact.getSignature());
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	public boolean equals(Object other) {
+		if (other instanceof Artefact) {
+			Artefact artefact = (Artefact) other;
+			return isMatch(artefact) && sourceAvailable == artefact.sourceAvailable;
+		}
+		return false;
+	}
+	
+	public ArtefactRepository getRepository() {
+		return repository;
+	}
+
+	public void setRepository(ArtefactRepository repository) {
+		this.repository = repository;
+	}
+
+	public ArtefactSet getSet() {
+		return set;
+	}
+
+	public void setSet(ArtefactSet set) {
+		this.set = set;
 	}
 }

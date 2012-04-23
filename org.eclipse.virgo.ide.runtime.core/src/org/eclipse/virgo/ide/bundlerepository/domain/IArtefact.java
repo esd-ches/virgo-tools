@@ -78,4 +78,12 @@ public interface IArtefact extends IArtefactTyped {
 	 * Matching artefacts are expected to share the same signature.
 	 */
 	boolean isMatch(IArtefact artefact);
+
+	void setSet(ArtefactSet set);
+
+	ArtefactSet getSet();
+
+	void setRepository(ArtefactRepository repository);
+
+	ArtefactRepository getRepository();
 }
