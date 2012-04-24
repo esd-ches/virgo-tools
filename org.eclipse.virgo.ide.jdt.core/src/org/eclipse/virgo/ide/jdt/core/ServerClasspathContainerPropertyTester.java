@@ -29,8 +29,9 @@ public class ServerClasspathContainerPropertyTester extends PropertyTester {
 			try {
 				IProject project = ((IResource) receiver).getProject();
 				IJavaProject javaProject = JavaCore.create(project);
-				if (project.hasNature(JavaCore.NATURE_ID))
+				if (project.hasNature(JavaCore.NATURE_ID)) {
 					return ClasspathUtils.hasClasspathContainer(javaProject);
+				}
 			} catch (CoreException e) {
 				return false;
 			}

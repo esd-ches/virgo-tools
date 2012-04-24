@@ -40,8 +40,9 @@ public class ServerLicenseRuntimeWizardFragment extends WizardFragment {
 	}
 
 	public void enter() {
-		if (comp != null)
+		if (comp != null) {
 			comp.updateLicense();
+		}
 	}
 
 	public boolean hasComposite() {
@@ -65,8 +66,9 @@ public class ServerLicenseRuntimeWizardFragment extends WizardFragment {
 	public boolean isComplete() {
 		try {
 			Boolean b = (Boolean) getTaskModel().getObject(ServerLicenseRuntimeWizardFragment.LICENSE_ACCEPT);
-			if (b != null && b.booleanValue())
+			if (b != null && b.booleanValue()) {
 				return true;
+			}
 		} catch (Exception e) {
 			// ignore
 		}

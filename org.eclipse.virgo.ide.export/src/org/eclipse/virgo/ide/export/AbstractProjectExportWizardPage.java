@@ -152,8 +152,9 @@ public abstract class AbstractProjectExportWizardPage extends WizardExportResour
 
 	protected void updateFileName() {
 		IProject project = getSelectedProject();
-		if (project == null)
+		if (project == null) {
 			return;
+		}
 
 		BundleManifest manifest = getBundleManifest(project);
 		if (manifest != null) {

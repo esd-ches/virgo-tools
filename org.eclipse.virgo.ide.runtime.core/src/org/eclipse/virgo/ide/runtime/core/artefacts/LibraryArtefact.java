@@ -111,10 +111,12 @@ public class LibraryArtefact extends Artefact implements Comparable<LibraryArtef
 	 * not guaranteed.
 	 */
 	public int compareTo(LibraryArtefact other) {
-		if (this == other)
+		if (this == other) {
 			return 0;
-		if (other == null)
+		}
+		if (other == null) {
 			return 0;
+		}
 		if (this.getSymbolicName().equals(other.getSymbolicName())) {
 			return other.getVersion().compareTo(this.getVersion());
 		} else {

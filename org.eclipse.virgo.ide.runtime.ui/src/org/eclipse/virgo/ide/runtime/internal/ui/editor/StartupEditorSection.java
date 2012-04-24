@@ -52,8 +52,9 @@ public class StartupEditorSection extends ServerEditorSection {
 	protected void addConfigurationChangeListener() {
 		listener = new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
-				if (updating)
+				if (updating) {
 					return;
+				}
 				updating = true;
 				if (IServerWorkingCopy.PROPERTY_TAIL_LOG_FILES.equals(event.getPropertyName())) {
 					tailLogFiles.setSelection(Boolean.valueOf(event.getNewValue().toString()));
@@ -96,8 +97,9 @@ public class StartupEditorSection extends ServerEditorSection {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (updating)
+				if (updating) {
 					return;
+				}
 				updating = true;
 				execute(new ModifyTailLogFilesCommand(serverWorkingCopy, tailLogFiles.getSelection()));
 				updating = false;
@@ -110,8 +112,9 @@ public class StartupEditorSection extends ServerEditorSection {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (updating)
+				if (updating) {
 					return;
+				}
 				updating = true;
 				execute(new ModifyCleanStartupCommand(serverWorkingCopy, cleanStartup.getSelection()));
 				updating = false;
@@ -127,8 +130,9 @@ public class StartupEditorSection extends ServerEditorSection {
 	 * @see ServerEditorSection#dispose()
 	 */
 	public void dispose() {
-		if (server != null)
+		if (server != null) {
 			server.removePropertyChangeListener(listener);
+		}
 	}
 
 	/**

@@ -122,7 +122,7 @@ public class ServerModuleFactoryDelegate extends ProjectModuleFactoryDelegate {
 				// TODO CD log exception
 			}
 		}
-		return (IModule[]) modules.toArray(new IModule[modules.size()]);
+		return modules.toArray(new IModule[modules.size()]);
 	}
 
 	/**
@@ -152,7 +152,7 @@ public class ServerModuleFactoryDelegate extends ProjectModuleFactoryDelegate {
 		paths.add(new Path(".project"));
 		paths.add(new Path(".settings"));
 		paths.add(new Path(".classpath"));
-		return (IPath[]) paths.toArray(new IPath[paths.size()]);
+		return paths.toArray(new IPath[paths.size()]);
 	}
 
 }

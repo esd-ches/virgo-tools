@@ -77,8 +77,9 @@ public class ParPackageImpl extends EPackageImpl implements ParPackage {
 	 * @generated
 	 */
 	public static ParPackage init() {
-		if (isInited)
+		if (isInited) {
 			return (ParPackage) EPackage.Registry.INSTANCE.getEPackage(ParPackage.eNS_URI);
+		}
 
 		// Obtain or create and register package
 		ParPackageImpl theParPackage = (ParPackageImpl) (EPackage.Registry.INSTANCE.get(eNS_URI) instanceof ParPackageImpl
@@ -160,8 +161,9 @@ public class ParPackageImpl extends EPackageImpl implements ParPackage {
 	 * @generated
 	 */
 	public void createPackageContents() {
-		if (isCreated)
+		if (isCreated) {
 			return;
+		}
 		isCreated = true;
 
 		// Create classes and their features
@@ -186,8 +188,9 @@ public class ParPackageImpl extends EPackageImpl implements ParPackage {
 	 * @generated
 	 */
 	public void initializePackageContents() {
-		if (isInitialized)
+		if (isInitialized) {
 			return;
+		}
 		isInitialized = true;
 
 		// Initialize package

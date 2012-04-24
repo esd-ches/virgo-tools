@@ -66,7 +66,7 @@ public class VirgoPreferencePage extends FieldEditorPreferencePage implements IW
 	public void setElement(IAdaptable element) {
 		Object obj = element.getAdapter(IResource.class);
 		if (obj instanceof IProject) {
-			fProject = (IProject) fProject;
+			fProject = fProject;
 		} else {
 			fProject = null;
 		}

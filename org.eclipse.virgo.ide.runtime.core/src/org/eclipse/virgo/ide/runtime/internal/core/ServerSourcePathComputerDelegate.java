@@ -63,7 +63,7 @@ public class ServerSourcePathComputerDelegate implements ISourcePathComputerDele
 		}
 
 		runtimeClasspath.addAll(Arrays.asList(JavaRuntime.computeUnresolvedSourceLookupPath(configuration)));
-		IRuntimeClasspathEntry[] entries = (IRuntimeClasspathEntry[]) runtimeClasspath
+		IRuntimeClasspathEntry[] entries = runtimeClasspath
 				.toArray(new IRuntimeClasspathEntry[runtimeClasspath.size()]);
 		IRuntimeClasspathEntry[] resolved = JavaRuntime.resolveSourceLookupPath(entries, configuration);
 		return JavaRuntime.getSourceContainers(resolved);

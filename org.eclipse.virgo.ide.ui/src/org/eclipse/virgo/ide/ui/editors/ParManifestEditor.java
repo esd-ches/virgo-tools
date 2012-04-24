@@ -124,7 +124,7 @@ public class ParManifestEditor extends BundleManifestEditor {
 		IFile parFile = null;
 
 		String name = file.getName().toLowerCase(Locale.ENGLISH);
-		if (name.equals(BundleModelUtility.F_MANIFEST)) { //$NON-NLS-1$
+		if (name.equals(BundleModelUtility.F_MANIFEST)) {
 			if (container instanceof IFolder) {
 				container = container.getParent();
 			}
@@ -163,7 +163,7 @@ public class ParManifestEditor extends BundleManifestEditor {
 		File manifestFile = null;
 		File parFile = null;
 		String name = file.getName().toLowerCase(Locale.ENGLISH);
-		if (name.equals(BundleModelUtility.F_MANIFEST)) { //$NON-NLS-1$
+		if (name.equals(BundleModelUtility.F_MANIFEST)) {
 			manifestFile = file;
 			File dir = file.getParentFile().getParentFile();
 			parFile = new File(dir, "org.eclipse.virgo.ide.runtime.core.par.xml");

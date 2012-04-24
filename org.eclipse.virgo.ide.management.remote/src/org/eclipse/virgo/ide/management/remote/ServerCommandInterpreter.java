@@ -60,25 +60,28 @@ public class ServerCommandInterpreter implements CommandInterpreter {
 	 * @return A string containing the next argument on the command line
 	 */
 	public String nextArgument() {
-		if (tok == null || !tok.hasMoreElements())
+		if (tok == null || !tok.hasMoreElements()) {
 			return null;
+		}
 
 		String arg = tok.nextToken();
 		if (arg.startsWith("\"")) { //$NON-NLS-1$
 			if (arg.endsWith("\"")) { //$NON-NLS-1$
-				if (arg.length() >= 2)
+				if (arg.length() >= 2) {
 					// strip the beginning and ending quotes
 					return arg.substring(1, arg.length() - 1);
+				}
 			}
 			String remainingArg = tok.nextToken("\""); //$NON-NLS-1$
 			arg = arg.substring(1) + remainingArg;
 			// skip to next whitespace separated token
 			tok.nextToken(WS_DELIM);
-		} else if (arg.startsWith("'")) { //$NON-NLS-1$ //$NON-NLS-2$
+		} else if (arg.startsWith("'")) { //$NON-NLS-1$ 
 			if (arg.endsWith("'")) { //$NON-NLS-1$
-				if (arg.length() >= 2)
+				if (arg.length() >= 2) {
 					// strip the beginning and ending quotes
 					return arg.substring(1, arg.length() - 1);
+				}
 			}
 			String remainingArg = tok.nextToken("'"); //$NON-NLS-1$
 			arg = arg.substring(1) + remainingArg;
@@ -236,8 +239,9 @@ public class ServerCommandInterpreter implements CommandInterpreter {
 	 *            the header to print above the key/value pairs
 	 */
 	public void printDictionary(Dictionary dic, String title) {
-		if (dic == null)
+		if (dic == null) {
 			return;
+		}
 
 		int count = dic.size();
 		String[] keys = new String[count];
@@ -275,8 +279,9 @@ public class ServerCommandInterpreter implements CommandInterpreter {
 				byte[] buffer = new byte[1024];
 				int read = 0;
 				try {
-					while ((read = in.read(buffer)) != -1)
+					while ((read = in.read(buffer)) != -1) {
 						print(new String(buffer, 0, read));
+					}
 				} finally {
 					if (in != null) {
 						try {

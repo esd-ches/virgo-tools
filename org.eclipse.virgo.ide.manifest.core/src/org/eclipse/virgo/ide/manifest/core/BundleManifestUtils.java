@@ -392,8 +392,9 @@ public class BundleManifestUtils {
 
 	public static int getPackageLineNumber(IDocument document, BundleManifestHeader header, ManifestElement element) {
 		String packageName = element.getValue();
-		if (element.getDirectiveKeys() != null || element.getKeys() != null)
+		if (element.getDirectiveKeys() != null || element.getKeys() != null) {
 			return getLineNumber(document, header, packageName + ";");
+		}
 
 		// check for this exact package on the last line
 		try {

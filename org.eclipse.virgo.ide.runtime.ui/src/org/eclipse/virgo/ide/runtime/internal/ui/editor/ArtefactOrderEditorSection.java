@@ -73,8 +73,9 @@ public class ArtefactOrderEditorSection extends ServerEditorSection {
 	protected void addConfigurationChangeListener() {
 		listener = new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
-				if (updating)
+				if (updating) {
 					return;
+				}
 				updating = true;
 				if (IServerWorkingCopy.PROPERTY_ARTEFACT_ORDER.equals(event.getPropertyName())) {
 					bundleTableViewer.setInput(server);
@@ -147,8 +148,9 @@ public class ArtefactOrderEditorSection extends ServerEditorSection {
 					artefactOrder.add(((IModule) module).getId());
 				}
 
-				if (updating)
+				if (updating) {
 					return;
+				}
 				updating = true;
 				execute(new ModifyArtefactOrderCommand(serverWorkingCopy, artefactOrder));
 				bundleTableViewer.setInput(server);
@@ -168,8 +170,9 @@ public class ArtefactOrderEditorSection extends ServerEditorSection {
 				int index = modules.indexOf(selectedArtefact);
 				modules.remove(selectedArtefact);
 				modules.add(index + 1, selectedArtefact);
-				if (updating)
+				if (updating) {
 					return;
+				}
 				updating = true;
 
 				List<String> artefactOrder = new ArrayList<String>();
@@ -190,8 +193,9 @@ public class ArtefactOrderEditorSection extends ServerEditorSection {
 	 * @see ServerEditorSection#dispose()
 	 */
 	public void dispose() {
-		if (server != null)
+		if (server != null) {
 			server.removePropertyChangeListener(listener);
+		}
 	}
 
 	/**

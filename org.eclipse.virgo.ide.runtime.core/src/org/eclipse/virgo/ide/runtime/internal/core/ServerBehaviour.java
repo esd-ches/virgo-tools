@@ -129,7 +129,7 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 
 		Iterator<IModule[]> iterator = getAllModules().iterator();
 		while (iterator.hasNext()) {
-			IModule[] module = (IModule[]) iterator.next();
+			IModule[] module = iterator.next();
 			IModuleResourceDelta[] delta = getPublishedResourceDelta(module);
 			if (delta == null || delta.length == 0) {
 				continue;

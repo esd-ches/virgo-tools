@@ -114,7 +114,7 @@ public class FacetUtils {
 				}
 			}
 		}
-		return (IProject[]) bundles.toArray(new IProject[bundles.size()]);
+		return bundles.toArray(new IProject[bundles.size()]);
 	}
 
 	public static IProject[] getBundleProjects(IProject parProject) {
@@ -132,7 +132,7 @@ public class FacetUtils {
 				}
 			}
 		}
-		return (IProject[]) bundles.toArray(new IProject[bundles.size()]);
+		return bundles.toArray(new IProject[bundles.size()]);
 	}
 
 	public static Par getParDefinition(IProject project) {

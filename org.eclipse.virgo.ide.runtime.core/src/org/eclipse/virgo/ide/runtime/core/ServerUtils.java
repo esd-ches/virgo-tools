@@ -241,7 +241,7 @@ public class ServerUtils {
 					// reflection hack to get the internal jvm install
 					Field field = JREContainer.class.getDeclaredField("fVMInstall");
 					field.setAccessible(true);
-					IVMInstall vm = (IVMInstall) field.get((JREContainer) container);
+					IVMInstall vm = (IVMInstall) field.get(container);
 
 					IExecutionEnvironmentsManager manager = JavaRuntime.getExecutionEnvironmentsManager();
 					// check for strict match

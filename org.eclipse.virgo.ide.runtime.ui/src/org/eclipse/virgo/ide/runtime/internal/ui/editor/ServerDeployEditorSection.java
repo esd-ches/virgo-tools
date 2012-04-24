@@ -58,8 +58,9 @@ public class ServerDeployEditorSection extends ServerEditorSection {
 	protected void addConfigurationChangeListener() {
 		listener = new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
-				if (updating)
+				if (updating) {
 					return;
+				}
 				updating = true;
 				if (IServerWorkingCopy.PROPERTY_MBEAN_SERVER_PASSWORD.equals(event.getPropertyName())) {
 					password.setText(event.getNewValue().toString());
@@ -104,8 +105,9 @@ public class ServerDeployEditorSection extends ServerEditorSection {
 		port.setLayoutData(data);
 		port.addModifyListener(new ModifyListener() {
 			public void modifyText(ModifyEvent e) {
-				if (updating)
+				if (updating) {
 					return;
+				}
 				int newPort = -1;
 				try {
 					newPort = Integer.valueOf(port.getText());
@@ -155,8 +157,9 @@ public class ServerDeployEditorSection extends ServerEditorSection {
 	 * @see ServerEditorSection#dispose()
 	 */
 	public void dispose() {
-		if (server != null)
+		if (server != null) {
 			server.removePropertyChangeListener(listener);
+		}
 	}
 
 	/**

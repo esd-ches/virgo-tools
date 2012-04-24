@@ -41,7 +41,7 @@ public class OsgiVersion implements Comparable<OsgiVersion> {
 	 * @return an OSGiVersion object representing the version of the bundle
 	 */
 	public static OsgiVersion ofBundle(Bundle bundle) {
-		String headerValue = (String) bundle.getHeaders().get(Constants.BUNDLE_VERSION);
+		String headerValue = bundle.getHeaders().get(Constants.BUNDLE_VERSION);
 		if (headerValue == null) {
 			return new OsgiVersion(0, 0, 0, "");
 		}
@@ -158,22 +158,27 @@ public class OsgiVersion implements Comparable<OsgiVersion> {
 		} else { // major, minor, and service versions equals
 			String myQualifier = this.qualifier;
 			String otherQualifier = o.qualifier;
-			if (myQualifier == null)
+			if (myQualifier == null) {
 				myQualifier = "";
-			if (otherQualifier == null)
+			}
+			if (otherQualifier == null) {
 				otherQualifier = "";
+			}
 			return myQualifier.compareTo(otherQualifier);
 		}
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (!(obj instanceof OsgiVersion))
+		}
+		if (!(obj instanceof OsgiVersion)) {
 			return false;
+		}
 		OsgiVersion version = (OsgiVersion) obj;
 		return this.toString().equals(version.toString());
 	}

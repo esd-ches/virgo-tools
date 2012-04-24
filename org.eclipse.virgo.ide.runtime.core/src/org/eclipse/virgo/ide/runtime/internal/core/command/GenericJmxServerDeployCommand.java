@@ -50,8 +50,8 @@ public class GenericJmxServerDeployCommand extends AbstractJmxServerDeployerComm
 
 		CompositeData returnValue = doExecute();
 		if (returnValue != null) {
-			String symbolicName = (String) ((CompositeData) returnValue).get(ITEM_SYMBOLIC_NAME);
-			String version = (String) ((CompositeData) returnValue).get(ITEM_VERSION);
+			String symbolicName = (String) returnValue.get(ITEM_SYMBOLIC_NAME);
+			String version = (String) returnValue.get(ITEM_VERSION);
 			Map<String, DeploymentIdentity> identities = serverBehaviour.getDeploymentIdentities();
 			DeploymentIdentity identity = new DeploymentIdentity(symbolicName, version);
 			identities.put(uri.toString(), identity);

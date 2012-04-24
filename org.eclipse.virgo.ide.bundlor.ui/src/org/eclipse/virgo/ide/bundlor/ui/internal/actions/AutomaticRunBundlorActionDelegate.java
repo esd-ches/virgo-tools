@@ -76,7 +76,7 @@ public class AutomaticRunBundlorActionDelegate extends RunBundlorActionDelegate 
 							}
 						}
 						if (!cmds.equals(newCmds)) {
-							description.setBuildSpec((ICommand[]) newCmds.toArray(new ICommand[] {}));
+							description.setBuildSpec(newCmds.toArray(new ICommand[] {}));
 							project.setDescription(description, monitor);
 						}
 					} catch (CoreException e) {

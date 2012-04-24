@@ -216,10 +216,12 @@ public class ParItemProviderAdapterFactory extends ParAdapterFactory implements 
 	 * @generated
 	 */
 	public void dispose() {
-		if (parItemProvider != null)
+		if (parItemProvider != null) {
 			parItemProvider.dispose();
-		if (bundleItemProvider != null)
+		}
+		if (bundleItemProvider != null) {
 			bundleItemProvider.dispose();
+		}
 	}
 
 }

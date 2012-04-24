@@ -214,8 +214,9 @@ public class ParExportWizard extends Wizard implements IExportWizard {
 	private static IPath locateManifestFile(IProject project) {
 		Path path = new Path("META-INF/MANIFEST.MF");
 		IResource manifestFile = project.findMember(path);
-		if (manifestFile != null)
+		if (manifestFile != null) {
 			return new Path(project.getName()).append(path);
+		}
 		return null;
 	}
 

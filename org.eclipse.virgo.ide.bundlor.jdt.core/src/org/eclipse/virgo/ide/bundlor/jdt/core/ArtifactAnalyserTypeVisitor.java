@@ -106,7 +106,7 @@ public class ArtifactAnalyserTypeVisitor extends ASTVisitor {
 	 */
 	@Override
 	public boolean visit(ImportDeclaration node) {
-		if (node.resolveBinding() != null && !((IBinding) node.resolveBinding()).isRecovered()) {
+		if (node.resolveBinding() != null && !node.resolveBinding().isRecovered()) {
 			IBinding binding = node.resolveBinding();
 			if (binding instanceof IPackageBinding) {
 				partialManifest.recordReferencedPackage(((IPackageBinding) binding).getName());

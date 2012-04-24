@@ -58,8 +58,9 @@ public class ParExportWizardPage extends AbstractProjectExportWizardPage {
 					IProject project = (IProject) element;
 					try {
 						IFacetedProject facetedProject = ProjectFacetsManager.create(project);
-						if (facetedProject == null)
+						if (facetedProject == null) {
 							return false;
+						}
 						return facetedProject.hasProjectFacet(ProjectFacetsManager.getProjectFacet(
 								FacetCorePlugin.PAR_FACET_ID).getDefaultVersion());
 					} catch (CoreException e) {

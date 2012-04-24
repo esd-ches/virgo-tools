@@ -497,8 +497,9 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 			for (String folder : folders) {
 				if (path.startsWith(folder)) {
 					path = path.substring(folder.length() + 1);
-					if (model instanceof EntryScannerListener)
+					if (model instanceof EntryScannerListener) {
 						((EntryScannerListener) model).onBeginEntry(path);
+					}
 					((EntryScannerListener) model).onEndEntry();
 				}
 			}

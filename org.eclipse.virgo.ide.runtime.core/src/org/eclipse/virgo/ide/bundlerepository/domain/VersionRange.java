@@ -214,39 +214,54 @@ public class VersionRange {
 	/* generated */
 	@Override
 	public boolean equals(Object obj) {
-		if (this == obj)
+		if (this == obj) {
 			return true;
-		if (obj == null)
+		}
+		if (obj == null) {
 			return false;
-		if (getClass() != obj.getClass())
+		}
+		if (getClass() != obj.getClass()) {
 			return false;
+		}
 		final VersionRange other = (VersionRange) obj;
-		if (isInclusiveLowerBound != other.isInclusiveLowerBound)
+		if (isInclusiveLowerBound != other.isInclusiveLowerBound) {
 			return false;
-		if (isInclusiveUpperBound != other.isInclusiveUpperBound)
+		}
+		if (isInclusiveUpperBound != other.isInclusiveUpperBound) {
 			return false;
-		if (lowerBoundMajor != other.lowerBoundMajor)
+		}
+		if (lowerBoundMajor != other.lowerBoundMajor) {
 			return false;
-		if (lowerBoundMinor != other.lowerBoundMinor)
+		}
+		if (lowerBoundMinor != other.lowerBoundMinor) {
 			return false;
+		}
 		if (lowerBoundQualifier == null) {
-			if (other.lowerBoundQualifier != null)
+			if (other.lowerBoundQualifier != null) {
 				return false;
-		} else if (!lowerBoundQualifier.equals(other.lowerBoundQualifier))
+			}
+		} else if (!lowerBoundQualifier.equals(other.lowerBoundQualifier)) {
 			return false;
-		if (lowerBoundService != other.lowerBoundService)
+		}
+		if (lowerBoundService != other.lowerBoundService) {
 			return false;
-		if (upperBoundMajor != other.upperBoundMajor)
+		}
+		if (upperBoundMajor != other.upperBoundMajor) {
 			return false;
-		if (upperBoundMinor != other.upperBoundMinor)
+		}
+		if (upperBoundMinor != other.upperBoundMinor) {
 			return false;
+		}
 		if (upperBoundQualifier == null) {
-			if (other.upperBoundQualifier != null)
+			if (other.upperBoundQualifier != null) {
 				return false;
-		} else if (!upperBoundQualifier.equals(other.upperBoundQualifier))
+			}
+		} else if (!upperBoundQualifier.equals(other.upperBoundQualifier)) {
 			return false;
-		if (upperBoundService != other.upperBoundService)
+		}
+		if (upperBoundService != other.upperBoundService) {
 			return false;
+		}
 		return true;
 	}
 

@@ -50,18 +50,22 @@ public class ServerLaunchableAdapterDelegate extends LaunchableAdapterDelegate {
 				Servlet servlet = (Servlet) moduleObject;
 				if (servlet.getAlias() != null) {
 					String path = servlet.getAlias();
-					if (path.startsWith("/"))
+					if (path.startsWith("/")) {
 						path = path.substring(1);
+					}
 					url = new URL(url, path);
-				} else
+				} else {
 					url = new URL(url, "servlet/" + servlet.getServletClassName());
+				}
 			} else if (moduleObject instanceof WebResource) {
 				WebResource resource = (WebResource) moduleObject;
 				String path = resource.getPath().toString();
-				if (path != null && path.startsWith("/") && path.length() > 0)
+				if (path != null && path.startsWith("/") && path.length() > 0) {
 					path = path.substring(1);
-				if (path != null && path.length() > 0)
+				}
+				if (path != null && path.length() > 0) {
 					url = new URL(url, path);
+				}
 			}
 			return new HttpLaunchable(url);
 		} catch (Exception e) {

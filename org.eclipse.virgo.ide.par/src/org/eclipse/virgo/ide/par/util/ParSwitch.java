@@ -85,15 +85,17 @@ public class ParSwitch<T> {
 		case ParPackage.PAR: {
 			Par par = (Par) theEObject;
 			T result = casePar(par);
-			if (result == null)
+			if (result == null) {
 				result = defaultCase(theEObject);
+			}
 			return result;
 		}
 		case ParPackage.BUNDLE: {
 			Bundle bundle = (Bundle) theEObject;
 			T result = caseBundle(bundle);
-			if (result == null)
+			if (result == null) {
 				result = defaultCase(theEObject);
+			}
 			return result;
 		}
 		default:

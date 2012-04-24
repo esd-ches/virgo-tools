@@ -186,7 +186,7 @@ public class BundleManifestEditor extends ManifestEditor {
 			return;
 		}
 		String name = file.getName();
-		if (name.equalsIgnoreCase(BundleModelUtility.F_MANIFEST)) { //$NON-NLS-1$
+		if (name.equalsIgnoreCase(BundleModelUtility.F_MANIFEST)) {
 			if (!fInputContextManager.hasContext(BundleInputContext.CONTEXT_ID)) {
 				IEditorInput in = new FileEditorInput(file);
 				fInputContextManager.putContext(in, new SpringBundleInputContext(this, in, false));
@@ -247,7 +247,7 @@ public class BundleManifestEditor extends ManifestEditor {
 		}
 		File manifestFile = null;
 		String name = file.getName().toLowerCase(Locale.ENGLISH);
-		if (name.equals(BundleModelUtility.F_MANIFEST)) { //$NON-NLS-1$
+		if (name.equals(BundleModelUtility.F_MANIFEST)) {
 			manifestFile = file;
 		}
 		try {
@@ -273,7 +273,7 @@ public class BundleManifestEditor extends ManifestEditor {
 		}
 
 		String name = input.getName().toLowerCase(Locale.ENGLISH);
-		if (name.startsWith(BundleModelUtility.F_MANIFEST)) { //$NON-NLS-1$
+		if (name.startsWith(BundleModelUtility.F_MANIFEST)) {
 			manager.putContext(input, new SpringBundleInputContext(this, input, true));
 		}
 	}
@@ -292,7 +292,7 @@ public class BundleManifestEditor extends ManifestEditor {
 				manager.putContext(
 						input,
 						new SpringBundleInputContext(this, input, storage.getName().equals(
-								BundleModelUtility.F_MANIFEST))); //$NON-NLS-1$
+								BundleModelUtility.F_MANIFEST)));
 			}
 		} finally {
 			try {

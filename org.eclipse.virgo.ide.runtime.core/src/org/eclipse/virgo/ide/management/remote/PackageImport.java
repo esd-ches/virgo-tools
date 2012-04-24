@@ -66,12 +66,15 @@ public class PackageImport implements IPackageImport, Serializable {
 			return false;
 		}
 		PackageImport that = (PackageImport) other;
-		if (!ObjectUtils.nullSafeEquals(this.name, that.name))
+		if (!ObjectUtils.nullSafeEquals(this.name, that.name)) {
 			return false;
-		if (!ObjectUtils.nullSafeEquals(this.version, that.version))
+		}
+		if (!ObjectUtils.nullSafeEquals(this.version, that.version)) {
 			return false;
-		if (!ObjectUtils.nullSafeEquals(this.supplierId, that.supplierId))
+		}
+		if (!ObjectUtils.nullSafeEquals(this.supplierId, that.supplierId)) {
 			return false;
+		}
 		return true;
 	}
 

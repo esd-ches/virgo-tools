@@ -107,10 +107,12 @@ public class ServiceReference implements IServiceReference, Serializable {
 			return false;
 		}
 		ServiceReference that = (ServiceReference) other;
-		if (!ObjectUtils.nullSafeEquals(this.clazzes, that.clazzes))
+		if (!ObjectUtils.nullSafeEquals(this.clazzes, that.clazzes)) {
 			return false;
-		if (!ObjectUtils.nullSafeEquals(this.type, that.type))
+		}
+		if (!ObjectUtils.nullSafeEquals(this.type, that.type)) {
 			return false;
+		}
 		return true;
 	}
 }

@@ -311,8 +311,9 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 	}
 
 	public void saveConfiguration(IProgressMonitor monitor) throws CoreException {
-		if (configuration == null)
+		if (configuration == null) {
 			return;
+		}
 	}
 
 	@Override

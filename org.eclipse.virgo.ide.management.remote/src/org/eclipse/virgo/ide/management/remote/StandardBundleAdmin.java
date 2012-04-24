@@ -192,8 +192,9 @@ public class StandardBundleAdmin implements BundleAdmin {
 
 	private Object[] getServices() {
 		ServiceReference[] serviceRefs = consoleProviderTracker.getServiceReferences();
-		if (serviceRefs == null)
+		if (serviceRefs == null) {
 			return new Object[0];
+		}
 		Util.dsort(serviceRefs, 0, serviceRefs.length);
 
 		Object[] serviceObjects = new Object[serviceRefs.length];

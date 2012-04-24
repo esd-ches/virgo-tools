@@ -186,8 +186,9 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 	public void dispose() {
 		super.dispose();
 
-		if (serverWC != null)
+		if (serverWC != null) {
 			serverWC.removeConfigurationChangeListener(propertyListener);
+		}
 		Job.getJobManager().removeJobChangeListener(jobListener);
 	}
 
@@ -201,8 +202,9 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 	}
 
 	public void setFocus() {
-		if (searchResultTable != null)
+		if (searchResultTable != null) {
 			searchResultTable.setFocus();
+		}
 	}
 
 	private Section createLeftSection(FormToolkit toolkit, ScrolledForm form) {
@@ -491,7 +493,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		Section leftSection = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.DESCRIPTION);
 		leftSection.setText(Messages.RepositoryBrowserEditorPage_InstalledBundlesAndLibraries);
 		leftSection.setDescription(Messages.RepositoryBrowserEditorPage_InstalledBundlesAndLibrariesMessage
-				+ getServerName() + "."); //$NON-NLS-2$
+				+ getServerName() + ".");
 		leftSection.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		Composite leftComposite = toolkit.createComposite(leftSection);
@@ -725,8 +727,9 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 	}
 
 	protected void initialize() {
-		if (searchResultTable == null)
+		if (searchResultTable == null) {
 			return;
+		}
 		searchResultTable.removeAll();
 		setErrorMessage(null);
 		shell.getDisplay().asyncExec(new Runnable() {

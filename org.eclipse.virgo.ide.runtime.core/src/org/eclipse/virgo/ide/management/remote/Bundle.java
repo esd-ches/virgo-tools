@@ -136,10 +136,12 @@ public class Bundle implements IBundle, Serializable {
 			return false;
 		}
 		Bundle that = (Bundle) other;
-		if (!ObjectUtils.nullSafeEquals(this.id, that.id))
+		if (!ObjectUtils.nullSafeEquals(this.id, that.id)) {
 			return false;
-		if (!ObjectUtils.nullSafeEquals(this.symbolicName, that.symbolicName))
+		}
+		if (!ObjectUtils.nullSafeEquals(this.symbolicName, that.symbolicName)) {
 			return false;
+		}
 		return true;
 	}
 }

@@ -148,7 +148,7 @@ public class ServerModuleDelegate extends ProjectModule {
 					String moduleFolderName = module.getProject().getName() + ".jar";
 					moduleRelativePath = new Path(moduleFolderName);
 					ModuleFolder folder = new ModuleFolder(null, moduleFolderName, Path.EMPTY);
-					folder.setMembers((IModuleResource[]) getMembers(module.getProject(), moduleRelativePath).toArray(
+					folder.setMembers(getMembers(module.getProject(), moduleRelativePath).toArray(
 							new IModuleResource[0]));
 					resources.add(folder);
 				}
@@ -190,7 +190,7 @@ public class ServerModuleDelegate extends ProjectModule {
 					String moduleFolderName = module.getProject().getName() + ".jar";
 					moduleRelativePath = new Path(moduleFolderName);
 					ModuleFolder folder = new ModuleFolder(null, moduleFolderName, Path.EMPTY);
-					folder.setMembers((IModuleResource[]) getMembers(module.getProject(), moduleRelativePath).toArray(
+					folder.setMembers(getMembers(module.getProject(), moduleRelativePath).toArray(
 							new IModuleResource[0]));
 					resources.add(folder);
 				} else if (FacetUtils.isParProject(module.getProject())) {
@@ -318,7 +318,7 @@ public class ServerModuleDelegate extends ProjectModule {
 					}
 				}
 			}
-			return (IModule[]) modules.toArray(new IModule[modules.size()]);
+			return modules.toArray(new IModule[modules.size()]);
 		} else if (FacetUtils.isPlanProject(getProject())) {
 			String fileName = getModule().getId();
 			fileName = fileName.substring(fileName.indexOf(':') + 1);

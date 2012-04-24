@@ -244,7 +244,7 @@ public class DefaultServerDeployer implements IServerDeployer {
 
 	protected <T> T executeDeployerCommand(IServerCommand<T> serverCommand) {
 		try {
-			return (T) serverCommand.execute();
+			return serverCommand.execute();
 		} catch (IOException e) {
 			StatusUtil.error("Failed execution of deployer command " + serverCommand, e);
 		} catch (TimeoutException e) {

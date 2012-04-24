@@ -85,9 +85,10 @@ public class BundleImpl extends EObjectImpl implements Bundle {
 	public void setSymbolicName(String newSymbolicName) {
 		String oldSymbolicName = symbolicName;
 		symbolicName = newSymbolicName;
-		if (eNotificationRequired())
+		if (eNotificationRequired()) {
 			eNotify(new ENotificationImpl(this, Notification.SET, ParPackage.BUNDLE__SYMBOLIC_NAME, oldSymbolicName,
 					symbolicName));
+		}
 	}
 
 	/**
@@ -155,8 +156,9 @@ public class BundleImpl extends EObjectImpl implements Bundle {
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy())
+		if (eIsProxy()) {
 			return super.toString();
+		}
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (symbolicName: ");

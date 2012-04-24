@@ -144,8 +144,9 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 		addButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (updating)
+				if (updating) {
 					return;
+				}
 
 				InputDialog dialog = new InputDialog(
 						getShell(),
@@ -179,8 +180,9 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				Object selectedArtefact = ((IStructuredSelection) filenamesTableViewer.getSelection()).getFirstElement();
-				if (updating)
+				if (updating) {
 					return;
+				}
 				updating = true;
 				List<Object> filenames = new ArrayList<Object>(Arrays.asList(contentProvider.getElements(server)));
 				filenames.remove(selectedArtefact);
@@ -202,8 +204,9 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 				int index = modules.indexOf(selectedArtefact);
 				modules.remove(selectedArtefact);
 				modules.add(index - 1, selectedArtefact);
-				if (updating)
+				if (updating) {
 					return;
+				}
 				updating = true;
 				execute(new ModifyStaticResourcesCommand(serverWorkingCopy, StringUtils.join(modules, ",")));
 				filenamesTableViewer.setInput(server);
@@ -223,8 +226,9 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 				int index = modules.indexOf(selectedArtefact);
 				modules.remove(selectedArtefact);
 				modules.add(index + 1, selectedArtefact);
-				if (updating)
+				if (updating) {
 					return;
+				}
 				updating = true;
 				execute(new ModifyStaticResourcesCommand(serverWorkingCopy, StringUtils.join(modules, ",")));
 				filenamesTableViewer.setInput(server);
@@ -277,8 +281,9 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 	 * @see ServerEditorSection#dispose()
 	 */
 	public void dispose() {
-		if (server != null)
+		if (server != null) {
 			server.removePropertyChangeListener(listener);
+		}
 	}
 
 	/**

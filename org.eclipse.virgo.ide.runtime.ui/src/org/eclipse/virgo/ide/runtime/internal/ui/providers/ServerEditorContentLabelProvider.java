@@ -55,7 +55,7 @@ public class ServerEditorContentLabelProvider implements ITreeContentProvider {
 		List<IServerEditorPartFactory> pageTexts = new ArrayList<IServerEditorPartFactory>();
 		int i = 0;
 		while (iterator.hasNext()) {
-			IServerEditorPartFactory factory = (IServerEditorPartFactory) iterator.next();
+			IServerEditorPartFactory factory = iterator.next();
 			if (factory.supportsType(serverType.getId()) && factory.shouldCreatePage(serverWorking)) {
 				pageTexts.add(factory);
 			}
