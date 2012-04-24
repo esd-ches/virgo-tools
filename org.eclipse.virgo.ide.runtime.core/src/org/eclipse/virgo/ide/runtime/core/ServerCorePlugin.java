@@ -20,46 +20,45 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepositoryManager;
 import org.osgi.framework.BundleContext;
 
-
 /**
  * Bundle Activator for the server.core plugin.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
 public class ServerCorePlugin extends AbstractUIPlugin {
-	
-	//TODO We should put this in a property so that we can maintain it
-	public static final String CONNECTOR_BUNDLE_NAME = 
-		"org.eclipse.virgo.ide.management.remote_1.0.0.201203091803.jar";
+
+	// TODO We should put this in a property so that we can maintain it
+	public static final String CONNECTOR_BUNDLE_NAME = "org.eclipse.virgo.ide.management.remote_1.0.0.201203091803.jar";
 
 	/** The bundle symbolic name */
 	public static final String PLUGIN_ID = "org.eclipse.virgo.ide.runtime.core";
 
 	public static final String PREF_LOAD_CLASSES_KEY = PLUGIN_ID + ".load.classes.from.index";
-	
+
 	private URI connectorBundleUri;
-	
+
 	/** The shared bundle instance */
 	private static ServerCorePlugin plugin;
-	
+
 	/** Internal artefact repository manager */
 	private ArtefactRepositoryManager artefactRepositoryManager;
-	
+
 	public static ExecutorService EXECUTOR = Executors.newCachedThreadPool();
 
 	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		plugin = this; 
+		plugin = this;
 		ServerUtils.clearCacheDirectory();
-		
+
 		URL url = FileLocator.toFileURL(context.getBundle().getEntry(CONNECTOR_BUNDLE_NAME));
 		if (url != null) {
 			connectorBundleUri = new URI("file", url.toString().substring(5), null);
 		}
-		
+
 		plugin.getPreferenceStore().setDefault(PREF_LOAD_CLASSES_KEY, false);
-		
+
 		artefactRepositoryManager = new ArtefactRepositoryManager();
 	}
 
@@ -88,7 +87,7 @@ public class ServerCorePlugin extends AbstractUIPlugin {
 	public static ArtefactRepositoryManager getArtefactRepositoryManager() {
 		return getDefault().artefactRepositoryManager;
 	}
-	
+
 	public URI getConnectorBundleUri() {
 		return connectorBundleUri;
 	}

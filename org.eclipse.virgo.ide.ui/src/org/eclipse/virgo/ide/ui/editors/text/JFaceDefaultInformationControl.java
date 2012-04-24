@@ -35,41 +35,43 @@ import org.eclipse.swt.widgets.Shell;
 /**
  * Default implementation of {@link org.eclipse.jface.text.IInformationControl}.
  * <p>
- * Displays textual information in a {@link org.eclipse.swt.custom.StyledText}widget. Before displaying, the information set to this information control is
- * processed by an <code>IInformationPresenter</code>.
+ * Displays textual information in a {@link org.eclipse.swt.custom.StyledText}widget. Before displaying, the information
+ * set to this information control is processed by an <code>IInformationPresenter</code>.
+ * 
  * @author Christian Dupuis
  * @since 2.0
  */
 public class JFaceDefaultInformationControl extends JFaceAbstractInformationControl implements DisposeListener {
 
 	/**
-	 * An information presenter determines the style presentation of information
-	 * displayed in the default information control. The interface can be
-	 * implemented by clients.
+	 * An information presenter determines the style presentation of information displayed in the default information
+	 * control. The interface can be implemented by clients.
 	 * 
 	 * @since 3.2
 	 */
 	public interface IInformationPresenterExtension {
 
 		/**
-		 * Updates the given presentation of the given information and thereby
-		 * may manipulate the information to be displayed. The manipulation
-		 * could be the extraction of textual encoded style information etc.
-		 * Returns the manipulated information.
+		 * Updates the given presentation of the given information and thereby may manipulate the information to be
+		 * displayed. The manipulation could be the extraction of textual encoded style information etc. Returns the
+		 * manipulated information.
 		 * <p>
 		 * Replaces
 		 * {@link DefaultInformationControl.IInformationPresenter#updatePresentation(Display, String, TextPresentation, int, int)}
-		 * Implementations should use the font of the given
-		 * <code>drawable</code> to calculate the size of the text to be
-		 * presented.
+		 * Implementations should use the font of the given <code>drawable</code> to calculate the size of the text to
+		 * be presented.
 		 * </p>
 		 * 
-		 * @param drawable the drawable of the information control
-		 * @param hoverInfo the information to be presented
-		 * @param presentation the presentation to be updated
-		 * @param maxWidth the maximal width in pixels
-		 * @param maxHeight the maximal height in pixels
-		 * 
+		 * @param drawable
+		 *            the drawable of the information control
+		 * @param hoverInfo
+		 *            the information to be presented
+		 * @param presentation
+		 *            the presentation to be updated
+		 * @param maxWidth
+		 *            the maximal width in pixels
+		 * @param maxHeight
+		 *            the maximal height in pixels
 		 * @return the manipulated information
 		 */
 		String updatePresentation(Drawable drawable, String hoverInfo, TextPresentation presentation, int maxWidth,
@@ -78,6 +80,7 @@ public class JFaceDefaultInformationControl extends JFaceAbstractInformationCont
 
 	/**
 	 * Inner border thickness in pixels.
+	 * 
 	 * @since 3.1
 	 */
 	private static final int INNER_BORDER = 1;
@@ -93,17 +96,19 @@ public class JFaceDefaultInformationControl extends JFaceAbstractInformationCont
 
 	/**
 	 * Additional styles to use for the text control.
+	 * 
 	 * @since 3.4, previously called <code>fTextStyle</code>
 	 */
 	private final int fAdditionalTextStyles;
 
 	/**
-	 * Creates a default information control with the given shell as parent. An
-	 * information presenter that can handle simple HTML is used to process the
-	 * information to be displayed.
+	 * Creates a default information control with the given shell as parent. An information presenter that can handle
+	 * simple HTML is used to process the information to be displayed.
 	 * 
-	 * @param parent the parent shell
-	 * @param isResizeable <code>true</code> if the control should be resizable
+	 * @param parent
+	 *            the parent shell
+	 * @param isResizeable
+	 *            <code>true</code> if the control should be resizable
 	 * @since 3.4
 	 */
 	public JFaceDefaultInformationControl(Shell parent, boolean isResizeable) {
@@ -114,13 +119,13 @@ public class JFaceDefaultInformationControl extends JFaceAbstractInformationCont
 	}
 
 	/**
-	 * Creates a default information control with the given shell as parent. An
-	 * information presenter that can handle simple HTML is used to process the
-	 * information to be displayed.
+	 * Creates a default information control with the given shell as parent. An information presenter that can handle
+	 * simple HTML is used to process the information to be displayed.
 	 * 
-	 * @param parent the parent shell
-	 * @param statusFieldText the text to be used in the status field or
-	 * <code>null</code> to hide the status field
+	 * @param parent
+	 *            the parent shell
+	 * @param statusFieldText
+	 *            the text to be used in the status field or <code>null</code> to hide the status field
 	 * @since 3.4
 	 */
 	public JFaceDefaultInformationControl(Shell parent, String statusFieldText) {
@@ -128,15 +133,15 @@ public class JFaceDefaultInformationControl extends JFaceAbstractInformationCont
 	}
 
 	/**
-	 * Creates a default information control with the given shell as parent. The
-	 * given information presenter is used to process the information to be
-	 * displayed.
+	 * Creates a default information control with the given shell as parent. The given information presenter is used to
+	 * process the information to be displayed.
 	 * 
-	 * @param parent the parent shell
-	 * @param statusFieldText the text to be used in the status field or
-	 * <code>null</code> to hide the status field
-	 * @param presenter the presenter to be used, or <code>null</code> if no
-	 * presenter should be used
+	 * @param parent
+	 *            the parent shell
+	 * @param statusFieldText
+	 *            the text to be used in the status field or <code>null</code> to hide the status field
+	 * @param presenter
+	 *            the presenter to be used, or <code>null</code> if no presenter should be used
 	 * @since 3.4
 	 */
 	public JFaceDefaultInformationControl(Shell parent, String statusFieldText, IInformationPresenter presenter) {
@@ -147,13 +152,13 @@ public class JFaceDefaultInformationControl extends JFaceAbstractInformationCont
 	}
 
 	/**
-	 * Creates a resizable default information control with the given shell as
-	 * parent. An information presenter that can handle simple HTML is used to
-	 * process the information to be displayed.
+	 * Creates a resizable default information control with the given shell as parent. An information presenter that can
+	 * handle simple HTML is used to process the information to be displayed.
 	 * 
-	 * @param parent the parent shell
-	 * @param toolBarManager the manager or <code>null</code> if toolbar is not
-	 * desired
+	 * @param parent
+	 *            the parent shell
+	 * @param toolBarManager
+	 *            the manager or <code>null</code> if toolbar is not desired
 	 * @since 3.4
 	 */
 	public JFaceDefaultInformationControl(Shell parent, ToolBarManager toolBarManager) {
@@ -161,15 +166,15 @@ public class JFaceDefaultInformationControl extends JFaceAbstractInformationCont
 	}
 
 	/**
-	 * Creates a resizable default information control with the given shell as
-	 * parent. The given information presenter is used to process the
-	 * information to be displayed.
+	 * Creates a resizable default information control with the given shell as parent. The given information presenter
+	 * is used to process the information to be displayed.
 	 * 
-	 * @param parent the parent shell
-	 * @param toolBarManager the manager or <code>null</code> if toolbar is not
-	 * desired
-	 * @param presenter the presenter to be used, or <code>null</code> if no
-	 * presenter should be used
+	 * @param parent
+	 *            the parent shell
+	 * @param toolBarManager
+	 *            the manager or <code>null</code> if toolbar is not desired
+	 * @param presenter
+	 *            the presenter to be used, or <code>null</code> if no presenter should be used
 	 * @since 3.4
 	 */
 	public JFaceDefaultInformationControl(Shell parent, ToolBarManager toolBarManager, IInformationPresenter presenter) {
@@ -180,37 +185,41 @@ public class JFaceDefaultInformationControl extends JFaceAbstractInformationCont
 	}
 
 	/**
-	 * Creates a default information control with the given shell as parent. No
-	 * information presenter is used to process the information to be displayed.
+	 * Creates a default information control with the given shell as parent. No information presenter is used to process
+	 * the information to be displayed.
 	 * 
-	 * @param parent the parent shell
+	 * @param parent
+	 *            the parent shell
 	 */
 	public JFaceDefaultInformationControl(Shell parent) {
 		this(parent, (String) null, null);
 	}
 
 	/**
-	 * Creates a default information control with the given shell as parent. The
-	 * given information presenter is used to process the information to be
-	 * displayed.
+	 * Creates a default information control with the given shell as parent. The given information presenter is used to
+	 * process the information to be displayed.
 	 * 
-	 * @param parent the parent shell
-	 * @param presenter the presenter to be used
+	 * @param parent
+	 *            the parent shell
+	 * @param presenter
+	 *            the presenter to be used
 	 */
 	public JFaceDefaultInformationControl(Shell parent, IInformationPresenter presenter) {
 		this(parent, (String) null, presenter);
 	}
 
 	/**
-	 * Creates a default information control with the given shell as parent. The
-	 * given information presenter is used to process the information to be
-	 * displayed. The given styles are applied to the created styled text
-	 * widget.
+	 * Creates a default information control with the given shell as parent. The given information presenter is used to
+	 * process the information to be displayed. The given styles are applied to the created styled text widget.
 	 * 
-	 * @param parent the parent shell
-	 * @param shellStyle the additional styles for the shell
-	 * @param style the additional styles for the styled text widget
-	 * @param presenter the presenter to be used
+	 * @param parent
+	 *            the parent shell
+	 * @param shellStyle
+	 *            the additional styles for the shell
+	 * @param style
+	 *            the additional styles for the styled text widget
+	 * @param presenter
+	 *            the presenter to be used
 	 * @deprecated As of 3.4, replaced by simpler constructors
 	 */
 	@Deprecated
@@ -219,17 +228,19 @@ public class JFaceDefaultInformationControl extends JFaceAbstractInformationCont
 	}
 
 	/**
-	 * Creates a default information control with the given shell as parent. The
-	 * given information presenter is used to process the information to be
-	 * displayed. The given styles are applied to the created styled text
-	 * widget.
+	 * Creates a default information control with the given shell as parent. The given information presenter is used to
+	 * process the information to be displayed. The given styles are applied to the created styled text widget.
 	 * 
-	 * @param parentShell the parent shell
-	 * @param shellStyle the additional styles for the shell
-	 * @param style the additional styles for the styled text widget
-	 * @param presenter the presenter to be used
-	 * @param statusFieldText the text to be used in the status field or
-	 * <code>null</code> to hide the status field
+	 * @param parentShell
+	 *            the parent shell
+	 * @param shellStyle
+	 *            the additional styles for the shell
+	 * @param style
+	 *            the additional styles for the styled text widget
+	 * @param presenter
+	 *            the presenter to be used
+	 * @param statusFieldText
+	 *            the text to be used in the status field or <code>null</code> to hide the status field
 	 * @since 3.0
 	 * @deprecated As of 3.4, replaced by simpler constructors
 	 */
@@ -243,15 +254,17 @@ public class JFaceDefaultInformationControl extends JFaceAbstractInformationCont
 	}
 
 	/**
-	 * Creates a default information control with the given shell as parent. The
-	 * given information presenter is used to process the information to be
-	 * displayed.
+	 * Creates a default information control with the given shell as parent. The given information presenter is used to
+	 * process the information to be displayed.
 	 * 
-	 * @param parent the parent shell
-	 * @param textStyles the additional styles for the styled text widget
-	 * @param presenter the presenter to be used
+	 * @param parent
+	 *            the parent shell
+	 * @param textStyles
+	 *            the additional styles for the styled text widget
+	 * @param presenter
+	 *            the presenter to be used
 	 * @deprecated As of 3.4, replaced by
-	 * {@link #DefaultInformationControl(Shell, DefaultInformationControl.IInformationPresenter)}
+	 *             {@link #DefaultInformationControl(Shell, DefaultInformationControl.IInformationPresenter)}
 	 */
 	@Deprecated
 	public JFaceDefaultInformationControl(Shell parent, int textStyles, IInformationPresenter presenter) {
@@ -259,18 +272,20 @@ public class JFaceDefaultInformationControl extends JFaceAbstractInformationCont
 	}
 
 	/**
-	 * Creates a default information control with the given shell as parent. The
-	 * given information presenter is used to process the information to be
-	 * displayed.
+	 * Creates a default information control with the given shell as parent. The given information presenter is used to
+	 * process the information to be displayed.
 	 * 
-	 * @param parent the parent shell
-	 * @param textStyles the additional styles for the styled text widget
-	 * @param presenter the presenter to be used
-	 * @param statusFieldText the text to be used in the status field or
-	 * <code>null</code> to hide the status field
+	 * @param parent
+	 *            the parent shell
+	 * @param textStyles
+	 *            the additional styles for the styled text widget
+	 * @param presenter
+	 *            the presenter to be used
+	 * @param statusFieldText
+	 *            the text to be used in the status field or <code>null</code> to hide the status field
 	 * @since 3.0
 	 * @deprecated As of 3.4, replaced by
-	 * {@link #DefaultInformationControl(Shell, String, DefaultInformationControl.IInformationPresenter)}
+	 *             {@link #DefaultInformationControl(Shell, String, DefaultInformationControl.IInformationPresenter)}
 	 */
 	@Deprecated
 	public JFaceDefaultInformationControl(Shell parent, int textStyles, IInformationPresenter presenter,
@@ -299,8 +314,7 @@ public class JFaceDefaultInformationControl extends JFaceAbstractInformationCont
 			// https://bugs.eclipse.org/bugs/show_bug.cgi?id=115432
 			layout.marginHeight = INNER_BORDER;
 			layout.marginWidth = INNER_BORDER;
-		}
-		else {
+		} else {
 			fText.setIndent(INNER_BORDER);
 		}
 	}
@@ -312,8 +326,7 @@ public class JFaceDefaultInformationControl extends JFaceAbstractInformationCont
 	public void setInformation(String content) {
 		if (fPresenter == null) {
 			fText.setText(content);
-		}
-		else {
+		} else {
 			fPresentation.clear();
 
 			int maxWidth = -1;
@@ -325,8 +338,7 @@ public class JFaceDefaultInformationControl extends JFaceAbstractInformationCont
 				if (fText.getWordWrap()) {
 					maxWidth -= INNER_BORDER * 2;
 					maxHeight -= INNER_BORDER * 2;
-				}
-				else {
+				} else {
 					maxWidth -= INNER_BORDER; // indent
 				}
 				Rectangle trim = computeTrim();
@@ -344,8 +356,7 @@ public class JFaceDefaultInformationControl extends JFaceAbstractInformationCont
 			if (fPresenter instanceof IInformationPresenterExtension) {
 				content = ((IInformationPresenterExtension) fPresenter).updatePresentation(fText, content,
 						fPresentation, maxWidth, maxHeight);
-			}
-			else {
+			} else {
 				content = fPresenter.updatePresentation(getShell().getDisplay(), content, fPresentation, maxWidth,
 						maxHeight);
 			}
@@ -353,8 +364,7 @@ public class JFaceDefaultInformationControl extends JFaceAbstractInformationCont
 			if (content != null) {
 				fText.setText(content);
 				TextPresentation.applyTextPresentation(fPresentation, fText);
-			}
-			else {
+			} else {
 				fText.setText(""); //$NON-NLS-1$
 			}
 		}

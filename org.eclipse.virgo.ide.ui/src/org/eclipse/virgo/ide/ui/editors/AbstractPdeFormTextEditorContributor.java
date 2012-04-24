@@ -42,7 +42,6 @@ import org.eclipse.ui.texteditor.ITextEditorActionDefinitionIds;
 import org.eclipse.ui.texteditor.RetargetTextEditorAction;
 import org.eclipse.virgo.ide.ui.internal.actions.ManifestFormatAction;
 
-
 /**
  * @author Christian Dupuis
  */
@@ -182,8 +181,7 @@ public class AbstractPdeFormTextEditorContributor extends PDEFormEditorContribut
 					rootBars.setGlobalActionHandler(id, (IAction) handlers.get(id));
 				}
 			}
-		}
-		else {
+		} else {
 			fSourceActionBars.deactivate();
 			registerGlobalActionHandlers();
 		}
@@ -280,8 +278,7 @@ public class AbstractPdeFormTextEditorContributor extends PDEFormEditorContribut
 		// This could break if JDT changes the "Show In" menu ID
 		try {
 			navigateMenu.insertAfter("showIn", quickOutlineAction); //$NON-NLS-1$
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			// Ignore
 		}
 	}
@@ -307,8 +304,7 @@ public class AbstractPdeFormTextEditorContributor extends PDEFormEditorContribut
 				text = PDEUIMessages.HyperlinkActionOpenPackage;
 				setText(text);
 				setToolTipText(text);
-			}
-			else {
+			} else {
 				super.generateActionText();
 			}
 		}

@@ -22,6 +22,7 @@ import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 
 /**
  * Implementors of this interface can calculate dependencies for a given {@link BundleManifest}.
+ * 
  * @author Christian Dupuis
  * @since 2.0.0
  */
@@ -30,12 +31,12 @@ public interface IDependencyLocator {
 	enum JavaVersion {
 		Java5, Java6;
 	}
-	
+
 	Map<File, List<String>> locateDependencies(BundleManifest manifest) throws DependencyLocationException;
-	
+
 	Set<? extends BundleDefinition> getBundles();
-	
-    Set<? extends LibraryDefinition> getLibraries();
-    
-    void shutdown();
+
+	Set<? extends LibraryDefinition> getLibraries();
+
+	void shutdown();
 }

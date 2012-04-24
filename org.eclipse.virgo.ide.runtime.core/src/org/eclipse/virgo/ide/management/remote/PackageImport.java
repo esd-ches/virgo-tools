@@ -47,7 +47,7 @@ public class PackageImport implements IPackageImport, Serializable {
 	public String getSupplierId() {
 		return supplierId;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		int hashCode = 17;
@@ -56,7 +56,7 @@ public class PackageImport implements IPackageImport, Serializable {
 		hashCode = 31 * hashCode + supplierId.hashCode();
 		return hashCode;
 	}
-	
+
 	@Override
 	public boolean equals(Object other) {
 		if (this == other) {
@@ -74,6 +74,5 @@ public class PackageImport implements IPackageImport, Serializable {
 			return false;
 		return true;
 	}
-	
 
 }

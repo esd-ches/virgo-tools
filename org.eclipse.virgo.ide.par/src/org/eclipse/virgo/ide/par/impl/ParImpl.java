@@ -23,33 +23,31 @@ import org.eclipse.virgo.ide.par.Bundle;
 import org.eclipse.virgo.ide.par.Par;
 import org.eclipse.virgo.ide.par.ParPackage;
 
-
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Par</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Par</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.virgo.ide.par.impl.ParImpl#getBundle <em>Bundle</em>}</li>
+ * <li>{@link org.eclipse.virgo.ide.par.impl.ParImpl#getBundle <em>Bundle</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class ParImpl extends EObjectImpl implements Par {
 	/**
-	 * The cached value of the '{@link #getBundle() <em>Bundle</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * The cached value of the '{@link #getBundle() <em>Bundle</em>}' containment reference list. <!-- begin-user-doc
+	 * --> <!-- end-user-doc -->
+	 * 
 	 * @see #getBundle()
 	 * @generated
 	 * @ordered
 	 */
 	protected EList<Bundle> bundle;
+
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected ParImpl() {
@@ -57,8 +55,8 @@ public class ParImpl extends EObjectImpl implements Par {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -67,8 +65,8 @@ public class ParImpl extends EObjectImpl implements Par {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public EList<Bundle> getBundle() {
@@ -79,75 +77,75 @@ public class ParImpl extends EObjectImpl implements Par {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
 		switch (featureID) {
-			case ParPackage.PAR__BUNDLE:
-				return ((InternalEList<?>)getBundle()).basicRemove(otherEnd, msgs);
+		case ParPackage.PAR__BUNDLE:
+			return ((InternalEList<?>) getBundle()).basicRemove(otherEnd, msgs);
 		}
 		return super.eInverseRemove(otherEnd, featureID, msgs);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ParPackage.PAR__BUNDLE:
-				return getBundle();
+		case ParPackage.PAR__BUNDLE:
+			return getBundle();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ParPackage.PAR__BUNDLE:
-				getBundle().clear();
-				getBundle().addAll((Collection<? extends Bundle>)newValue);
-				return;
+		case ParPackage.PAR__BUNDLE:
+			getBundle().clear();
+			getBundle().addAll((Collection<? extends Bundle>) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ParPackage.PAR__BUNDLE:
-				getBundle().clear();
-				return;
+		case ParPackage.PAR__BUNDLE:
+			getBundle().clear();
+			return;
 		}
 		super.eUnset(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ParPackage.PAR__BUNDLE:
-				return bundle != null && !bundle.isEmpty();
+		case ParPackage.PAR__BUNDLE:
+			return bundle != null && !bundle.isEmpty();
 		}
 		return super.eIsSet(featureID);
 	}

@@ -20,16 +20,15 @@ import org.eclipse.virgo.ide.runtime.internal.core.DeploymentIdentity;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.model.IURLProvider;
 
-
-
 /**
  * Implementations of this interface are intended to provide extra knowledge
  * about the runtime behavior or a dm Server instance.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
 public interface IServerBehaviour extends IURLProvider {
-	
+
 	/** Property indicating the ip of the deployer JMX control */
 	String PROPERTY_MBEAN_SERVER_IP = ServerCorePlugin.PLUGIN_ID + "deployer.ip";
 
@@ -37,14 +36,13 @@ public interface IServerBehaviour extends IURLProvider {
 	 * Configure the given {@link ILaunch} and add all runtime settings like
 	 * class path and command line options.
 	 */
-	void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor)
-			throws CoreException;
-	
+	void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor) throws CoreException;
+
 	/**
 	 * Returns the ip address of the controlled server
 	 */
 	String getMBeanServerIp();
-	
+
 	/**
 	 * Returns the deployer control
 	 */

@@ -19,9 +19,9 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.virgo.ide.jdt.internal.core.classpath.ServerClasspathContainer;
 
-
 /**
  * {@link IClasspathContainerPage} for the server classpath container
+ * 
  * @author Christian Dupuis
  * @since 1.1.3
  */

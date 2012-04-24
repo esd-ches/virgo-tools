@@ -121,21 +121,17 @@ public class BundleOverviewPage extends PDEFormPage implements IHyperlinkListene
 				if (ManifestEditorUtils.hasErrorSeverityMarker(markers)) {
 					form.setText(MANIFEST_ERRORS);
 					form.setImage(ServerIdeUiPlugin.getImage("full/obj16/manifest_error.png"));
-				}
-				else {
+				} else {
 					form.setText(PDEUIMessages.ManifestEditor_OverviewPage_title);
 					form.setImage(ServerIdeUiPlugin.getImage("full/obj16/osgi_obj.gif"));
 				}
-			}
-			catch (OperationCanceledException e) {
+			} catch (OperationCanceledException e) {
 				StatusHandler.log(new Status(Status.ERROR, ServerIdeUiPlugin.PLUGIN_ID,
 						"Could not update page title text", e));
-			}
-			catch (InterruptedException e) {
+			} catch (InterruptedException e) {
 				StatusHandler.log(new Status(Status.ERROR, ServerIdeUiPlugin.PLUGIN_ID,
 						"Could not update page title text", e));
-			}
-			catch (CoreException e) {
+			} catch (CoreException e) {
 				StatusHandler.log(new Status(Status.ERROR, ServerIdeUiPlugin.PLUGIN_ID,
 						"Could not update page title text", e));
 			}
@@ -206,8 +202,7 @@ public class BundleOverviewPage extends PDEFormPage implements IHyperlinkListene
 								if (config.getBuilderName().equals(BundlorCorePlugin.BUILDER_ID)) {
 									if (BundlorUiPlugin.isBundlorBuilding(project)) {
 										newCmds.remove(config);
-									}
-									else {
+									} else {
 										ICommand command = project.getDescription().newCommand();
 										command.setBuilderName(BundlorCorePlugin.BUILDER_ID);
 										newCmds.add(config);
@@ -218,18 +213,16 @@ public class BundleOverviewPage extends PDEFormPage implements IHyperlinkListene
 								description.setBuildSpec(newCmds.toArray(new ICommand[] {}));
 								project.setDescription(description, monitor);
 							}
-						}
-						catch (CoreException e1) {
+						} catch (CoreException e1) {
 						}
 					}
 				};
 				try {
-					PlatformUI.getWorkbench().getProgressService()
+					PlatformUI.getWorkbench()
+							.getProgressService()
 							.runInUI(PDEPlugin.getActiveWorkbenchWindow(), op, PDEPlugin.getWorkspace().getRoot());
-				}
-				catch (InvocationTargetException e1) {
-				}
-				catch (InterruptedException e1) {
+				} catch (InvocationTargetException e1) {
+				} catch (InterruptedException e1) {
 				}
 
 			}
@@ -276,8 +269,7 @@ public class BundleOverviewPage extends PDEFormPage implements IHyperlinkListene
 		FormText text = toolkit.createFormText(section, true);
 		try {
 			text.setText(content, parseTags, false);
-		}
-		catch (SWTException e) {
+		} catch (SWTException e) {
 			text.setText(e.getMessage(), false, false);
 		}
 		return text;
@@ -286,11 +278,9 @@ public class BundleOverviewPage extends PDEFormPage implements IHyperlinkListene
 	public void linkActivated(HyperlinkEvent e) {
 		if (e.getHref().equals("dependencies")) {
 			getEditor().setActivePage(BundleDependenciesPage.PAGE_ID);
-		}
-		else if (e.getHref().equals("runtime")) {
+		} else if (e.getHref().equals("runtime")) {
 			getEditor().setActivePage(BundleRuntimePage.PAGE_ID);
-		}
-		else if (e.getHref().equals("refreshdependencies")) {
+		} else if (e.getHref().equals("refreshdependencies")) {
 			IRunnableWithProgress op = new WorkspaceModifyOperation() {
 				protected void execute(IProgressMonitor monitor) throws CoreException, InterruptedException {
 					ServerClasspathContainerUpdateJob.scheduleClasspathContainerUpdateJob(
@@ -298,18 +288,15 @@ public class BundleOverviewPage extends PDEFormPage implements IHyperlinkListene
 				}
 			};
 			try {
-				PlatformUI.getWorkbench().getProgressService()
+				PlatformUI.getWorkbench()
+						.getProgressService()
 						.runInUI(PDEPlugin.getActiveWorkbenchWindow(), op, PDEPlugin.getWorkspace().getRoot());
+			} catch (InvocationTargetException e1) {
+			} catch (InterruptedException e1) {
 			}
-			catch (InvocationTargetException e1) {
-			}
-			catch (InterruptedException e1) {
-			}
-		}
-		else if (e.getHref().equals("generate")) {
+		} else if (e.getHref().equals("generate")) {
 			BundlorUiPlugin.runBundlorOnProject(JavaCore.create(resource.getProject()));
-		}
-		else if (e.getHref().equals("exportbundle")) {
+		} else if (e.getHref().equals("exportbundle")) {
 			Display.getDefault().asyncExec(new Runnable() {
 
 				public void run() {

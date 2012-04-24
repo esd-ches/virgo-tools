@@ -14,12 +14,11 @@ package org.eclipse.virgo.ide.runtime;
 import org.eclipse.osgi.util.NLS;
 
 /**
- * 
  * @author Miles Parker
- *
  */
 public class Messages extends NLS {
 	private static final String BUNDLE_NAME = "org.eclipse.virgo.ide.runtime.internal.ui.editor.messages"; //$NON-NLS-1$
+
 	public static String VirgoServerName;
 	static {
 		// initialize resource bundle

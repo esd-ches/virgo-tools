@@ -156,8 +156,7 @@ public class BundleQuickAssistAssistant extends QuickAssistAssistant {
 								list.add(new BundleCompletionProposal(element, pos, marker));
 							}
 						}
-					}
-					catch (BadLocationException e) {
+					} catch (BadLocationException e) {
 					}
 
 				}

@@ -39,9 +39,9 @@ import org.eclipse.virgo.ide.bundlor.internal.core.BundlorCorePlugin;
 import org.eclipse.virgo.ide.bundlor.ui.BundlorUiPlugin;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
 
-
 /**
  * {@link IObjectActionDelegate} to enables/disables the incremental Bundlor project builder.
+ * 
  * @author Christian Dupuis
  * @since 1.1.3
  */
@@ -57,8 +57,7 @@ public class AutomaticRunBundlorActionDelegate extends RunBundlorActionDelegate 
 			}
 		}
 		IRunnableWithProgress op = new WorkspaceModifyOperation() {
-			protected void execute(IProgressMonitor monitor) throws CoreException,
-					InterruptedException {
+			protected void execute(IProgressMonitor monitor) throws CoreException, InterruptedException {
 				for (final IJavaProject javaProject : projects) {
 					IProject project = javaProject.getProject();
 					IProjectDescription description = project.getDescription();
@@ -69,7 +68,7 @@ public class AutomaticRunBundlorActionDelegate extends RunBundlorActionDelegate 
 							if (config.getBuilderName().equals(BundlorCorePlugin.BUILDER_ID)) {
 								if (BundlorUiPlugin.isBundlorBuilding(project)) {
 									newCmds.remove(config);
-								} else { 
+								} else {
 									ICommand command = project.getDescription().newCommand();
 									command.setBuilderName(BundlorCorePlugin.BUILDER_ID);
 									newCmds.add(config);
@@ -77,26 +76,28 @@ public class AutomaticRunBundlorActionDelegate extends RunBundlorActionDelegate 
 							}
 						}
 						if (!cmds.equals(newCmds)) {
-							description.setBuildSpec((ICommand[]) newCmds.toArray(new ICommand[]{}));
+							description.setBuildSpec((ICommand[]) newCmds.toArray(new ICommand[] {}));
 							project.setDescription(description, monitor);
 						}
-					}
-					catch (CoreException e) {
-						StatusManager.getManager().handle(new Status(IStatus.ERROR, BundlorUiPlugin.PLUGIN_ID, "An exception occurred while running bundlor.", e));
+					} catch (CoreException e) {
+						StatusManager.getManager().handle(
+								new Status(IStatus.ERROR, BundlorUiPlugin.PLUGIN_ID,
+										"An exception occurred while running bundlor.", e));
 					}
 				}
 			}
 		};
-		
+
 		try {
-			PlatformUI.getWorkbench().getProgressService().runInUI(
-					PlatformUI.getWorkbench().getActiveWorkbenchWindow(), op,
-					ResourcesPlugin.getWorkspace().getRoot());
-		}
-		catch (InvocationTargetException e) {
-			StatusManager.getManager().handle(new Status(IStatus.ERROR, BundlorUiPlugin.PLUGIN_ID, "An exception occurred while running bundlor.", e));
-		}
-		catch (InterruptedException e) {
+			PlatformUI.getWorkbench()
+					.getProgressService()
+					.runInUI(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), op,
+							ResourcesPlugin.getWorkspace().getRoot());
+		} catch (InvocationTargetException e) {
+			StatusManager.getManager().handle(
+					new Status(IStatus.ERROR, BundlorUiPlugin.PLUGIN_ID,
+							"An exception occurred while running bundlor.", e));
+		} catch (InterruptedException e) {
 		}
 
 	}

@@ -14,7 +14,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -25,7 +24,6 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.pde.internal.ui.util.ModelModification;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IEditorPart;
@@ -39,15 +37,15 @@ import org.eclipse.wst.server.ui.internal.editor.ServerEditor;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorInput;
 
 /**
- * 
  * @author Miles Parker
- * 
  */
 @SuppressWarnings("restriction")
 public class RepositoryOutlinePage extends ContentOutlinePage {
 
 	private TreeViewer contentOutlineViewer;
+
 	protected Object input;
+
 	final ServerEditor editor;
 
 	public RepositoryOutlinePage(ServerEditor editor) {
@@ -56,8 +54,8 @@ public class RepositoryOutlinePage extends ContentOutlinePage {
 
 	private void setEditorPage(int page) {
 		try {
-			Method setPageMethod = MultiPageEditorPart.class.getDeclaredMethod(	"setActivePage",
-																				new Class[] { Integer.TYPE });
+			Method setPageMethod = MultiPageEditorPart.class.getDeclaredMethod("setActivePage",
+					new Class[] { Integer.TYPE });
 			setPageMethod.setAccessible(true);
 			setPageMethod.invoke(editor, page);
 		} catch (Exception e) {
@@ -98,8 +96,7 @@ public class RepositoryOutlinePage extends ContentOutlinePage {
 				if (pageNumber >= 0) {
 					setEditorPage(pageNumber);
 					IEditorPart activeEditor = getActiveEditor();
-					ISelectionChangedListener pageListener = (ISelectionChangedListener) activeEditor
-							.getAdapter(ISelectionChangedListener.class);
+					ISelectionChangedListener pageListener = (ISelectionChangedListener) activeEditor.getAdapter(ISelectionChangedListener.class);
 					if (pageListener != null) {
 						ISelection selection = getTreeViewer().getSelection();
 						if (selection instanceof TreeSelection) {
@@ -110,7 +107,7 @@ public class RepositoryOutlinePage extends ContentOutlinePage {
 							}
 							if (leafList.size() > 0) {
 								pageListener.selectionChanged(new SelectionChangedEvent(event.getSelectionProvider(),
-									new StructuredSelection(leafList)));
+										new StructuredSelection(leafList)));
 							}
 						}
 					}
@@ -119,7 +116,6 @@ public class RepositoryOutlinePage extends ContentOutlinePage {
 		});
 		registerContextMenu(contentOutlineViewer);
 	}
-	
 
 	protected void registerContextMenu(StructuredViewer viewer) {
 		MenuManager searchResultManager = new MenuManager();

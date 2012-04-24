@@ -15,17 +15,18 @@ import java.util.List;
 /**
  * Marker interface to be implemented by configuration providers for the dm
  * server integration.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
 public interface IServerConfiguration {
-	
+
 	List<String> getArtefactOrder();
-	
+
 	void setArtefactOrder(List<String> artefacts);
-	
+
 	void addArtefact(String artefact);
 
 	void removeArtefact(String artefact);
-	
+
 }

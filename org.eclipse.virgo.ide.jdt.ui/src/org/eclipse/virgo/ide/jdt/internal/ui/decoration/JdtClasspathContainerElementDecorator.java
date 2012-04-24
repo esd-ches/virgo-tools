@@ -33,16 +33,14 @@ import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.jdt.internal.core.classpath.ServerClasspathContainer;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
 
-
 /**
- * {@link ILightweightLabelDecorator} that decorates non-accessible packages in the class path
- * container.
+ * {@link ILightweightLabelDecorator} that decorates non-accessible packages in the class path container.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
 @SuppressWarnings("restriction")
-public class JdtClasspathContainerElementDecorator extends LabelProvider implements
-		ILightweightLabelDecorator {
+public class JdtClasspathContainerElementDecorator extends LabelProvider implements ILightweightLabelDecorator {
 
 	/** A JDT model listener that gets notified if a class path changed */
 	private IElementChangedListener changeListener = null;
@@ -54,8 +52,8 @@ public class JdtClasspathContainerElementDecorator extends LabelProvider impleme
 		changeListener = new IElementChangedListener() {
 
 			/**
-			 * Flag indicating a change in the resolved class path. This entry is copied from
-			 * Eclipse 3.4 in order to make this compatible with 3.3.
+			 * Flag indicating a change in the resolved class path. This entry is copied from Eclipse 3.4 in order to
+			 * make this compatible with 3.3.
 			 */
 			private static final int F_RESOLVED_CLASSPATH_CHANGED = 0x200000;
 
@@ -91,8 +89,7 @@ public class JdtClasspathContainerElementDecorator extends LabelProvider impleme
 				// make light gray and lock icon decoration
 				decoration.setForegroundColor(ColorMap.GRAY_LIGHT);
 				decoration.addOverlay(JdtUiImages.DESC_OVR_LOCKED, IDecoration.TOP_LEFT);
-			}
-			else if (shouldDecorateExportedPackageFragment(packageFragment)) {
+			} else if (shouldDecorateExportedPackageFragment(packageFragment)) {
 				decoration.addOverlay(JdtUiImages.DESC_OVR_EXPORTED, IDecoration.TOP_RIGHT);
 			}
 		}
@@ -100,26 +97,18 @@ public class JdtClasspathContainerElementDecorator extends LabelProvider impleme
 		else if (element instanceof IPackageFragmentRoot) {
 			IPackageFragmentRoot root = (IPackageFragmentRoot) element;
 			try {
-				if (ServerClasspathContainer.CLASSPATH_CONTAINER_PATH.equals(root
-						.getRawClasspathEntry().getPath())
-						&& root.getJavaProject().getProject().isAccessible()
-						&& root.getJavaProject().isOpen()) {
-					ServerClasspathContainer cpContainer = (ServerClasspathContainer) JavaCore
-							.getClasspathContainer(
-									ServerClasspathContainer.CLASSPATH_CONTAINER_PATH, root
-											.getJavaProject());
+				if (ServerClasspathContainer.CLASSPATH_CONTAINER_PATH.equals(root.getRawClasspathEntry().getPath())
+						&& root.getJavaProject().getProject().isAccessible() && root.getJavaProject().isOpen()) {
+					ServerClasspathContainer cpContainer = (ServerClasspathContainer) JavaCore.getClasspathContainer(
+							ServerClasspathContainer.CLASSPATH_CONTAINER_PATH, root.getJavaProject());
 					if (cpContainer != null) {
 						for (IClasspathEntry entry : cpContainer.getClasspathEntries()) {
-							if (entry.getPath().equals(root.getPath())
-									&& entry.getExtraAttributes() != null) {
+							if (entry.getPath().equals(root.getPath()) && entry.getExtraAttributes() != null) {
 								for (IClasspathAttribute attribute : entry.getExtraAttributes()) {
-									if (attribute
-											.getName()
-											.equals(
-													ServerClasspathContainer.TEST_CLASSPATH_ATTRIBUTE_VALUE)) {
+									if (attribute.getName().equals(
+											ServerClasspathContainer.TEST_CLASSPATH_ATTRIBUTE_VALUE)) {
 										decoration.setForegroundColor(ColorMap.GRAY_LIGHT);
-										decoration.addOverlay(JdtUiImages.DESC_OVR_LOCKED,
-												IDecoration.TOP_LEFT);
+										decoration.addOverlay(JdtUiImages.DESC_OVR_LOCKED, IDecoration.TOP_LEFT);
 									}
 								}
 								break;
@@ -128,8 +117,7 @@ public class JdtClasspathContainerElementDecorator extends LabelProvider impleme
 					}
 
 				}
-			}
-			catch (JavaModelException e) {
+			} catch (JavaModelException e) {
 			}
 		}
 		// class files represent a single type file in a JAR
@@ -145,39 +133,37 @@ public class JdtClasspathContainerElementDecorator extends LabelProvider impleme
 		// decorate the class path container and add the originating target runtime
 		else if (element instanceof ClassPathContainer) {
 			ClassPathContainer container = (ClassPathContainer) element;
-			if (container.getClasspathEntry().getPath().equals(
-					ServerClasspathContainer.CLASSPATH_CONTAINER_PATH)) {
+			if (container.getClasspathEntry().getPath().equals(ServerClasspathContainer.CLASSPATH_CONTAINER_PATH)) {
 				try {
-					if (container.getJavaProject().getProject().isAccessible()
-							&& container.getJavaProject().isOpen()) {
-						ServerClasspathContainer cpContainer = (ServerClasspathContainer) JavaCore
-								.getClasspathContainer(
-										ServerClasspathContainer.CLASSPATH_CONTAINER_PATH,
-										container.getJavaProject());
+					if (container.getJavaProject().getProject().isAccessible() && container.getJavaProject().isOpen()) {
+						ServerClasspathContainer cpContainer = (ServerClasspathContainer) JavaCore.getClasspathContainer(
+								ServerClasspathContainer.CLASSPATH_CONTAINER_PATH, container.getJavaProject());
 						decoration.addSuffix(cpContainer.getDescriptionSuffix());
 					}
-				}
-				catch (JavaModelException e) {
+				} catch (JavaModelException e) {
 				}
 			}
 		}
 	}
 
 	/**
-	 * Checks if a given {@link IPackageFragment} is in the list of exported packages for the
-	 * current {@link IJavaProject}.
+	 * Checks if a given {@link IPackageFragment} is in the list of exported packages for the current
+	 * {@link IJavaProject}.
+	 * 
 	 * @return true if the {@link IPackageFragment} is in the list of exported packages
 	 */
 	private boolean shouldDecorateExportedPackageFragment(IPackageFragment packageFragment) {
 		IJavaProject lavaProject = packageFragment.getJavaProject();
 		return FacetUtils.isBundleProject(lavaProject.getProject())
-				&& BundleManifestCorePlugin.getBundleManifestManager().getPackageExports(
-						lavaProject).contains(packageFragment.getElementName());
+				&& BundleManifestCorePlugin.getBundleManifestManager()
+						.getPackageExports(lavaProject)
+						.contains(packageFragment.getElementName());
 	}
 
 	/**
 	 * Checks if a given {@link IPackageFragment} is in the list of resolved imports for the current
 	 * {@link IJavaProject}.
+	 * 
 	 * @return true if the {@link IPackageFragment} is not accessible from the java project
 	 */
 	private boolean shouldDecorateImportedPackageFragment(IPackageFragment packageFragment) {
@@ -196,13 +182,13 @@ public class JdtClasspathContainerElementDecorator extends LabelProvider impleme
 		try {
 			IClasspathEntry entry = root.getRawClasspathEntry();
 			if (entry.getPath().equals(ServerClasspathContainer.CLASSPATH_CONTAINER_PATH)) {
-				if (!BundleManifestCorePlugin.getBundleManifestManager().getResolvedPackageImports(
-						root.getJavaProject()).contains(packageFragment.getElementName())) {
+				if (!BundleManifestCorePlugin.getBundleManifestManager()
+						.getResolvedPackageImports(root.getJavaProject())
+						.contains(packageFragment.getElementName())) {
 					return true;
 				}
 			}
-		}
-		catch (JavaModelException e) {
+		} catch (JavaModelException e) {
 		}
 		return false;
 	}

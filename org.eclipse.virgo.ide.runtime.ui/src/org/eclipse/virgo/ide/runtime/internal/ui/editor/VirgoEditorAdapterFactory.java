@@ -19,25 +19,21 @@ import org.eclipse.wst.server.ui.internal.editor.ServerEditor;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorInput;
 
 /**
- * 
  * @author Miles Parker
- * 
  */
 public class VirgoEditorAdapterFactory implements IAdapterFactory {
 
 	/**
-	 * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object,
-	 *      java.lang.Class)
+	 * @see org.eclipse.core.runtime.IAdapterFactory#getAdapter(java.lang.Object, java.lang.Class)
 	 */
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		if (adapterType == IContentOutlinePage.class && adaptableObject instanceof ServerEditor) {
 			ServerEditor serverEditor = (ServerEditor) adaptableObject;
 			ServerEditorInput editorInput = (ServerEditorInput) serverEditor.getEditorInput();
-			IServer server = ServerCore.findServer(editorInput
-					.getServerId());
+			IServer server = ServerCore.findServer(editorInput.getServerId());
 			IEditorPart[] findEditors = serverEditor.findEditors(editorInput);
 			IServerType serverType = server.getServerType();
-			if (serverType.getId().equals(ServerUiPlugin.VIRGO_SERVER_ID )) {
+			if (serverType.getId().equals(ServerUiPlugin.VIRGO_SERVER_ID)) {
 				return new RepositoryOutlinePage(serverEditor);
 			}
 		}

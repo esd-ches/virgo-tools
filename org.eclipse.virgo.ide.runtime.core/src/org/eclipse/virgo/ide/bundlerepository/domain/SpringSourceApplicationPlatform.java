@@ -16,7 +16,9 @@ import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
 /**
- * Represents the configuration of the SpringSourceApplicationPlatform osgi profile
+ * Represents the configuration of the SpringSourceApplicationPlatform osgi
+ * profile
+ * 
  * @author acolyer
  * 
  */

@@ -57,16 +57,15 @@ import org.eclipse.virgo.ide.manifest.core.editor.model.SpringBundleModel;
 import org.eclipse.virgo.ide.ui.editors.BundleManifestEditor;
 import org.osgi.framework.Constants;
 
-
 /**
- * Adapted from PDEModelUtility to create SpringBundleModels for modification.
- * This will either retrieve a model from an open editor if one exists or create
- * a new SpringBundleModel from file.
+ * Adapted from PDEModelUtility to create SpringBundleModels for modification. This will either retrieve a model from an
+ * open editor if one exists or create a new SpringBundleModel from file.
+ * 
  * @author Christian Dupuis
  * @author Leo Dos Santos
  * @see PDEModelUtility
  */
-@SuppressWarnings( { "unchecked" })
+@SuppressWarnings({ "unchecked" })
 public class BundleModelUtility {
 
 	public static final String F_MANIFEST = "MANIFEST.MF"; //$NON-NLS-1$
@@ -95,8 +94,7 @@ public class BundleModelUtility {
 			// open editor found, should have underlying text listeners -> apply
 			// modification
 			modifyEditorModel((BundleModelModification) modification, editor, model, monitor);
-		}
-		else {
+		} else {
 			generateModelEdits((BundleModelModification) modification, monitor, true);
 		}
 	}
@@ -111,8 +109,7 @@ public class BundleModelUtility {
 			files = new IFile[2];
 			files[F_Bi] = getManifestFile(modification);
 			files[F_Xi] = getXMLFile(modification);
-		}
-		else {
+		} else {
 			files = new IFile[] { getFile(modification) };
 		}
 		// need to monitor number of successful buffer connections for
@@ -138,8 +135,7 @@ public class BundleModelUtility {
 			IBaseModel editModel;
 			if (isFullBundleModification(modification)) {
 				editModel = prepareBundlePluginModel(files, documents, !performEdits);
-			}
-			else {
+			} else {
 				editModel = prepareAbstractEditingModel(files[0], documents[0], !performEdits);
 			}
 
@@ -178,17 +174,13 @@ public class BundleModelUtility {
 					edits.add(change);
 				}
 			}
-		}
-		catch (CoreException e) {
+		} catch (CoreException e) {
 			PDEPlugin.log(e);
-		}
-		catch (MalformedTreeException e) {
+		} catch (MalformedTreeException e) {
 			PDEPlugin.log(e);
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 			PDEPlugin.log(e);
-		}
-		finally {
+		} finally {
 			// don't want to over-disconnect in case we ran into an exception
 			// during connections
 			// dc <= sc stops this from happening
@@ -200,8 +192,7 @@ public class BundleModelUtility {
 				try {
 					manager.disconnect(files[i].getFullPath(), LocationKind.NORMALIZE, monitor);
 					dc++;
-				}
-				catch (CoreException e) {
+				} catch (CoreException e) {
 					PDEPlugin.log(e);
 				}
 			}
@@ -222,8 +213,7 @@ public class BundleModelUtility {
 		IBundlePluginModelBase pluginModel;
 		if (isFragment) {
 			pluginModel = new BundleFragmentModel();
-		}
-		else {
+		} else {
 			pluginModel = new BundlePluginModel();
 		}
 
@@ -241,8 +231,7 @@ public class BundleModelUtility {
 		if (filename.equals(F_MANIFEST)) {
 			// TODO: include template.mf && TEST.MF??
 			model = new SpringBundleModel(doc, true);
-		}
-		else {
+		} else {
 			return null;
 		}
 		model.setUnderlyingResource(file);
@@ -250,8 +239,7 @@ public class BundleModelUtility {
 			model.load();
 			IModelTextChangeListener listener = createListener(filename, doc, generateEditNames);
 			model.addModelChangedListener(listener);
-		}
-		catch (CoreException e) {
+		} catch (CoreException e) {
 			PDEPlugin.log(e);
 		}
 		return model;
@@ -263,8 +251,7 @@ public class BundleModelUtility {
 		if (name.equals(F_PLUGIN) || name.equals(F_FRAGMENT) || name.equals(F_MANIFEST)
 				|| name.equalsIgnoreCase("template.mf") || name.equalsIgnoreCase("TEST.MF")) {
 			return getOpenManifestEditor(project, getFile(modification));
-		}
-		else if (name.equals(F_BUILD)) {
+		} else if (name.equals(F_BUILD)) {
 			PDEFormEditor openEditor = PDEModelUtility.getOpenBuildPropertiesEditor(project);
 			if (openEditor == null) {
 				openEditor = getOpenManifestEditor(project, getFile(modification));
@@ -307,19 +294,16 @@ public class BundleModelUtility {
 			if (model instanceof IBundlePluginModelBase) {
 				model = ((IBundlePluginModelBase) model).getExtensionsModel();
 			}
-		}
-		else if (name.equals(F_BUILD)) {
+		} else if (name.equals(F_BUILD)) {
 			if (openEditor instanceof BuildEditor) {
 				model = openEditor.getAggregateModel();
-			}
-			else if (openEditor instanceof ManifestEditor) {
+			} else if (openEditor instanceof ManifestEditor) {
 				IFormPage page = openEditor.findPage(BuildInputContext.CONTEXT_ID);
 				if (page instanceof BuildSourcePage) {
 					model = ((BuildSourcePage) page).getInputContext().getModel();
 				}
 			}
-		}
-		else if (name.equals(F_MANIFEST) || name.equalsIgnoreCase("template.mf") || name.equalsIgnoreCase("TEST.MF")) {
+		} else if (name.equals(F_MANIFEST) || name.equalsIgnoreCase("template.mf") || name.equalsIgnoreCase("TEST.MF")) {
 			model = openEditor.getAggregateModel();
 			if (model instanceof IBundlePluginModelBase) {
 				return model;
@@ -375,8 +359,7 @@ public class BundleModelUtility {
 			openEditorsField.setAccessible(true);
 			Hashtable openEditors = (Hashtable) openEditorsField.get(null);
 			return openEditors;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			return new Hashtable();
 		}
 	}
@@ -391,12 +374,10 @@ public class BundleModelUtility {
 					return ((BundleModelModification) mod).getIfile();
 				}
 				return null;
-			}
-			else {
+			} else {
 				return (IFile) obj;
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
@@ -408,13 +389,11 @@ public class BundleModelUtility {
 			Object obj = getFileMethod.invoke(mod, (Object[]) null);
 			if (obj instanceof IFile) {
 				return (IFile) obj;
-			}
-			else if (mod instanceof BundleModelModification) {
+			} else if (mod instanceof BundleModelModification) {
 				return ((BundleModelModification) mod).getIfile();
 			}
 			return null;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
@@ -428,8 +407,7 @@ public class BundleModelUtility {
 				return (IFile) obj;
 			}
 			return null;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
@@ -443,8 +421,7 @@ public class BundleModelUtility {
 				return (IFile) obj;
 			}
 			return null;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
@@ -458,14 +435,12 @@ public class BundleModelUtility {
 			if (obj instanceof Boolean) {
 				Boolean bool = (Boolean) obj;
 				return bool.booleanValue();
-			}
-			else if (mod instanceof BundleModelModification) {
+			} else if (mod instanceof BundleModelModification) {
 				IFile file = ((BundleModelModification) mod).getIfile();
 				return file.getName().equals(F_MANIFEST);
 			}
 			return false;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			if (mod instanceof BundleModelModification) {
 				IFile file = ((BundleModelModification) mod).getIfile();
 				return file.getName().equals(F_MANIFEST);
@@ -493,12 +468,10 @@ public class BundleModelUtility {
 	private static IModelTextChangeListener createListener(String filename, IDocument doc, boolean generateEditNames) {
 		if (filename.equals(F_PLUGIN) || filename.equals(F_FRAGMENT)) {
 			return new XMLTextChangeListener(doc, generateEditNames);
-		}
-		else if (filename.equals(F_MANIFEST)) {
+		} else if (filename.equals(F_MANIFEST)) {
 			// TODO: include template.mf && TEST.MF??
 			return new BundleTextChangeListener(doc, generateEditNames);
-		}
-		else if (filename.endsWith(F_PROPERTIES)) {
+		} else if (filename.endsWith(F_PROPERTIES)) {
 			return new PropertiesTextChangeListener(doc, generateEditNames);
 		}
 		return null;

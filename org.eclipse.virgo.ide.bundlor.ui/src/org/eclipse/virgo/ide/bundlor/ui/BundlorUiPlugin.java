@@ -29,9 +29,9 @@ import org.eclipse.ui.progress.IProgressConstants;
 import org.eclipse.virgo.ide.bundlor.internal.core.BundlorCorePlugin;
 import org.osgi.framework.BundleContext;
 
-
 /**
  * UI Plugin for Bundlor UI.
+ * 
  * @author Christian Dupuis
  * @since 1.1.2
  */
@@ -98,8 +98,7 @@ public class BundlorUiPlugin extends AbstractUIPlugin {
 			try {
 				javaProject.getProject().build(IncrementalProjectBuilder.FULL_BUILD, BundlorCorePlugin.BUILDER_ID,
 						Collections.<String, String> emptyMap(), monitor);
-			}
-			catch (CoreException e) {
+			} catch (CoreException e) {
 			}
 			return Status.OK_STATUS;
 		}
@@ -119,8 +118,7 @@ public class BundlorUiPlugin extends AbstractUIPlugin {
 						return command;
 					}
 				}
-			}
-			catch (CoreException e) {
+			} catch (CoreException e) {
 			}
 		}
 		return null;

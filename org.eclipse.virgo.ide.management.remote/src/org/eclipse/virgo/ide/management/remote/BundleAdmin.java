@@ -16,9 +16,9 @@ import java.util.Map;
  * @author Christian Dupuis
  */
 public interface BundleAdmin {
-	
+
 	Map<Long, Bundle> retrieveBundles();
-	
+
 	String execute(String cmdLine);
-	
+
 }

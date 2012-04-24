@@ -15,8 +15,9 @@ import java.io.File;
 
 /**
  * Any entity that has a corresponding file system entity.
+ * 
  * @author Miles Parker
- *
+ * 
  */
 public interface ILocalEntity {
 

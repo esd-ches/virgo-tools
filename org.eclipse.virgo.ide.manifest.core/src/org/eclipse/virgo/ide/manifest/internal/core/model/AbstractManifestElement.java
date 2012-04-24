@@ -10,29 +10,28 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.manifest.internal.core.model;
 
-
 /**
  * @author Leo Dos Santos
  */
 public class AbstractManifestElement {
 
 	private AbstractManifestElement parent;
-	
+
 	private String name;
-	
+
 	public AbstractManifestElement(AbstractManifestElement parent, String name) {
 		this.parent = parent;
 		this.name = name;
 	}
-	
+
 	public AbstractManifestElement[] getChildren() {
 		return new AbstractManifestElement[0];
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public AbstractManifestElement getParent() {
 		return parent;
 	}
@@ -40,11 +39,11 @@ public class AbstractManifestElement {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public void setParent(AbstractManifestElement parent) {
 		this.parent = parent;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -75,5 +74,5 @@ public class AbstractManifestElement {
 			return false;
 		return true;
 	}
-	
+
 }

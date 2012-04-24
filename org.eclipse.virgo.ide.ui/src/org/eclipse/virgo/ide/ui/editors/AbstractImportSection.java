@@ -51,9 +51,9 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
 /**
- * Abstract class with common functionality for Eclipse Forms sections that
- * display and edit a list of artifacts -- Import Package, Import Bundle, and
- * Import Library. Originally based on <code>PDESection</code>.
+ * Abstract class with common functionality for Eclipse Forms sections that display and edit a list of artifacts --
+ * Import Package, Import Bundle, and Import Library. Originally based on <code>PDESection</code>.
+ * 
  * @author Christian Dupuis
  */
 public abstract class AbstractImportSection extends TableSection implements IModelChangedListener {
@@ -168,11 +168,9 @@ public abstract class AbstractImportSection extends TableSection implements IMod
 	protected void buttonSelected(int index) {
 		if (index == getAddIndex()) {
 			handleAdd();
-		}
-		else if (index == getRemoveIndex()) {
+		} else if (index == getRemoveIndex()) {
 			handleRemove();
-		}
-		else if (index == getPropertiesIndex()) {
+		} else if (index == getPropertiesIndex()) {
 			handleOpenProperties();
 		}
 	}
@@ -272,8 +270,7 @@ public abstract class AbstractImportSection extends TableSection implements IMod
 				if (object.getVersion() != null || !(optional == object.isOptional())) {
 					return false;
 				}
-			}
-			else if (!version.equals(object.getVersion()) || !(optional == object.isOptional())) {
+			} else if (!version.equals(object.getVersion()) || !(optional == object.isOptional())) {
 				return false;
 			}
 		}

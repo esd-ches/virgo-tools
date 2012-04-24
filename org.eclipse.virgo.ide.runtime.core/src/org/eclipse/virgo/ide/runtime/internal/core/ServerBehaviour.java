@@ -67,12 +67,14 @@ import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 
 /**
  * Default dm server behavior.
+ * 
  * @author Christian Dupuis
  * @author Kaloyan Raev
  * @since 1.0.0
  */
 @SuppressWarnings("restriction")
-public class ServerBehaviour extends ServerBehaviourDelegate implements IServerBehaviour, IOSGiFrameworkAdmin, IOSGiFrameworkConsole {
+public class ServerBehaviour extends ServerBehaviourDelegate implements IServerBehaviour, IOSGiFrameworkAdmin,
+		IOSGiFrameworkConsole {
 
 	private final static String WEB_CONTEXT_PATH_MANIFEST_HEADER = "Web-ContextPath";
 
@@ -148,9 +150,9 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 		if (status != null && status.getSeverity() == IStatus.ERROR) {
 			throw new CoreException(status);
 		}
-		
+
 		getVersionHandler().preStartup(this);
-		
+
 		setServerRestartState(false);
 		setServerState(IServer.STATE_STARTING);
 		setMode(launchMode);
@@ -162,18 +164,18 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 	public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor)
 			throws CoreException {
 
-		String existingProgArgs = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
-				(String) null);
+		String existingProgArgs = workingCopy.getAttribute(	IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
+															(String) null);
 		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, LaunchArgumentUtils
 				.mergeArguments(existingProgArgs, getRuntimeProgramArguments(),
-						getExcludedRuntimeProgramArguments(true), true));
+								getExcludedRuntimeProgramArguments(true), true));
 
-		String existingVMArgs = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
-				(String) null);
+		String existingVMArgs = workingCopy.getAttribute(	IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
+															(String) null);
 		String[] configVMArgs = getRuntimeVMArguments();
 
-		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS, LaunchArgumentUtils
-				.mergeArguments(existingVMArgs, configVMArgs, null, false));
+		workingCopy.setAttribute(	IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
+									LaunchArgumentUtils.mergeArguments(existingVMArgs, configVMArgs, null, false));
 
 		IServerRuntime runtime = ServerUtils.getServerRuntime(this);
 		IVMInstall vmInstall = runtime.getVMInstall();
@@ -202,11 +204,15 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 		if (vmInstall != null) {
 			try {
 				String typeId = vmInstall.getVMInstallType().getId();
-				LaunchArgumentUtils.replaceJREContainer(oldCp, JavaRuntime.newRuntimeContainerClasspathEntry(new Path(
-						JavaRuntime.JRE_CONTAINER).append(typeId).append(vmInstall.getName()),
-						IRuntimeClasspathEntry.BOOTSTRAP_CLASSES));
-			}
-			catch (Exception e) {
+				LaunchArgumentUtils
+						.replaceJREContainer(	oldCp,
+												JavaRuntime.newRuntimeContainerClasspathEntry(	new Path(
+																									JavaRuntime.JRE_CONTAINER)
+																										.append(typeId)
+																										.append(vmInstall
+																														.getName()),
+																								IRuntimeClasspathEntry.BOOTSTRAP_CLASSES));
+			} catch (Exception e) {
 				// ignore
 			}
 
@@ -219,14 +225,13 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 					for (toolsIndex = 0; toolsIndex < oldCp.size(); toolsIndex++) {
 						IRuntimeClasspathEntry entry = oldCp.get(toolsIndex);
 						if (entry.getType() == IRuntimeClasspathEntry.ARCHIVE
-								&& entry.getPath().lastSegment().equals("tools.jar")) {
+							&& entry.getPath().lastSegment().equals("tools.jar")) {
 							break;
 						}
 					}
 					if (toolsIndex < oldCp.size()) {
 						oldCp.set(toolsIndex, toolsJar);
-					}
-					else {
+					} else {
 						LaunchArgumentUtils.mergeClasspath(oldCp, toolsJar);
 					}
 				}
@@ -239,8 +244,7 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 			IRuntimeClasspathEntry entry = iterator.next();
 			try {
 				list.add(entry.getMemento());
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 			}
 		}
 
@@ -252,8 +256,7 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 	public void stop(boolean force) {
 		if (force) {
 			immediateShutdown();
-		}
-		else {
+		} else {
 			shutdown();
 		}
 	}
@@ -289,7 +292,7 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 	public void tail(DeploymentIdentity identity) {
 		// add setting to enable/disable tailing
 		if (processConsole != null && ServerUtils.getServer(this).shouldTailTraceFiles() && identity != null
-				&& identity.getSymbolicName() != null && identity.getVersion() != null) {
+			&& identity.getSymbolicName() != null && identity.getVersion() != null) {
 			ServerLogTail tail = new ServerLogTail(this, identity, processConsole);
 			tail.setSystem(true);
 			tail.schedule();
@@ -313,7 +316,7 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 					int size = events.length;
 					for (int i = 0; i < size; i++) {
 						if (newProcess != null && newProcess.equals(events[i].getSource())
-								&& events[i].getKind() == DebugEvent.TERMINATE) {
+							&& events[i].getKind() == DebugEvent.TERMINATE) {
 							stopServer();
 						}
 					}
@@ -329,12 +332,12 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 		}
 
 		File traceDirectory = new File(getRuntimeBaseDirectory().toOSString() + File.separator + "serviceability"
-				+ File.separator + "trace");
+			+ File.separator + "trace");
 		if (traceDirectory.exists()) {
 			for (File applicationTraceDirectory : traceDirectory.listFiles()) {
 				if (applicationTraceDirectory.isDirectory()) {
 					File traceFile = new File(applicationTraceDirectory.getAbsolutePath() + File.separator
-							+ "trace.log");
+						+ "trace.log");
 					if (traceFile.exists()) {
 						traceFileSizes.put(traceFile.getAbsolutePath(), traceFile.length());
 					}
@@ -346,17 +349,18 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 
 	public URL getModuleRootURL(IModule module) {
 		try {
-			// check pre condition; only dynamic web projects and java projects are allowed
+			// check pre condition; only dynamic web projects and java projects
+			// are allowed
 			IProject project = module.getProject();
 			if (!FacetedProjectFramework.hasProjectFacet(project, FacetCorePlugin.WEB_FACET_ID)
-					|| !project.hasNature(JavaCore.NATURE_ID)) {
+				|| !project.hasNature(JavaCore.NATURE_ID)) {
 				return null;
 			}
 
 			String contextPath = null;
 
-			BundleManifest bundleManifest = BundleManifestCorePlugin.getBundleManifestManager().getBundleManifest(
-					JavaCore.create(project));
+			BundleManifest bundleManifest = BundleManifestCorePlugin.getBundleManifestManager()
+					.getBundleManifest(JavaCore.create(project));
 			if (bundleManifest != null) {
 				Dictionary<String, String> manifest = bundleManifest.toDictionary();
 				if (manifest != null && manifest.get(WEB_CONTEXT_PATH_MANIFEST_HEADER) != null) {
@@ -382,8 +386,7 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 			}
 
 			return new URL(urlBuilder.toString());
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}
@@ -430,8 +433,7 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 				launch.terminate();
 				stopServer();
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 		}
 	}
 
@@ -462,11 +464,9 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 		if (launch != null) {
 			try {
 				getServerDeployer().shutdown();
-			}
-			catch (TimeoutException e) {
+			} catch (TimeoutException e) {
 				immediateShutdown();
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				immediateShutdown();
 			}
 		}
@@ -490,8 +490,8 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 		public ServerLogTail(ServerBehaviour server, DeploymentIdentity identity, ProcessConsole console) {
 			super(server.getServer().getName());
 			this.logfile = new File(server.getRuntimeBaseDirectory().toOSString() + File.separator + "serviceability"
-					+ File.separator + "trace" + File.separator + identity.getSymbolicName() + "-"
-					+ identity.getVersion() + File.separator + "trace.log");
+				+ File.separator + "trace" + File.separator + identity.getSymbolicName() + "-" + identity.getVersion()
+				+ File.separator + "trace.log");
 			this.stream = console.newOutputStream();
 			Long fileSize = traceFileSizes.get(logfile.getAbsolutePath());
 			if (fileSize != null) {
@@ -518,8 +518,7 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 			while (this.tailing && !logfile.exists()) {
 				try {
 					Thread.sleep(sampleInterval);
-				}
-				catch (InterruptedException e) {
+				} catch (InterruptedException e) {
 				}
 			}
 
@@ -552,15 +551,13 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 
 						// Sleep for the specified interval
 						Thread.sleep(this.sampleInterval);
-					}
-					catch (Exception e) {
+					} catch (Exception e) {
 					}
 				}
 
 				// Close the file that we are tailing
 				file.close();
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 
 			}
 

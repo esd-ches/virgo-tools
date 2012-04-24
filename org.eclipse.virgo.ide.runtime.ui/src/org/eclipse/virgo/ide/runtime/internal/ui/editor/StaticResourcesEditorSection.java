@@ -53,9 +53,9 @@ import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiImages;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.editor.ServerEditorSection;
 
-
 /**
  * {@link ServerEditorSection} section that allows to configure the JMX deployer credentials
+ * 
  * @author Christian Dupuis
  * @author Steffen Pingel
  * @since 1.1.3
@@ -97,14 +97,11 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 		super.createSection(parent);
 		FormToolkit toolkit = getFormToolkit(parent.getDisplay());
 
-		Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE
-				| ExpandableComposite.EXPANDED | ExpandableComposite.TITLE_BAR
-				| Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
+		Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED
+				| ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
 		section.setText("Redeploy Behavior");
-		section
-				.setDescription("Configure server redeploy and refresh behavior on changes to project resources.\n\nDefine patterns for files that should be copied into the server without redeploying the bundle or application. Spring XML configuration files be handled separately.");
-		section
-				.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
+		section.setDescription("Configure server redeploy and refresh behavior on changes to project resources.\n\nDefine patterns for files that should be copied into the server without redeploying the bundle or application. Spring XML configuration files be handled separately.");
+		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 
 		Composite composite = toolkit.createComposite(section);
 		GridLayout layout = new GridLayout();
@@ -114,13 +111,11 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 		layout.verticalSpacing = 5;
 		layout.horizontalSpacing = 10;
 		composite.setLayout(layout);
-		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL
-				| GridData.VERTICAL_ALIGN_FILL));
+		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
 
-		filenameTable = toolkit.createTable(composite, SWT.SINGLE | SWT.V_SCROLL
-				| SWT.FULL_SELECTION);
+		filenameTable = toolkit.createTable(composite, SWT.SINGLE | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
 		data.heightHint = 130;
 		filenameTable.setLayoutData(data);
@@ -143,7 +138,7 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 		buttonLayout.marginHeight = 0;
 		buttonComposite.setLayout(buttonLayout);
 		GridDataFactory.fillDefaults().applyTo(buttonComposite);
-		
+
 		addButton = toolkit.createButton(buttonComposite, "Add", SWT.PUSH);
 		GridDataFactory.fillDefaults().applyTo(addButton);
 		addButton.addSelectionListener(new SelectionAdapter() {
@@ -167,11 +162,9 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 						});
 				if (dialog.open() == Dialog.OK) {
 					updating = true;
-					List<Object> filenames = new ArrayList<Object>(Arrays.asList(contentProvider
-							.getElements(server)));
+					List<Object> filenames = new ArrayList<Object>(Arrays.asList(contentProvider.getElements(server)));
 					filenames.add(dialog.getValue());
-					execute(new ModifyStaticResourcesCommand(serverWorkingCopy, StringUtils
-							.join(filenames, ",")));
+					execute(new ModifyStaticResourcesCommand(serverWorkingCopy, StringUtils.join(filenames, ",")));
 					filenamesTableViewer.setInput(server);
 					filenamesTableViewer.setSelection(new StructuredSelection(dialog.getValue()));
 					// update buttons
@@ -185,16 +178,13 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 		deleteButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Object selectedArtefact = ((IStructuredSelection) filenamesTableViewer
-						.getSelection()).getFirstElement();
+				Object selectedArtefact = ((IStructuredSelection) filenamesTableViewer.getSelection()).getFirstElement();
 				if (updating)
 					return;
 				updating = true;
-				List<Object> filenames = new ArrayList<Object>(Arrays.asList(contentProvider
-						.getElements(server)));
+				List<Object> filenames = new ArrayList<Object>(Arrays.asList(contentProvider.getElements(server)));
 				filenames.remove(selectedArtefact);
-				execute(new ModifyStaticResourcesCommand(serverWorkingCopy, StringUtils
-						.join(filenames, ",")));
+				execute(new ModifyStaticResourcesCommand(serverWorkingCopy, StringUtils.join(filenames, ",")));
 				filenamesTableViewer.setInput(server);
 				// update buttons
 				updating = false;
@@ -206,8 +196,7 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 		upButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Object selectedArtefact = ((IStructuredSelection) filenamesTableViewer
-						.getSelection()).getFirstElement();
+				Object selectedArtefact = ((IStructuredSelection) filenamesTableViewer.getSelection()).getFirstElement();
 				List<Object> modules = new ArrayList<Object>();
 				modules.addAll(Arrays.asList(contentProvider.getElements(server)));
 				int index = modules.indexOf(selectedArtefact);
@@ -216,8 +205,7 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 				if (updating)
 					return;
 				updating = true;
-				execute(new ModifyStaticResourcesCommand(serverWorkingCopy, StringUtils
-						.join(modules, ",")));
+				execute(new ModifyStaticResourcesCommand(serverWorkingCopy, StringUtils.join(modules, ",")));
 				filenamesTableViewer.setInput(server);
 				updateButtons(selectedArtefact);
 				updating = false;
@@ -229,8 +217,7 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 		downButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Object selectedArtefact = ((IStructuredSelection) filenamesTableViewer
-						.getSelection()).getFirstElement();
+				Object selectedArtefact = ((IStructuredSelection) filenamesTableViewer.getSelection()).getFirstElement();
 				List<Object> modules = new ArrayList<Object>();
 				modules.addAll(Arrays.asList(contentProvider.getElements(server)));
 				int index = modules.indexOf(selectedArtefact);
@@ -239,8 +226,7 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 				if (updating)
 					return;
 				updating = true;
-				execute(new ModifyStaticResourcesCommand(serverWorkingCopy, StringUtils
-				                 						.join(modules, ",")));
+				execute(new ModifyStaticResourcesCommand(serverWorkingCopy, StringUtils.join(modules, ",")));
 				filenamesTableViewer.setInput(server);
 				updateButtons(selectedArtefact);
 				updating = false;
@@ -248,15 +234,12 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 		});
 
 		FormText restoreDefault = toolkit.createFormText(composite, true);
-		restoreDefault
-				.setText(
-						"<form><p><a href=\"exportbundle\">Restore default</a> filename pattern</p></form>",
-						true, false);
+		restoreDefault.setText("<form><p><a href=\"exportbundle\">Restore default</a> filename pattern</p></form>",
+				true, false);
 		restoreDefault.addHyperlinkListener(new HyperlinkAdapter() {
 			public void linkActivated(HyperlinkEvent e) {
 				updating = true;
-				execute(new ModifyStaticResourcesCommand(serverWorkingCopy,
-						IServerWorkingCopy.DEFAULT_STATIC_FILENAMES));
+				execute(new ModifyStaticResourcesCommand(serverWorkingCopy, IServerWorkingCopy.DEFAULT_STATIC_FILENAMES));
 				filenamesTableViewer.setInput(server);
 				updating = false;
 			}
@@ -278,8 +261,7 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 			upButton.setEnabled(index > 0);
 			downButton.setEnabled(index < modules.size() - 1);
 			deleteButton.setEnabled(true);
-		}
-		else {
+		} else {
 			upButton.setEnabled(false);
 			downButton.setEnabled(false);
 			deleteButton.setEnabled(false);
@@ -304,8 +286,7 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 	 */
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
-		serverWorkingCopy = (IServerWorkingCopy) server.loadAdapter(IServerWorkingCopy.class,
-				new NullProgressMonitor());
+		serverWorkingCopy = (IServerWorkingCopy) server.loadAdapter(IServerWorkingCopy.class, new NullProgressMonitor());
 		addConfigurationChangeListener();
 	}
 
@@ -331,10 +312,8 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 		public Object[] getElements(Object inputElement) {
 			if (inputElement instanceof IServer) {
 				IServer server = (IServer) inputElement;
-				IServerWorkingCopy dmServer = (IServerWorkingCopy) server.loadAdapter(
-						IServerWorkingCopy.class, null);
-				String[] filenames = StringUtils.split(dmServer
-						.getStaticFilenamePatterns(), ",");
+				IServerWorkingCopy dmServer = (IServerWorkingCopy) server.loadAdapter(IServerWorkingCopy.class, null);
+				String[] filenames = StringUtils.split(dmServer.getStaticFilenamePatterns(), ",");
 				return filenames;
 
 			}

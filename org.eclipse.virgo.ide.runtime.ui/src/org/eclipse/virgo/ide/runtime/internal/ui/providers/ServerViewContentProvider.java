@@ -14,9 +14,7 @@ package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 import org.eclipse.wst.server.core.IServer;
 
 /**
- * 
  * @author Miles Parker
- * 
  */
 public class ServerViewContentProvider extends RepositoryContentProvider {
 

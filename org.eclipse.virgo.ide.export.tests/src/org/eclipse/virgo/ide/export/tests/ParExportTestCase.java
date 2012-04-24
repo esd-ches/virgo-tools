@@ -41,35 +41,39 @@ import org.junit.Test;
 public class ParExportTestCase extends VirgoIdeTestCase {
 
 	@Test
-	public void testExportOperation() throws InvocationTargetException, InterruptedException, IOException, CoreException {
-		IPath parLocation = Path.fromOSString(VirgoIdeTestUtil.getWorkspaceRoot().getLocation().toFile().getCanonicalPath()).append("test-1.0.0.par");
+	public void testExportOperation() throws InvocationTargetException, InterruptedException, IOException,
+			CoreException {
+		IPath parLocation = Path.fromOSString(
+				VirgoIdeTestUtil.getWorkspaceRoot().getLocation().toFile().getCanonicalPath()).append("test-1.0.0.par");
 		createPredefinedProject("bundlor-test");
-		
+
 		IProject project = VirgoIdeTestUtil.setUpProject("bundlor-test-par", "1.4", getSourceWorkspacePath());
 		VirgoIdeTestUtil.getWorkspace().build(IncrementalProjectBuilder.FULL_BUILD, null);
 
-		boolean status = ParExportWizard.exportPar(project, parLocation, PlatformUI.getWorkbench().getActiveWorkbenchWindow(), Display.getDefault().getActiveShell());
+		boolean status = ParExportWizard.exportPar(project, parLocation, PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow(), Display.getDefault().getActiveShell());
 		Assert.assertTrue("Expects status is OK", status);
-		
+
 		File file = new File(parLocation.toOSString());
 		FileInputStream fileStream = new FileInputStream(file);
 		ZipInputStream stream = new ZipInputStream(fileStream);
-		
+
 		List<String> fileNames = new ArrayList<String>();
-		while(stream.available() > 0) {
+		while (stream.available() > 0) {
 			ZipEntry entry = stream.getNextEntry();
 			if (entry != null) {
 				fileNames.add(entry.getName());
 			}
 		}
-		
+
 		String[] sortedFileNames = fileNames.toArray(new String[fileNames.size()]);
 		Arrays.sort(sortedFileNames);
 
 		Assert.assertTrue("Expects 2 entries", sortedFileNames.length == 2);
 		Assert.assertEquals("Expects 1st entry to be META-INF/MANIFEST.MF", "META-INF/MANIFEST.MF", sortedFileNames[0]);
-		Assert.assertEquals("Expects 2nd entry to be com.springsource.bundlor-1.0.0.jar", "com.springsource.bundlor-1.0.0.jar", sortedFileNames[1]);
-		
+		Assert.assertEquals("Expects 2nd entry to be com.springsource.bundlor-1.0.0.jar",
+				"com.springsource.bundlor-1.0.0.jar", sortedFileNames[1]);
+
 		fileStream.close();
 		stream.close();
 	}
@@ -78,5 +82,5 @@ public class ParExportTestCase extends VirgoIdeTestCase {
 	protected String getBundleName() {
 		return "org.eclipse.virgo.ide.export.tests";
 	}
-	
+
 }

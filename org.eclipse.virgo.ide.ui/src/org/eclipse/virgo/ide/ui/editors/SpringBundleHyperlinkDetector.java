@@ -36,7 +36,6 @@ import org.eclipse.pde.internal.ui.editor.text.TranslationHyperlink;
 import org.eclipse.virgo.ide.manifest.core.editor.model.ImportBundleHeader;
 import org.eclipse.virgo.ide.manifest.core.editor.model.ImportLibraryHeader;
 
-
 /**
  * @author Christian Dupuis
  * @author Leo Dos Santos
@@ -46,7 +45,8 @@ public class SpringBundleHyperlinkDetector implements IHyperlinkDetector {
 	private final PDESourcePage fSourcePage;
 
 	/**
-	 * @param editor the editor in which to detect the hyperlink
+	 * @param editor
+	 *            the editor in which to detect the hyperlink
 	 */
 	public SpringBundleHyperlinkDetector(PDESourcePage page) {
 		fSourcePage = page;
@@ -105,8 +105,7 @@ public class SpringBundleHyperlinkDetector implements IHyperlinkDetector {
 			}
 			return new IHyperlink[] { new JavaHyperlink(new Region(range.getOffset(), range.getLength()), target,
 					header.getModel().getUnderlyingResource()) };
-		}
-		else if (header instanceof BasePackageHeader || header instanceof RequireBundleHeader
+		} else if (header instanceof BasePackageHeader || header instanceof RequireBundleHeader
 				|| header instanceof ImportBundleHeader || header instanceof ImportLibraryHeader
 				|| header instanceof FragmentHostHeader) {
 			return matchLinkFor(header, region.getOffset());
@@ -169,8 +168,7 @@ public class SpringBundleHyperlinkDetector implements IHyperlinkDetector {
 				IRegion region = new Region(mainOffset - (offset - downOffset), match.length());
 				if (header instanceof BasePackageHeader) {
 					return new IHyperlink[] { new PackageHyperlink(region, match, (BasePackageHeader) header) };
-				}
-				else if (header instanceof RequireBundleHeader || header instanceof ImportBundleHeader
+				} else if (header instanceof RequireBundleHeader || header instanceof ImportBundleHeader
 						|| header instanceof FragmentHostHeader) {
 
 					// try to figure out the version range
@@ -179,8 +177,7 @@ public class SpringBundleHyperlinkDetector implements IHyperlinkDetector {
 						version = version.substring(10);
 						int lastindex = version.indexOf('"');
 						version = version.substring(0, lastindex);
-					}
-					else if (version.startsWith(";bundle-version=\"")) {
+					} else if (version.startsWith(";bundle-version=\"")) {
 						version = version.substring(17);
 						int lastindex = version.indexOf('"');
 						version = version.substring(0, lastindex);
@@ -189,8 +186,7 @@ public class SpringBundleHyperlinkDetector implements IHyperlinkDetector {
 					return new IHyperlink[] { new BundleHyperlink(region, match, version) };
 				}
 			}
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 		}
 		return null;
 	}

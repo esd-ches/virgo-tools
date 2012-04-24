@@ -17,6 +17,7 @@ import org.eclipse.jst.server.core.IJavaRuntime;
 
 /**
  * Extension to {@link IJavaRuntime} that has specific dm Server methods.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */

@@ -25,7 +25,8 @@ import org.json.JSONTokener;
 /**
  * Safely reads a JSON file.
  * 
- * Usage: Just implement {@link #parse(JSONObject)} with the processing you need and pass in a file.
+ * Usage: Just implement {@link #parse(JSONObject)} with the processing you need
+ * and pass in a file.
  * 
  * @author Miles Parker
  * 
@@ -33,13 +34,14 @@ import org.json.JSONTokener;
 public abstract class JSONFileParser implements SimpleJSONParser {
 
 	File file;
-	
+
 	public JSONFileParser(File file) {
 		this.file = file;
-		//(perhaps we shouldn't do this as side effect of construction, but I'm growing tired of verbosity for its own sake.)
+		// (perhaps we shouldn't do this as side effect of construction, but I'm
+		// growing tired of verbosity for its own sake.)
 		apply();
 	}
-	
+
 	public void apply() {
 		try {
 			FileReader reader = new FileReader(file);

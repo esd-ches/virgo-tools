@@ -21,7 +21,7 @@ import org.eclipse.pde.internal.core.text.bundle.BundleModel;
 public class SpringBundleModel extends BundleModel {
 
 	private IBundleModelFactory fFactory;
-	
+
 	public SpringBundleModel(String string, boolean isReconciling) {
 		this(new Document(string), isReconciling);
 	}

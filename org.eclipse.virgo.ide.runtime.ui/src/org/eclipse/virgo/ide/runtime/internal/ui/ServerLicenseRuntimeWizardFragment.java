@@ -15,14 +15,14 @@ import org.eclipse.wst.server.ui.internal.wizard.page.LicenseComposite;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 
-
 /**
- * {@link WizardFragment} to accept license terms. 
+ * {@link WizardFragment} to accept license terms.
+ * 
  * @author Christian Dupuis
  */
 @SuppressWarnings("restriction")
 public class ServerLicenseRuntimeWizardFragment extends WizardFragment {
-	
+
 	public static final String LICENSE = "license";
 
 	public static final String LICENSE_NONE = "none";
@@ -64,12 +64,10 @@ public class ServerLicenseRuntimeWizardFragment extends WizardFragment {
 
 	public boolean isComplete() {
 		try {
-			Boolean b = (Boolean) getTaskModel().getObject(
-					ServerLicenseRuntimeWizardFragment.LICENSE_ACCEPT);
+			Boolean b = (Boolean) getTaskModel().getObject(ServerLicenseRuntimeWizardFragment.LICENSE_ACCEPT);
 			if (b != null && b.booleanValue())
 				return true;
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			// ignore
 		}
 		return false;

@@ -15,9 +15,9 @@ import org.eclipse.virgo.ide.runtime.Messages;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiImages;
 import org.eclipse.wst.server.ui.editor.ServerEditorPart;
 
-
 /**
  * {@link ServerEditorPart} that allows to browse the local and remote bundle repository.
+ * 
  * @author Terry Hon
  * @author Christian Dupuis
  * @since 1.0.0
@@ -28,7 +28,7 @@ public class VirgoRepositoryBrowserEditorPage extends RepositoryBrowserEditorPag
 	protected Image getFormImage() {
 		return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_VIRGO);
 	}
-	
+
 	@Override
 	protected String getServerName() {
 		return Messages.VirgoServerName;

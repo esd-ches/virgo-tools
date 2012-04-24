@@ -15,10 +15,7 @@ import org.eclipse.swtbot.swt.finder.results.VoidResult;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
-import org.eclipse.virgo.ide.ui.editors.BundleDependenciesPage;
-import org.eclipse.virgo.ide.ui.editors.BundleManifestEditor;
 import org.eclipse.virgo.ide.ui.tests.AbstractManifestUiTestCase;
-
 
 /**
  * @author Leo Dos Santos

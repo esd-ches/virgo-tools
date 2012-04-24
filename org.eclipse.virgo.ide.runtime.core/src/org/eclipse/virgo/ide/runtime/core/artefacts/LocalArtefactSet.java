@@ -13,11 +13,10 @@ package org.eclipse.virgo.ide.runtime.core.artefacts;
 
 import java.io.File;
 
-
 /**
  * 
  * @author Miles Parker
- *
+ * 
  */
 public class LocalArtefactSet extends ArtefactSet implements ILocalEntity {
 
@@ -31,7 +30,7 @@ public class LocalArtefactSet extends ArtefactSet implements ILocalEntity {
 	public File getFile() {
 		return location;
 	}
-	
+
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet#toString()
 	 */

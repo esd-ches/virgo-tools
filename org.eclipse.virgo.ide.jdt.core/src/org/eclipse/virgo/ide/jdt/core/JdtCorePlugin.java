@@ -22,9 +22,9 @@ import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.osgi.framework.BundleContext;
 
-
 /**
  * Bundle {@link JdtCorePlugin} for the jdt.core plug-in.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
@@ -34,11 +34,9 @@ public class JdtCorePlugin extends Plugin {
 	public static final String PLUGIN_ID = "org.eclipse.virgo.ide.jdt.core";
 
 	/**
-	 * The marker id used for creating markers that indicate un-resolved dependencies on bundle
-	 * manifests
+	 * The marker id used for creating markers that indicate un-resolved dependencies on bundle manifests
 	 */
-	public static final String DEPENDENCY_PROBLEM_MARKER_ID = PLUGIN_ID
-			+ ".dependencyproblemmarker";
+	public static final String DEPENDENCY_PROBLEM_MARKER_ID = PLUGIN_ID + ".dependencyproblemmarker";
 
 	// The shared instance
 	private static JdtCorePlugin plugin;
@@ -51,8 +49,7 @@ public class JdtCorePlugin extends Plugin {
 		bundleManifestChangeListener = new ServerClasspathContainerBundleManifestChangeListener();
 		BundleManifestCorePlugin.getBundleManifestManager().addBundleManifestChangeListener(
 				bundleManifestChangeListener);
-		ServerCorePlugin.getArtefactRepositoryManager().addBundleRepositoryChangeListener(
-				bundleManifestChangeListener);
+		ServerCorePlugin.getArtefactRepositoryManager().addBundleRepositoryChangeListener(bundleManifestChangeListener);
 	}
 
 	public void stop(BundleContext context) throws Exception {
@@ -69,7 +66,7 @@ public class JdtCorePlugin extends Plugin {
 		IEclipsePreferences node = context.getNode(PLUGIN_ID);
 		return node;
 	}
-	
+
 	public static JdtCorePlugin getDefault() {
 		return plugin;
 	}

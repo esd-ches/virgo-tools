@@ -32,7 +32,7 @@ public class ColoredRespositoryLabelProvider extends ArtefactLabelProvider imple
 
 	public Color getForeground(Object element) {
 		if (repositoryContentProvider.getRepository() != null && element instanceof IArtefact
-			&& repositoryContentProvider.getRepository().contains((IArtefact) element)) {
+				&& repositoryContentProvider.getRepository().contains((IArtefact) element)) {
 			return Display.getDefault().getSystemColor(SWT.COLOR_DARK_GRAY);
 		}
 		return null;

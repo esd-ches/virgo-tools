@@ -10,34 +10,29 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.par.impl;
 
-
 import org.eclipse.emf.common.notify.Notification;
-
 import org.eclipse.emf.ecore.EClass;
-
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.virgo.ide.par.Bundle;
 import org.eclipse.virgo.ide.par.ParPackage;
 
 /**
- * <!-- begin-user-doc -->
- * An implementation of the model object '<em><b>Bundle</b></em>'.
- * <!-- end-user-doc -->
+ * <!-- begin-user-doc --> An implementation of the model object '<em><b>Bundle</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are implemented:
  * <ul>
- *   <li>{@link org.eclipse.virgo.ide.par.impl.BundleImpl#getSymbolicName <em>Symbolic Name</em>}</li>
+ * <li>{@link org.eclipse.virgo.ide.par.impl.BundleImpl#getSymbolicName <em>Symbolic Name</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @generated
  */
 public class BundleImpl extends EObjectImpl implements Bundle {
 	/**
-	 * The default value of the '{@link #getSymbolicName() <em>Symbolic Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The default value of the '{@link #getSymbolicName() <em>Symbolic Name</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getSymbolicName()
 	 * @generated
 	 * @ordered
@@ -45,9 +40,9 @@ public class BundleImpl extends EObjectImpl implements Bundle {
 	protected static final String SYMBOLIC_NAME_EDEFAULT = null;
 
 	/**
-	 * The cached value of the '{@link #getSymbolicName() <em>Symbolic Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+	 * The cached value of the '{@link #getSymbolicName() <em>Symbolic Name</em>}' attribute. <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
+	 * 
 	 * @see #getSymbolicName()
 	 * @generated
 	 * @ordered
@@ -55,8 +50,8 @@ public class BundleImpl extends EObjectImpl implements Bundle {
 	protected String symbolicName = SYMBOLIC_NAME_EDEFAULT;
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	protected BundleImpl() {
@@ -64,8 +59,8 @@ public class BundleImpl extends EObjectImpl implements Bundle {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
@@ -74,8 +69,8 @@ public class BundleImpl extends EObjectImpl implements Bundle {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public String getSymbolicName() {
@@ -83,83 +78,85 @@ public class BundleImpl extends EObjectImpl implements Bundle {
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	public void setSymbolicName(String newSymbolicName) {
 		String oldSymbolicName = symbolicName;
 		symbolicName = newSymbolicName;
 		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, ParPackage.BUNDLE__SYMBOLIC_NAME, oldSymbolicName, symbolicName));
+			eNotify(new ENotificationImpl(this, Notification.SET, ParPackage.BUNDLE__SYMBOLIC_NAME, oldSymbolicName,
+					symbolicName));
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
 		switch (featureID) {
-			case ParPackage.BUNDLE__SYMBOLIC_NAME:
-				return getSymbolicName();
+		case ParPackage.BUNDLE__SYMBOLIC_NAME:
+			return getSymbolicName();
 		}
 		return super.eGet(featureID, resolve, coreType);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eSet(int featureID, Object newValue) {
 		switch (featureID) {
-			case ParPackage.BUNDLE__SYMBOLIC_NAME:
-				setSymbolicName((String)newValue);
-				return;
+		case ParPackage.BUNDLE__SYMBOLIC_NAME:
+			setSymbolicName((String) newValue);
+			return;
 		}
 		super.eSet(featureID, newValue);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public void eUnset(int featureID) {
 		switch (featureID) {
-			case ParPackage.BUNDLE__SYMBOLIC_NAME:
-				setSymbolicName(SYMBOLIC_NAME_EDEFAULT);
-				return;
+		case ParPackage.BUNDLE__SYMBOLIC_NAME:
+			setSymbolicName(SYMBOLIC_NAME_EDEFAULT);
+			return;
 		}
 		super.eUnset(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public boolean eIsSet(int featureID) {
 		switch (featureID) {
-			case ParPackage.BUNDLE__SYMBOLIC_NAME:
-				return SYMBOLIC_NAME_EDEFAULT == null ? symbolicName != null : !SYMBOLIC_NAME_EDEFAULT.equals(symbolicName);
+		case ParPackage.BUNDLE__SYMBOLIC_NAME:
+			return SYMBOLIC_NAME_EDEFAULT == null ? symbolicName != null : !SYMBOLIC_NAME_EDEFAULT.equals(symbolicName);
 		}
 		return super.eIsSet(featureID);
 	}
 
 	/**
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+	 * <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
 	 * @generated
 	 */
 	@Override
 	public String toString() {
-		if (eIsProxy()) return super.toString();
+		if (eIsProxy())
+			return super.toString();
 
 		StringBuffer result = new StringBuffer(super.toString());
 		result.append(" (symbolicName: ");

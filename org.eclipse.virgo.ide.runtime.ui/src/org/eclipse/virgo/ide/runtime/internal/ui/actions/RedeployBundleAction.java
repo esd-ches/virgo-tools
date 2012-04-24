@@ -28,9 +28,9 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
 
-
 /**
  * Action implementation that redeploys the selected module or bundle
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
@@ -46,17 +46,16 @@ public class RedeployBundleAction implements IObjectActionDelegate {
 	}
 
 	public void run(IAction action) {
-		
+
 		if (server.getServerState() != IServer.STATE_STARTED) {
 			return;
 		}
-		
-		Job publishJob = new Job("Redeploy of module '" + selectedModule.getName() +"'") {
+
+		Job publishJob = new Job("Redeploy of module '" + selectedModule.getName() + "'") {
 
 			@Override
 			protected IStatus run(IProgressMonitor monitor) {
-				IServerBehaviour behaviour = (IServerBehaviour) server.loadAdapter(
-						IServerBehaviour.class, null);
+				IServerBehaviour behaviour = (IServerBehaviour) server.loadAdapter(IServerBehaviour.class, null);
 				// PAR selected
 				if (FacetCorePlugin.PAR_FACET_ID.equals(selectedModule.getModuleType().getId())) {
 					behaviour.getServerDeployer().redeploy(selectedModule);
@@ -67,11 +66,10 @@ public class RedeployBundleAction implements IObjectActionDelegate {
 					if (modules.contains(selectedModule)) {
 						// Single deployed module
 						behaviour.getServerDeployer().redeploy(selectedModule);
-					}
-					else {
+					} else {
 						for (IModule module : modules) {
-							List<IModule> childModules = Arrays.asList(server.getChildModules(
-									new IModule[] { module }, null));
+							List<IModule> childModules = Arrays.asList(server.getChildModules(new IModule[] { module },
+									null));
 							if (childModules.contains(selectedModule)
 									&& FacetCorePlugin.PAR_FACET_ID.equals(module.getModuleType().getId())) {
 								behaviour.getServerDeployer().refresh(module, selectedModule);
@@ -88,7 +86,7 @@ public class RedeployBundleAction implements IObjectActionDelegate {
 		};
 		publishJob.setPriority(Job.INTERACTIVE);
 		publishJob.schedule();
-		
+
 	}
 
 	public void selectionChanged(IAction action, ISelection selection) {

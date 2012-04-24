@@ -33,9 +33,9 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.internal.ServerPreferences;
 
-
 /**
  * {@link ILaunchConfigurationDelegate} for the dm server.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
@@ -43,8 +43,8 @@ import org.eclipse.wst.server.core.internal.ServerPreferences;
 public class ServerLaunchConfigurationDelegate extends AbstractJavaLaunchConfigurationDelegate {
 
 	@SuppressWarnings("unchecked")
-	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch,
-			IProgressMonitor monitor) throws CoreException {
+	public void launch(ILaunchConfiguration configuration, String mode, ILaunch launch, IProgressMonitor monitor)
+			throws CoreException {
 		IServer server = ServerUtil.getServer(configuration);
 		if (server == null) {
 			return;
@@ -53,7 +53,7 @@ public class ServerLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 		IProgressMonitor subMonitor = new SubProgressMonitor(monitor, 5);
 		checkCancelled(subMonitor);
 		subMonitor.beginTask("Starting SpringSource dm Server instance", 5);
-		
+
 		if (server.shouldPublish() && ServerPreferences.getInstance().isAutoPublishing()) {
 			subMonitor.subTask("Publishing to staging directory...");
 			server.publish(IServer.PUBLISH_INCREMENTAL, monitor);
@@ -62,8 +62,7 @@ public class ServerLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 		checkCancelled(subMonitor);
 		subMonitor.subTask("Configuring launch parameters...");
 
-		ServerBehaviour behaviour = (ServerBehaviour) server.loadAdapter(ServerBehaviour.class,
-				null);
+		ServerBehaviour behaviour = (ServerBehaviour) server.loadAdapter(ServerBehaviour.class, null);
 
 		String mainTypeName = ServerUtils.getServer(behaviour).getRuntime().getRuntimeClass();
 
@@ -113,8 +112,7 @@ public class ServerLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 			try {
 				subMonitor.subTask("Configuring TPTP profiling parameter...");
 				ServerProfilerDelegate.configureProfiling(launch, vm, runConfiguration, monitor);
-			}
-			catch (CoreException ce) {
+			} catch (CoreException ce) {
 				behaviour.stopServer();
 				throw ce;
 			}
@@ -125,13 +123,12 @@ public class ServerLaunchConfigurationDelegate extends AbstractJavaLaunchConfigu
 		subMonitor.subTask("Launching SpringSource dm Server...");
 		behaviour.setupLaunch(launch, mode, monitor);
 		launch.setAttribute(IServerBehaviour.PROPERTY_MBEAN_SERVER_IP, "127.0.0.1");
-		
+
 		try {
 			runner.run(runConfiguration, launch, monitor);
 			behaviour.addProcessListener(launch.getProcesses()[0]);
 			subMonitor.worked(1);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 		}
 	}
 

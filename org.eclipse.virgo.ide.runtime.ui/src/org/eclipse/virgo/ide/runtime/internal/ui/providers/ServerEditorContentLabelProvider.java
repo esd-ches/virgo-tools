@@ -14,17 +14,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.pde.internal.ui.PDEPlugin;
-import org.eclipse.pde.internal.ui.PDEPluginImages;
-import org.eclipse.swt.graphics.Image;
 import org.eclipse.virgo.ide.runtime.core.artefacts.Artefact;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet;
-import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact;
-import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiImages;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
 import org.eclipse.virgo.ide.runtime.internal.ui.editor.Messages;
 import org.eclipse.wst.server.core.IRuntime;
@@ -36,10 +30,7 @@ import org.eclipse.wst.server.ui.internal.editor.ServerEditorCore;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditorPartFactory;
 
 /**
- * 
- * 
  * @author Miles Parker
- * 
  */
 @SuppressWarnings("restriction")
 public class ServerEditorContentLabelProvider implements ITreeContentProvider {
@@ -47,12 +38,13 @@ public class ServerEditorContentLabelProvider implements ITreeContentProvider {
 	private IServer server;
 
 	private IServerEditorPartFactory[] pageFactories;
-	
+
 	private int repositoryPage;
-	
+
 	private IServerEditorPartFactory repositoryPageFactory;
 
 	RepositoryContentProvider repositoryContentProvider;
+
 	ArtefactLabelProvider repositoryLabelProvider;
 
 	public ServerEditorContentLabelProvider(IServer server) {
@@ -86,7 +78,7 @@ public class ServerEditorContentLabelProvider implements ITreeContentProvider {
 
 	public boolean hasChildren(Object element) {
 		if (element == Messages.RepositoryBrowserEditorPage_InstalledBundlesAndLibraries
-			|| getChildren(element).length > 0) {
+				|| getChildren(element).length > 0) {
 			return true;
 		}
 		return false;

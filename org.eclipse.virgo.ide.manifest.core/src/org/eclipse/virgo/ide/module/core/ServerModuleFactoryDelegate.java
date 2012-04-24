@@ -33,9 +33,9 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.model.ModuleDelegate;
 import org.eclipse.wst.server.core.util.ProjectModuleFactoryDelegate;
 
-
 /**
  * {@link ProjectModuleFactoryDelegate} extension that knows how to handle par and bundle projects.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
@@ -61,7 +61,7 @@ public class ServerModuleFactoryDelegate extends ProjectModuleFactoryDelegate {
 
 			// Add module for bundle deployment
 			modules.add(createModule(project.getName(), project.getName(), FacetCorePlugin.BUNDLE_FACET_ID, "1.0",
- 					project));
+					project));
 
 			// Add module for par deployment
 			for (IProject parProject : FacetUtils.getParProjects(project)) {
@@ -69,10 +69,8 @@ public class ServerModuleFactoryDelegate extends ProjectModuleFactoryDelegate {
 						FacetCorePlugin.BUNDLE_FACET_ID, "1.0", project));
 			}
 
-		}
-		else if (FacetUtils.isParProject(project)) {
-			modules.add(createModule(project.getName(), project.getName(), FacetCorePlugin.PAR_FACET_ID, "1.0",
-							project));
+		} else if (FacetUtils.isParProject(project)) {
+			modules.add(createModule(project.getName(), project.getName(), FacetCorePlugin.PAR_FACET_ID, "1.0", project));
 		}
 
 		// Every project can also be a plan project
@@ -92,8 +90,7 @@ public class ServerModuleFactoryDelegate extends ProjectModuleFactoryDelegate {
 								}
 							}
 						}
-					}
-					catch (JavaModelException e) {
+					} catch (JavaModelException e) {
 						//safe to ignore
 					}
 				}
@@ -109,8 +106,7 @@ public class ServerModuleFactoryDelegate extends ProjectModuleFactoryDelegate {
 							modules.add(createModule(resource.getFullPath().toString(), resource.getProject().getName()
 									+ "/" + resource.getProjectRelativePath().toString(),
 									FacetCorePlugin.PLAN_FACET_ID, "2.0", project));
-						}
-						else if (resource instanceof IContainer) {
+						} else if (resource instanceof IContainer) {
 							IPath path = ((IContainer) resource).getFullPath();
 							for (IPath outputLocation : outputLocations) {
 								if (outputLocation.isPrefixOf(path)) {
@@ -122,8 +118,7 @@ public class ServerModuleFactoryDelegate extends ProjectModuleFactoryDelegate {
 						return true;
 					}
 				});
-			}
-			catch (CoreException e) {
+			} catch (CoreException e) {
 				// TODO CD log exception
 			}
 		}
@@ -148,8 +143,7 @@ public class ServerModuleFactoryDelegate extends ProjectModuleFactoryDelegate {
 							return true;
 						}
 					});
-				}
-				catch (CoreException e) {
+				} catch (CoreException e) {
 				}
 
 			}

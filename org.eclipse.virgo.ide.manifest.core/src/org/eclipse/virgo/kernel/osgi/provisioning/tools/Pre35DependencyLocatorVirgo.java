@@ -27,21 +27,22 @@ import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
  */
 public class Pre35DependencyLocatorVirgo implements IDependencyLocator {
 
-private final Pre35DependencyLocator dependencyLocator;
-	
-	public Pre35DependencyLocatorVirgo(String serverHomePath, String[] additionalSearchPaths, String indexDirectoryPath,
-			JavaVersion javaVersion) throws IOException {
+	private final Pre35DependencyLocator dependencyLocator;
+
+	public Pre35DependencyLocatorVirgo(String serverHomePath, String[] additionalSearchPaths,
+			String indexDirectoryPath, JavaVersion javaVersion) throws IOException {
 		// Some platform dependent string matching
 		if (Platform.getOS().equals(Platform.OS_WIN32)) {
 			serverHomePath = serverHomePath.replace('/', '\\');
 			indexDirectoryPath = indexDirectoryPath.replace('/', '\\');
 			for (int i = 0; i < additionalSearchPaths.length; i++) {
 				additionalSearchPaths[i] = additionalSearchPaths[i].replace('/', '\\');
-			} 
+			}
 		}
-		dependencyLocator = new Pre35DependencyLocator(serverHomePath, additionalSearchPaths, indexDirectoryPath, new NoOpEventLogger());
+		dependencyLocator = new Pre35DependencyLocator(serverHomePath, additionalSearchPaths, indexDirectoryPath,
+				new NoOpEventLogger());
 	}
-	
+
 	public Map<File, List<String>> locateDependencies(BundleManifest manifest) throws DependencyLocationException {
 		return dependencyLocator.locateDependencies(manifest);
 	}

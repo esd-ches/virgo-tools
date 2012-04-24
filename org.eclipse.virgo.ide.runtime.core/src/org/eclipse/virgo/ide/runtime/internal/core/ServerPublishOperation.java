@@ -48,7 +48,9 @@ import org.eclipse.wst.server.core.model.PublishOperation;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 
 /**
- * {@link PublishOperation} extension that deals with deploy, clean and refresh of dm Server modules.
+ * {@link PublishOperation} extension that deals with deploy, clean and refresh
+ * of dm Server modules.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
@@ -82,7 +84,7 @@ public class ServerPublishOperation extends PublishOperation {
 		boolean shouldReployChild = false;
 		IProject project = modules[0].getProject();
 		if (!FacetUtils.isBundleProject(project) && !FacetUtils.isParProject(project)
-				&& ServerUtils.getServer(server).getChildModules(modules) != null && !FacetUtils.isPlanProject(project)) {
+			&& ServerUtils.getServer(server).getChildModules(modules) != null && !FacetUtils.isPlanProject(project)) {
 			for (IModule module : ServerUtils.getServer(server).getChildModules(modules)) {
 				if (publishJar(module, status, monitor)) {
 					shouldReployChild = true;
@@ -108,37 +110,41 @@ public class ServerPublishOperation extends PublishOperation {
 	}
 
 	/**
-	 * Checks if the given <code>file</code> is a root node that is a known Spring namespace.
+	 * Checks if the given <code>file</code> is a root node that is a known
+	 * Spring namespace.
 	 */
-//	private boolean checkIfSpringConfigurationFile(IFile file) {
-//		IStructuredModel model = null;
-//		try {
-//			model = StructuredModelManager.getModelManager().getExistingModelForRead(file);
-//			if (model == null) {
-//				model = StructuredModelManager.getModelManager().getModelForRead(file);
-//			}
-//			if (model != null) {
-//				IDOMDocument document = ((DOMModelImpl) model).getDocument();
-//				if (document != null && document.getDocumentElement() != null) {
-//					String namespaceUri = document.getDocumentElement().getNamespaceURI();
-//					if (NamespaceUtils.DEFAULT_NAMESPACE_URI.equals(namespaceUri)
-//							|| new DelegatingNamespaceHandlerResolver(JdtUtils.getClassLoader(file.getProject(), null),
-//									null).resolve(namespaceUri) != null) {
-//						return false;
-//					}
-//				}
-//			}
-//		}
-//		catch (Exception e) {
-//		}
-//		finally {
-//			if (model != null) {
-//				model.releaseFromRead();
-//			}
-//			model = null;
-//		}
-//		return true;
-//	}
+	// private boolean checkIfSpringConfigurationFile(IFile file) {
+	// IStructuredModel model = null;
+	// try {
+	// model =
+	// StructuredModelManager.getModelManager().getExistingModelForRead(file);
+	// if (model == null) {
+	// model = StructuredModelManager.getModelManager().getModelForRead(file);
+	// }
+	// if (model != null) {
+	// IDOMDocument document = ((DOMModelImpl) model).getDocument();
+	// if (document != null && document.getDocumentElement() != null) {
+	// String namespaceUri = document.getDocumentElement().getNamespaceURI();
+	// if (NamespaceUtils.DEFAULT_NAMESPACE_URI.equals(namespaceUri)
+	// || new
+	// DelegatingNamespaceHandlerResolver(JdtUtils.getClassLoader(file.getProject(),
+	// null),
+	// null).resolve(namespaceUri) != null) {
+	// return false;
+	// }
+	// }
+	// }
+	// }
+	// catch (Exception e) {
+	// }
+	// finally {
+	// if (model != null) {
+	// model.releaseFromRead();
+	// }
+	// model = null;
+	// }
+	// return true;
+	// }
 
 	/**
 	 * Check if resource delta only contains static resources
@@ -151,13 +157,11 @@ public class ServerPublishOperation extends PublishOperation {
 				}
 			}
 			return true;
-		}
-		else {
+		} else {
 			if (delta.getModuleResource() instanceof IModuleFile) {
 				files.add((IModuleFile) delta.getModuleResource());
 			}
 			String name = delta.getModuleResource().getName();
-
 
 			boolean isStatic = false;
 			// Check the configuration options for static resources
@@ -166,8 +170,7 @@ public class ServerPublishOperation extends PublishOperation {
 					.getStaticFilenamePatterns(), ",")) {
 				if (pattern.startsWith("!") && matcher.match(pattern.substring(1), name)) {
 					isStatic = false;
-				}
-				else if (matcher.match(pattern, name)) {
+				} else if (matcher.match(pattern, name)) {
 					isStatic = true;
 				}
 			}
@@ -209,8 +212,8 @@ public class ServerPublishOperation extends PublishOperation {
 	private void publishManifest(IModule module, IPath path) {
 
 		if (FacetUtils.hasProjectFacet(module.getProject(), FacetCorePlugin.WEB_FACET_ID)) {
-			File manifestFile = path.append(BundleManifestCorePlugin.MANIFEST_FOLDER_NAME).append(
-					BundleManifestCorePlugin.MANIFEST_FILE_NAME).toFile();
+			File manifestFile = path.append(BundleManifestCorePlugin.MANIFEST_FOLDER_NAME)
+					.append(BundleManifestCorePlugin.MANIFEST_FILE_NAME).toFile();
 			if (manifestFile.exists()) {
 				return;
 			}
@@ -220,16 +223,13 @@ public class ServerPublishOperation extends PublishOperation {
 				manifestFile.getParentFile().mkdirs();
 				writer = new FileWriter(manifestFile);
 				manifest.write(writer);
-			}
-			catch (IOException e) {
-			}
-			finally {
+			} catch (IOException e) {
+			} finally {
 				if (writer != null) {
 					try {
 						writer.flush();
 						writer.close();
-					}
-					catch (IOException e) {
+					} catch (IOException e) {
 					}
 				}
 			}
@@ -258,7 +258,7 @@ public class ServerPublishOperation extends PublishOperation {
 
 				// Delete all child modules that are not being used anymore
 				ServerModuleDelegate planModule = (ServerModuleDelegate) module.loadAdapter(ServerModuleDelegate.class,
-						null);
+																							null);
 				IServer s = server.getServer();
 				for (IModule childModule : planModule.getChildModules()) {
 					if (!ServerUtil.containsModule(s, childModule, monitor)) {
@@ -295,7 +295,7 @@ public class ServerPublishOperation extends PublishOperation {
 		publishManifest(module, path);
 
 		if (ServerUtils.getServer(server).getServer().getServerState() == IServer.STATE_STARTED
-				&& deltaKind != ServerBehaviourDelegate.NO_CHANGE) {
+			&& deltaKind != ServerBehaviourDelegate.NO_CHANGE) {
 
 			Set<IModuleFile> files = new HashSet<IModuleFile>();
 			// first check if only static resources are changed
@@ -310,8 +310,7 @@ public class ServerPublishOperation extends PublishOperation {
 			if (!onlyStaticResources) {
 				// redeploy
 				return true;
-			}
-			else {
+			} else {
 				// refresh static resources
 				for (IModuleFile file : files) {
 					server.getServerDeployer().refreshStatic(module, file);

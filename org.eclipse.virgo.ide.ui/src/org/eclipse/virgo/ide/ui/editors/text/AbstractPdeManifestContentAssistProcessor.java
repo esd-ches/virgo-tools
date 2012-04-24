@@ -136,8 +136,7 @@ public class AbstractPdeManifestContentAssistProcessor extends TypePackageComple
 			int lineNum = doc.getLineOfOffset(offset);
 			int lineStart = doc.getLineOffset(lineNum);
 			return computeCompletionProposals(doc, lineStart, offset);
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 		}
 		return null;
 	}
@@ -165,17 +164,14 @@ public class AbstractPdeManifestContentAssistProcessor extends TypePackageComple
 								set.add(element.getValue());
 							}
 							fHeaders.put(header, set);
-						}
-						else {
+						} else {
 							fHeaders.put(header, elems);
 						}
-					}
-					catch (BundleException e) {
+					} catch (BundleException e) {
 					}
 					offset = line.getOffset();
 				}
-			}
-			catch (BadLocationException e) {
+			} catch (BadLocationException e) {
 			}
 		}
 	}
@@ -192,8 +188,7 @@ public class AbstractPdeManifestContentAssistProcessor extends TypePackageComple
 				return computeValue(doc, startOffset, offset);
 			}
 			return computeHeader(doc.get(startOffset, offset - startOffset), startOffset, offset);
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 		}
 		return new ICompletionProposal[0];
 	}
@@ -244,51 +239,50 @@ public class AbstractPdeManifestContentAssistProcessor extends TypePackageComple
 		}
 
 		int length = value.length();
-		if (value.regionMatches(true, 0, Constants.IMPORT_PACKAGE, 0, Math.min(length, Constants.IMPORT_PACKAGE
-				.length()))) {
+		if (value.regionMatches(true, 0, Constants.IMPORT_PACKAGE, 0,
+				Math.min(length, Constants.IMPORT_PACKAGE.length()))) {
 			return handleImportPackageCompletion(value.substring(Constants.IMPORT_PACKAGE.length() + 1), offset);
 		}
-		if (value
-				.regionMatches(true, 0, Constants.FRAGMENT_HOST, 0, Math.min(length, Constants.FRAGMENT_HOST.length()))) {
+		if (value.regionMatches(true, 0, Constants.FRAGMENT_HOST, 0, Math.min(length, Constants.FRAGMENT_HOST.length()))) {
 			return handleFragmentHostCompletion(value.substring(Constants.FRAGMENT_HOST.length() + 1), offset);
 		}
-		if (value.regionMatches(true, 0, Constants.REQUIRE_BUNDLE, 0, Math.min(length, Constants.REQUIRE_BUNDLE
-				.length()))) {
+		if (value.regionMatches(true, 0, Constants.REQUIRE_BUNDLE, 0,
+				Math.min(length, Constants.REQUIRE_BUNDLE.length()))) {
 			return handleRequireBundleCompletion(value.substring(Constants.REQUIRE_BUNDLE.length() + 1), offset);
 		}
-		if (value.regionMatches(true, 0, Constants.EXPORT_PACKAGE, 0, Math.min(length, Constants.EXPORT_PACKAGE
-				.length()))) {
+		if (value.regionMatches(true, 0, Constants.EXPORT_PACKAGE, 0,
+				Math.min(length, Constants.EXPORT_PACKAGE.length()))) {
 			return handleExportPackageCompletion(value.substring(Constants.EXPORT_PACKAGE.length() + 1), offset);
 		}
-		if (value.regionMatches(true, 0, Constants.BUNDLE_ACTIVATOR, 0, Math.min(length, Constants.BUNDLE_ACTIVATOR
-				.length()))) {
-			return handleBundleActivatorCompletion(removeLeadingSpaces(value.substring(Constants.BUNDLE_ACTIVATOR
-					.length() + 1)), offset);
+		if (value.regionMatches(true, 0, Constants.BUNDLE_ACTIVATOR, 0,
+				Math.min(length, Constants.BUNDLE_ACTIVATOR.length()))) {
+			return handleBundleActivatorCompletion(
+					removeLeadingSpaces(value.substring(Constants.BUNDLE_ACTIVATOR.length() + 1)), offset);
 		}
-		if (value.regionMatches(true, 0, Constants.BUNDLE_SYMBOLICNAME, 0, Math.min(length,
-				Constants.BUNDLE_SYMBOLICNAME.length()))) {
+		if (value.regionMatches(true, 0, Constants.BUNDLE_SYMBOLICNAME, 0,
+				Math.min(length, Constants.BUNDLE_SYMBOLICNAME.length()))) {
 			return handleBundleSymbolicNameCompletion(value.substring(Constants.BUNDLE_SYMBOLICNAME.length() + 1),
 					offset);
 		}
-		if (value.regionMatches(true, 0, Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT, 0, Math.min(length,
-				Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT.length()))) {
+		if (value.regionMatches(true, 0, Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT, 0,
+				Math.min(length, Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT.length()))) {
 			return handleRequiredExecEnv(value.substring(Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT.length() + 1),
 					offset);
 		}
-		if (value.regionMatches(true, 0, ICoreConstants.ECLIPSE_LAZYSTART, 0, Math.min(length,
-				ICoreConstants.ECLIPSE_LAZYSTART.length()))) {
+		if (value.regionMatches(true, 0, ICoreConstants.ECLIPSE_LAZYSTART, 0,
+				Math.min(length, ICoreConstants.ECLIPSE_LAZYSTART.length()))) {
 			return handleTrueFalseValue(value.substring(ICoreConstants.ECLIPSE_LAZYSTART.length() + 1), offset);
 		}
 		if (value.regionMatches(true, 0, Constants.BUNDLE_NAME, 0, Math.min(length, Constants.BUNDLE_NAME.length()))) {
 			return handleBundleNameCompletion(value.substring(Constants.BUNDLE_NAME.length() + 1), offset);
 		}
-		if (value.regionMatches(true, 0, Constants.BUNDLE_ACTIVATIONPOLICY, 0, Math.min(length,
-				Constants.BUNDLE_ACTIVATIONPOLICY.length()))) {
-			return handleBundleActivationPolicyCompletion(value
-					.substring(Constants.BUNDLE_ACTIVATIONPOLICY.length() + 1), offset);
+		if (value.regionMatches(true, 0, Constants.BUNDLE_ACTIVATIONPOLICY, 0,
+				Math.min(length, Constants.BUNDLE_ACTIVATIONPOLICY.length()))) {
+			return handleBundleActivationPolicyCompletion(
+					value.substring(Constants.BUNDLE_ACTIVATIONPOLICY.length() + 1), offset);
 		}
-		if (value.regionMatches(true, 0, ICoreConstants.ECLIPSE_BUDDY_POLICY, 0, Math.min(length,
-				ICoreConstants.ECLIPSE_BUDDY_POLICY.length()))) {
+		if (value.regionMatches(true, 0, ICoreConstants.ECLIPSE_BUDDY_POLICY, 0,
+				Math.min(length, ICoreConstants.ECLIPSE_BUDDY_POLICY.length()))) {
 			return handleBuddyPolicyCompletion(value.substring(ICoreConstants.ECLIPSE_BUDDY_POLICY.length() + 1),
 					offset);
 		}
@@ -363,8 +357,7 @@ public class AbstractPdeManifestContentAssistProcessor extends TypePackageComple
 					}
 				}
 			}
-			ICompletionProposal[] proposals = (ICompletionProposal[]) completions
-					.toArray(new ICompletionProposal[completions.size()]);
+			ICompletionProposal[] proposals = (ICompletionProposal[]) completions.toArray(new ICompletionProposal[completions.size()]);
 			sortCompletions(proposals);
 			return proposals;
 		}
@@ -375,8 +368,8 @@ public class AbstractPdeManifestContentAssistProcessor extends TypePackageComple
 			return handleAttrsAndDirectives(value, initializeNewList(validAtts), initializeNewList(validTypes), offset);
 		}
 		String attributeValue = removeLeadingSpaces(currentValue.substring(semicolon + 1));
-		if (Constants.RESOLUTION_DIRECTIVE.regionMatches(true, 0, attributeValue, 0, Constants.RESOLUTION_DIRECTIVE
-				.length())) {
+		if (Constants.RESOLUTION_DIRECTIVE.regionMatches(true, 0, attributeValue, 0,
+				Constants.RESOLUTION_DIRECTIVE.length())) {
 			return matchValueCompletion(currentValue.substring(equals + 1), new String[] {
 					Constants.RESOLUTION_MANDATORY, Constants.RESOLUTION_OPTIONAL }, new int[] { F_TYPE_VALUE,
 					F_TYPE_VALUE }, offset, "RESOLUTION_"); //$NON-NLS-1$
@@ -417,8 +410,7 @@ public class AbstractPdeManifestContentAssistProcessor extends TypePackageComple
 		int index = currentValue.lastIndexOf(';');
 		if (index == -1) {
 			HashMap completions = new HashMap();
-			IPluginModelBase base = PluginRegistry.findModel(((ManifestEditor) fSourcePage.getEditor())
-					.getCommonProject());
+			IPluginModelBase base = PluginRegistry.findModel(((ManifestEditor) fSourcePage.getEditor()).getCommonProject());
 			BundleDescription desc = base.getBundleDescription();
 			String currentId = desc != null ? desc.getSymbolicName() : null;
 
@@ -472,20 +464,20 @@ public class AbstractPdeManifestContentAssistProcessor extends TypePackageComple
 			return handleAttrsAndDirectives(value, initializeNewList(validAttrs), initializeNewList(validTypes), offset);
 		}
 		String attributeValue = removeLeadingSpaces(currentValue.substring(semicolon + 1));
-		if (Constants.VISIBILITY_DIRECTIVE.regionMatches(true, 0, attributeValue, 0, Constants.VISIBILITY_DIRECTIVE
-				.length())) {
+		if (Constants.VISIBILITY_DIRECTIVE.regionMatches(true, 0, attributeValue, 0,
+				Constants.VISIBILITY_DIRECTIVE.length())) {
 			return matchValueCompletion(currentValue.substring(equals + 1), new String[] {
 					Constants.VISIBILITY_PRIVATE, Constants.VISIBILITY_REEXPORT }, new int[] { F_TYPE_VALUE,
 					F_TYPE_VALUE }, offset, "VISIBILITY_"); //$NON-NLS-1$
 		}
-		if (Constants.RESOLUTION_DIRECTIVE.regionMatches(true, 0, attributeValue, 0, Constants.RESOLUTION_DIRECTIVE
-				.length())) {
+		if (Constants.RESOLUTION_DIRECTIVE.regionMatches(true, 0, attributeValue, 0,
+				Constants.RESOLUTION_DIRECTIVE.length())) {
 			return matchValueCompletion(currentValue.substring(equals + 1), new String[] {
 					Constants.RESOLUTION_MANDATORY, Constants.RESOLUTION_OPTIONAL }, new int[] { F_TYPE_VALUE,
 					F_TYPE_VALUE }, offset, "RESOLUTION_"); //$NON-NLS-1$
 		}
-		if (Constants.BUNDLE_VERSION_ATTRIBUTE.regionMatches(true, 0, attributeValue, 0, Constants.RESOLUTION_DIRECTIVE
-				.length())) {
+		if (Constants.BUNDLE_VERSION_ATTRIBUTE.regionMatches(true, 0, attributeValue, 0,
+				Constants.RESOLUTION_DIRECTIVE.length())) {
 			String pluginId = removeLeadingSpaces(currentValue.substring((comma == -1) ? 0 : comma + 1, semicolon));
 			return getBundleVersionCompletions(pluginId, removeLeadingSpaces(currentValue.substring(equals + 1)),
 					offset);
@@ -506,8 +498,7 @@ public class AbstractPdeManifestContentAssistProcessor extends TypePackageComple
 				}
 			}
 			return (ICompletionProposal[]) proposals.toArray(new ICompletionProposal[proposals.size()]);
-		}
-		else if (existingValue.length() == 0) {
+		} else if (existingValue.length() == 0) {
 			return new ICompletionProposal[] { new BundleTypeCompletionProposal(
 					"\"\"", getImage(F_TYPE_VALUE), "\"\"", offset, 0) }; //$NON-NLS-1$ //$NON-NLS-2$
 		}
@@ -524,8 +515,7 @@ public class AbstractPdeManifestContentAssistProcessor extends TypePackageComple
 			buffer.append(version.getMinor());
 			buffer.append('.');
 			buffer.append(version.getMicro());
-		}
-		else {
+		} else {
 			char[] chars = base.getPluginBase().getVersion().toCharArray();
 			int periodCount = 0;
 			for (char element : chars) {
@@ -588,8 +578,7 @@ public class AbstractPdeManifestContentAssistProcessor extends TypePackageComple
 					}
 				}
 			}
-		}
-		else {
+		} else {
 			String value = currentValue;
 			if (comma > 0) {
 				do {
@@ -619,8 +608,8 @@ public class AbstractPdeManifestContentAssistProcessor extends TypePackageComple
 					ICoreConstants.INTERNAL_DIRECTIVE.length())) {
 				return handleTrueFalseValue(currentValue.substring(equals + 1), offset);
 			}
-			if (Constants.VERSION_ATTRIBUTE.regionMatches(true, 0, attributeValue, 0, Constants.VERSION_ATTRIBUTE
-					.length())) {
+			if (Constants.VERSION_ATTRIBUTE.regionMatches(true, 0, attributeValue, 0,
+					Constants.VERSION_ATTRIBUTE.length())) {
 				value = removeLeadingSpaces(currentValue.substring(equals + 1));
 				if (value.length() == 0) {
 					return new ICompletionProposal[] { new BundleTypeCompletionProposal(
@@ -636,8 +625,7 @@ public class AbstractPdeManifestContentAssistProcessor extends TypePackageComple
 		IProject project = ((PDEFormEditor) fSourcePage.getEditor()).getCommonProject();
 		int startOffset = offset - currentValue.length();
 		generateTypePackageProposals(currentValue, project, completions, startOffset, IJavaSearchConstants.CLASS);
-		ICompletionProposal[] proposals = (ICompletionProposal[]) completions
-				.toArray(new ICompletionProposal[completions.size()]);
+		ICompletionProposal[] proposals = (ICompletionProposal[]) completions.toArray(new ICompletionProposal[completions.size()]);
 		sortCompletions(proposals);
 		return proposals;
 	}
@@ -659,8 +647,7 @@ public class AbstractPdeManifestContentAssistProcessor extends TypePackageComple
 					proposal.setAdditionalProposalInfo(getJavaDoc("SINGLETON_DIRECTIVE")); //$NON-NLS-1$
 					return new ICompletionProposal[] { proposal };
 				}
-			}
-			else if (equals > semicolon) {
+			} else if (equals > semicolon) {
 				return handleTrueFalseValue(currentValue.substring(equals + 1), offset);
 			}
 		}
@@ -722,13 +709,11 @@ public class AbstractPdeManifestContentAssistProcessor extends TypePackageComple
 					new BundleTypeCompletionProposal("true", getImage(F_TYPE_VALUE), "true", offset, 0), //$NON-NLS-1$ //$NON-NLS-2$
 					new BundleTypeCompletionProposal("false", getImage(F_TYPE_VALUE), "false", offset, 0) //$NON-NLS-1$ //$NON-NLS-2$
 			};
-		}
-		else if (length < 5 && "true".regionMatches(true, 0, currentValue, 0, length)) {
+		} else if (length < 5 && "true".regionMatches(true, 0, currentValue, 0, length)) {
 			return new ICompletionProposal[] { new BundleTypeCompletionProposal(
 					"true", getImage(F_TYPE_VALUE), "true", offset - length, length) //$NON-NLS-1$ //$NON-NLS-2$
 			};
-		}
-		else if (length < 6 && "false".regionMatches(true, 0, currentValue, 0, length)) {
+		} else if (length < 6 && "false".regionMatches(true, 0, currentValue, 0, length)) {
 			return new ICompletionProposal[] { new BundleTypeCompletionProposal(
 					"false", getImage(F_TYPE_VALUE), "false", offset - length, length) //$NON-NLS-1$ //$NON-NLS-2$
 			};
@@ -751,13 +736,11 @@ public class AbstractPdeManifestContentAssistProcessor extends TypePackageComple
 					proposal = new BundleTypeCompletionProposal(
 							attrs[i] + "=", getImage(F_TYPE_ATTRIBUTE), attrs[i], offset - length, length); //$NON-NLS-1$
 					proposal.setAdditionalProposalInfo(getJavaDoc(attrs[i] + "_ATTRIBUTE")); //$NON-NLS-1$
-				}
-				else if (types[i] == F_TYPE_DIRECTIVE) {
+				} else if (types[i] == F_TYPE_DIRECTIVE) {
 					proposal = new BundleTypeCompletionProposal(
 							attrs[i] + ":=", getImage(F_TYPE_DIRECTIVE), attrs[i], offset - length, length); //$NON-NLS-1$
 					proposal.setAdditionalProposalInfo(getJavaDoc(attrs[i] + "_DIRECTIVE")); //$NON-NLS-1$
-				}
-				else {
+				} else {
 					proposal = new BundleTypeCompletionProposal(attrs[i], getImage(types[i]), attrs[i],
 							offset - length, length);
 					proposal.setAdditionalProposalInfo(getJavaDoc(prefixCostant + attrs[i]));
@@ -823,11 +806,9 @@ public class AbstractPdeManifestContentAssistProcessor extends TypePackageComple
 			int firstColon = newValue.indexOf(':');
 			if (colon > 0 && newValue.charAt(colon + 1) != '=') {
 				newValue = doc.get(offset, startOfLine - 1 - offset);
-			}
-			else if (firstColon > 0 && newValue.charAt(firstColon + 1) == ' ') {
+			} else if (firstColon > 0 && newValue.charAt(firstColon + 1) == ' ') {
 				newValue = doc.get(offset, startOfLine - 1 - offset);
-			}
-			else {
+			} else {
 				// break on the comma to find our element, but only break on a
 				// comma that is not enclosed in parenthesis
 				int comma = newValue.indexOf(',');
@@ -837,8 +818,7 @@ public class AbstractPdeManifestContentAssistProcessor extends TypePackageComple
 				}
 			}
 			return value.concat(newValue);
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 		}
 		return ""; //$NON-NLS-1$
 	}
@@ -912,8 +892,7 @@ public class AbstractPdeManifestContentAssistProcessor extends TypePackageComple
 				case F_TYPE_VALUE:
 					return null;
 				}
-			}
-			else {
+			} else {
 				return fImages[type];
 			}
 		}

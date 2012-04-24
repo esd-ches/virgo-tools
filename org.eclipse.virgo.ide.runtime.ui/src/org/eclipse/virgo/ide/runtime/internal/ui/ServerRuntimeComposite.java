@@ -78,12 +78,12 @@ public class ServerRuntimeComposite extends Composite {
 	private Combo versionCombo;
 
 	protected ServerRuntimeComposite(Composite parent, IWizardHandle wizard, String wizardTitle,
-		String wizardDescription) {
+			String wizardDescription) {
 		this(parent, wizard, wizardTitle, wizardDescription, ServerUiImages.DESC_WIZB_SERVER);
 	}
 
 	protected ServerRuntimeComposite(Composite parent, IWizardHandle wizard, String wizardTitle,
-		String wizardDescription, ImageDescriptor imageDescriptor) {
+			String wizardDescription, ImageDescriptor imageDescriptor) {
 		super(parent, SWT.NONE);
 		this.wizard = wizard;
 

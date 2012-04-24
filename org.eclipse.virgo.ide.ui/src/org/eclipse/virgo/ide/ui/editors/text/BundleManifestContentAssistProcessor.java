@@ -40,7 +40,6 @@ import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryUtils;
 import org.osgi.framework.Constants;
 
-
 /**
  * @author Christian Dupuis
  * @author Leo Dos Santos
@@ -165,8 +164,8 @@ public class BundleManifestContentAssistProcessor extends AbstractPdeManifestCon
 			Set<PackageExport> packages = RepositoryUtils.getImportPackageProposals(getProject(), value);
 			for (PackageExport proposal : packages) {
 				if (!set.contains(proposal.getName())) {
-					completions.add(new BundleTypeCompletionProposal(proposal.getName(), getImage(F_TYPE_PKG), proposal
-							.getName(), offset - length, length));
+					completions.add(new BundleTypeCompletionProposal(proposal.getName(), getImage(F_TYPE_PKG),
+							proposal.getName(), offset - length, length));
 					set.add(proposal.getName());
 				}
 			}
@@ -434,15 +433,15 @@ public class BundleManifestContentAssistProcessor extends AbstractPdeManifestCon
 					List<String> proposalValues = getVersionProposals(element.getVersion());
 					for (String proposalValue : proposalValues) {
 						if (proposalValue.regionMatches(0, existingValue, 0, existingValue.length())) {
-							proposals.add(new BundleTypeCompletionProposal(proposalValue.substring(existingValue
-									.length()), getImage(F_TYPE_VALUE), proposalValue, offset, 0));
+							proposals.add(new BundleTypeCompletionProposal(
+									proposalValue.substring(existingValue.length()), getImage(F_TYPE_VALUE),
+									proposalValue, offset, 0));
 						}
 					}
 				}
 			}
 			return proposals.toArray(new ICompletionProposal[proposals.size()]);
-		}
-		else if (existingValue.length() == 0) {
+		} else if (existingValue.length() == 0) {
 			return new ICompletionProposal[] { new BundleTypeCompletionProposal("\"\"", getImage(F_TYPE_VALUE), "\"\"",
 					offset, 0) };
 		}
@@ -460,15 +459,15 @@ public class BundleManifestContentAssistProcessor extends AbstractPdeManifestCon
 					List<String> proposalValues = getVersionProposals(element.getVersion());
 					for (String proposalValue : proposalValues) {
 						if (proposalValue.regionMatches(0, existingValue, 0, existingValue.length())) {
-							proposals.add(new BundleTypeCompletionProposal(proposalValue.substring(existingValue
-									.length()), getImage(F_TYPE_VALUE), proposalValue, offset, 0));
+							proposals.add(new BundleTypeCompletionProposal(
+									proposalValue.substring(existingValue.length()), getImage(F_TYPE_VALUE),
+									proposalValue, offset, 0));
 						}
 					}
 				}
 			}
 			return proposals.toArray(new ICompletionProposal[proposals.size()]);
-		}
-		else if (existingValue.length() == 0) {
+		} else if (existingValue.length() == 0) {
 			return new ICompletionProposal[] { new BundleTypeCompletionProposal("\"\"", getImage(F_TYPE_VALUE), "\"\"",
 					offset, 0) };
 		}
@@ -490,15 +489,15 @@ public class BundleManifestContentAssistProcessor extends AbstractPdeManifestCon
 						if (!proposedVersions.contains(proposalValue)
 								&& proposalValue.regionMatches(0, existingValue, 0, existingValue.length())) {
 							proposedVersions.add(proposalValue);
-							proposals.add(new BundleTypeCompletionProposal(proposalValue.substring(existingValue
-									.length()), getImage(F_TYPE_VALUE), proposalValue, offset, 0));
+							proposals.add(new BundleTypeCompletionProposal(
+									proposalValue.substring(existingValue.length()), getImage(F_TYPE_VALUE),
+									proposalValue, offset, 0));
 						}
 					}
 				}
 			}
 			return proposals.toArray(new ICompletionProposal[proposals.size()]);
-		}
-		else if (existingValue.length() == 0) {
+		} else if (existingValue.length() == 0) {
 			return new ICompletionProposal[] { new BundleTypeCompletionProposal("\"\"", getImage(F_TYPE_VALUE), "\"\"",
 					offset, 0) };
 		}
@@ -536,8 +535,7 @@ public class BundleManifestContentAssistProcessor extends AbstractPdeManifestCon
 				case F_TYPE_BUNDLE:
 					return fImages[type] = PDEPluginImages.DESC_BUNDLE_OBJ.createImage();
 				}
-			}
-			else {
+			} else {
 				return fImages[type];
 			}
 		}

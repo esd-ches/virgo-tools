@@ -12,16 +12,16 @@ package org.eclipse.virgo.ide.export;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-
+
 /**
  * @author Christian Dupuis
  */
 public class ServerExportPlugin extends AbstractUIPlugin {
 
 	public static final String PLUGIN_ID = "org.eclipse.virgo.ide.export";
-	
+
 	public static ImageDescriptor getImageDescriptor(String path) {
 		return imageDescriptorFromPlugin(PLUGIN_ID, "icons/" + path);
 	}
-	
+
 }

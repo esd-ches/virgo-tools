@@ -45,10 +45,10 @@ import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.ui.internal.dialogs.DialogUtil;
 import org.eclipse.virgo.ide.module.core.ServerModuleDelegate;
 
-
 /**
- * {@link PropertyPage} implementation that enables the user to configure java source folders that
- * are pure test folders.
+ * {@link PropertyPage} implementation that enables the user to configure java source folders that are pure test
+ * folders.
+ * 
  * @author Christian Dupuis
  * @since 1.0.1
  */
@@ -97,8 +97,7 @@ public class TestSourceFolderPreferencePage extends PropertyPage {
 		listViewer.setContentProvider(new ClasspathEntryContentProvider());
 		listViewer.setComparator(new ViewerComparator());
 		listViewer.setInput(project);
-		listViewer.setCheckedElements(ServerModuleDelegate.getSourceClasspathEntries(project, true)
-				.toArray());
+		listViewer.setCheckedElements(ServerModuleDelegate.getSourceClasspathEntries(project, true).toArray());
 
 		// check for initial modification to avoid work if no changes are made
 		listViewer.addCheckStateListener(new ICheckStateListener() {
@@ -139,28 +138,24 @@ public class TestSourceFolderPreferencePage extends PropertyPage {
 				if (entry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
 					Set<IClasspathAttribute> attrs = new HashSet<IClasspathAttribute>();
 					for (IClasspathAttribute attr : entry.getExtraAttributes()) {
-						if (!attr.getName().equals(
-								ServerModuleDelegate.TEST_CLASSPATH_ENTRY_ATTRIBUTE)) {
+						if (!attr.getName().equals(ServerModuleDelegate.TEST_CLASSPATH_ENTRY_ATTRIBUTE)) {
 							attrs.add(attr);
 						}
 					}
 					attrs.add(getClasspathAttribute(entry));
 
-					entries.add(JavaCore.newSourceEntry(entry.getPath(), entry
-							.getInclusionPatterns(), entry.getExclusionPatterns(), entry
-							.getOutputLocation(), (IClasspathAttribute[]) attrs
-							.toArray(new IClasspathAttribute[attrs.size()])));
-				}
-				else {
+					entries.add(JavaCore.newSourceEntry(entry.getPath(), entry.getInclusionPatterns(),
+							entry.getExclusionPatterns(), entry.getOutputLocation(),
+							(IClasspathAttribute[]) attrs.toArray(new IClasspathAttribute[attrs.size()])));
+				} else {
 					entries.add(entry);
 				}
 			}
 
-			JavaCore.create(project).setRawClasspath(
-					(IClasspathEntry[]) entries.toArray(new IClasspathEntry[entries.size()]),
-					new NullProgressMonitor());
-		}
-		catch (JavaModelException e) {
+			JavaCore.create(project)
+					.setRawClasspath((IClasspathEntry[]) entries.toArray(new IClasspathEntry[entries.size()]),
+							new NullProgressMonitor());
+		} catch (JavaModelException e) {
 		}
 
 		return true;
@@ -222,8 +217,7 @@ public class TestSourceFolderPreferencePage extends PropertyPage {
 						}
 					}
 					return sourceFolders.toArray(new IClasspathEntry[sourceFolders.size()]);
-				}
-				catch (JavaModelException e) {
+				} catch (JavaModelException e) {
 				}
 			}
 			return new Object[0];

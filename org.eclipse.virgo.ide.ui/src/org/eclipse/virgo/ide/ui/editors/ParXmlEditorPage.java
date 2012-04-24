@@ -19,7 +19,6 @@ import org.eclipse.virgo.ide.eclipse.editors.AbstractParXmlEditorPage;
 import org.eclipse.virgo.ide.par.Par;
 import org.eclipse.virgo.ide.ui.ServerIdeUiPlugin;
 
-
 /**
  * @author Christian Dupuis
  */

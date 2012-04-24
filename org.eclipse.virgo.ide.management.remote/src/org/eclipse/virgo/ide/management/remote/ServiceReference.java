@@ -20,13 +20,13 @@ import java.util.Set;
  * @author Christian Dupuis
  */
 public class ServiceReference implements Serializable {
-	
+
 	public enum Type {
 		IN_USE, REGISTERED
 	}
 
 	private static final long serialVersionUID = -4896924600246187914L;
-	
+
 	private final Long bundleId;
 
 	private final String[] clazzes;
@@ -34,7 +34,7 @@ public class ServiceReference implements Serializable {
 	private final Map<String, String> properties = new HashMap<String, String>();
 
 	private final Set<Long> usingBundles = new HashSet<Long>();
-	
+
 	private final Type type;
 
 	public ServiceReference(Type type, Long bundleId, String[] clazzes) {
@@ -50,7 +50,7 @@ public class ServiceReference implements Serializable {
 	public String[] getClazzes() {
 		return clazzes;
 	}
-	
+
 	public Set<Long> getUsingBundleIds() {
 		return usingBundles;
 	}

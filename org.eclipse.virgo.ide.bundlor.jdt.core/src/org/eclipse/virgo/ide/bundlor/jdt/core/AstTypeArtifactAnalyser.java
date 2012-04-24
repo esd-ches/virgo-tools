@@ -21,19 +21,19 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
-
 import org.eclipse.virgo.bundlor.support.ArtifactAnalyzer;
 import org.eclipse.virgo.bundlor.support.partialmanifest.PartialManifest;
 
 /**
- * {@link ArtefactAnalyser} that is delegates to JDT AST scanning </p>
- * <strong>Concurrent Semantics</strong><br />
+ * {@link ArtefactAnalyser} that is delegates to JDT AST scanning </p> <strong>Concurrent Semantics</strong><br />
  * Not threadsafe.
+ * 
  * @author Christian Dupuis
  */
 public class AstTypeArtifactAnalyser implements ArtifactAnalyzer {
 
 	private static final String JAVA_EXT = ".java"; //$NON-NLS-1$
+
 	private final IJavaProject javaProject;
 
 	public AstTypeArtifactAnalyser(IJavaProject javaProject) {
@@ -76,14 +76,11 @@ public class AstTypeArtifactAnalyser implements ArtifactAnalyzer {
 			while ((line = reader.readLine()) != null) {
 				sb.append(line).append("\n");
 			}
-		}
-		catch (IOException e) {
-		}
-		finally {
+		} catch (IOException e) {
+		} finally {
 			try {
 				is.close();
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 			}
 		}
 

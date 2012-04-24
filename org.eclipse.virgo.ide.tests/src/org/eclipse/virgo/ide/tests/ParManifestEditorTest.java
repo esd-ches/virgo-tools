@@ -53,7 +53,9 @@ public class ParManifestEditorTest {
 				"/testdata/par/.settings/org.eclipse.virgo.ide.runtime.core.par.xml");
 		IPath path = new Path(source.getAbsolutePath());
 		IFileStore file = EFS.getLocalFileSystem().getStore(path);
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+		PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow()
+				.getActivePage()
 				.openEditor(new FileStoreEditorInput(file), ParManifestEditor.ID_EDITOR);
 
 		assertEquals(1, activePage.getEditorReferences().length);
@@ -68,7 +70,9 @@ public class ParManifestEditorTest {
 		File source = VirgoIdeTestUtil.getFilePath(VirgoIdeTestsPlugin.PLUGIN_ID, "/testdata/par/par.xml");
 		IPath path = new Path(source.getAbsolutePath());
 		IFileStore file = EFS.getLocalFileSystem().getStore(path);
-		PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage()
+		PlatformUI.getWorkbench()
+				.getActiveWorkbenchWindow()
+				.getActivePage()
 				.openEditor(new FileStoreEditorInput(file), ParManifestEditor.ID_EDITOR);
 
 		// fails since the corresponding MANIFEST.MF is not found

@@ -97,7 +97,7 @@ public class ServerUtils {
 	public static String getServerHome(IRuntime... targetedServerRuntimes) {
 		for (org.eclipse.wst.server.core.IRuntime serverRuntime : targetedServerRuntimes) {
 			VirgoServerRuntime sRuntime = (VirgoServerRuntime) serverRuntime.loadAdapter(	VirgoServerRuntime.class,
-																				new NullProgressMonitor());
+																							new NullProgressMonitor());
 			if (sRuntime != null) {
 				return serverRuntime.getLocation().toString();
 			}
@@ -166,10 +166,12 @@ public class ServerUtils {
 
 	private static IDependencyLocator createDependencyLocator(IRuntime runtime, String serverHomePath,
 			String[] additionalSearchPaths, String indexDirectoryPath, JavaVersion javaVersion) throws IOException {
-		IServerRuntimeWorkingCopy serverRuntime = (IServerRuntimeWorkingCopy) runtime.loadAdapter(IServerRuntimeWorkingCopy.class, null);
+		IServerRuntimeWorkingCopy serverRuntime = (IServerRuntimeWorkingCopy) runtime
+				.loadAdapter(IServerRuntimeWorkingCopy.class, null);
 		IServerRuntimeProvider versionHandler = serverRuntime.getVirgoVersion();
 		if (versionHandler != null) {
-			return versionHandler.createDependencyLocator(runtime, serverHomePath, additionalSearchPaths, indexDirectoryPath, javaVersion);
+			return versionHandler.createDependencyLocator(	runtime, serverHomePath, additionalSearchPaths,
+															indexDirectoryPath, javaVersion);
 		}
 		return null;
 	}

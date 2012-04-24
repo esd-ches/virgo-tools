@@ -67,16 +67,18 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
 
 /**
- * Manages instances of {@link ArtefactRepository} to represent the current contents of the SpringSource Enterprise
- * Bundle Repository and {@link BundleRepository}s indexed by {@link IRuntime} representing local bundle and library
- * repositories in a Virgo Server instance.
+ * Manages instances of {@link ArtefactRepository} to represent the current
+ * contents of the SpringSource Enterprise Bundle Repository and
+ * {@link BundleRepository}s indexed by {@link IRuntime} representing local
+ * bundle and library repositories in a Virgo Server instance.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
 public class ArtefactRepositoryManager {
 
 	private ArtefactRepository artefactRepository = new ArtefactRepository();
-	
+
 	private Map<IRuntime, BundleRepository> bundleRepositories = new ConcurrentHashMap<IRuntime, BundleRepository>();
 
 	private Date repositoryDate = new Date();
@@ -85,7 +87,7 @@ public class ArtefactRepositoryManager {
 
 	private Set<IBundleRepositoryChangeListener> changeListeners = Collections
 			.synchronizedSet(new HashSet<IBundleRepositoryChangeListener>());
-	
+
 	private volatile boolean initialized = false;
 
 	protected static final ReentrantReadWriteLock rwl = new ReentrantReadWriteLock();
@@ -103,8 +105,7 @@ public class ArtefactRepositoryManager {
 					versions.add(bundle.getVersion());
 				}
 			}
-		}
-		finally {
+		} finally {
 			r.unlock();
 		}
 		return versions;
@@ -116,8 +117,7 @@ public class ArtefactRepositoryManager {
 			if (bundleRepositories.containsKey(runtime)) {
 				return bundleRepositories.get(runtime);
 			}
-		}
-		finally {
+		} finally {
 			r.unlock();
 		}
 		IDependencyLocator locator = null;
@@ -126,7 +126,7 @@ public class ArtefactRepositoryManager {
 			if (bundleRepositories.containsKey(runtime)) {
 				return bundleRepositories.get(runtime);
 			}
-			
+
 			locator = ServerUtils.createDependencyLocator(runtime);
 			Set<BundleDefinition> bundles = new HashSet<BundleDefinition>();
 
@@ -137,11 +137,10 @@ public class ArtefactRepositoryManager {
 			}
 
 			BundleRepository initializedBundleRepository = new InitializedBundleRepository(bundles,
-					new HashSet<LibraryDefinition>(locator.getLibraries()));
+				new HashSet<LibraryDefinition>(locator.getLibraries()));
 			bundleRepositories.put(runtime, initializedBundleRepository);
 			return initializedBundleRepository;
-		}
-		finally {
+		} finally {
 			// Shutdown DependencyLocator
 			if (locator != null) {
 				locator.shutdown();
@@ -155,8 +154,7 @@ public class ArtefactRepositoryManager {
 		try {
 			w.lock();
 			bundleRepositories.remove(runtime);
-		}
-		finally {
+		} finally {
 			w.unlock();
 		}
 
@@ -186,8 +184,7 @@ public class ArtefactRepositoryManager {
 				}
 				if (foundMatch) {
 					bundles.add(getBundle(imp.getSymbolicName(), highestAvailable));
-				}
-				else {
+				} else {
 					unsatisfiedBundleImports.add(imp);
 				}
 			}
@@ -199,8 +196,7 @@ public class ArtefactRepositoryManager {
 			}
 			collectExporters(required, includeOptional, imports, unsatisfiedImports);
 			return required;
-		}
-		finally {
+		} finally {
 			r.unlock();
 		}
 	}
@@ -212,8 +208,7 @@ public class ArtefactRepositoryManager {
 				start();
 			}
 			return artefactRepository;
-		}
-		finally {
+		} finally {
 			r.unlock();
 		}
 	}
@@ -225,16 +220,15 @@ public class ArtefactRepositoryManager {
 				start();
 			}
 			return repositoryDate;
-		}
-		finally {
+		} finally {
 			r.unlock();
 		}
 	}
-	
+
 	public boolean isArtefactRepositoryInitialized() {
 		return initialized;
 	}
-	
+
 	private BundleArtefact getBundle(String symbolicName, OsgiVersion version) {
 		try {
 			r.lock();
@@ -244,8 +238,7 @@ public class ArtefactRepositoryManager {
 				}
 			}
 			return null;
-		}
-		finally {
+		} finally {
 			r.unlock();
 		}
 	}
@@ -286,8 +279,7 @@ public class ArtefactRepositoryManager {
 					BundleArtefact exporter = findBestExporter(imp);
 					if (exporter == null) {
 						unsatisfied.add(imp);
-					}
-					else {
+					} else {
 						if (!alreadyInBundleList(required, exporter)) {
 							required.add(exporter);
 							collectExporters(required, includeOptional, exporter.getImports(), unsatisfied);
@@ -311,8 +303,7 @@ public class ArtefactRepositoryManager {
 			for (PackageExport versionMatchedExport : versionMatchedCandidates) {
 				if (withHighestVersion == null) {
 					withHighestVersion = versionMatchedExport;
-				}
-				else {
+				} else {
 					if (withHighestVersion.getVersion().compareTo(versionMatchedExport.getVersion()) < 0) {
 						withHighestVersion = versionMatchedExport;
 					}
@@ -404,7 +395,7 @@ public class ArtefactRepositoryManager {
 		public BundleDefinition findBySymbolicName(String symbolicName, VersionRange versionRange) {
 			for (BundleDefinition bundle : bundles) {
 				if (bundle.getManifest() != null && bundle.getManifest().getBundleSymbolicName() != null
-						&& bundle.getManifest().getBundleSymbolicName().getSymbolicName().equals(symbolicName)) {
+					&& bundle.getManifest().getBundleSymbolicName().getSymbolicName().equals(symbolicName)) {
 					Version version = bundle.getManifest().getBundleVersion();
 					if (versionRange.includes(version)) {
 						return bundle;
@@ -501,17 +492,14 @@ public class ArtefactRepositoryManager {
 				}
 
 				zipInputStream.close();
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				StatusUtil.error(e);
-			}
-			finally {
+			} finally {
 				try {
 					if (zipInputStream != null) {
 						zipInputStream.close();
 					}
-				}
-				catch (IOException e) {
+				} catch (IOException e) {
 					StatusUtil.error(e);
 				}
 			}
@@ -526,18 +514,20 @@ public class ArtefactRepositoryManager {
 		protected IStatus run(IProgressMonitor monitor) {
 			try {
 
-				// firstly make sure that we have the repository in the in the workspace
+				// firstly make sure that we have the repository in the in the
+				// workspace
 				Enumeration<URL> urls = bundle.findEntries("/index", "repository-*.zip", false);
 
-				// we will only bundle one repository zip in the plugin so it is safe to take the
+				// we will only bundle one repository zip in the plugin so it is
+				// safe to take the
 				// first element
 				if (urls.hasMoreElements()) {
 					URL url = urls.nextElement();
 					if (!getRepositoryIndexFile().exists()) {
 						writeArchiveContentsToLocalRespositoryDirectory(url.openStream());
-					}
-					else {
-						// Check if the timestamp on the bundled repository is newer than the
+					} else {
+						// Check if the timestamp on the bundled repository is
+						// newer than the
 						// extracted
 						String path = url.getFile();
 						int ix = path.lastIndexOf("repository-");
@@ -552,18 +542,16 @@ public class ArtefactRepositoryManager {
 				initialized = true;
 
 				// secondly load the repository in memory
-				ArtefactRepository newArtefactRepository = createArtefactRespositoryLoader().loadArtefactRepository(
-						getLocalDirectory());
+				ArtefactRepository newArtefactRepository = createArtefactRespositoryLoader()
+						.loadArtefactRepository(getLocalDirectory());
 				try {
 					w.lock();
 					artefactRepository = newArtefactRepository;
 					repositoryDate = new Date(getLocalRepositoryTimestamp());
-				}
-				finally {
+				} finally {
 					w.unlock();
 				}
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				StatusUtil.error(e);
 				initialized = true;
 				artefactRepository = new ArtefactRepository();
@@ -579,8 +567,7 @@ public class ArtefactRepositoryManager {
 				properties.load(is);
 				Long localTimestamp = Long.valueOf(properties.getProperty("creation.timestamp"));
 				return localTimestamp;
-			}
-			finally {
+			} finally {
 				if (is != null) {
 					is.close();
 				}
@@ -591,7 +578,10 @@ public class ArtefactRepositoryManager {
 
 	public class ArtefactRepositoryUpdateJob extends ArtefactRepositoryStartJob {
 
-		/** The url under which the newest version of the repository index will be published */
+		/**
+		 * The url under which the newest version of the repository index will
+		 * be published
+		 */
 		private static final String REPOSITORY_INDEX_URL = "http://static.springsource.com/projects/sts-dm-server/index/repository.zip";
 
 		@Override
@@ -601,7 +591,7 @@ public class ArtefactRepositoryManager {
 				// first download file from the online repository
 				Date lastModifiedDate = WebDownloadUtils.getLastModifiedDate(REPOSITORY_INDEX_URL, monitor);
 				if (lastModifiedDate != null
-						&& Long.valueOf(lastModifiedDate.getTime()).compareTo(getLocalRepositoryTimestamp()) == 1) {
+					&& Long.valueOf(lastModifiedDate.getTime()).compareTo(getLocalRepositoryTimestamp()) == 1) {
 					File repositoryArchive = WebDownloadUtils.downloadFile(REPOSITORY_INDEX_URL, getLocalDirectory()
 							.getParentFile(), monitor);
 
@@ -613,13 +603,11 @@ public class ArtefactRepositoryManager {
 							try {
 								is = new FileInputStream(repositoryArchive);
 								writeArchiveContentsToLocalRespositoryDirectory(is);
-							}
-							finally {
+							} finally {
 								if (is != null) {
 									try {
 										is.close();
-									}
-									catch (Exception e) {
+									} catch (Exception e) {
 										// ignore
 									}
 								}
@@ -633,27 +621,23 @@ public class ArtefactRepositoryManager {
 							w.lock();
 							artefactRepository = newArtefactRepository;
 							repositoryDate = new Date(getLocalRepositoryTimestamp());
-						}
-						finally {
+						} finally {
 							w.unlock();
 						}
 					}
 				}
-			}
-			catch (FileNotFoundException e) {
+			} catch (FileNotFoundException e) {
 				StatusUtil.error(e);
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 				StatusUtil.error(e);
-			}
-			catch (CoreException e) {
+			} catch (CoreException e) {
 				StatusUtil.error(e);
 			}
 
 			return Status.OK_STATUS;
 		}
 	}
-	
+
 	public static byte[] convert(String string) {
 		if (string == null) {
 			return null;
@@ -661,8 +645,7 @@ public class ArtefactRepositoryManager {
 		String newString = new String(string);
 		try {
 			return newString.getBytes("UTF-8");
-		}
-		catch (UnsupportedEncodingException e) {
+		} catch (UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
 	}

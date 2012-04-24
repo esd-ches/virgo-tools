@@ -35,7 +35,9 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.IModuleFile;
 
 /**
- * Deployer helper that hides the JMX-based communication with a running dm Server.
+ * Deployer helper that hides the JMX-based communication with a running dm
+ * Server.
+ * 
  * @author Christian Dupuis
  * @since 2.0.0
  */
@@ -56,14 +58,15 @@ public class DefaultServerDeployer implements IServerDeployer {
 		// make sure we honor the user configured order
 		final List<String> orderedArtefacts = getArtefactOrder();
 
-		// sort the modules according the order defined in the server configuration
+		// sort the modules according the order defined in the server
+		// configuration
 		Collections.sort(orderedModules, new Comparator<IModule>() {
 
 			public int compare(IModule o1, IModule o2) {
 				Integer m1 = (orderedArtefacts.contains(o1.getId()) ? orderedArtefacts.indexOf(o1.getId())
-						: Integer.MAX_VALUE);
+					: Integer.MAX_VALUE);
 				Integer m2 = (orderedArtefacts.contains(o2.getId()) ? orderedArtefacts.indexOf(o2.getId())
-						: Integer.MAX_VALUE);
+					: Integer.MAX_VALUE);
 				return m1.compareTo(m2);
 			}
 		});
@@ -75,10 +78,12 @@ public class DefaultServerDeployer implements IServerDeployer {
 			}
 			behaviour.onModulePublishStateChange(new IModule[] { module }, IServer.PUBLISH_STATE_NONE);
 			// if (identity != null) {
-			// behaviour.onModuleStateChange(new IModule[] { module }, IServer.STATE_STARTED);
+			// behaviour.onModuleStateChange(new IModule[] { module },
+			// IServer.STATE_STARTED);
 			// }
 			// else {
-			// behaviour.onModuleStateChange(new IModule[] { module }, IServer.STATE_STOPPED);
+			// behaviour.onModuleStateChange(new IModule[] { module },
+			// IServer.STATE_STOPPED);
 			// }
 		}
 	}
@@ -98,15 +103,16 @@ public class DefaultServerDeployer implements IServerDeployer {
 		DeploymentIdentity identity = behaviour.getDeploymentIdentities().get(module.getId());
 		if (identity == null) {
 			identity = executeDeployerCommand(getServerDeployCommand(module));
-		}
-		else {
-			// Special handling for pars with nested bundles to determine if only one of the bundles
+		} else {
+			// Special handling for pars with nested bundles to determine if
+			// only one of the bundles
 			// refreshing
 			if (FacetUtils.isParProject(module.getProject())) {
 
 				Set<String> bundleSymbolicNames = new LinkedHashSet<String>();
 				IModule[] children = getModuleChildren(module);
-				// If only one module has actual changes; emit a bundle refresh only
+				// If only one module has actual changes; emit a bundle refresh
+				// only
 				for (IModule child : children) {
 					int state = getModuleState(module, child);
 					if (state != IServer.PUBLISH_STATE_NONE) {
@@ -123,21 +129,21 @@ public class DefaultServerDeployer implements IServerDeployer {
 				// Only one changed bundle found -> update single one
 				if (bundleSymbolicNames.size() == 1) {
 					executeDeployerCommand(getServerRefreshCommand(module, bundleSymbolicNames.iterator().next()));
-				}
-				else {
+				} else {
 					identity = executeDeployerCommand(getServerDeployCommand(module));
 				}
-			}
-			else {
+			} else {
 				identity = executeDeployerCommand(getServerDeployCommand(module));
 			}
 		}
 
 		// if (identity != null) {
-		// behaviour.onModuleStateChange(new IModule[] { module }, IServer.STATE_STARTED);
+		// behaviour.onModuleStateChange(new IModule[] { module },
+		// IServer.STATE_STARTED);
 		// }
 		// else {
-		// behaviour.onModuleStateChange(new IModule[] { module }, IServer.STATE_STOPPED);
+		// behaviour.onModuleStateChange(new IModule[] { module },
+		// IServer.STATE_STOPPED);
 		// }
 
 	}
@@ -168,8 +174,8 @@ public class DefaultServerDeployer implements IServerDeployer {
 	 */
 	public void refresh(IModule parModule, IModule... modules) {
 		for (IModule module : modules) {
-			BundleManifest manifest = BundleManifestCorePlugin.getBundleManifestManager().getBundleManifest(
-					JavaCore.create(module.getProject()));
+			BundleManifest manifest = BundleManifestCorePlugin.getBundleManifestManager()
+					.getBundleManifest(JavaCore.create(module.getProject()));
 			if (manifest != null && manifest.getBundleSymbolicName() != null) {
 				executeDeployerCommand(getServerRefreshCommand(parModule, manifest.getBundleSymbolicName()
 						.getSymbolicName()));
@@ -189,31 +195,29 @@ public class DefaultServerDeployer implements IServerDeployer {
 				IFile f = (IFile) file.getAdapter(IFile.class);
 				if (f != null) {
 					if (FacetUtils.isBundleProject(f.getProject())
-							|| FacetUtils.hasProjectFacet(f.getProject(), FacetCorePlugin.WEB_FACET_ID)) {
+						|| FacetUtils.hasProjectFacet(f.getProject(), FacetCorePlugin.WEB_FACET_ID)) {
 						BundleManifest manifest = BundleManifestCorePlugin.getBundleManifestManager()
 								.getBundleManifest(JavaCore.create(f.getProject()));
 						String symbolicName = null;
 						if (manifest != null && manifest.getBundleSymbolicName() != null) {
 							symbolicName = manifest.getBundleSymbolicName().getSymbolicName();
-						}
-						else {
+						} else {
 							symbolicName = f.getProject().getName();
 						}
 						String projectPath = f.getProject().getName();
 						String path = file.getModuleRelativePath().toString();
 
-						// add 5 for .jar or .war + / (see ServerModuleDelegate#members())
+						// add 5 for .jar or .war + / (see
+						// ServerModuleDelegate#members())
 						if (path.length() > projectPath.length() + 5) {
 							path = path.substring(projectPath.length() + 5);
 							executeDeployerCommand(getServerUpdateCommand(module, file, identity, symbolicName, path));
-						}
-						else {
+						} else {
 							executeDeployerCommand(getServerUpdateCommand(module, file, identity, symbolicName, ""));
 						}
 					}
 				}
-			}
-			else {
+			} else {
 				executeDeployerCommand(getServerUpdateCommand(module, file, identity, null, file
 						.getModuleRelativePath().toString()));
 			}
@@ -233,18 +237,17 @@ public class DefaultServerDeployer implements IServerDeployer {
 	public void undeploy(IModule... modules) {
 		for (IModule module : modules) {
 			executeDeployerCommand(getServerUndeployCommand(module));
-			// behaviour.onModuleStateChange(new IModule[] { module }, IServer.STATE_STOPPED);
+			// behaviour.onModuleStateChange(new IModule[] { module },
+			// IServer.STATE_STOPPED);
 		}
 	}
 
 	protected <T> T executeDeployerCommand(IServerCommand<T> serverCommand) {
 		try {
 			return (T) serverCommand.execute();
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			StatusUtil.error("Failed execution of deployer command " + serverCommand, e);
-		}
-		catch (TimeoutException e) {
+		} catch (TimeoutException e) {
 			StatusUtil.error("Failed execution of deployer command " + serverCommand, e);
 		}
 		return null;
@@ -273,7 +276,7 @@ public class DefaultServerDeployer implements IServerDeployer {
 	protected IServerCommand<Void> getServerUpdateCommand(IModule module, IModuleFile moduleFile,
 			DeploymentIdentity identity, String bundleSymbolicName, String targetPath) {
 		return behaviour.getVersionHandler().getServerUpdateCommand(behaviour, module, moduleFile, identity,
-				bundleSymbolicName, targetPath);
+																	bundleSymbolicName, targetPath);
 	}
 
 }

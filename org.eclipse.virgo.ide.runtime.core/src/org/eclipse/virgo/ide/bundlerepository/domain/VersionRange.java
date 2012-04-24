@@ -17,20 +17,28 @@ package org.eclipse.virgo.ide.bundlerepository.domain;
 public class VersionRange {
 
 	public static final OsgiVersion INFINITY = new OsgiVersion(Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MAX_VALUE,
-			"");
+		"");
 
 	private transient OsgiVersion lowerBound;
 
 	private transient OsgiVersion upperBound;
 
-	private boolean isInclusiveLowerBound = true; // if true then the a version == lowerBound will satisfy this range
+	private boolean isInclusiveLowerBound = true; // if true then the a version
+													// == lowerBound will
+													// satisfy this range
 
-	private boolean isInclusiveUpperBound = false; // if true then a version == upperBound will satisfy this range
+	private boolean isInclusiveUpperBound = false; // if true then a version ==
+													// upperBound will satisfy
+													// this range
 
-	// these next shenanigans are because JPA can't persist an embeddable type nested in an embeddable type
-	// therefore we have to either fudge things in the database (by storing version ranges in their own table), or
-	// fudge things in the domain model (to allow version range and import package information to be stored in
-	// the same table). We've chosen the latter option here as we never want to retrieve PackageImports without their
+	// these next shenanigans are because JPA can't persist an embeddable type
+	// nested in an embeddable type
+	// therefore we have to either fudge things in the database (by storing
+	// version ranges in their own table), or
+	// fudge things in the domain model (to allow version range and import
+	// package information to be stored in
+	// the same table). We've chosen the latter option here as we never want to
+	// retrieve PackageImports without their
 	// version ranges.
 	private int lowerBoundMajor;
 
@@ -52,7 +60,9 @@ public class VersionRange {
 	}
 
 	/**
-	 * Construct a version range from the String format found in the version attribute of an import package header
+	 * Construct a version range from the String format found in the version
+	 * attribute of an import package header
+	 * 
 	 * @param osgiRangeSpecification range specification
 	 */
 	public VersionRange(String osgiRangeSpecification) {
@@ -74,13 +84,11 @@ public class VersionRange {
 			setLowerBound(new OsgiVersion(osgiRangeSpecification.substring(0, splitIndex)));
 			try {
 				setUpperBound(new OsgiVersion(osgiRangeSpecification.substring(splitIndex + 1)));
-			}
-			catch (IllegalArgumentException e) {
+			} catch (IllegalArgumentException e) {
 				// default to infinity
 				setUpperBound(INFINITY);
 			}
-		}
-		else {
+		} else {
 			setLowerBound(new OsgiVersion(osgiRangeSpecification));
 			setUpperBound(INFINITY);
 		}
@@ -88,10 +96,13 @@ public class VersionRange {
 
 	/**
 	 * Create a version range object
+	 * 
 	 * @param lowerBound lower bound of range
-	 * @param lowerInclusive whether the lower bound is inclusive (true) or exclusive (false)
+	 * @param lowerInclusive whether the lower bound is inclusive (true) or
+	 *        exclusive (false)
 	 * @param upperBound upper bound of range
-	 * @param upperInclusive whether the upper bound is inclusive (true) or exclusive (false)
+	 * @param upperInclusive whether the upper bound is inclusive (true) or
+	 *        exclusive (false)
 	 */
 	public VersionRange(OsgiVersion lowerBound, boolean lowerInclusive, OsgiVersion upperBound, boolean upperInclusive) {
 		setLowerBound(lowerBound);
@@ -154,16 +165,14 @@ public class VersionRange {
 		int lowerBoundComparison = version.compareTo(getLowerBound());
 		if (lowerBoundComparison < 0) {
 			return false;
-		}
-		else if ((lowerBoundComparison == 0) && !this.isInclusiveLowerBound) {
+		} else if ((lowerBoundComparison == 0) && !this.isInclusiveLowerBound) {
 			return false;
 		}
 		// we've passed the lower bound test, check the upper bound
 		int upperBoundComparison = version.compareTo(getUpperBound());
 		if (upperBoundComparison > 0) {
 			return false;
-		}
-		else if ((upperBoundComparison == 0) && !this.isInclusiveUpperBound) {
+		} else if ((upperBoundComparison == 0) && !this.isInclusiveUpperBound) {
 			return false;
 		}
 		return true;
@@ -177,8 +186,7 @@ public class VersionRange {
 		sb.append(", ");
 		if (getUpperBound().equals(INFINITY)) {
 			sb.append("infinity)");
-		}
-		else {
+		} else {
 			sb.append(getUpperBound().toString());
 			sb.append(isInclusiveUpperBound ? "]" : ")");
 		}
@@ -224,8 +232,7 @@ public class VersionRange {
 		if (lowerBoundQualifier == null) {
 			if (other.lowerBoundQualifier != null)
 				return false;
-		}
-		else if (!lowerBoundQualifier.equals(other.lowerBoundQualifier))
+		} else if (!lowerBoundQualifier.equals(other.lowerBoundQualifier))
 			return false;
 		if (lowerBoundService != other.lowerBoundService)
 			return false;
@@ -236,8 +243,7 @@ public class VersionRange {
 		if (upperBoundQualifier == null) {
 			if (other.upperBoundQualifier != null)
 				return false;
-		}
-		else if (!upperBoundQualifier.equals(other.upperBoundQualifier))
+		} else if (!upperBoundQualifier.equals(other.upperBoundQualifier))
 			return false;
 		if (upperBoundService != other.upperBoundService)
 			return false;
@@ -245,38 +251,36 @@ public class VersionRange {
 	}
 
 	/**
-	 * Parse any inclusive "]" or exclusive ")" upper bound postfix and return the input string with them stripped
+	 * Parse any inclusive "]" or exclusive ")" upper bound postfix and return
+	 * the input string with them stripped
 	 */
 	private String extractUpperBoundCriteria(String osgiRangeSpecification) {
 		// parse any ending inclusive / exclusive brackets
 		if (osgiRangeSpecification.endsWith(")")) {
 			this.isInclusiveUpperBound = false;
 			osgiRangeSpecification = osgiRangeSpecification.substring(0, osgiRangeSpecification.length() - 1);
-		}
-		else if (osgiRangeSpecification.endsWith("]")) {
+		} else if (osgiRangeSpecification.endsWith("]")) {
 			this.isInclusiveUpperBound = true;
 			osgiRangeSpecification = osgiRangeSpecification.substring(0, osgiRangeSpecification.length() - 1);
-		}
-		else {
+		} else {
 			this.isInclusiveUpperBound = true;
 		}
 		return osgiRangeSpecification;
 	}
 
 	/**
-	 * Parse any inclusive "[" or exclusive "(" lower bound prefix and return the input string with them stripped.
+	 * Parse any inclusive "[" or exclusive "(" lower bound prefix and return
+	 * the input string with them stripped.
 	 */
 	private String extractLowerBoundCriteria(String osgiRangeSpecification) {
 		// parse any opening inclusive / exclusive brackets
 		if (osgiRangeSpecification.startsWith("(")) {
 			this.isInclusiveLowerBound = false;
 			osgiRangeSpecification = osgiRangeSpecification.substring(1);
-		}
-		else if (osgiRangeSpecification.startsWith("[")) {
+		} else if (osgiRangeSpecification.startsWith("[")) {
 			osgiRangeSpecification = osgiRangeSpecification.substring(1);
 			this.isInclusiveLowerBound = true;
-		}
-		else {
+		} else {
 			this.isInclusiveLowerBound = true;
 		}
 		return osgiRangeSpecification;

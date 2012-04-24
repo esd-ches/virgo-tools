@@ -60,8 +60,7 @@ import org.eclipse.virgo.ide.bundlor.ui.BundlorUiPlugin;
 import org.osgi.service.prefs.BackingStoreException;
 
 /**
- * {@link PropertyPage} to configure properties files for Bundlor variable
- * substitution
+ * {@link PropertyPage} to configure properties files for Bundlor variable substitution
  * 
  * @author Christian Dupuis
  * @author Leo Dos Santos
@@ -172,12 +171,11 @@ public class BundlorPreferencePage extends PropertyPage {
 
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				FilteredElementTreeSelectionDialog selDialog = new FilteredElementTreeSelectionDialog(Display
-						.getCurrent().getActiveShell(), new JavaElementLabelProvider(),
-					new WorkspaceResourceContentProvider());
+				FilteredElementTreeSelectionDialog selDialog = new FilteredElementTreeSelectionDialog(
+						Display.getCurrent().getActiveShell(), new JavaElementLabelProvider(),
+						new WorkspaceResourceContentProvider());
 				selDialog.setTitle("Select properties files");
-				selDialog
-						.setMessage("Select properties files in the workspace that should be\nused for variable substitution:");
+				selDialog.setMessage("Select properties files in the workspace that should be\nused for variable substitution:");
 				selDialog.setValidator(new ISelectionStatusValidator() {
 					public IStatus validate(Object[] selection) {
 						for (Object object : selection) {
@@ -230,13 +228,13 @@ public class BundlorPreferencePage extends PropertyPage {
 
 		if (project != null) {
 			IEclipsePreferences node = getProjectPreferences(project);
-			String properties = node.get(	BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_KEY,
-											BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_DEFAULT);
+			String properties = node.get(BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_KEY,
+					BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_DEFAULT);
 			filenames = Arrays.asList(StringUtils.split(properties, ";"));
-			checkScanByteCodeButton = node.getBoolean(	BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_KEY,
-														BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_DEFAULT);
-			checkFormatManifestsButton = node.getBoolean(	BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_KEY,
-															BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_DEFAULT);
+			checkScanByteCodeButton = node.getBoolean(BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_KEY,
+					BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_DEFAULT);
+			checkFormatManifestsButton = node.getBoolean(BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_KEY,
+					BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_DEFAULT);
 		} else {
 			filenames = new ArrayList<String>();
 			checkScanByteCodeButton = BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_DEFAULT;
@@ -257,8 +255,8 @@ public class BundlorPreferencePage extends PropertyPage {
 		IEclipsePreferences node = getProjectPreferences(project);
 
 		node.put(BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_KEY, StringUtils.join(filenames, ";"));
-		boolean oldScanByteCode = node.getBoolean(	BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_KEY,
-													BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_DEFAULT);
+		boolean oldScanByteCode = node.getBoolean(BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_KEY,
+				BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_DEFAULT);
 		node.putBoolean(BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_KEY, scanByteCode.getSelection());
 		node.putBoolean(BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_KEY, formatManifests.getSelection());
 		try {

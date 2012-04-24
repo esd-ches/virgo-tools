@@ -65,31 +65,23 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.ui.actions.WorkspaceModifyDelegatingOperation;
 
 /**
- * SpringSource Tool Suite Team - This class was copied from Eclipse 3.4 for use
- * in 3.3-based distributions. Necessary changes included porting all the
- * NewJavaProjectWizard messages from the NewWizardMessages utility class to
+ * SpringSource Tool Suite Team - This class was copied from Eclipse 3.4 for use in 3.3-based distributions. Necessary
+ * changes included porting all the NewJavaProjectWizard messages from the NewWizardMessages utility class to
  * NewJavaProjectWizardConstants.
  * 
- * @deprecated As of release 2.0.0, STS only supports Eclipse 3.4 and above. Use
- * {@link NewJavaProjectWizardPageTwo} instead.
- * -----------------------------------------------------------------------------
- * 
- * The second page of the New Java project wizard. It allows to configure the
- * build path and output location. As addition to the
- * {@link JavaCapabilityConfigurationPage}, the wizard page does an early
- * project creation (so that linked folders can be defined) and, if an existing
- * external location was specified, detects the class path.
- * 
- * <p>
- * Clients may instantiate or subclass.
- * </p>
- * 
- * <p>
- * <strong>EXPERIMENTAL</strong> This class or interface has been added as part
- * of a work in progress. This API is under review and may still change when
- * finalized. Please send your comments to bug 160985.
- * </p>
- * 
+ * @deprecated As of release 2.0.0, STS only supports Eclipse 3.4 and above. Use {@link NewJavaProjectWizardPageTwo}
+ *             instead. ----------------------------------------------------------------------------- The second page of
+ *             the New Java project wizard. It allows to configure the build path and output location. As addition to
+ *             the {@link JavaCapabilityConfigurationPage}, the wizard page does an early project creation (so that
+ *             linked folders can be defined) and, if an existing external location was specified, detects the class
+ *             path.
+ *             <p>
+ *             Clients may instantiate or subclass.
+ *             </p>
+ *             <p>
+ *             <strong>EXPERIMENTAL</strong> This class or interface has been added as part of a work in progress. This
+ *             API is under review and may still change when finalized. Please send your comments to bug 160985.
+ *             </p>
  * @since 3.4
  */
 @SuppressWarnings("restriction")
@@ -106,9 +98,9 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 				URI rootLocation = ResourcesPlugin.getWorkspace().getRoot().getLocationURI();
 
 				location = new URI(rootLocation.getScheme(), null, Path.fromPortableString(rootLocation.getPath())
-						.append(projectName).toString(), null);
-			}
-			catch (URISyntaxException e) {
+						.append(projectName)
+						.toString(), null);
+			} catch (URISyntaxException e) {
 				Assert.isTrue(false, "Can't happen"); //$NON-NLS-1$
 			}
 		}
@@ -116,13 +108,13 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 	}
 
 	/**
-	 * Sets whether building automatically is enabled in the workspace or not
-	 * and returns the old value.
+	 * Sets whether building automatically is enabled in the workspace or not and returns the old value.
 	 * 
-	 * @param state <code>true</code> if automatically building is enabled,
-	 * <code>false</code> otherwise
+	 * @param state
+	 *            <code>true</code> if automatically building is enabled, <code>false</code> otherwise
 	 * @return the old state
-	 * @throws CoreException thrown if the operation failed
+	 * @throws CoreException
+	 *             thrown if the operation failed
 	 */
 	public static boolean setAutoBuilding(boolean state) throws CoreException {
 		IWorkspace workspace = ResourcesPlugin.getWorkspace();
@@ -154,7 +146,8 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 	/**
 	 * Constructor for the {@link NewJavaProjectWizardPageTwoCOPY}.
 	 * 
-	 * @param mainPage the first page of the wizard
+	 * @param mainPage
+	 *            the first page of the wizard
 	 */
 	public NewJavaProjectWizardPageTwoCOPY(NewJavaProjectWizardPageOneCOPY mainPage) {
 		fFirstPage = mainPage;
@@ -177,14 +170,11 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 						fIsAutobuild = Boolean.valueOf(setAutoBuilding(false));
 					}
 					infoStatus = updateProject(monitor);
-				}
-				catch (CoreException e) {
+				} catch (CoreException e) {
 					throw new InvocationTargetException(e);
-				}
-				catch (OperationCanceledException e) {
+				} catch (OperationCanceledException e) {
 					throw new InterruptedException();
-				}
-				finally {
+				} finally {
 					monitor.done();
 				}
 			}
@@ -193,13 +183,11 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 		try {
 			getContainer().run(true, false, new WorkspaceModifyDelegatingOperation(op));
 			return op.infoStatus;
-		}
-		catch (InvocationTargetException e) {
+		} catch (InvocationTargetException e) {
 			final String title = NewJavaProjectWizardConstants.NewJavaProjectWizardPageTwo_error_title;
 			final String message = NewJavaProjectWizardConstants.NewJavaProjectWizardPageTwo_error_message;
 			ExceptionHandler.handle(e, getShell(), title, message);
-		}
-		catch (InterruptedException e) {
+		} catch (InterruptedException e) {
 			// cancel pressed
 		}
 		return null;
@@ -228,12 +216,10 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 
 				os.write(buffer, 0, bytesRead);
 			}
-		}
-		finally {
+		} finally {
 			try {
 				is.close();
-			}
-			finally {
+			} finally {
 				os.close();
 			}
 		}
@@ -244,8 +230,7 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 			File bak = File.createTempFile("eclipse-" + name, ".bak"); //$NON-NLS-1$//$NON-NLS-2$
 			copyFile(source, bak);
 			return bak;
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			IStatus status = new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.ERROR, Messages.format(
 					NewJavaProjectWizardConstants.NewJavaProjectWizardPageTwo_problem_backup, name), e);
 			throw new CoreException(status);
@@ -253,10 +238,8 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 	}
 
 	/**
-	 * Creates the provisional project on which the wizard is working on. The
-	 * provisional project is typically created when the page is entered the
-	 * first time. The early project creation is required to configure linked
-	 * folders.
+	 * Creates the provisional project on which the wizard is working on. The provisional project is typically created
+	 * when the page is entered the first time. The early project creation is required to configure linked folders.
 	 * 
 	 * @return the provisional project
 	 */
@@ -297,19 +280,16 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 				fCurrProject.delete(removeContent, false, new SubProgressMonitor(monitor, 2));
 
 				restoreExistingFiles(projLoc, new SubProgressMonitor(monitor, 1));
-			}
-			finally {
+			} finally {
 				setAutoBuilding(fIsAutobuild.booleanValue()); // fIsAutobuild
 				// must
 				// be
 				// set
 				fIsAutobuild = null;
 			}
-		}
-		catch (CoreException e) {
+		} catch (CoreException e) {
 			throw new InvocationTargetException(e);
-		}
-		finally {
+		} finally {
 			monitor.done();
 			fCurrProject = null;
 			fKeepContent = false;
@@ -322,15 +302,16 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 	}
 
 	/**
-	 * Evaluates the new build path and output folder according to the settings
-	 * on the first page. The resulting build path is set by calling
-	 * {@link #init(IJavaProject, IPath, IClasspathEntry[], boolean)}. Clients
-	 * can override this method.
+	 * Evaluates the new build path and output folder according to the settings on the first page. The resulting build
+	 * path is set by calling {@link #init(IJavaProject, IPath, IClasspathEntry[], boolean)}. Clients can override this
+	 * method.
 	 * 
-	 * @param javaProject the new project which is already created when this
-	 * method is called.
-	 * @param monitor the progress monitor
-	 * @throws CoreException thrown when initializing the build path failed
+	 * @param javaProject
+	 *            the new project which is already created when this method is called.
+	 * @param monitor
+	 *            the progress monitor
+	 * @throws CoreException
+	 *             thrown when initializing the build path failed
 	 */
 	@SuppressWarnings("unchecked")
 	protected void initializeBuildPath(IJavaProject javaProject, IProgressMonitor monitor) throws CoreException {
@@ -353,12 +334,10 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 					if (entries.length == 0) {
 						entries = null;
 					}
-				}
-				else {
+				} else {
 					monitor.worked(2);
 				}
-			}
-			else {
+			} else {
 				List cpEntries = new ArrayList();
 				IWorkspaceRoot root = project.getWorkspace().getRoot();
 
@@ -387,8 +366,7 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 			}
 
 			init(javaProject, outputLocation, entries, false);
-		}
-		finally {
+		} finally {
 			monitor.done();
 		}
 	}
@@ -405,11 +383,12 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 	/**
 	 * Called from the wizard on finish.
 	 * 
-	 * @param monitor the progress monitor
-	 * @throws CoreException thrown when the project creation or configuration
-	 * failed
-	 * @throws InterruptedException thrown when the user cancelled the project
-	 * creation
+	 * @param monitor
+	 *            the progress monitor
+	 * @throws CoreException
+	 *             thrown when the project creation or configuration failed
+	 * @throws InterruptedException
+	 *             thrown when the user cancelled the project creation
 	 */
 	@SuppressWarnings("unchecked")
 	public void performFinish(IProgressMonitor monitor) throws CoreException, InterruptedException {
@@ -433,8 +412,7 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 					project.setOptions(options);
 				}
 			}
-		}
-		finally {
+		} finally {
 			monitor.done();
 			fCurrProject = null;
 			if (fIsAutobuild != null) {
@@ -456,8 +434,7 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 					fOrginalFolders.add(child);
 				}
 			}
-		}
-		catch (CoreException e) {
+		} catch (CoreException e) {
 			JavaPlugin.log(e);
 		}
 	}
@@ -480,8 +457,8 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 	}
 
 	/**
-	 * Removes the provisional project. The provisional project is typically
-	 * removed when the user cancels the wizard or goes back to the first page.
+	 * Removes the provisional project. The provisional project is typically removed when the user cancels the wizard or
+	 * goes back to the first page.
 	 */
 	protected void removeProvisonalProject() {
 		if (!fCurrProject.exists()) {
@@ -497,13 +474,11 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 
 		try {
 			getContainer().run(true, true, new WorkspaceModifyDelegatingOperation(op));
-		}
-		catch (InvocationTargetException e) {
+		} catch (InvocationTargetException e) {
 			final String title = NewJavaProjectWizardConstants.NewJavaProjectWizardPageTwo_error_remove_title;
 			final String message = NewJavaProjectWizardConstants.NewJavaProjectWizardPageTwo_error_remove_message;
 			ExceptionHandler.handle(e, getShell(), title, message);
-		}
-		catch (InterruptedException e) {
+		} catch (InterruptedException e) {
 			// cancel pressed
 		}
 	}
@@ -517,8 +492,7 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 			if (fDotProjectBackup != null) {
 				copyFile(fDotProjectBackup, projectFile, new SubProgressMonitor(monitor, 1));
 			}
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			IStatus status = new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.ERROR,
 					NewJavaProjectWizardConstants.NewJavaProjectWizardPageTwo_problem_restore_project, e);
 			throw new CoreException(status);
@@ -529,8 +503,7 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 			if (fDotClasspathBackup != null) {
 				copyFile(fDotClasspathBackup, classpathFile, new SubProgressMonitor(monitor, 1));
 			}
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			IStatus status = new Status(IStatus.ERROR, JavaUI.ID_PLUGIN, IStatus.ERROR,
 					NewJavaProjectWizardConstants.NewJavaProjectWizardPageTwo_problem_restore_classpath, e);
 			throw new CoreException(status);
@@ -552,8 +525,7 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 				IFileStore deleted = (IFileStore) iterator.next();
 				deleted.mkdir(EFS.NONE, null);
 			}
-		}
-		catch (CoreException e) {
+		} catch (CoreException e) {
 			JavaPlugin.log(e);
 		}
 	}
@@ -570,8 +542,7 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 			if (isShownFirstTime) { // entering from the first page
 				createProvisonalProject();
 			}
-		}
-		else {
+		} else {
 			if (getContainer().getCurrentPage() == fFirstPage) { // leaving
 				// back to
 				// the first
@@ -619,8 +590,7 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 
 			try {
 				createProject(fCurrProject, fCurrProjectLocation, new SubProgressMonitor(monitor, 2));
-			}
-			catch (CoreException e) {
+			} catch (CoreException e) {
 				if (e.getStatus().getCode() == IResourceStatus.FAILED_READ_METADATA) {
 					result = new StatusInfo(IStatus.INFO, Messages.format(
 							NewJavaProjectWizardConstants.NewJavaProjectWizardPageTwo_DeleteCorruptProjectFile_message,
@@ -632,8 +602,7 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 					}
 
 					createProject(fCurrProject, fCurrProjectLocation, null);
-				}
-				else {
+				} else {
 					throw e;
 				}
 			}
@@ -657,8 +626,7 @@ public class NewJavaProjectWizardPageTwoCOPY extends JavaCapabilityConfiguration
 			// source
 			// folder
 			// page
-		}
-		finally {
+		} finally {
 			monitor.done();
 		}
 		return result;

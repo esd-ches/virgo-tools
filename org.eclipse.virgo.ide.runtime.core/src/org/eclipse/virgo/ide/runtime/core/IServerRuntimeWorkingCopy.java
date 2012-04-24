@@ -14,16 +14,18 @@ import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jst.server.core.IJavaRuntime;
 
 /**
- * Extension to {@link IServerRuntime} that allows for set some java related settings.
+ * Extension to {@link IServerRuntime} that allows for set some java related
+ * settings.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
 public interface IServerRuntimeWorkingCopy extends IServerRuntime, IJavaRuntime {
-	
+
 	/**
-	 * Sets the {@link IVMInstall} for the given dm Server runtime 
+	 * Sets the {@link IVMInstall} for the given dm Server runtime
 	 */
 	void setVMInstall(IVMInstall vmInstall);
-	
+
 	IServerRuntimeProvider getVirgoVersion();
 }

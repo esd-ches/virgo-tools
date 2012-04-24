@@ -47,9 +47,9 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IModuleType;
 import org.eclipse.wst.server.core.model.ServerDelegate;
 
-
 /**
  * Default dm server implementation.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
@@ -66,7 +66,7 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 			listeners.add(listener);
 		}
 	}
-	
+
 	protected String getServerName() {
 		return "SpringSource dm Server";
 	}
@@ -78,37 +78,37 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 			for (int i = 0; i < size; i++) {
 				IModule module = add[i];
 				if (!FacetCorePlugin.WEB_FACET_ID.equals(module.getModuleType().getId())
-						&& !FacetCorePlugin.BUNDLE_FACET_ID.equals(module.getModuleType().getId())
-						&& !FacetCorePlugin.PAR_FACET_ID.equals(module.getModuleType().getId())
-						&& !FacetCorePlugin.PLAN_FACET_ID.equals(module.getModuleType().getId())) {
+					&& !FacetCorePlugin.BUNDLE_FACET_ID.equals(module.getModuleType().getId())
+					&& !FacetCorePlugin.PAR_FACET_ID.equals(module.getModuleType().getId())
+					&& !FacetCorePlugin.PLAN_FACET_ID.equals(module.getModuleType().getId())) {
 					return new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, 0,
-							"SpringSource par or bundle projects only", null);
+						"SpringSource par or bundle projects only", null);
 				}
 
 				IProject project = module.getProject();
 				// Check that nested par module is not displayed
 				if (module.getId().endsWith("$" + project.getName())) {
-					return new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, 0,
-							"No nested par modules allowed", null);
+					return new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, 0, "No nested par modules allowed",
+						null);
 				}
 
 				// Check that shared war is only deployed as WAR
 				try {
 					if (project.hasNature(JavaCore.NATURE_ID)
-							&& FacetedProjectFramework.hasProjectFacet(project, FacetCorePlugin.WEB_FACET_ID)
-							&& FacetUtils.isBundleProject(project)
-							&& FacetCorePlugin.BUNDLE_FACET_ID.equals(module.getModuleType().getId())) {
+						&& FacetedProjectFramework.hasProjectFacet(project, FacetCorePlugin.WEB_FACET_ID)
+						&& FacetUtils.isBundleProject(project)
+						&& FacetCorePlugin.BUNDLE_FACET_ID.equals(module.getModuleType().getId())) {
 						return new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, 0,
-								"Shared WAR deploy only as jst.web modules", null);
+							"Shared WAR deploy only as jst.web modules", null);
 					}
 				} catch (CoreException e) {
 					return new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, 0,
-										"Core Exception when resolving project: ", e);
+						"Core Exception when resolving project: ", e);
 				}
 
 				if (getVersionHandler() == null) {
-					return new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, 0,
-							"No " + getServerName() + " runtime configured", null);
+					return new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, 0, "No " + getServerName()
+						+ " runtime configured", null);
 				}
 
 				IStatus status = getVersionHandler().canAddModule(module);
@@ -117,8 +117,7 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 				}
 
 				if (module.getProject() == null || !module.getProject().isAccessible()) {
-					return new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, 0,
-							"Project not accessible", null);
+					return new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, 0, "Project not accessible", null);
 				}
 
 				status = FacetUtil.verifyFacets(module.getProject(), getServer());
@@ -151,17 +150,15 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 					IModule[] modules = webModule.getModules();
 					return modules;
 				}
-			}
-			else if (FacetCorePlugin.PAR_FACET_ID.equals(moduleType.getId())) {
-				ServerModuleDelegate parModule = (ServerModuleDelegate) module[0].loadAdapter(
-						ServerModuleDelegate.class, null);
+			} else if (FacetCorePlugin.PAR_FACET_ID.equals(moduleType.getId())) {
+				ServerModuleDelegate parModule = (ServerModuleDelegate) module[0]
+						.loadAdapter(ServerModuleDelegate.class, null);
 				if (parModule != null) {
 					return parModule.getChildModules();
 				}
-			}
-			else if (FacetCorePlugin.PLAN_FACET_ID.equals(moduleType.getId())) {
-				ServerModuleDelegate planModule = (ServerModuleDelegate) module[0].loadAdapter(
-						ServerModuleDelegate.class, null);
+			} else if (FacetCorePlugin.PLAN_FACET_ID.equals(moduleType.getId())) {
+				ServerModuleDelegate planModule = (ServerModuleDelegate) module[0]
+						.loadAdapter(ServerModuleDelegate.class, null);
 				if (planModule != null) {
 					return planModule.getChildModules();
 				}
@@ -175,8 +172,7 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 		if (configuration == null) {
 			try {
 				configuration = new ServerConfiguration(getServer().getServerConfiguration());
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 			}
 		}
 		return configuration;
@@ -201,14 +197,11 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 	public IPath getModuleDeployDirectory(IModule module) {
 		if (FacetCorePlugin.BUNDLE_FACET_ID.equals(module.getModuleType().getId())) {
 			return getServerDeployDirectory().append(module.getName() + ".jar");
-		}
-		else if (FacetCorePlugin.PAR_FACET_ID.equals(module.getModuleType().getId())) {
+		} else if (FacetCorePlugin.PAR_FACET_ID.equals(module.getModuleType().getId())) {
 			return getServerDeployDirectory().append(module.getName() + ".par");
-		}
-		else if (FacetCorePlugin.PLAN_FACET_ID.equals(module.getModuleType().getId())) {
+		} else if (FacetCorePlugin.PLAN_FACET_ID.equals(module.getModuleType().getId())) {
 			return getServerDeployDirectory();
-		}
-		else {
+		} else {
 			return getServerDeployDirectory().append(module.getName() + ".war");
 		}
 	}
@@ -216,9 +209,9 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 	@Override
 	public IModule[] getRootModules(IModule module) throws CoreException {
 		if (FacetCorePlugin.WEB_FACET_ID.equals(module.getModuleType().getId())
-				|| FacetCorePlugin.BUNDLE_FACET_ID.equals(module.getModuleType().getId())
-				|| FacetCorePlugin.PAR_FACET_ID.equals(module.getModuleType().getId())
-				|| FacetCorePlugin.PLAN_FACET_ID.equals(module.getModuleType().getId())) {
+			|| FacetCorePlugin.BUNDLE_FACET_ID.equals(module.getModuleType().getId())
+			|| FacetCorePlugin.PAR_FACET_ID.equals(module.getModuleType().getId())
+			|| FacetCorePlugin.PLAN_FACET_ID.equals(module.getModuleType().getId())) {
 			IStatus status = canModifyModules(new IModule[] { module }, null);
 			if (status == null || !status.isOK()) {
 				return new IModule[0];
@@ -251,13 +244,13 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 			IPath base = getRuntimeBaseDirectory();
 			deployPath = base.append(deployPath);
 		}
-		// Make sure that stage directory is accessible and we can write into it; if we can't the stage will be in the
+		// Make sure that stage directory is accessible and we can write into
+		// it; if we can't the stage will be in the
 		// plugin's statelocation
 		File deployPathFile = deployPath.toFile();
 		if (!deployPathFile.exists() && !deployPathFile.getParentFile().canWrite()) {
 			deployPath = ServerCorePlugin.getDefault().getStateLocation().append(deployDir);
-		}
-		else if (deployPathFile.exists() && !deployPathFile.canWrite()) {
+		} else if (deployPathFile.exists() && !deployPathFile.canWrite()) {
 			deployPath = ServerCorePlugin.getDefault().getStateLocation().append(deployDir);
 		}
 		return deployPath;
@@ -274,29 +267,25 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 	}
 
 	@Override
-	public void modifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor)
-			throws CoreException {
-		// Add target runtime to new projects in order to refresh their classpath based on the
+	public void modifyModules(IModule[] add, IModule[] remove, IProgressMonitor monitor) throws CoreException {
+		// Add target runtime to new projects in order to refresh their
+		// classpath based on the
 		// manifest
 		if (add != null && add.length > 0) {
 			// Get the facet runtime which is != the server runtime
 			IRuntime runtime = RuntimeManager.getRuntime(getRuntime().getRuntime().getName());
 			if (runtime != null) {
 				for (IModule addedModule : add) {
-					IFacetedProject project = ProjectFacetsManager.create(addedModule.getProject(),
-							false, monitor);
+					IFacetedProject project = ProjectFacetsManager.create(addedModule.getProject(), false, monitor);
 					if (project != null) {
-						Set<IRuntime> runtimes = new HashSet<IRuntime>(project
-								.getTargetedRuntimes());
+						Set<IRuntime> runtimes = new HashSet<IRuntime>(project.getTargetedRuntimes());
 
 						// Add this server's runtime to the target runtime
 						if (!runtimes.contains(runtime)) {
 							runtimes.add(runtime);
-							project.setTargetedRuntimes(runtimes,
-									new SubProgressMonitor(monitor, 1));
+							project.setTargetedRuntimes(runtimes, new SubProgressMonitor(monitor, 1));
 							if (runtimes.size() > 1) {
-								project.setPrimaryRuntime(runtime, new SubProgressMonitor(monitor,
-										1));
+								project.setPrimaryRuntime(runtime, new SubProgressMonitor(monitor, 1));
 							}
 						}
 					}
@@ -363,16 +352,16 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 		fireConfigurationChanged(PROPERTY_TAIL_LOG_FILES, oldValue, shouldTailTraceFiles);
 
 	}
-	
+
 	public boolean shouldCleanStartup() {
 		return getAttribute(PROPERTY_CLEAN_STARTUP, DEFAULT_CLEAN_STARTUP);
 	}
-	
+
 	public void shouldCleanStartup(boolean shouldCleanStartup) {
 		boolean oldValue = shouldCleanStartup();
 		setAttribute(PROPERTY_CLEAN_STARTUP, shouldCleanStartup);
 		fireConfigurationChanged(PROPERTY_CLEAN_STARTUP, oldValue, shouldCleanStartup);
-		
+
 	}
 
 	public List<String> getArtefactOrder() {

@@ -23,7 +23,6 @@ import org.eclipse.libra.framework.editor.core.model.IPackageImport;
 import org.eclipse.libra.framework.editor.core.model.IServiceReference;
 import org.eclipse.virgo.util.common.ObjectUtils;
 
-
 /**
  * @author Christian Dupuis
  * @author Kaloyan Raev

@@ -80,8 +80,7 @@ public class BundleTypeCompletionProposal implements ICompletionProposal, ICompl
 		}
 		try {
 			document.replace(fBeginInsertPoint, fLength, fReplacementString);
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 			// DEBUG
 			// e.printStackTrace();
 		}
@@ -196,8 +195,7 @@ public class BundleTypeCompletionProposal implements ICompletionProposal, ICompl
 		}
 		try {
 			document.replace(fBeginInsertPoint, fLength, fReplacementString);
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 			// DEBUG
 			// e.printStackTrace();
 		}
@@ -234,8 +232,7 @@ public class BundleTypeCompletionProposal implements ICompletionProposal, ICompl
 			String start = document.get(fBeginInsertPoint, length);
 			// Remove " for comparison
 			return word != null && word.substring(0, start.length()).equalsIgnoreCase(start);
-		}
-		catch (BadLocationException x) {
+		} catch (BadLocationException x) {
 		}
 
 		return false;

@@ -72,8 +72,7 @@ public class AbstractManifestUiTestCase extends SWTBotTestCase {
 					if (editor instanceof ManifestEditor) {
 						return ((ManifestEditor) editor);
 					}
-				}
-				catch (PartInitException e) {
+				} catch (PartInitException e) {
 					fail("Could not open a manifest editor.");
 				}
 				return null;
@@ -92,8 +91,7 @@ public class AbstractManifestUiTestCase extends SWTBotTestCase {
 		bot = new VirgoIdeTestBot();
 		try {
 			bot.viewByTitle("Welcome").close();
-		}
-		catch (WidgetNotFoundException e) {
+		} catch (WidgetNotFoundException e) {
 			// ignore
 		}
 		assertFalse("SWTBot tests can not run in the UI thread.", SWTUtils.isUIThread());

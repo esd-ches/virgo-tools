@@ -31,10 +31,9 @@ import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
  * preferences can be accessed directly via the preference store.
  */
 
-public class VirgoPreferencePage
-	extends FieldEditorPreferencePage
-	implements IWorkbenchPreferencePage, IWorkbenchPropertyPage {
-	
+public class VirgoPreferencePage extends FieldEditorPreferencePage implements IWorkbenchPreferencePage,
+		IWorkbenchPropertyPage {
+
 	private IProject fProject; // can be null
 
 	public VirgoPreferencePage() {
@@ -42,18 +41,20 @@ public class VirgoPreferencePage
 		setPreferenceStore(ServerCorePlugin.getDefault().getPreferenceStore());
 		setDescription("Expand the tree to edit preferences for the Virgo runtime tools.");
 	}
-	
+
 	/**
-	 * Creates the field editors. Field editors are abstractions of
-	 * the common GUI blocks needed to manipulate various types
-	 * of preferences. Each field editor knows how to save and
-	 * restore itself.
+	 * Creates the field editors. Field editors are abstractions of the common
+	 * GUI blocks needed to manipulate various types of preferences. Each field
+	 * editor knows how to save and restore itself.
 	 */
 	public void createFieldEditors() {
 	}
 
-	/* (non-Javadoc)
-	 * @see org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.eclipse.ui.IWorkbenchPreferencePage#init(org.eclipse.ui.IWorkbench)
 	 */
 	public void init(IWorkbench workbench) {
 	}
@@ -70,5 +71,5 @@ public class VirgoPreferencePage
 			fProject = null;
 		}
 	}
-	
+
 }

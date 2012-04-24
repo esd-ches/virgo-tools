@@ -20,7 +20,6 @@ import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefactTyped;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ILocalEntity;
 import org.eclipse.virgo.ide.runtime.core.artefacts.LocalBundleArtefact;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiImages;
-import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServer;
 
 /**
@@ -37,7 +36,7 @@ public class ArtefactLabelProvider extends LabelProvider {
 			ArtefactType artefactType = ((IArtefactTyped) parentElement).getArtefactType();
 			if (artefactType == ArtefactType.BUNDLE) {
 				if (parentElement instanceof LocalBundleArtefact
-					&& ((LocalBundleArtefact) parentElement).isSourceDownloaded()) {
+						&& ((LocalBundleArtefact) parentElement).isSourceDownloaded()) {
 					return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_BUNDLE_SRC);
 				}
 				return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_BUNDLE);

@@ -33,9 +33,9 @@ import org.eclipse.ui.PlatformUI;
 import org.eclipse.virgo.ide.bundlor.ui.BundlorUiPlugin;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
 
-
 /**
- * Action delegate that runs Bundlor on the selected projects. 
+ * Action delegate that runs Bundlor on the selected projects.
+ * 
  * @author Christian Dupuis
  * @since 1.1.3
  */
@@ -74,18 +74,15 @@ public class RunBundlorActionDelegate implements IObjectActionDelegate {
 					if (!project.getProject().isOpen()) {
 						enabled = false;
 						break;
-					}
-					else {
+					} else {
 						selected.add(project.getProject());
 					}
-				}
-				else {
+				} else {
 					enabled = false;
 					break;
 				}
 			}
-		}
-		else {
+		} else {
 			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
 			if (activePage != null) {
 				IEditorPart editor = activePage.getActiveEditor();

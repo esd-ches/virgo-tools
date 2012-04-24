@@ -15,7 +15,6 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepository;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet;
 
-
 /**
  * @author Christian Dupuis
  * @author Miles Parker
@@ -36,7 +35,7 @@ public class RepositorySearchResultContentProvider implements ITreeContentProvid
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof ArtefactRepository) {
 			ArtefactRepository artefactRepository = (ArtefactRepository) inputElement;
-			return new Object[]{artefactRepository.getBundleSet(), artefactRepository.getLibrarySet()};
+			return new Object[] { artefactRepository.getBundleSet(), artefactRepository.getLibrarySet() };
 		}
 		return new Object[0];
 	}
@@ -54,5 +53,5 @@ public class RepositorySearchResultContentProvider implements ITreeContentProvid
 
 	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
-	
+
 }

@@ -43,11 +43,11 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.dialogs.WizardExportResourcesPage;
-
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 
 /**
  * Abstract wizard page for presenting a list of projects and specifying a location to export to.
+ * 
  * @author Christian Dupuis
  * @author Terry Hon
  */
@@ -61,7 +61,7 @@ public abstract class AbstractProjectExportWizardPage extends WizardExportResour
 	protected TableViewer tableViewer;
 
 	protected IStructuredSelection initialSelection;
-	
+
 	private boolean overwrite;
 
 	protected AbstractProjectExportWizardPage(String pageName, IStructuredSelection selection) {
@@ -85,7 +85,7 @@ public abstract class AbstractProjectExportWizardPage extends WizardExportResour
 
 		setControl(composite);
 	}
-	
+
 	public boolean getOverwrite() {
 		return overwrite;
 	}
@@ -130,18 +130,18 @@ public abstract class AbstractProjectExportWizardPage extends WizardExportResour
 				updateFileName();
 			}
 		});
-		
+
 		updateFileName();
-		
+
 		final Button overwriteButton = new Button(destinationSelectionGroup, SWT.CHECK);
 		overwriteButton.setText("Overwrite existing file without warning");
-		
+
 		GridData buttonData = new GridData(SWT.FILL, SWT.FILL, true, false);
 		buttonData.horizontalSpan = 3;
 		buttonData.verticalIndent = 5;
 		overwriteButton.setLayoutData(buttonData);
 		overwriteButton.setSelection(false);
-		
+
 		overwriteButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -152,18 +152,18 @@ public abstract class AbstractProjectExportWizardPage extends WizardExportResour
 
 	protected void updateFileName() {
 		IProject project = getSelectedProject();
-		if (project == null) return;
-	
+		if (project == null)
+			return;
+
 		BundleManifest manifest = getBundleManifest(project);
 		if (manifest != null) {
 			String name = getSymbolicName(manifest);
 			String version = getVersion(manifest);
-			
+
 			IPath path = null;
 			if (destinationText.getText() != null) {
 				path = new Path("");
-			}
-			else {
+			} else {
 				path = new Path(destinationText.getText());
 			}
 			if (name != null && version != null) {
@@ -176,7 +176,7 @@ public abstract class AbstractProjectExportWizardPage extends WizardExportResour
 	protected abstract String getSymbolicName(BundleManifest bundleManifest);
 
 	protected abstract String getVersion(BundleManifest bundleManifest);
-	
+
 	protected abstract BundleManifest getBundleManifest(IProject project);
 
 	private void createInputGroup(Composite parent) {
@@ -186,13 +186,12 @@ public abstract class AbstractProjectExportWizardPage extends WizardExportResour
 		tableViewer.getTable().setLayoutData(data);
 		tableViewer.setUseHashlookup(true);
 
-		int labelFlags = JavaElementLabelProvider.SHOW_BASICS
-				| JavaElementLabelProvider.SHOW_OVERLAY_ICONS
+		int labelFlags = JavaElementLabelProvider.SHOW_BASICS | JavaElementLabelProvider.SHOW_OVERLAY_ICONS
 				| JavaElementLabelProvider.SHOW_SMALL_ICONS;
 		ITreeContentProvider treeContentProvider = getTreeContentProvider();
 
-		final DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(
-				new JavaElementLabelProvider(labelFlags), new ProblemsLabelDecorator(null));
+		final DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new JavaElementLabelProvider(
+				labelFlags), new ProblemsLabelDecorator(null));
 
 		tableViewer.setContentProvider(treeContentProvider);
 		tableViewer.setLabelProvider(labelProvider);
@@ -232,16 +231,14 @@ public abstract class AbstractProjectExportWizardPage extends WizardExportResour
 		Object[] selectedItems;
 		if (selection instanceof IStructuredSelection) {
 			selectedItems = ((IStructuredSelection) selection).toArray();
-		}
-		else {
+		} else {
 			selectedItems = new Object[0];
 		}
 
 		for (Object selectedItem : selectedItems) {
 			if (selectedItem instanceof IJavaProject) {
 				return ((IJavaProject) selectedItem).getProject();
-			}
-			else if (selectedItem instanceof IProject) {
+			} else if (selectedItem instanceof IProject) {
 				return (IProject) selectedItem;
 			}
 		}
@@ -261,19 +258,17 @@ public abstract class AbstractProjectExportWizardPage extends WizardExportResour
 		int lastSeparatorIndex = currentSourceString.lastIndexOf(File.separator);
 		if (lastSeparatorIndex != -1) {
 			dialog.setFilterPath(currentSourceString.substring(0, lastSeparatorIndex));
-			dialog.setFileName(currentSourceString.substring(lastSeparatorIndex + 1,
-					currentSourceString.length()));
-		}
-		else {
+			dialog.setFileName(currentSourceString.substring(lastSeparatorIndex + 1, currentSourceString.length()));
+		} else {
 			dialog.setFileName(currentSourceString);
 		}
 		String selectedFileName = dialog.open();
 		if (selectedFileName != null) {
-			IContainer[] findContainersForLocation = ResourcesPlugin.getWorkspace().getRoot()
+			IContainer[] findContainersForLocation = ResourcesPlugin.getWorkspace()
+					.getRoot()
 					.findContainersForLocation(new Path(selectedFileName));
 			if (findContainersForLocation.length > 0) {
-				selectedFileName = findContainersForLocation[0].getFullPath().makeRelative()
-						.toString();
+				selectedFileName = findContainersForLocation[0].getFullPath().makeRelative().toString();
 			}
 			destinationText.setText(selectedFileName);
 		}

@@ -18,7 +18,6 @@ import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
 
-
 /**
  * @author Christian Dupuis
  */

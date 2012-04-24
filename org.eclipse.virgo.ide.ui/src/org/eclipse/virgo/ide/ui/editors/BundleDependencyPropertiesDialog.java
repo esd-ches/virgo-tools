@@ -28,8 +28,8 @@ import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Group;
 
 /**
- * Based on <code>DependencyPropertiesDialog</code> from PDE for Eclipse 3.4.
- * Used for compatibility with Eclipse 3.4.
+ * Based on <code>DependencyPropertiesDialog</code> from PDE for Eclipse 3.4. Used for compatibility with Eclipse 3.4.
+ * 
  * @author Christian Dupuis
  */
 public class BundleDependencyPropertiesDialog extends StatusDialog {
@@ -75,8 +75,7 @@ public class BundleDependencyPropertiesDialog extends StatusDialog {
 
 		if (isImport) {
 			fVersionPart = new PluginVersionPart(true);
-		}
-		else {
+		} else {
 			fVersionPart = new PluginVersionPart(false) {
 				@Override
 				protected String getGroupText() {

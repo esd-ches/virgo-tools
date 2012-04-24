@@ -15,8 +15,9 @@ import org.eclipse.virgo.kernel.repository.BundleRepository;
 import org.eclipse.wst.server.core.IRuntime;
 
 /**
- * Implementation of this interface get notified if a {@link BundleRepository} stored in the
- * {@link ArtefactRepositoryManager} is changed.
+ * Implementation of this interface get notified if a {@link BundleRepository}
+ * stored in the {@link ArtefactRepositoryManager} is changed.
+ * 
  * @author Christian Dupuis
  * @since 1.0.1
  * @see ArtefactRepositoryManager#addBundleRepositoryChangeListener(IBundleRepositoryChangeListener)
@@ -25,8 +26,11 @@ import org.eclipse.wst.server.core.IRuntime;
 public interface IBundleRepositoryChangeListener {
 
 	/**
-	 * Notifies changes to the {@link BundleRepository} of the supplied {@link IRuntime}.
-	 * @param runtime the runtime instance which {@link BundleRepository} has changed
+	 * Notifies changes to the {@link BundleRepository} of the supplied
+	 * {@link IRuntime}.
+	 * 
+	 * @param runtime the runtime instance which {@link BundleRepository} has
+	 *        changed
 	 */
 	void bundleRepositoryChanged(IRuntime runtime);
 

@@ -33,7 +33,6 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.virgo.ide.ui.ServerIdeUiPlugin;
 import org.eclipse.virgo.ide.ui.StatusHandler;
 
-
 /**
  * @author Christian Dupuis
  */
@@ -97,12 +96,10 @@ public class BundleDependenciesPage extends PDEFormPage implements IBundleManife
 		try {
 			// Wait for build
 			Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
-		}
-		catch (OperationCanceledException e) {
-			StatusHandler.log(new Status(Status.ERROR, ServerIdeUiPlugin.PLUGIN_ID,
-					"Could not update page title text", e));
-		}
-		catch (InterruptedException e) {
+		} catch (OperationCanceledException e) {
+			StatusHandler.log(new Status(Status.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Could not update page title text",
+					e));
+		} catch (InterruptedException e) {
 			// Nothing to do?
 		}
 
@@ -112,16 +109,14 @@ public class BundleDependenciesPage extends PDEFormPage implements IBundleManife
 				if (ManifestEditorUtils.hasErrorSeverityMarker(markers)) {
 					form.setText(MANIFEST_ERRORS);
 					form.setImage(ServerIdeUiPlugin.getImage("full/obj16/manifest_error.png"));
-				}
-				else {
+				} else {
 					form.setText(PDEUIMessages.DependenciesPage_title);
 					form.setImage(ServerIdeUiPlugin.getImage("full/obj16/osgi_obj.gif"));
 				}
 			}
-		}
-		catch (CoreException e) {
-			StatusHandler.log(new Status(Status.ERROR, ServerIdeUiPlugin.PLUGIN_ID,
-					"Could not update page title text", e));
+		} catch (CoreException e) {
+			StatusHandler.log(new Status(Status.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Could not update page title text",
+					e));
 		}
 
 	}

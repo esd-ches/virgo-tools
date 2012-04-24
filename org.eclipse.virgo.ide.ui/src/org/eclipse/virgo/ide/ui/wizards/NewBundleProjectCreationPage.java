@@ -29,8 +29,7 @@ public class NewBundleProjectCreationPage extends NewJavaProjectWizardPageTwo {
 		NewBundleProjectWizard wizard = (NewBundleProjectWizard) getWizard();
 		if (wizard.getPropertiesPage() instanceof NullPropertiesPage) {
 			return wizard.getInformationPage();
-		}
-		else {
+		} else {
 			return wizard.getPropertiesPage();
 		}
 	}

@@ -18,14 +18,13 @@ import javax.management.ObjectName;
 
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 
-
 /**
  * {@link IServerCommand} to ping a dm Server.
+ * 
  * @author Christian Dupuis
  * @since 1.0.1
  */
-public class JmxServerPingCommand extends AbstractJmxServerCommand implements
-		IServerCommand<Boolean> {
+public class JmxServerPingCommand extends AbstractJmxServerCommand implements IServerCommand<Boolean> {
 
 	/**
 	 * Creates a new {@link JmxServerPingCommand}.
@@ -38,7 +37,7 @@ public class JmxServerPingCommand extends AbstractJmxServerCommand implements
 	 * {@inheritDoc}
 	 */
 	public Boolean execute() throws IOException, TimeoutException {
-		
+
 		JmxServerCommandTemplate template = new JmxServerCommandTemplate() {
 
 			public Object invokeOperation(MBeanServerConnection connection) throws Exception {
@@ -46,9 +45,9 @@ public class JmxServerPingCommand extends AbstractJmxServerCommand implements
 						.getRecoveryMonitorMBeanName());
 				return connection.getAttribute(name, "RecoveryComplete");
 			}
-			
+
 		};
-		
+
 		Object returnValue = execute(template);
 		if (returnValue instanceof Boolean) {
 			return (Boolean) returnValue;

@@ -18,9 +18,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.virgo.ide.runtime.core.IServerWorkingCopy;
 
-
 /**
  * {@link AbstractOperation} to modify the jmx deployer username.
+ * 
  * @author Christian Dupuis
  * @since 1.0.1
  */

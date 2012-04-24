@@ -55,6 +55,7 @@ import org.osgi.framework.Constants;
 
 /**
  * Helper methods to located and load {@link BundleManifest} instances.
+ * 
  * @author Christian Dupuis
  * @author Steffen Pingel
  * @author Martin Lippert
@@ -75,10 +76,8 @@ public class BundleManifestUtils {
 		IFile manifestFile = locateManifest(javaProject, testBundle);
 		if (manifestFile != null) {
 			try {
-				return BundleManifestFactory
-						.createBundleManifest(new InputStreamReader(manifestFile.getContents(true)));
-			}
-			catch (Exception e) {
+				return BundleManifestFactory.createBundleManifest(new InputStreamReader(manifestFile.getContents(true)));
+			} catch (Exception e) {
 			}
 		}
 		return null;
@@ -91,7 +90,8 @@ public class BundleManifestUtils {
 	 * META-INF/MANIFEST.MF as the valid manifest.
 	 */
 	public static IFile locateManifest(IJavaProject javaProject, boolean testBundle) {
-		String manifestLocation = (testBundle ? BundleManifestCorePlugin.TEST_MANIFEST_FILE_LOCATION
+		String manifestLocation = (testBundle
+				? BundleManifestCorePlugin.TEST_MANIFEST_FILE_LOCATION
 				: BundleManifestCorePlugin.MANIFEST_FILE_LOCATION);
 		try {
 			for (IClasspathEntry entry : ServerModuleDelegate.getSourceClasspathEntries(javaProject.getProject(),
@@ -108,7 +108,8 @@ public class BundleManifestUtils {
 				if (webArtifact != null) {
 					IPath webDotXmlPath = webArtifact.getDeploymentDescriptorPath();
 					if (webDotXmlPath != null) {
-						IPath path = webDotXmlPath.removeLastSegments(2).append(manifestLocation)
+						IPath path = webDotXmlPath.removeLastSegments(2)
+								.append(manifestLocation)
 								.removeFirstSegments(1);
 						IFile manifestFileHandle = javaProject.getProject().getFile(path);
 						if (manifestFileHandle.exists()) {
@@ -118,8 +119,7 @@ public class BundleManifestUtils {
 				}
 			}
 
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 		}
 		return null;
 	}
@@ -170,16 +170,14 @@ public class BundleManifestUtils {
 				String scheme = uri.getScheme();
 				if (FILE_SCHEME.equalsIgnoreCase(scheme)) {
 					return uri;
-				}
-				else if ("sourcecontrol".equals(scheme)) {
+				} else if ("sourcecontrol".equals(scheme)) {
 					// special case of Rational Team Concert
 					IPath path = resource.getLocation();
 					File file = path.toFile();
 					if (file.exists()) {
 						return file.toURI();
 					}
-				}
-				else {
+				} else {
 					IPathVariableManager variableManager = ResourcesPlugin.getWorkspace().getPathVariableManager();
 					return variableManager.resolveURI(uri);
 				}
@@ -212,22 +210,17 @@ public class BundleManifestUtils {
 			try {
 				reader = new FileReader(existingManifestFile);
 				manifest = BundleManifestFactory.createBundleManifest(new FileReader(existingManifestFile));
-			}
-			catch (FileNotFoundException e) {
-			}
-			catch (IOException e) {
-			}
-			finally {
+			} catch (FileNotFoundException e) {
+			} catch (IOException e) {
+			} finally {
 				if (reader != null) {
 					try {
 						reader.close();
-					}
-					catch (IOException e) {
+					} catch (IOException e) {
 					}
 				}
 			}
-		}
-		else {
+		} else {
 			manifest = BundleManifestFactory.createBundleManifest();
 		}
 
@@ -256,23 +249,19 @@ public class BundleManifestUtils {
 		try {
 			if (existingManifestFile != null) {
 				writer = new FileWriter(existingManifestFile);
-			}
-			else {
+			} else {
 				writer = new FileWriter(getFirstPossibleManifestFile(javaProject.getProject(), false).getRawLocation()
 						.toFile());
 			}
 			BundleManifest bundleManifest = BundleManifestFactory.createBundleManifest(dictonary);
 			bundleManifest.write(writer);
-		}
-		catch (IOException e) {
-		}
-		finally {
+		} catch (IOException e) {
+		} finally {
 			if (writer != null) {
 				try {
 					writer.flush();
 					writer.close();
-				}
-				catch (IOException e) {
+				} catch (IOException e) {
 				}
 			}
 		}
@@ -299,16 +288,13 @@ public class BundleManifestUtils {
 			writer = new FileWriter(getFirstPossibleManifestFile(project, false).getRawLocation().toFile());
 			BundleManifest bundleManifest = BundleManifestFactory.createBundleManifest(manifest);
 			bundleManifest.write(writer);
-		}
-		catch (IOException e) {
-		}
-		finally {
+		} catch (IOException e) {
+		} finally {
 			if (writer != null) {
 				try {
 					writer.flush();
 					writer.close();
-				}
-				catch (IOException e) {
+				} catch (IOException e) {
 				}
 			}
 		}
@@ -318,8 +304,8 @@ public class BundleManifestUtils {
 		try {
 			if (project.hasNature(JavaCore.NATURE_ID)) {
 
-				List<IClasspathEntry> entries = new ArrayList<IClasspathEntry>(ServerModuleDelegate
-						.getSourceClasspathEntries(project, isTestManifest));
+				List<IClasspathEntry> entries = new ArrayList<IClasspathEntry>(
+						ServerModuleDelegate.getSourceClasspathEntries(project, isTestManifest));
 				Collections.sort(entries, new Comparator<IClasspathEntry>() {
 
 					public int compare(IClasspathEntry o1, IClasspathEntry o2) {
@@ -327,14 +313,12 @@ public class BundleManifestUtils {
 						String s2 = o2.getPath().toString();
 						if (("/" + project.getName() + "/src/main/resources").equals(s1)) {
 							return -1;
-						}
-						else if (("/" + project.getName() + "/src/test/resources").equals(s1)) {
+						} else if (("/" + project.getName() + "/src/test/resources").equals(s1)) {
 							return -1;
 						}
 						if (("/" + project.getName() + "/src/main/resources").equals(s2)) {
 							return 1;
-						}
-						else if (("/" + project.getName() + "/src/test/resources").equals(s2)) {
+						} else if (("/" + project.getName() + "/src/test/resources").equals(s2)) {
 							return 1;
 						}
 						return s1.compareTo(s2);
@@ -344,24 +328,24 @@ public class BundleManifestUtils {
 				for (IClasspathEntry entry : entries) {
 					return createNewManifestInFolder(findResource(project, entry.getPath()), isTestManifest);
 				}
-			}
-			else {
+			} else {
 				return createNewManifestInFolder(project, isTestManifest);
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
 	private static IFile createNewManifestInFolder(IResource resource, boolean isTestManifest) throws CoreException {
-		String manifestFilePath = "META-INF/" + (isTestManifest ? BundleManifestCorePlugin.TEST_MANIFEST_FILE_NAME : BundleManifestCorePlugin.MANIFEST_FILE_NAME);
+		String manifestFilePath = "META-INF/"
+				+ (isTestManifest
+						? BundleManifestCorePlugin.TEST_MANIFEST_FILE_NAME
+						: BundleManifestCorePlugin.MANIFEST_FILE_NAME);
 		IFile manifestFile = null;
 		if (resource instanceof IFolder) {
 			manifestFile = ((IFolder) resource).getFile(manifestFilePath);
-		}
-		else if (resource instanceof IProject) {
+		} else if (resource instanceof IProject) {
 			manifestFile = ((IProject) resource).getFile(manifestFilePath);
 		}
 		if (manifestFile != null && !manifestFile.exists()) {
@@ -387,8 +371,7 @@ public class BundleManifestUtils {
 				if (lineStr.indexOf(valueSubstring) >= 0) {
 					return l + 1;
 				}
-			}
-			catch (BadLocationException ble) {
+			} catch (BadLocationException ble) {
 			}
 		}
 		// it might span multiple lines, try a longer algorithm
@@ -402,8 +385,7 @@ public class BundleManifestUtils {
 					return l;
 				}
 			}
-		}
-		catch (BadLocationException ble) {
+		} catch (BadLocationException ble) {
 		}
 		return header.getLineNumber() + 1;
 	}
@@ -420,8 +402,7 @@ public class BundleManifestUtils {
 			if (lineStr.endsWith(packageName)) {
 				return header.getLineNumber() + header.getLinesSpan();
 			}
-		}
-		catch (BadLocationException ble) {
+		} catch (BadLocationException ble) {
 		}
 
 		// search all except last line

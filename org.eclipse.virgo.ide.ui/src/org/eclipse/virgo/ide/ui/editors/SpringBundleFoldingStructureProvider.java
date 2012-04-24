@@ -26,7 +26,6 @@ import org.eclipse.pde.internal.ui.editor.plugin.BundleFoldingStructureProvider;
 import org.eclipse.virgo.ide.manifest.core.IHeaderConstants;
 import org.osgi.framework.Constants;
 
-
 /**
  * @author Christian Dupuis
  * @author Leo Dos Santos
@@ -59,8 +58,7 @@ public class SpringBundleFoldingStructureProvider extends BundleFoldingStructure
 			addFoldingRegions(currentRegions, importBundleHeader, model.getDocument());
 			addFoldingRegions(currentRegions, importTemplateBundleHeader, model.getDocument());
 			addFoldingRegions(currentRegions, exportTemplateBundleHeader, model.getDocument());
-		}
-		catch (BadLocationException e) {
+		} catch (BadLocationException e) {
 		}
 	}
 

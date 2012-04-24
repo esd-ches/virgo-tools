@@ -32,8 +32,8 @@ import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 
 /**
- * Menu action to add or remove the SpringSource AP bundle project nature/facet
- * from a given project.
+ * Menu action to add or remove the SpringSource AP bundle project nature/facet from a given project.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
@@ -47,8 +47,7 @@ public class ConvertToBundleProject implements IObjectActionDelegate {
 			IProject project = iter.next();
 			if (FacetUtils.isBundleProject(project)) {
 				removeFacetsFromProject(project);
-			}
-			else {
+			} else {
 				addFacetsToProject(project);
 			}
 		}
@@ -69,12 +68,10 @@ public class ConvertToBundleProject implements IObjectActionDelegate {
 					if (!project.isOpen()) {
 						enabled = false;
 						break;
-					}
-					else {
+					} else {
 						selected.add(project);
 					}
-				}
-				else {
+				} else {
 					enabled = false;
 					break;
 				}
@@ -97,8 +94,7 @@ public class ConvertToBundleProject implements IObjectActionDelegate {
 
 		try {
 			ResourcesPlugin.getWorkspace().run(oper, new NullProgressMonitor());
-		}
-		catch (CoreException e) {
+		} catch (CoreException e) {
 		}
 	}
 
@@ -113,8 +109,7 @@ public class ConvertToBundleProject implements IObjectActionDelegate {
 
 		try {
 			ResourcesPlugin.getWorkspace().run(oper, new NullProgressMonitor());
-		}
-		catch (CoreException e) {
+		} catch (CoreException e) {
 		}
 	}
 }

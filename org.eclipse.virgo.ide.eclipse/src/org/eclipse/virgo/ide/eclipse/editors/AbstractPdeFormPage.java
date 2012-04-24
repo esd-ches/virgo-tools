@@ -25,8 +25,7 @@ import org.eclipse.ui.forms.editor.FormEditor;
 import org.eclipse.ui.forms.editor.FormPage;
 
 /**
- * SpringSource Tool Suite Team - Portions of this class were copied from PDE's
- * PDEFormPage.
+ * SpringSource Tool Suite Team - Portions of this class were copied from PDE's PDEFormPage.
  */
 @SuppressWarnings("restriction")
 public abstract class AbstractPdeFormPage extends FormPage {
@@ -63,15 +62,13 @@ public abstract class AbstractPdeFormPage extends FormPage {
 				text.insert(""); //$NON-NLS-1$
 				return true;
 			}
-		}
-		else if (control instanceof Table) {
+		} else if (control instanceof Table) {
 			Table table = (Table) control;
 			if (id.equals(ActionFactory.SELECT_ALL.getId())) {
 				table.selectAll();
 				return true;
 			}
-		}
-		else if (control instanceof Tree) {
+		} else if (control instanceof Tree) {
 			Tree tree = (Tree) control;
 			if (id.equals(ActionFactory.SELECT_ALL.getId())) {
 				tree.selectAll();

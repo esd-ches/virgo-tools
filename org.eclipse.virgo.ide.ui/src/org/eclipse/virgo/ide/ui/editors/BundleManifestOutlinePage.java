@@ -36,7 +36,6 @@ import org.eclipse.virgo.ide.manifest.core.editor.model.ImportLibraryHeader;
 import org.eclipse.virgo.ide.manifest.core.editor.model.ImportLibraryObject;
 import org.osgi.framework.Constants;
 
-
 /**
  * @author Christian Dupuis
  * @author Steffen Pingel
@@ -57,12 +56,9 @@ public class BundleManifestOutlinePage extends ManifestOutlinePage {
 				IBundle bundle = model.getBundle();
 				if (page.getId().equals(BundleDependenciesPage.PAGE_ID)) {
 					ArrayList<Object> list = new ArrayList<Object>();
-					ImportPackageHeader packageHeader = (ImportPackageHeader) bundle
-							.getManifestHeader(Constants.IMPORT_PACKAGE);
-					ImportBundleHeader bundleHeader = (ImportBundleHeader) bundle
-							.getManifestHeader(IHeaderConstants.IMPORT_BUNDLE);
-					ImportLibraryHeader libraryHeader = (ImportLibraryHeader) bundle
-							.getManifestHeader(IHeaderConstants.IMPORT_LIBRARY);
+					ImportPackageHeader packageHeader = (ImportPackageHeader) bundle.getManifestHeader(Constants.IMPORT_PACKAGE);
+					ImportBundleHeader bundleHeader = (ImportBundleHeader) bundle.getManifestHeader(IHeaderConstants.IMPORT_BUNDLE);
+					ImportLibraryHeader libraryHeader = (ImportLibraryHeader) bundle.getManifestHeader(IHeaderConstants.IMPORT_LIBRARY);
 
 					if (packageHeader != null && !packageHeader.isEmpty()) {
 						list.addAll(Arrays.asList(packageHeader.getPackages()));
@@ -111,11 +107,9 @@ public class BundleManifestOutlinePage extends ManifestOutlinePage {
 			public String getText(Object obj) {
 				if (obj instanceof ImportLibraryObject) {
 					return ((ImportLibraryObject) obj).getId();
-				}
-				else if (obj instanceof ImportBundleObject) {
+				} else if (obj instanceof ImportBundleObject) {
 					return ((ImportBundleObject) obj).getId();
-				}
-				else {
+				} else {
 					return super.getText(obj);
 				}
 			}
@@ -125,11 +119,9 @@ public class BundleManifestOutlinePage extends ManifestOutlinePage {
 				PDELabelProvider labelProvider = PDEPlugin.getDefault().getLabelProvider();
 				if (obj instanceof ImportLibraryObject) {
 					return labelProvider.get(PDEPluginImages.DESC_JAR_LIB_OBJ);
-				}
-				else if (obj instanceof ImportBundleObject) {
+				} else if (obj instanceof ImportBundleObject) {
 					return labelProvider.get(PDEPluginImages.DESC_BUNDLE_OBJ);
-				}
-				else {
+				} else {
 					return super.getImage(obj);
 				}
 			}

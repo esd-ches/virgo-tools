@@ -45,9 +45,9 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.editor.ServerEditorSection;
 
-
 /**
  * {@link ServerEditorSection} section that allows to configure the JMX deployer credentials
+ * 
  * @author Christian Dupuis
  * @author Steffen Pingel
  * @since 1.0.1
@@ -89,14 +89,11 @@ public class ArtefactOrderEditorSection extends ServerEditorSection {
 		super.createSection(parent);
 		FormToolkit toolkit = getFormToolkit(parent.getDisplay());
 
-		Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE
-				| ExpandableComposite.EXPANDED | ExpandableComposite.TITLE_BAR
-				| Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
+		Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED
+				| ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
 		section.setText("Artefact Deployment Order");
-		section
-				.setDescription("Specify the deployment order of targeted bundles and PARs on server startup.");
-		section
-				.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
+		section.setDescription("Specify the deployment order of targeted bundles and PARs on server startup.");
+		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 
 		Composite composite = toolkit.createComposite(section);
 		GridLayout layout = new GridLayout();
@@ -106,13 +103,11 @@ public class ArtefactOrderEditorSection extends ServerEditorSection {
 		layout.verticalSpacing = 5;
 		layout.horizontalSpacing = 1;
 		composite.setLayout(layout);
-		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL
-				| GridData.VERTICAL_ALIGN_FILL));
+		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
 
-		bundleTable = toolkit
-				.createTable(composite, SWT.SINGLE | SWT.V_SCROLL | SWT.FULL_SELECTION);
+		bundleTable = toolkit.createTable(composite, SWT.SINGLE | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
 		data.heightHint = 100;
 		bundleTable.setLayoutData(data);
@@ -141,8 +136,7 @@ public class ArtefactOrderEditorSection extends ServerEditorSection {
 		upButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Object selectedArtefact = ((IStructuredSelection) bundleTableViewer.getSelection())
-						.getFirstElement();
+				Object selectedArtefact = ((IStructuredSelection) bundleTableViewer.getSelection()).getFirstElement();
 				List<Object> modules = new ArrayList<Object>();
 				modules.addAll(Arrays.asList(contentProvider.getElements(server)));
 				int index = modules.indexOf(selectedArtefact);
@@ -168,8 +162,7 @@ public class ArtefactOrderEditorSection extends ServerEditorSection {
 		downButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Object selectedArtefact = ((IStructuredSelection) bundleTableViewer.getSelection())
-						.getFirstElement();
+				Object selectedArtefact = ((IStructuredSelection) bundleTableViewer.getSelection()).getFirstElement();
 				List<Object> modules = new ArrayList<Object>();
 				modules.addAll(Arrays.asList(contentProvider.getElements(server)));
 				int index = modules.indexOf(selectedArtefact);
@@ -206,8 +199,7 @@ public class ArtefactOrderEditorSection extends ServerEditorSection {
 	 */
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
-		serverWorkingCopy = (IServerWorkingCopy) server.loadAdapter(IServerWorkingCopy.class,
-				new NullProgressMonitor());
+		serverWorkingCopy = (IServerWorkingCopy) server.loadAdapter(IServerWorkingCopy.class, new NullProgressMonitor());
 		addConfigurationChangeListener();
 	}
 
@@ -251,10 +243,9 @@ public class ArtefactOrderEditorSection extends ServerEditorSection {
 				IServer server = (IServer) inputElement;
 				IModule[] modules = server.getModules();
 
-				IServerWorkingCopy workingServer = (IServerWorkingCopy) server.loadAdapter(
-						IServerWorkingCopy.class, null);
-				final List<String> orderedArtefacts = workingServer.getConfiguration()
-						.getArtefactOrder();
+				IServerWorkingCopy workingServer = (IServerWorkingCopy) server.loadAdapter(IServerWorkingCopy.class,
+						null);
+				final List<String> orderedArtefacts = workingServer.getConfiguration().getArtefactOrder();
 
 				List<IModule> orderedModules = Arrays.asList(modules);
 
@@ -262,10 +253,12 @@ public class ArtefactOrderEditorSection extends ServerEditorSection {
 				Collections.sort(orderedModules, new Comparator<IModule>() {
 
 					public int compare(IModule o1, IModule o2) {
-						Integer m1 = (orderedArtefacts.contains(o1.getId()) ? orderedArtefacts
-								.indexOf(o1.getId()) : Integer.MAX_VALUE);
-						Integer m2 = (orderedArtefacts.contains(o2.getId()) ? orderedArtefacts
-								.indexOf(o2.getId()) : Integer.MAX_VALUE);
+						Integer m1 = (orderedArtefacts.contains(o1.getId())
+								? orderedArtefacts.indexOf(o1.getId())
+								: Integer.MAX_VALUE);
+						Integer m2 = (orderedArtefacts.contains(o2.getId())
+								? orderedArtefacts.indexOf(o2.getId())
+								: Integer.MAX_VALUE);
 						return m1.compareTo(m2);
 					}
 				});

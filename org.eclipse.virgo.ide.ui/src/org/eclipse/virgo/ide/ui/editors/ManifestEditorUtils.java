@@ -19,15 +19,13 @@ import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.virgo.ide.runtime.core.artefacts.Artefact;
 
-
 /**
  * @author Christian Dupuis
  */
 public class ManifestEditorUtils {
 
 	/**
-	 * Returns a collection of downloadable artifacts where only the latest
-	 * versions are included.
+	 * Returns a collection of downloadable artifacts where only the latest versions are included.
 	 */
 	public static void removeOldVersions(Set<Artefact> bundles) {
 		Map<String, Artefact> symbolicNameToHighestVersionMap = new HashMap<String, Artefact>(bundles.size());
@@ -38,12 +36,10 @@ public class ManifestEditorUtils {
 			Artefact mappedArtifact = symbolicNameToHighestVersionMap.get(currArtifactDefinition.getSymbolicName());
 			if (mappedArtifact == null) {
 				symbolicNameToHighestVersionMap.put(currArtifactDefinition.getSymbolicName(), currArtifactDefinition);
-			}
-			else {
+			} else {
 				if (currArtifactDefinition.getVersion().compareTo(mappedArtifact.getVersion()) <= 0) {
 					oldArtifacts.add(currArtifactDefinition);
-				}
-				else {
+				} else {
 					oldArtifacts.add(mappedArtifact);
 					symbolicNameToHighestVersionMap.put(currArtifactDefinition.getSymbolicName(),
 							currArtifactDefinition);

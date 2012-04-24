@@ -57,7 +57,6 @@ public interface IArtefact extends IArtefactTyped {
 	 */
 	void setSourceAvailable(boolean sourceAvailable);
 
-
 	/**
 	 * Get the relative URL path for downloading this artefact from S3
 	 */
@@ -70,14 +69,15 @@ public interface IArtefact extends IArtefactTyped {
 	String getRelativeLicenseUrlPath();
 
 	/**
-	 * Returns a string that identifies this artefact as completely matching a given requirement.
-	 * At minimum, this should use name, version and artefact type.
+	 * Returns a string that identifies this artefact as completely matching a
+	 * given requirement. At minimum, this should use name, version and artefact
+	 * type.
 	 */
 	String getSignature();
 
 	/**
-	 * Does the artefact match the supplied artefact?
-	 * Matching artefacts are expected to share the same signature.
+	 * Does the artefact match the supplied artefact? Matching artefacts are
+	 * expected to share the same signature.
 	 */
 	boolean isMatch(IArtefact artefact);
 

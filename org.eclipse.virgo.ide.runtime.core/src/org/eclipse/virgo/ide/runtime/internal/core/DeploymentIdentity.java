@@ -12,13 +12,14 @@ package org.eclipse.virgo.ide.runtime.internal.core;
 
 /**
  * Simple data holder for a deployed par or bundle.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
 public class DeploymentIdentity {
-	
+
 	private String symbolicName;
-	
+
 	private String version;
 
 	public DeploymentIdentity(String symbolicName, String version) {
@@ -29,7 +30,7 @@ public class DeploymentIdentity {
 	public DeploymentIdentity(String output) {
 		int ix = output.lastIndexOf('#');
 		this.symbolicName = output.substring(0, ix);
-		this.version = output.substring(ix+1);
+		this.version = output.substring(ix + 1);
 	}
 
 	public String getSymbolicName() {
@@ -39,5 +40,5 @@ public class DeploymentIdentity {
 	public String getVersion() {
 		return version;
 	}
-	
+
 }

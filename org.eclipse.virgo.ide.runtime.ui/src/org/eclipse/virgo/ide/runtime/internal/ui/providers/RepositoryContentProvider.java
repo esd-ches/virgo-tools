@@ -25,14 +25,13 @@ import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ILocalArtefact;
 import org.eclipse.virgo.ide.runtime.core.artefacts.LocalArtefactRepository;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryUtils;
-import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServer;
 
 /**
  * Common content provider for repository installation nodes.
+ * 
  * @author Christian Dupuis
  * @author Miles Parker
- *
  */
 public class RepositoryContentProvider implements ITreeContentProvider {
 
@@ -54,8 +53,7 @@ public class RepositoryContentProvider implements ITreeContentProvider {
 					}
 					if (setForFile.containsKey(file)) {
 						setForFile.get(file).add(bundle);
-					}
-					else {
+					} else {
 						ArtefactRepository localRepository = new LocalArtefactRepository(file);
 						localRepository.setServer(server);
 						localRepository.add(bundle);

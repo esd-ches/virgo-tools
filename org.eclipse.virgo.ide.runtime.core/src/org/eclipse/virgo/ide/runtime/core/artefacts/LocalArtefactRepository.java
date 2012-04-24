@@ -18,7 +18,7 @@ import org.apache.commons.lang.ObjectUtils;
 /**
  * 
  * @author Miles Parker
- *
+ * 
  */
 public class LocalArtefactRepository extends ArtefactRepository implements ILocalEntity {
 
@@ -49,6 +49,7 @@ public class LocalArtefactRepository extends ArtefactRepository implements ILoca
 
 	/**
 	 * Assumes one and only one repository at each file.
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	public boolean equals(Object other) {

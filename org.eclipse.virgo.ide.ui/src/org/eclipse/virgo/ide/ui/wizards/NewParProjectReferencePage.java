@@ -16,7 +16,6 @@ import org.eclipse.ui.dialogs.WizardNewProjectReferencePage;
 import org.eclipse.ui.model.WorkbenchContentProvider;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
 
-
 /**
  * @author Christian Dupuis
  */

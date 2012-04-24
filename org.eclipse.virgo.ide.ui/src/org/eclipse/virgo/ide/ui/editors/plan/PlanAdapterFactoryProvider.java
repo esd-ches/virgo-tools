@@ -23,5 +23,5 @@ public class PlanAdapterFactoryProvider extends AdapterFactoryProviderForXML {
 	public boolean isFor(IDocumentTypeHandler contentTypeDescription) {
 		return (contentTypeDescription instanceof PlanModelHandler);
 	}
-	
+
 }

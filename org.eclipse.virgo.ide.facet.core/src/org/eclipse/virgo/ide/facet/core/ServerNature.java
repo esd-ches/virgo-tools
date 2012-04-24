@@ -16,6 +16,7 @@ import org.eclipse.core.runtime.CoreException;
 
 /**
  * Basic {@link IProjectNature} implementation for server natures (bundle and par).
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */

@@ -50,13 +50,11 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
@@ -100,8 +98,7 @@ import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.ui.editor.ServerEditorPart;
 
 /**
- * {@link ServerEditorPart} that allows to browse the local and remote bundle
- * repository.
+ * {@link ServerEditorPart} that allows to browse the local and remote bundle repository.
  * 
  * @author Christian Dupuis
  * @author Miles Parker
@@ -129,7 +126,8 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 
 	public RepositoryContentProvider repositoryContentProvider = new RepositoryContentProvider();
 
-	private ColoredRespositoryLabelProvider coloredRespositoryLabelProvider  = new ColoredRespositoryLabelProvider(repositoryContentProvider);
+	private ColoredRespositoryLabelProvider coloredRespositoryLabelProvider = new ColoredRespositoryLabelProvider(
+			repositoryContentProvider);
 
 	private Tree repositoryTable;
 
@@ -209,8 +207,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 
 	private Section createLeftSection(FormToolkit toolkit, ScrolledForm form) {
 		GridLayout layout;
-		Section leftSection = toolkit
-				.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.DESCRIPTION);
+		Section leftSection = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.DESCRIPTION);
 		leftSection.setText(Messages.RepositoryBrowserEditorPage_SearchBundlesAndLibraries);
 		leftSection.setDescription(Messages.RepositoryBrowserEditorPage_SearchBundlesAndLibrariesByName);
 		leftSection.setLayoutData(new GridData(GridData.FILL_BOTH));
@@ -244,7 +241,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		searchButtonComposite.setLayoutData(data);
 
 		searchButton = toolkit.createButton(searchButtonComposite, Messages.RepositoryBrowserEditorPage_Search,
-											SWT.PUSH);
+				SWT.PUSH);
 		searchButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent e) {
 				handleSearch();
@@ -254,8 +251,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		data.widthHint = 100;
 		searchButton.setLayoutData(data);
 
-		searchResultTable = toolkit
-				.createTree(leftComposite, SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION | SWT.CHECK);
+		searchResultTable = toolkit.createTree(leftComposite, SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION | SWT.CHECK);
 
 		searchResultTableViewer = new CheckboxTreeViewer(searchResultTable);
 		searchResultTableViewer.setContentProvider(searchResultContentProvider);
@@ -311,21 +307,18 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 
 		data = new GridData(GridData.FILL_HORIZONTAL);
 		data.widthHint = 100;
-		Button selectAllButton = toolkit.createButton(	buttonComposite,
-														Messages.RepositoryBrowserEditorPage_SelectAll,
-														SWT.PUSH);
+		Button selectAllButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_SelectAll,
+				SWT.PUSH);
 		selectAllButton.setLayoutData(data);
 		selectAllButton.setToolTipText(Messages.RepositoryBrowserEditorPage_SelectAllBundlesAndLibraries);
 		selectAllButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent selectionEvent) {
-				searchResultTableViewer.setCheckedElements(searchResultContentProvider.getElements(searchResultTableViewer
-						.getInput()));
+				searchResultTableViewer.setCheckedElements(searchResultContentProvider.getElements(searchResultTableViewer.getInput()));
 			}
 		});
 
-		Button deselectAllButton = toolkit
-				.createButton(	buttonComposite, Messages.RepositoryBrowserEditorPage_DeselectAllBundlesAndLibraries,
-								SWT.PUSH);
+		Button deselectAllButton = toolkit.createButton(buttonComposite,
+				Messages.RepositoryBrowserEditorPage_DeselectAllBundlesAndLibraries, SWT.PUSH);
 		deselectAllButton.setToolTipText(Messages.RepositoryBrowserEditorPage_9);
 		deselectAllButton.setLayoutData(data);
 		deselectAllButton.addSelectionListener(new SelectionAdapter() {
@@ -353,8 +346,8 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 			}
 		});
 
-		licenseButton = toolkit.createButton(	buttonComposite, Messages.RepositoryBrowserEditorPage_ViewLicense,
-												SWT.PUSH);
+		licenseButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_ViewLicense,
+				SWT.PUSH);
 		licenseButton.setEnabled(false);
 		licenseButton.setLayoutData(data);
 		licenseButton.setToolTipText(Messages.RepositoryBrowserEditorPage_OpenLicense);
@@ -364,11 +357,11 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 				if (selection instanceof IStructuredSelection) {
 					Object element = ((IStructuredSelection) selection).getFirstElement();
 					if (element instanceof LibraryArtefact) {
-						WebUiUtils.openUrl(RepositoryUtils.getResourceUrl(	(LibraryArtefact) element,
-																			RepositoryUtils.DOWNLOAD_TYPE_LICENSE));
+						WebUiUtils.openUrl(RepositoryUtils.getResourceUrl((LibraryArtefact) element,
+								RepositoryUtils.DOWNLOAD_TYPE_LICENSE));
 					} else if (element instanceof BundleArtefact) {
-						WebUiUtils.openUrl(RepositoryUtils.getResourceUrl(	(BundleArtefact) element,
-																			RepositoryUtils.DOWNLOAD_TYPE_LICENSE));
+						WebUiUtils.openUrl(RepositoryUtils.getResourceUrl((BundleArtefact) element,
+								RepositoryUtils.DOWNLOAD_TYPE_LICENSE));
 					}
 				}
 			}
@@ -391,30 +384,30 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 					}
 				}
 
-				boolean showDialog = ServerUiPlugin.getDefault().getPreferenceStore()
+				boolean showDialog = ServerUiPlugin.getDefault()
+						.getPreferenceStore()
 						.getBoolean(ServerUiPlugin.PLUGIN_ID + ".download.message"); //$NON-NLS-1$
 
 				if (!showDialog) {
-					MessageDialogWithToggle dialog = MessageDialogWithToggle
-							.openOkCancelConfirm(	shell,
-													Messages.RepositoryBrowserEditorPage_DownloadBundlesAndLibraries,
-													Messages.RepositoryBrowserEditorPage_DownloadTriggerMessage,
-													Messages.RepositoryBrowserEditorPage_DontShowDialog, false,
-													ServerUiPlugin.getDefault().getPreferenceStore(),
-													ServerUiPlugin.PLUGIN_ID + ".download.message"); //$NON-NLS-1$
+					MessageDialogWithToggle dialog = MessageDialogWithToggle.openOkCancelConfirm(shell,
+							Messages.RepositoryBrowserEditorPage_DownloadBundlesAndLibraries,
+							Messages.RepositoryBrowserEditorPage_DownloadTriggerMessage,
+							Messages.RepositoryBrowserEditorPage_DontShowDialog, false, ServerUiPlugin.getDefault()
+									.getPreferenceStore(), ServerUiPlugin.PLUGIN_ID + ".download.message"); //$NON-NLS-1$
 					if (dialog.getReturnCode() != Dialog.OK) {
 						return;
 					} else {
-						ServerUiPlugin.getDefault().getPreferenceStore()
+						ServerUiPlugin.getDefault()
+								.getPreferenceStore()
 								.setValue(ServerUiPlugin.PLUGIN_ID + ".download.message", //$NON-NLS-1$
-											new Boolean(dialog.getToggleState()));
+										new Boolean(dialog.getToggleState()));
 					}
 				}
 
 				Set<IRuntime> runtimes = new HashSet<IRuntime>();
 				runtimes.add(getServer().getRuntime());
-				RepositoryProvisioningJob operation = new RepositoryProvisioningJob(runtimes, RepositoryUtils
-						.resolveDependencies(artifacts, false), downloadSourcesCheckbox.getSelection());
+				RepositoryProvisioningJob operation = new RepositoryProvisioningJob(runtimes,
+						RepositoryUtils.resolveDependencies(artifacts, false), downloadSourcesCheckbox.getSelection());
 				operation.setProperty(IProgressConstants.ICON_PROPERTY, ServerUiImages.DESC_OBJ_BUNDLE);
 				operation.schedule();
 
@@ -434,9 +427,8 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		wrappedComposite.setLayout(twLayout);
 		GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(wrappedComposite);
 
-		downloadSourcesCheckbox = toolkit.createButton(	wrappedComposite,
-														Messages.RepositoryBrowserEditorPage_DownloadSourceJars,
-														SWT.CHECK | SWT.WRAP);
+		downloadSourcesCheckbox = toolkit.createButton(wrappedComposite,
+				Messages.RepositoryBrowserEditorPage_DownloadSourceJars, SWT.CHECK | SWT.WRAP);
 		downloadSourcesCheckbox.setSelection(true);
 		downloadSourcesCheckbox.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP));
 
@@ -454,8 +446,8 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		update.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				if (MessageDialog.openQuestion(	shell, Messages.RepositoryBrowserEditorPage_UpdateLocalBundles,
-												Messages.RepositoryBrowserEditorPage_ConfirmIndexMessage)) {
+				if (MessageDialog.openQuestion(shell, Messages.RepositoryBrowserEditorPage_UpdateLocalBundles,
+						Messages.RepositoryBrowserEditorPage_ConfirmIndexMessage)) {
 					ServerCorePlugin.getArtefactRepositoryManager().update();
 				}
 
@@ -464,13 +456,11 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		setRepositoryDateString();
 		update.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP));
 
-		Hyperlink disclaimer = toolkit.createHyperlink(	wrappedComposite,
-														Messages.RepositoryBrowserEditorPage_FirewallConfigureMessage,
-														SWT.WRAP);
+		Hyperlink disclaimer = toolkit.createHyperlink(wrappedComposite,
+				Messages.RepositoryBrowserEditorPage_FirewallConfigureMessage, SWT.WRAP);
 		disclaimer.addHyperlinkListener(new HyperlinkAdapter() {
 			public void linkActivated(HyperlinkEvent e) {
-				PreferenceDialog dialog = PreferencesUtil
-						.createPreferenceDialogOn(null, PROXY_PREF_PAGE_ID, null, null);
+				PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(null, PROXY_PREF_PAGE_ID, null, null);
 				dialog.open();
 			}
 		});
@@ -498,11 +488,10 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 
 	private Section createRightSection(FormToolkit toolkit, ScrolledForm form) {
 		GridLayout layout;
-		Section leftSection = toolkit
-				.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.DESCRIPTION);
+		Section leftSection = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.DESCRIPTION);
 		leftSection.setText(Messages.RepositoryBrowserEditorPage_InstalledBundlesAndLibraries);
 		leftSection.setDescription(Messages.RepositoryBrowserEditorPage_InstalledBundlesAndLibrariesMessage
-			+ getServerName() + "."); //$NON-NLS-2$
+				+ getServerName() + "."); //$NON-NLS-2$
 		leftSection.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		Composite leftComposite = toolkit.createComposite(leftSection);
@@ -569,8 +558,8 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 			}
 		});
 
-		downloadSourcesButton = toolkit.createButton(	buttonComposite,
-														Messages.RepositoryBrowserEditorPage_InstallSources, SWT.PUSH);
+		downloadSourcesButton = toolkit.createButton(buttonComposite,
+				Messages.RepositoryBrowserEditorPage_InstallSources, SWT.PUSH);
 		downloadSourcesButton.setLayoutData(data);
 		downloadSourcesButton.setToolTipText(Messages.RepositoryBrowserEditorPage_InstallSourcesMessage);
 		downloadSourcesButton.addSelectionListener(new SelectionAdapter() {
@@ -582,8 +571,8 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		// insert vertical space to make the download button stand out
 		toolkit.createLabel(buttonComposite, Messages.RepositoryBrowserEditorPage_40);
 
-		openManifestButton = toolkit.createButton(	buttonComposite, Messages.RepositoryBrowserEditorPage_OpenManifest,
-													SWT.PUSH);
+		openManifestButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_OpenManifest,
+				SWT.PUSH);
 		openManifestButton.setLayoutData(data);
 		openManifestButton.setToolTipText(Messages.RepositoryBrowserEditorPage_OpenManifestMessage);
 		openManifestButton.addSelectionListener(new SelectionAdapter() {
@@ -593,7 +582,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 					Object element = ((IStructuredSelection) selection).getFirstElement();
 					if (element instanceof LocalBundleArtefact) {
 						BundleManifestEditor.openExternalPlugin(((LocalBundleArtefact) element).getFile(),
-																"META-INF/MANIFEST.MF"); //$NON-NLS-1$
+								"META-INF/MANIFEST.MF"); //$NON-NLS-1$
 					}
 				}
 			}
@@ -688,7 +677,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		for (int i = members.length - 1; i >= 0; i--) {
 			Object element = members[i];
 			boolean elementGrayChecked = searchResultTableViewer.getGrayed(element)
-				|| searchResultTableViewer.getChecked(element);
+					|| searchResultTableViewer.getChecked(element);
 			if (state) {
 				searchResultTableViewer.setChecked(element, true);
 				searchResultTableViewer.setGrayed(element, false);

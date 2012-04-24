@@ -77,7 +77,8 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.ui.views.navigator.ResourceComparator;
 
 /**
- * Adapted from PDE's <code>LibrarySection</code>. 
+ * Adapted from PDE's <code>LibrarySection</code>.
+ * 
  * @author Christian Dupuis
  */
 @SuppressWarnings("unchecked")
@@ -335,8 +336,7 @@ public class BundleLibrarySection extends TableSection implements IModelChangedL
 				IPluginBase plugin = ep.getPluginBase();
 				try {
 					plugin.remove(ep);
-				}
-				catch (CoreException e) {
+				} catch (CoreException e) {
 					PDEPlugin.logException(e);
 				}
 				remove[i] = ep.getName();
@@ -384,16 +384,15 @@ public class BundleLibrarySection extends TableSection implements IModelChangedL
 			table.setSelection(index2);
 			table.setFocus();
 			updateButtons();
-		}
-		catch (CoreException e) {
+		} catch (CoreException e) {
 			PDEPlugin.logException(e);
 		}
 	}
 
 	private void handleNew() {
 		IPluginModelBase model = getModel();
-		NewRuntimeLibraryDialog dialog = new NewRuntimeLibraryDialog(getPage().getSite().getShell(), model
-				.getPluginBase().getLibraries());
+		NewRuntimeLibraryDialog dialog = new NewRuntimeLibraryDialog(getPage().getSite().getShell(),
+				model.getPluginBase().getLibraries());
 		dialog.create();
 		dialog.getShell().setText(PDEUIMessages.ManifestEditor_LibrarySection_newLibraryEntry);
 		SWTUtil.setDialogSize(dialog, 250, 175);
@@ -412,8 +411,7 @@ public class BundleLibrarySection extends TableSection implements IModelChangedL
 				updateBuildProperties(new String[] { null }, new String[] { library.getName() }, true);
 				fLibraryTable.setSelection(new StructuredSelection(library));
 				fLibraryTable.getTable().setFocus();
-			}
-			catch (CoreException e) {
+			} catch (CoreException e) {
 				PDEPlugin.logException(e);
 			}
 		}
@@ -432,8 +430,7 @@ public class BundleLibrarySection extends TableSection implements IModelChangedL
 		try {
 			library.setName("."); //$NON-NLS-1$
 			pluginModel.getPluginBase().add(library);
-		}
-		catch (CoreException e) {
+		} catch (CoreException e) {
 		}
 	}
 
@@ -474,16 +471,13 @@ public class BundleLibrarySection extends TableSection implements IModelChangedL
 						entry.addToken((String) tokens.get(i));
 					}
 					build.add(entry);
-				}
-				else {
+				} else {
 					entry.setName(PROPERTY_SOURCE_PREFIX + newPath);
 				}
-			}
-			else if (entry != null && newPath == null) {
+			} else if (entry != null && newPath == null) {
 				build.remove(entry);
 			}
-		}
-		catch (JavaModelException e) {
+		} catch (JavaModelException e) {
 		}
 	}
 
@@ -524,8 +518,7 @@ public class BundleLibrarySection extends TableSection implements IModelChangedL
 					library.setExported(true);
 					model.getPluginBase().add(library);
 					list.add(library);
-				}
-				catch (CoreException e) {
+				} catch (CoreException e) {
 					PDEPlugin.logException(e);
 				}
 			}
@@ -560,8 +553,7 @@ public class BundleLibrarySection extends TableSection implements IModelChangedL
 					}
 				}
 				// removing entries
-			}
-			else if (newPaths[0] == null) {
+			} else if (newPaths[0] == null) {
 				for (String element : oldPaths) {
 					if (element != null) {
 						entry.removeToken(element);
@@ -574,8 +566,7 @@ public class BundleLibrarySection extends TableSection implements IModelChangedL
 					build.remove(entry);
 				}
 				// rename entries
-			}
-			else {
+			} else {
 				for (int i = 0; i < oldPaths.length; i++) {
 					if (newPaths[i] != null && oldPaths[i] != null) {
 						entry.renameToken(oldPaths[i], newPaths[i]);
@@ -585,8 +576,7 @@ public class BundleLibrarySection extends TableSection implements IModelChangedL
 					}
 				}
 			}
-		}
-		catch (CoreException e) {
+		} catch (CoreException e) {
 		}
 	}
 
@@ -609,8 +599,7 @@ public class BundleLibrarySection extends TableSection implements IModelChangedL
 							continue entryLoop;
 						}
 					}
-				}
-				else if (entries[i].getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
+				} else if (entries[i].getEntryKind() == IClasspathEntry.CPE_CONTAINER) {
 					if (index == -1) {
 						index = i;
 					}
@@ -639,8 +628,7 @@ public class BundleLibrarySection extends TableSection implements IModelChangedL
 
 			IClasspathEntry[] updated = (IClasspathEntry[]) toBeAdded.toArray(new IClasspathEntry[toBeAdded.size()]);
 			jproject.setRawClasspath(updated, null);
-		}
-		catch (JavaModelException e) {
+		} catch (JavaModelException e) {
 		}
 	}
 
@@ -664,18 +652,14 @@ public class BundleLibrarySection extends TableSection implements IModelChangedL
 		if (changeObject instanceof IPluginLibrary) {
 			if (event.getChangeType() == IModelChangedEvent.INSERT) {
 				fLibraryTable.add(changeObject);
-			}
-			else if (event.getChangeType() == IModelChangedEvent.REMOVE) {
+			} else if (event.getChangeType() == IModelChangedEvent.REMOVE) {
 				fLibraryTable.remove(changeObject);
-			}
-			else {
+			} else {
 				fLibraryTable.update(changeObject, null);
 			}
-		}
-		else if (changeObject.equals(fLibraryTable.getInput())) {
+		} else if (changeObject.equals(fLibraryTable.getInput())) {
 			markStale();
-		}
-		else if (changeObject instanceof IPluginElement
+		} else if (changeObject instanceof IPluginElement
 				&& ((IPluginElement) changeObject).getParent() instanceof IPluginLibrary) {
 			fLibraryTable.update(((IPluginElement) changeObject).getParent(), null);
 		}
@@ -711,8 +695,7 @@ public class BundleLibrarySection extends TableSection implements IModelChangedL
 					plugin.add(library);
 				}
 			}
-		}
-		catch (CoreException e) {
+		} catch (CoreException e) {
 			PDEPlugin.logException(e);
 		}
 	}
@@ -776,8 +759,7 @@ public class BundleLibrarySection extends TableSection implements IModelChangedL
 			updateBuildProperties(oldValue, newValue, !memberExists);
 			updateJavaClasspathLibs(oldValue, memberExists ? newValue : new String[] { null });
 			model.getPluginBase().add(library);
-		}
-		catch (CoreException e) {
+		} catch (CoreException e) {
 			PDEPlugin.logException(e);
 		}
 	}

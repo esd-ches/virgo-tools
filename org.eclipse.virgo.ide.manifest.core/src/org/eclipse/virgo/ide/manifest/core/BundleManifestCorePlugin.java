@@ -21,6 +21,7 @@ import org.osgi.framework.BundleContext;
 
 /**
  * Activator for the manifest.core plugin.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
@@ -39,12 +40,16 @@ public class BundleManifestCorePlugin extends Plugin {
 	public static final String MANIFEST_FOLDER_NAME = "META-INF";
 
 	/** Relative path to a bundle manifest */
-	public static final String MANIFEST_FILE_LOCATION = new StringBuilder('/').append(
-			MANIFEST_FOLDER_NAME).append('/').append(MANIFEST_FILE_NAME).toString();
+	public static final String MANIFEST_FILE_LOCATION = new StringBuilder('/').append(MANIFEST_FOLDER_NAME)
+			.append('/')
+			.append(MANIFEST_FILE_NAME)
+			.toString();
 
 	/** Relative path to a test bundle manifest */
-	public static final String TEST_MANIFEST_FILE_LOCATION = new StringBuilder('/').append(
-			MANIFEST_FOLDER_NAME).append('/').append(TEST_MANIFEST_FILE_NAME).toString();
+	public static final String TEST_MANIFEST_FILE_LOCATION = new StringBuilder('/').append(MANIFEST_FOLDER_NAME)
+			.append('/')
+			.append(TEST_MANIFEST_FILE_NAME)
+			.toString();
 
 	/** Module-Type manifest header */
 	public static final String MODULE_TYPE_MANIFEST_HEADER = "Module-Type";
@@ -54,37 +59,36 @@ public class BundleManifestCorePlugin extends Plugin {
 
 	/** The bundle manifest manager hosted with this plugin */
 	private static BundleManifestManager bundleManifestManager;
-	
-    private final ServiceRegistrationTracker tracker = new ServiceRegistrationTracker();
 
-    private volatile EventLogger eventLogger = null;
+	private final ServiceRegistrationTracker tracker = new ServiceRegistrationTracker();
+
+	private volatile EventLogger eventLogger = null;
 
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		bundleManifestManager = new BundleManifestManager();
 		bundleManifestManager.start();
 		plugin = this;
-		
+
 		this.eventLogger = new NoOpEventLogger();
-        this.tracker.track(context.registerService(EventLogger.class.getName(), this.eventLogger, null));
-        
-        // make sure that the repository bundle is started
-        Bundle bundle = Platform.getBundle("org.eclipse.virgo.repository");
-        if (bundle != null && bundle.getState() != Bundle.ACTIVE) {
-        	try {
-        		bundle.start();
-        	}
-        	catch (IllegalStateException e) {
-        	}
-        }
+		this.tracker.track(context.registerService(EventLogger.class.getName(), this.eventLogger, null));
+
+		// make sure that the repository bundle is started
+		Bundle bundle = Platform.getBundle("org.eclipse.virgo.repository");
+		if (bundle != null && bundle.getState() != Bundle.ACTIVE) {
+			try {
+				bundle.start();
+			} catch (IllegalStateException e) {
+			}
+		}
 	}
 
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		bundleManifestManager.stop();
-		
+
 		this.tracker.unregisterAll();
-		
+
 		super.stop(context);
 	}
 

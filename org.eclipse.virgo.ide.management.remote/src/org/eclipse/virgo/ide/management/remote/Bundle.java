@@ -34,13 +34,13 @@ public class Bundle implements Serializable {
 	private final String symbolicName;
 
 	private final String version;
-	
+
 	private final String location;
 
 	private final Map<String, String> headers = new HashMap<String, String>();
-	
+
 	private final Set<ServiceReference> registeredServices = new HashSet<ServiceReference>();
-	
+
 	private final Set<ServiceReference> servicesInUse = new HashSet<ServiceReference>();
 
 	public Bundle(String id, String symbolicName, String version, String state, String location) {
@@ -50,7 +50,7 @@ public class Bundle implements Serializable {
 		this.state = state;
 		this.location = location;
 	}
-	
+
 	public Map<String, String> getHeaders() {
 		return headers;
 	}
@@ -86,7 +86,7 @@ public class Bundle implements Serializable {
 	public void addPackageImport(PackageImport pi) {
 		this.imports.add(pi);
 	}
-	
+
 	public void addRegisteredService(ServiceReference pi) {
 		this.registeredServices.add(pi);
 	}

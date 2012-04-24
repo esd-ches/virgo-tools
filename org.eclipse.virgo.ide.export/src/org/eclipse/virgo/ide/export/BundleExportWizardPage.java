@@ -23,13 +23,13 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
+import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 
-import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
-
 /**
  * Export wizard page for exporting bundle project
+ * 
  * @author Christian Dupuis
  * @author Terry Hon
  */
@@ -51,19 +51,15 @@ public class BundleExportWizardPage extends AbstractProjectExportWizardPage {
 				if (element instanceof IPackageFragmentRoot) {
 					IPackageFragmentRoot root = (IPackageFragmentRoot) element;
 					return !root.isArchive() && !root.isExternal();
-				}
-				else if (element instanceof IJavaProject) {
+				} else if (element instanceof IJavaProject) {
 					IJavaProject javaProject = (IJavaProject) element;
 					try {
-						IFacetedProject facetedProject = ProjectFacetsManager.create(javaProject
-								.getProject());
+						IFacetedProject facetedProject = ProjectFacetsManager.create(javaProject.getProject());
 						if (facetedProject != null) {
-							return facetedProject.hasProjectFacet(ProjectFacetsManager
-									.getProjectFacet(FacetCorePlugin.BUNDLE_FACET_ID)
-									.getDefaultVersion());
+							return facetedProject.hasProjectFacet(ProjectFacetsManager.getProjectFacet(
+									FacetCorePlugin.BUNDLE_FACET_ID).getDefaultVersion());
 						}
-					}
-					catch (CoreException e) {
+					} catch (CoreException e) {
 					}
 					return false;
 				}
@@ -116,8 +112,7 @@ public class BundleExportWizardPage extends AbstractProjectExportWizardPage {
 	@Override
 	protected BundleManifest getBundleManifest(IProject project) {
 		if (project != null) {
-			return BundleManifestCorePlugin.getBundleManifestManager().getBundleManifest(
-					JavaCore.create(project));
+			return BundleManifestCorePlugin.getBundleManifestManager().getBundleManifest(JavaCore.create(project));
 		}
 		return null;
 	}

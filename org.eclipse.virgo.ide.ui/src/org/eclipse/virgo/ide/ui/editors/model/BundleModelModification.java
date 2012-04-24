@@ -18,8 +18,9 @@ import org.eclipse.pde.core.IBaseModel;
 import org.eclipse.pde.internal.ui.util.ModelModification;
 
 /**
- * Adapted from ModelModification for use when modifying SpringBundleModels.
- * This essentially provides access to needed private final methods.
+ * Adapted from ModelModification for use when modifying SpringBundleModels. This essentially provides access to needed
+ * private final methods.
+ * 
  * @author Christian Dupuis
  * @author Leo Dos Santos
  */
@@ -28,10 +29,10 @@ public abstract class BundleModelModification extends ModelModification {
 	private IFile modelFile;
 
 	/**
-	 * Create a single model modification - used for modifying single
-	 * AbstractEditingModels
-	 * @param modelFile the basic underlying file for the model you wish to
-	 * modify.
+	 * Create a single model modification - used for modifying single AbstractEditingModels
+	 * 
+	 * @param modelFile
+	 *            the basic underlying file for the model you wish to modify.
 	 */
 	public BundleModelModification(IFile modelFile) {
 		super(modelFile);
@@ -40,9 +41,11 @@ public abstract class BundleModelModification extends ModelModification {
 
 	/**
 	 * Create a full IBundlePluginModelBase modification
-	 * @param bundleFile the MANIFEST.MF file
-	 * @param xmlFile the plugin.xml/fragment.xml file for this modification
-	 * (optional - can be null)
+	 * 
+	 * @param bundleFile
+	 *            the MANIFEST.MF file
+	 * @param xmlFile
+	 *            the plugin.xml/fragment.xml file for this modification (optional - can be null)
 	 * @pre bundleFile must not be <code>null</code>
 	 */
 	public BundleModelModification(IFile bundleFile, IFile xmlFile) {
@@ -50,10 +53,10 @@ public abstract class BundleModelModification extends ModelModification {
 	}
 
 	/**
-	 * Create a ModelModification based on the contents of the project ie. if
-	 * the project contains a MANIFEST.MF this will be tagged as a
-	 * fullBundleModification, otherwise (this project is an old-style plugin)
-	 * this will be a PluginModel/FragmentModel modification.
+	 * Create a ModelModification based on the contents of the project ie. if the project contains a MANIFEST.MF this
+	 * will be tagged as a fullBundleModification, otherwise (this project is an old-style plugin) this will be a
+	 * PluginModel/FragmentModel modification.
+	 * 
 	 * @param project
 	 */
 	public BundleModelModification(IProject project) {

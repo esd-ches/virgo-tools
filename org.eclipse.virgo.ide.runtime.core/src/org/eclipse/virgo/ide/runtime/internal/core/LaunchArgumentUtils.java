@@ -17,11 +17,12 @@ import org.eclipse.jdt.launching.IRuntimeClasspathEntry;
 
 /**
  * Utility class that deals with command line arguments.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
 public class LaunchArgumentUtils {
-	
+
 	public static String mergeArguments(String originalArg, String[] vmArgs, String[] excludeArgs,
 			boolean keepActionLast) {
 		if (vmArgs == null) {
@@ -45,14 +46,12 @@ public class LaunchArgumentUtils {
 					int index2 = getNextToken(originalArg, index + ind + 1);
 					if (index2 >= 0) {
 						originalArg = s + vmArgs[i] + originalArg.substring(index2);
-					}
-					else {
+					} else {
 						originalArg = s + vmArgs[i];
 					}
 					vmArgs[i] = null;
 				}
-			}
-			else if (ind2 >= 0) { // a=b style
+			} else if (ind2 >= 0) { // a=b style
 				int index = originalArg.indexOf(vmArgs[i].substring(0, ind2 + 1));
 				if (index == 0 || (index > 0 && originalArg.charAt(index - 1) == ' ')) {
 					// replace
@@ -60,14 +59,12 @@ public class LaunchArgumentUtils {
 					int index2 = getNextToken(originalArg, index);
 					if (index2 >= 0) {
 						originalArg = s + vmArgs[i] + originalArg.substring(index2);
-					}
-					else {
+					} else {
 						originalArg = s + vmArgs[i];
 					}
 					vmArgs[i] = null;
 				}
-			}
-			else { // abc style
+			} else { // abc style
 				int index = originalArg.indexOf(vmArgs[i]);
 				if (index == 0 || (index > 0 && originalArg.charAt(index - 1) == ' ')) {
 					// replace
@@ -76,19 +73,16 @@ public class LaunchArgumentUtils {
 					if (!keepActionLast || i < (size - 1)) {
 						if (index2 >= 0) {
 							originalArg = s + vmArgs[i] + originalArg.substring(index2);
-						}
-						else {
+						} else {
 							originalArg = s + vmArgs[i];
 						}
 						vmArgs[i] = null;
-					}
-					else {
+					} else {
 						// The last VM argument needs to remain last,
 						// remove original arg and append the vmArg later
 						if (index2 >= 0) {
 							originalArg = s + originalArg.substring(index2);
-						}
-						else {
+						} else {
 							originalArg = s;
 						}
 					}
@@ -110,18 +104,15 @@ public class LaunchArgumentUtils {
 						if (index2 >= 0) {
 							// If remainder will become the first argument,
 							// remove leading blanks
-							while (index2 < originalArg.length()
-									&& originalArg.charAt(index2) == ' ') {
+							while (index2 < originalArg.length() && originalArg.charAt(index2) == ' ') {
 								index2 += 1;
 							}
 							originalArg = s + originalArg.substring(index2);
-						}
-						else {
+						} else {
 							originalArg = s;
 						}
 					}
-				}
-				else if (ind2 >= 0) { // a=b style
+				} else if (ind2 >= 0) { // a=b style
 					int index = originalArg.indexOf(excludeArgs[i].substring(0, ind2 + 1));
 					if (index == 0 || (index > 0 && originalArg.charAt(index - 1) == ' ')) {
 						// remove
@@ -130,18 +121,15 @@ public class LaunchArgumentUtils {
 						if (index2 >= 0) {
 							// If remainder will become the first argument,
 							// remove leading blanks
-							while (index2 < originalArg.length()
-									&& originalArg.charAt(index2) == ' ') {
+							while (index2 < originalArg.length() && originalArg.charAt(index2) == ' ') {
 								index2 += 1;
 							}
 							originalArg = s + originalArg.substring(index2);
-						}
-						else {
+						} else {
 							originalArg = s;
 						}
 					}
-				}
-				else { // abc style
+				} else { // abc style
 					int index = originalArg.indexOf(excludeArgs[i]);
 					if (index == 0 || (index > 0 && originalArg.charAt(index - 1) == ' ')) {
 						// remove
@@ -149,13 +137,11 @@ public class LaunchArgumentUtils {
 						int index2 = getNextToken(originalArg, index);
 						if (index2 >= 0) {
 							// Remove leading blanks
-							while (index2 < originalArg.length()
-									&& originalArg.charAt(index2) == ' ') {
+							while (index2 < originalArg.length() && originalArg.charAt(index2) == ' ') {
 								index2 += 1;
 							}
 							originalArg = s + originalArg.substring(index2);
-						}
-						else {
+						} else {
 							originalArg = s;
 						}
 					}

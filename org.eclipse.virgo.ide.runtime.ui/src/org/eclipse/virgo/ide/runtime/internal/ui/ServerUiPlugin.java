@@ -21,6 +21,7 @@ import org.osgi.framework.BundleContext;
 
 /**
  * The activator class controls the plug-in life cycle
+ * 
  * @author Christian Dupuis
  */
 public class ServerUiPlugin extends AbstractUIPlugin {
@@ -29,7 +30,7 @@ public class ServerUiPlugin extends AbstractUIPlugin {
 	public static final String PLUGIN_ID = "org.eclipse.virgo.ide.runtime.ui";
 
 	private static final String RESOURCE_NAME = "org.eclipse.virgo.ide.runtime.internal.ui.messages";
-	
+
 	public static final String REPOSITORY_PAGE_ID = "org.eclipse.virgo.ide.server.ui.configuration.editor.repository";
 
 	public static final String PREF_DOWNLOAD_MESSAGE_KEY = PLUGIN_ID + "..download.message";
@@ -58,8 +59,7 @@ public class ServerUiPlugin extends AbstractUIPlugin {
 		plugin = this;
 		try {
 			resourceBundle = ResourceBundle.getBundle(RESOURCE_NAME);
-		}
-		catch (MissingResourceException e) {
+		} catch (MissingResourceException e) {
 			resourceBundle = null;
 		}
 
@@ -97,7 +97,8 @@ public class ServerUiPlugin extends AbstractUIPlugin {
 	/**
 	 * Writes the message to the plug-in's log
 	 * 
-	 * @param message the text to write to the log
+	 * @param message
+	 *            the text to write to the log
 	 */
 	public static void log(String message, Throwable exception) {
 		IStatus status = createErrorStatus(message, exception);
@@ -127,13 +128,11 @@ public class ServerUiPlugin extends AbstractUIPlugin {
 		if (bundle != null) {
 			try {
 				bundleString = bundle.getString(key);
-			}
-			catch (MissingResourceException e) {
+			} catch (MissingResourceException e) {
 				log(e);
 				bundleString = "!" + key + "!";
 			}
-		}
-		else {
+		} else {
 			bundleString = "!" + key + "!";
 		}
 		return bundleString;

@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * Extension to {@link IServer}.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
@@ -22,7 +23,7 @@ public interface IServerWorkingCopy extends IServer {
 
 	/** Default deploy directory name */
 	String DEFAULT_DEPLOYDIR = "stage";
-	
+
 	/** Default deployer control username */
 	String DEFAULT_MBEAN_SERVER_USERNAME = "admin";
 
@@ -31,7 +32,7 @@ public interface IServerWorkingCopy extends IServer {
 
 	/** Default deployer control password */
 	String DEFAULT_MBEAN_SERVER_PASSWORD = "springsource";
-	
+
 	/** Default filename patters that should not trigger a bundle refresh */
 	String DEFAULT_STATIC_FILENAMES = "*.html,*.xhtml,*.css,*.js,*.jspx,*.jsp,*.gif,*.jpg,*.png,*.swf,*-flow.xml,*.properties,*.xml,!tiles.xml,!web.xml";
 
@@ -46,7 +47,8 @@ public interface IServerWorkingCopy extends IServer {
 	void setDeployDirectory(String deployDir);
 
 	/**
-	 * Adds a {@link PropertyChangeListener} to the configuration backing the server.
+	 * Adds a {@link PropertyChangeListener} to the configuration backing the
+	 * server.
 	 */
 	void addConfigurationChangeListener(PropertyChangeListener listener);
 
@@ -56,29 +58,29 @@ public interface IServerWorkingCopy extends IServer {
 	void removeConfigurationChangeListener(PropertyChangeListener listener);
 
 	/**
-	 * Sets the username of the JMX deployer control 
+	 * Sets the username of the JMX deployer control
 	 */
 	void setMBeanServerUsername(String username);
 
 	/**
-	 * Sets the port of the JMX deployer control 
+	 * Sets the port of the JMX deployer control
 	 */
 	void setMBeanServerPort(int port);
-	
+
 	/**
-	 * Sets the password of the JMX deployer control 
+	 * Sets the password of the JMX deployer control
 	 */
 	void setMBeanServerPassword(String password);
-	
+
 	/**
-	 * Sets the flag to tail application trace files 
+	 * Sets the flag to tail application trace files
 	 */
 	void shouldTailTraceFiles(boolean shouldTailTraceFiles);
 
 	void shouldCleanStartup(boolean shouldCleanStartup);
-	
+
 	void setArtefactOrder(List<String> artefactOrder);
-	
+
 	void setStaticFilenamePatterns(String filenamePatterns);
 
 }

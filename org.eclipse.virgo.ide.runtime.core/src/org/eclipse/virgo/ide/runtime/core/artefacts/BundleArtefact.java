@@ -18,9 +18,10 @@ import org.eclipse.virgo.ide.bundlerepository.domain.PackageExport;
 import org.eclipse.virgo.ide.bundlerepository.domain.PackageImport;
 
 /**
- * Central element in the domain model - captures everything we know about a bundle. This includes meta-data directly
- * available in the bundle, as well as additional information such as the license and any notes we want to display in
- * the BRITS web application
+ * Central element in the domain model - captures everything we know about a
+ * bundle. This includes meta-data directly available in the bundle, as well as
+ * additional information such as the license and any notes we want to display
+ * in the BRITS web application
  */
 public class BundleArtefact extends Artefact {
 
@@ -39,7 +40,9 @@ public class BundleArtefact extends Artefact {
 	}
 
 	/**
-	 * Construct a new BundleArtefact, for parameter descriptions see Artefact constructor javadoc
+	 * Construct a new BundleArtefact, for parameter descriptions see Artefact
+	 * constructor javadoc
+	 * 
 	 * @param name
 	 * @param symbolicName
 	 * @param version
@@ -48,7 +51,7 @@ public class BundleArtefact extends Artefact {
 	 * @see Artefact
 	 */
 	public BundleArtefact(String name, String symbolicName, OsgiVersion version, String organisationName,
-			String moduleName) {
+		String moduleName) {
 		super(name, symbolicName, version, organisationName, moduleName);
 	}
 
@@ -100,15 +103,16 @@ public class BundleArtefact extends Artefact {
 	@Override
 	public String getRelativeUrlPath() {
 		return ("/" + getOrganisationName() + "/" + getModuleName() + "/" + getVersion() + "/" + getModuleName() + "-"
-				+ getVersion() + ".jar");
+			+ getVersion() + ".jar");
 	}
 
 	/**
-	 * Return the relative URL path for downloading the source for this bundle from S3
+	 * Return the relative URL path for downloading the source for this bundle
+	 * from S3
 	 */
 	public String getRelativeSourceUrlPath() {
 		return ("/" + getOrganisationName() + "/" + getModuleName() + "/" + getVersion() + "/" + getModuleName()
-				+ "-sources-" + getVersion() + ".jar");
+			+ "-sources-" + getVersion() + ".jar");
 	}
 
 	@Override
@@ -136,6 +140,7 @@ public class BundleArtefact extends Artefact {
 
 	/**
 	 * Returns BUNDLE;
+	 * 
 	 * @see org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact#getType()
 	 */
 	public ArtefactType getArtefactType() {

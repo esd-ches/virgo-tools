@@ -24,8 +24,8 @@ import org.eclipse.wst.server.core.IRuntime;
  */
 public class RuntimeProviders {
 
-	public static final VirgoRuntimeProvider[] ALL_HANDLERS = new VirgoRuntimeProvider[] {
-		Virgo21_30Provider.INSTANCE, Virgo35Provider.INSTANCE };
+	public static final VirgoRuntimeProvider[] ALL_HANDLERS = new VirgoRuntimeProvider[] { Virgo21_30Provider.INSTANCE,
+		Virgo35Provider.INSTANCE };
 
 	public static IServerRuntimeProvider getVersionHandler(String id) {
 		for (VirgoRuntimeProvider handler : ALL_HANDLERS) {

@@ -17,7 +17,9 @@ import org.eclipse.virgo.ide.bundlerepository.domain.BundleImport;
 import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 
 /**
- * A library stored in BRITS. A library is a collection of bundles grouped under a common name, id, and version.
+ * A library stored in BRITS. A library is a collection of bundles grouped under
+ * a common name, id, and version.
+ * 
  * @author acolyer
  */
 public class LibraryArtefact extends Artefact implements Comparable<LibraryArtefact> {
@@ -32,24 +34,28 @@ public class LibraryArtefact extends Artefact implements Comparable<LibraryArtef
 	}
 
 	/**
-	 * Create a new LibraryArtefact. This will *not* be stored in the database unless explicitly stored using the
-	 * ArtefactRepository. Storing a library artefact does *not* the bundles it contains - these must be stored in the
+	 * Create a new LibraryArtefact. This will *not* be stored in the database
+	 * unless explicitly stored using the ArtefactRepository. Storing a library
+	 * artefact does *not* the bundles it contains - these must be stored in the
 	 * database independently first.
+	 * 
 	 * @param name human readable name of the library (e.g. "Spring Framework")
-	 * @param symbolicName identifying name of the library (e.g. "org.springframework")
+	 * @param symbolicName identifying name of the library (e.g.
+	 *        "org.springframework")
 	 * @param version the library version, following normal OSGi conventions
 	 * @param organisationName the organisation name as found in ivy.xml
 	 * @param moduleName the module name as found in ivy.xml
 	 * @param bundles the bundles that are part of this library
 	 */
 	public LibraryArtefact(String name, String symbolicName, OsgiVersion version, String organisationName,
-			String moduleName) {
+		String moduleName) {
 		super(name, symbolicName, version, organisationName, moduleName);
 		this.bundleImports = new ArrayList<BundleImport>();
 	}
 
 	/**
 	 * Add a new import to this library
+	 * 
 	 * @param imp the import to add
 	 */
 	public void addBundleImport(BundleImport imp) {
@@ -69,7 +75,7 @@ public class LibraryArtefact extends Artefact implements Comparable<LibraryArtef
 	@Override
 	public String getRelativeUrlPath() {
 		return ("/" + getOrganisationName() + "/" + getModuleName() + "/" + getVersion() + "/" + getModuleName() + "-"
-				+ getVersion() + ".libd");
+			+ getVersion() + ".libd");
 	}
 
 	@Override
@@ -98,9 +104,11 @@ public class LibraryArtefact extends Artefact implements Comparable<LibraryArtef
 	}
 
 	/**
-	 * Sort by symbolic name, and then reverse version. See the javadoc for the TreeSet class to understand the
-	 * implications of this wrt. Set semantics. Since equality is based on id, and compareTo is based on symbolicName
-	 * and version, full Set semantics when using LibraryArtefacts in a TreeSet are not guaranteed.
+	 * Sort by symbolic name, and then reverse version. See the javadoc for the
+	 * TreeSet class to understand the implications of this wrt. Set semantics.
+	 * Since equality is based on id, and compareTo is based on symbolicName and
+	 * version, full Set semantics when using LibraryArtefacts in a TreeSet are
+	 * not guaranteed.
 	 */
 	public int compareTo(LibraryArtefact other) {
 		if (this == other)
@@ -109,14 +117,14 @@ public class LibraryArtefact extends Artefact implements Comparable<LibraryArtef
 			return 0;
 		if (this.getSymbolicName().equals(other.getSymbolicName())) {
 			return other.getVersion().compareTo(this.getVersion());
-		}
-		else {
+		} else {
 			return this.getSymbolicName().compareTo(other.getSymbolicName());
 		}
 	}
 
 	/**
 	 * Returns LIBRARY;
+	 * 
 	 * @see org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact#getType()
 	 */
 	public ArtefactType getArtefactType() {

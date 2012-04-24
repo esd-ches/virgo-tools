@@ -41,7 +41,6 @@ import org.eclipse.virgo.ide.runtime.core.artefacts.BundleArtefact;
 import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryUtils;
 
-
 /**
  * @author Christian Dupuis
  * @author Leo Dos Santos
@@ -73,8 +72,7 @@ public class BundleImportSection extends AbstractImportSection {
 					IHeaderConstants.IMPORT_BUNDLE);
 			if (header == null) {
 				return new Object[0];
-			}
-			else {
+			} else {
 				return header.getImportedBundles();
 			}
 		}
@@ -96,10 +94,9 @@ public class BundleImportSection extends AbstractImportSection {
 		if (addRemote) {
 			ArtefactRepository bundleRepository = RepositoryUtils.searchForArtifacts("", true, false);
 			bundles = bundleRepository.getBundleSet().toArray();
-		}
-		else {
+		} else {
 			Collection<Artefact> bundleList = RepositoryUtils.getImportBundleProposals(project, "");
-			bundles = bundleList.toArray(new IArtefact[]{});
+			bundles = bundleList.toArray(new IArtefact[] {});
 		}
 		dialog.setElements(bundles);
 	}
@@ -149,8 +146,7 @@ public class BundleImportSection extends AbstractImportSection {
 
 			if (addRemote) {
 				addRemoteBundles(selected);
-			}
-			else {
+			} else {
 				addLocalBundles(selected);
 			}
 		}
@@ -296,8 +292,7 @@ public class BundleImportSection extends AbstractImportSection {
 				if (object.getVersion() != null || !(optional == object.isOptional())) {
 					return false;
 				}
-			}
-			else if (!version.equals(object.getVersion()) || !(optional == object.isOptional())) {
+			} else if (!version.equals(object.getVersion()) || !(optional == object.isOptional())) {
 				return false;
 			}
 		}
@@ -314,8 +309,7 @@ public class BundleImportSection extends AbstractImportSection {
 		SWTUtil.setDialogSize(dialog, 400, -1);
 		if (selected.length == 1) {
 			dialog.setTitle(((ImportBundleObject) selected[0]).getValue());
-		}
-		else {
+		} else {
 			dialog.setTitle("Properties");
 		}
 		if (dialog.open() == Window.OK && isEditable()) {
@@ -337,8 +331,7 @@ public class BundleImportSection extends AbstractImportSection {
 	protected void buttonSelected(int index) {
 		if (index == ADD_REMOTE_BUNDLE_INDEX) {
 			internalHandleAdd(true);
-		}
-		else {
+		} else {
 			super.buttonSelected(index);
 		}
 	}

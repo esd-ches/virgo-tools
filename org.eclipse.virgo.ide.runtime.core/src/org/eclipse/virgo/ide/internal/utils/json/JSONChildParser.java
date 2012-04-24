@@ -35,7 +35,8 @@ public abstract class JSONChildParser implements SimpleJSONParser {
 	 * Constructs and executes the parser.
 	 * 
 	 * @param parent Any parent JSON object.
-	 * @param key A key within the parent that identifies an object, an array, or nothing at all.
+	 * @param key A key within the parent that identifies an object, an array,
+	 *        or nothing at all.
 	 */
 	public JSONChildParser(JSONObject parent, String key) throws JSONException {
 		super();

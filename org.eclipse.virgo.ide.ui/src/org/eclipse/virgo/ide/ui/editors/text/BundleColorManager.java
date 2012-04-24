@@ -132,8 +132,7 @@ public class BundleColorManager implements IColorManager, IPDEColorConstants, IS
 		Object color = event.getNewValue();
 		if (color instanceof RGB) {
 			putColor(event.getProperty(), (RGB) color);
-		}
-		else {
+		} else {
 			putColor(event.getProperty(), StringConverter.asRGB(color.toString()));
 		}
 	}

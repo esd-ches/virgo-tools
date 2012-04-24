@@ -16,19 +16,20 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 
 /**
- * A listener to get notification if a {@link BundleManifest} and {@link IJavaProject} has been
- * changed in the bundle manifest model.
+ * A listener to get notification if a {@link BundleManifest} and {@link IJavaProject} has been changed in the bundle
+ * manifest model.
  * <p>
  * Register and un-register implementations of this interface with the
  * {@link IBundleManifestManager#addBundleManifestChangeListener()} and
  * {@link IBundleManifestManager#removeBundleManifestChangeListener()} method
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  * @see IBundleManifestManager
  * @see BundleManifestCorePlugin#getBundleManifestManager()
  */
 public interface IBundleManifestChangeListener {
-	
+
 	enum Type {
 		IMPORT_PACKAGE, IMPORT_BUNDLE, IMPORT_LIBRARY, EXPORT_PACKAGE, REQUIRE_BUNDLE
 	}
@@ -37,7 +38,7 @@ public interface IBundleManifestChangeListener {
 	 * Notified if in case of a change to a {@link BundleManifest} within the {@link IJavaProject}.
 	 */
 	void bundleManifestChanged(BundleManifest newBundleManfest, BundleManifest oldBundleManifest,
-			BundleManifest newTestBundleManifest, BundleManifest oldTestBundleManifest,
-			Set<Type> type, IJavaProject javaProject);
+			BundleManifest newTestBundleManifest, BundleManifest oldTestBundleManifest, Set<Type> type,
+			IJavaProject javaProject);
 
 }

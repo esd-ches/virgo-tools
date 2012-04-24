@@ -128,13 +128,11 @@ public class NewParProjectWizard extends AbstractNewParProjectWizard implements 
 
 		try {
 			getContainer().run(true, true, oper);
-		}
-		catch (InvocationTargetException e) {
+		} catch (InvocationTargetException e) {
 			StatusManager.getManager()
 					.handle(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID,
 							"Exception while adding project facets.", e));
-		}
-		catch (InterruptedException e) {
+		} catch (InterruptedException e) {
 			StatusManager.getManager().handle(
 					new Status(IStatus.WARNING, ServerIdeUiPlugin.PLUGIN_ID,
 							"Interruption while adding project facets.", e));
@@ -192,8 +190,8 @@ public class NewParProjectWizard extends AbstractNewParProjectWizard implements 
 
 						// Get the URI of the model file.
 						//
-						org.eclipse.emf.common.util.URI fileURI = org.eclipse.emf.common.util.URI
-								.createPlatformResourceURI(parFile.getFullPath().toString(), true);
+						org.eclipse.emf.common.util.URI fileURI = org.eclipse.emf.common.util.URI.createPlatformResourceURI(
+								parFile.getFullPath().toString(), true);
 
 						// Create a resource for this file.
 						//
@@ -206,19 +204,16 @@ public class NewParProjectWizard extends AbstractNewParProjectWizard implements 
 						Map<Object, Object> options = new HashMap<Object, Object>();
 						options.put(XMLResource.OPTION_ENCODING, ENCODING_UTF8);
 						resource.save(options);
-					}
-					catch (Exception exception) {
+					} catch (Exception exception) {
 						ServerIdeUiPlugin.getDefault().log(exception);
-					}
-					finally {
+					} finally {
 						progressMonitor.done();
 					}
 				}
 			};
 			getContainer().run(false, false, operation);
 			return parFile;
-		}
-		catch (Exception exception) {
+		} catch (Exception exception) {
 			ServerIdeUiPlugin.getDefault().log(exception);
 			return null;
 		}
@@ -271,8 +266,7 @@ public class NewParProjectWizard extends AbstractNewParProjectWizard implements 
 			//
 			try {
 				page.openEditor(new FileEditorInput(manifestFile), ParManifestEditor.ID_EDITOR);
-			}
-			catch (PartInitException exception) {
+			} catch (PartInitException exception) {
 				MessageDialog.openError(workbenchWindow.getShell(), "Error opening editor", exception.getMessage());
 			}
 			return true;
@@ -293,12 +287,10 @@ public class NewParProjectWizard extends AbstractNewParProjectWizard implements 
 
 		try {
 			getContainer().run(true, true, oper);
-		}
-		catch (InvocationTargetException e) {
+		} catch (InvocationTargetException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		catch (InterruptedException e) {
+		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

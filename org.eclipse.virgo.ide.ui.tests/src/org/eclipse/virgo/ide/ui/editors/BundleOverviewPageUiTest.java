@@ -13,12 +13,7 @@ package org.eclipse.virgo.ide.ui.editors;
 import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
 import org.eclipse.swtbot.swt.finder.results.VoidResult;
 import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
-import org.eclipse.virgo.ide.ui.editors.BundleDependenciesPage;
-import org.eclipse.virgo.ide.ui.editors.BundleManifestEditor;
-import org.eclipse.virgo.ide.ui.editors.BundleOverviewPage;
-import org.eclipse.virgo.ide.ui.editors.BundleRuntimePage;
 import org.eclipse.virgo.ide.ui.tests.AbstractManifestUiTestCase;
-
 
 /**
  * @author Leo Dos Santos

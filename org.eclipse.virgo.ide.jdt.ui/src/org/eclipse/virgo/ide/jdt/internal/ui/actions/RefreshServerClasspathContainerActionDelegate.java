@@ -28,9 +28,9 @@ import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.jdt.internal.core.classpath.ServerClasspathContainerUpdateJob;
 import org.eclipse.virgo.ide.manifest.internal.core.BundleManifestManager;
 
-
 /**
  * Menu action to refresh the bundle classpath container.
+ * 
  * @author Christian Dupuis
  * @since 1.0.1
  */
@@ -45,8 +45,7 @@ public class RefreshServerClasspathContainerActionDelegate implements IObjectAct
 			IProject project = iter.next();
 			if (FacetUtils.isBundleProject(project)) {
 				projects.add(JavaCore.create(project));
-			}
-			else if (FacetUtils.isParProject(project)) {
+			} else if (FacetUtils.isParProject(project)) {
 				for (IProject bundle : FacetUtils.getBundleProjects(project)) {
 					projects.add(JavaCore.create(bundle));
 				}
@@ -75,12 +74,10 @@ public class RefreshServerClasspathContainerActionDelegate implements IObjectAct
 					if (!project.isOpen()) {
 						enabled = false;
 						break;
-					}
-					else {
+					} else {
 						selected.add(project);
 					}
-				}
-				else {
+				} else {
 					enabled = false;
 					break;
 				}

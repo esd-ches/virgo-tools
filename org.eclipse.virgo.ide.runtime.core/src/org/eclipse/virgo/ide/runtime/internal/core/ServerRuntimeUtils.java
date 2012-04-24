@@ -24,17 +24,18 @@ import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
 
-
 /**
- * Utility class that allows callback operations with the {@link VirgoServerRuntime} that a given
- * {@link IProject} is targeted to.
+ * Utility class that allows callback operations with the
+ * {@link VirgoServerRuntime} that a given {@link IProject} is targeted to.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
-public class ServerRuntimeUtils { 
+public class ServerRuntimeUtils {
 
 	/**
-	 * Callback interface to do logic within the context of a {@link VirgoServerRuntime}.
+	 * Callback interface to do logic within the context of a
+	 * {@link VirgoServerRuntime}.
 	 */
 	public interface ServerRuntimeCallback {
 
@@ -46,26 +47,26 @@ public class ServerRuntimeUtils {
 	}
 
 	/**
-	 * Executes the given callback with every {@link VirgoServerRuntime} that given {@link IProject} is
-	 * targeted against.
+	 * Executes the given callback with every {@link VirgoServerRuntime} that
+	 * given {@link IProject} is targeted against.
+	 * 
 	 * @param project the project to check for targeted runtimes
 	 * @param callback the callback to execute
 	 */
 	public static void execute(IProject project, ServerRuntimeCallback callback) {
 		try {
 			IFacetedProject fProject = ProjectFacetsManager.create(project);
-			
+
 			// If the facet frameworks returns null we should just exit here
 			if (fProject == null) {
 				return;
 			}
-			
-			org.eclipse.wst.common.project.facet.core.runtime.IRuntime runtime = fProject
-					.getPrimaryRuntime();
-			// If a targeted runtime exists use the configured runtime bundle repository
+
+			org.eclipse.wst.common.project.facet.core.runtime.IRuntime runtime = fProject.getPrimaryRuntime();
+			// If a targeted runtime exists use the configured runtime bundle
+			// repository
 			if (runtime != null) {
-				IRuntime[] serverRuntimes = ServerUtil.getRuntimes(FacetCorePlugin.BUNDLE_FACET_ID,
-						null);
+				IRuntime[] serverRuntimes = ServerUtil.getRuntimes(FacetCorePlugin.BUNDLE_FACET_ID, null);
 				for (IRuntime serverRuntime : serverRuntimes) {
 					if (serverRuntime.getName().equals(runtime.getName())) {
 						if (!executeCallback(callback, serverRuntime)) {
@@ -74,10 +75,10 @@ public class ServerRuntimeUtils {
 					}
 				}
 			}
-			// If project is targeted to a server use the server to add library paths
+			// If project is targeted to a server use the server to add library
+			// paths
 			else {
-				IServer[] servers = ServerUtil.getServersByModule(ServerUtil.getModule(project),
-						null);
+				IServer[] servers = ServerUtil.getServersByModule(ServerUtil.getModule(project), null);
 				// Check if the project is targeted directly to a server
 				if (servers != null && servers.length > 0) {
 					for (IServer server : servers) {
@@ -85,12 +86,11 @@ public class ServerRuntimeUtils {
 							return;
 						}
 					}
-				}
-				else {
-					// Check if the project is part of a par; if so add the par project target to
+				} else {
+					// Check if the project is part of a par; if so add the par
+					// project target to
 					// the search path
-					for (IProject parProject : ResourcesPlugin.getWorkspace().getRoot()
-							.getProjects()) {
+					for (IProject parProject : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
 						if (FacetUtils.isParProject(parProject)) {
 							Par parDefinition = FacetUtils.getParDefinition(parProject);
 							if (parDefinition != null) {
@@ -104,14 +104,13 @@ public class ServerRuntimeUtils {
 					}
 				}
 			}
-		}
-		catch (CoreException e) {
+		} catch (CoreException e) {
 		}
 	}
 
 	private static boolean executeCallback(ServerRuntimeCallback callback, IRuntime runtime) {
-		VirgoServerRuntime serverRuntime = (VirgoServerRuntime) runtime.loadAdapter(
-				VirgoServerRuntime.class, new NullProgressMonitor());
+		VirgoServerRuntime serverRuntime = (VirgoServerRuntime) runtime.loadAdapter(VirgoServerRuntime.class,
+																					new NullProgressMonitor());
 		if (serverRuntime != null) {
 			return callback.doWithRuntime(serverRuntime);
 		}

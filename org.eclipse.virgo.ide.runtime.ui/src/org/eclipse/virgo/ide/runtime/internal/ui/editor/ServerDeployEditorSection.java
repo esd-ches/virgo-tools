@@ -35,9 +35,9 @@ import org.eclipse.virgo.ide.runtime.internal.core.actions.ModifyDeployerPortCom
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
 import org.eclipse.wst.server.ui.editor.ServerEditorSection;
 
-
 /**
  * {@link ServerEditorSection} section that allows to configure the JMX deployer credentials
+ * 
  * @author Christian Dupuis
  * @since 1.0.1
  */
@@ -63,12 +63,9 @@ public class ServerDeployEditorSection extends ServerEditorSection {
 				updating = true;
 				if (IServerWorkingCopy.PROPERTY_MBEAN_SERVER_PASSWORD.equals(event.getPropertyName())) {
 					password.setText(event.getNewValue().toString());
-				}
-				else if (IServerWorkingCopy.PROPERTY_MBEAN_SERVER_PORT.equals(event.getPropertyName())) {
+				} else if (IServerWorkingCopy.PROPERTY_MBEAN_SERVER_PORT.equals(event.getPropertyName())) {
 					port.setText(event.getNewValue().toString());
-				}
-				else if (IServerWorkingCopy.PROPERTY_MBEAN_SERVER_USERNAME.equals(event
-						.getPropertyName())) {
+				} else if (IServerWorkingCopy.PROPERTY_MBEAN_SERVER_USERNAME.equals(event.getPropertyName())) {
 					username.setText(event.getNewValue().toString());
 				}
 				updating = false;
@@ -81,14 +78,11 @@ public class ServerDeployEditorSection extends ServerEditorSection {
 		super.createSection(parent);
 		FormToolkit toolkit = getFormToolkit(parent.getDisplay());
 
-		Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE
-				| ExpandableComposite.EXPANDED | ExpandableComposite.TITLE_BAR
-				| Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
+		Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED
+				| ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
 		section.setText("Deployer Control");
-		section
-				.setDescription("Configure the communication with the server Deployer Control.");
-		section
-				.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
+		section.setDescription("Configure the communication with the server Deployer Control.");
+		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 
 		Composite composite = toolkit.createComposite(section);
 		GridLayout layout = new GridLayout();
@@ -98,8 +92,7 @@ public class ServerDeployEditorSection extends ServerEditorSection {
 		layout.verticalSpacing = 5;
 		layout.horizontalSpacing = 15;
 		composite.setLayout(layout);
-		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL
-				| GridData.VERTICAL_ALIGN_FILL));
+		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
 
@@ -116,8 +109,7 @@ public class ServerDeployEditorSection extends ServerEditorSection {
 				int newPort = -1;
 				try {
 					newPort = Integer.valueOf(port.getText());
-				}
-				catch (NumberFormatException nfe) {
+				} catch (NumberFormatException nfe) {
 					setErrorMessage(port.getText() + " is not a valid port number");
 					return;
 				}
@@ -191,10 +183,9 @@ public class ServerDeployEditorSection extends ServerEditorSection {
 	public IStatus[] getSaveStatus() {
 		try {
 			Integer.valueOf(port.getText());
-		}
-		catch (NumberFormatException nfe) {
-			return new IStatus[] { new Status(IStatus.ERROR, ServerUiPlugin.PLUGIN_ID, "'"
-					+ port.getText() + "' is not a valid port number") };
+		} catch (NumberFormatException nfe) {
+			return new IStatus[] { new Status(IStatus.ERROR, ServerUiPlugin.PLUGIN_ID, "'" + port.getText()
+					+ "' is not a valid port number") };
 		}
 		return super.getSaveStatus();
 	}

@@ -49,8 +49,9 @@ import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.virgo.util.osgi.manifest.ExportedPackage;
 
 /**
- * Default {@link IBundleManifestManager} implementation used to manage the life-cycle of the
- * {@link BundleManifest} instances.
+ * Default {@link IBundleManifestManager} implementation used to manage the life-cycle of the {@link BundleManifest}
+ * instances.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
@@ -92,8 +93,8 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 	private Map<IJavaProject, Long> testBundleTimestamps = new ConcurrentHashMap<IJavaProject, Long>();
 
 	/**
-	 * Resource change listener that listens to changes of Eclipse file resources and triggers a
-	 * refresh for corresponding class path container
+	 * Resource change listener that listens to changes of Eclipse file resources and triggers a refresh for
+	 * corresponding class path container
 	 */
 	private IResourceChangeListener resourceChangeListener = null;
 
@@ -106,8 +107,7 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 			if (bundles.containsKey(javaProject)) {
 				return bundles.get(javaProject);
 			}
-		}
-		finally {
+		} finally {
 			r.unlock();
 		}
 		// Load and store the bundle if not found; loadBundleManifest will acquire write lock.
@@ -123,8 +123,7 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 			if (testBundles.containsKey(javaProject)) {
 				return testBundles.get(javaProject);
 			}
-		}
-		finally {
+		} finally {
 			r.unlock();
 		}
 		// Load and store the bundle if not found; loadBundleManifest will acquire write lock.
@@ -142,16 +141,14 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 				if (bundleManifest.getExportPackage() != null
 						&& bundleManifest.getExportPackage().getExportedPackages() != null) {
 					Set<String> packageExports = new LinkedHashSet<String>();
-					for (ExportedPackage packageExport : bundleManifest.getExportPackage()
-							.getExportedPackages()) {
+					for (ExportedPackage packageExport : bundleManifest.getExportPackage().getExportedPackages()) {
 						packageExports.add(packageExport.getPackageName());
 					}
 					return packageExports;
 				}
 			}
 			return Collections.emptySet();
-		}
-		finally {
+		} finally {
 			r.unlock();
 		}
 	}
@@ -166,8 +163,7 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 				return packageImports.get(javaProject);
 			}
 			return Collections.emptySet();
-		}
-		finally {
+		} finally {
 			r.unlock();
 		}
 	}
@@ -192,19 +188,18 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void updateResolvedPackageImports(IJavaProject javaProject,
-			Set<String> resolvedPackageImports) {
+	public void updateResolvedPackageImports(IJavaProject javaProject, Set<String> resolvedPackageImports) {
 		try {
 			w.lock();
 			packageImports.put(javaProject, resolvedPackageImports);
-		}
-		finally {
+		} finally {
 			w.unlock();
 		}
 	}
 
 	/**
 	 * Internal method to locate and load {@link BundleManifest}s for given {@link IJavaProject}.
+	 * 
 	 * @param testBundle
 	 */
 	private BundleManifest loadBundleManifest(IJavaProject javaProject, boolean testBundle) {
@@ -220,8 +215,7 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 				manifests.remove(javaProject);
 				timestamps.remove(javaProject);
 				bundleManifestChanged(null, null, null, null, IMPORTS_CHANGED, javaProject);
-			}
-			finally {
+			} finally {
 				w.unlock();
 			}
 		}
@@ -236,29 +230,24 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 						return oldBundleManifest;
 					}
 				}
-			}
-			finally {
+			} finally {
 				r.unlock();
 			}
-			BundleManifest bundleManifest = BundleManifestUtils.getBundleManifest(javaProject,
-					testBundle);
+			BundleManifest bundleManifest = BundleManifestUtils.getBundleManifest(javaProject, testBundle);
 			try {
 				w.lock();
 				if (bundleManifest != null) {
 					manifests.put(javaProject, bundleManifest);
-				}
-				else {
+				} else {
 					manifests.remove(javaProject);
 				}
 				timestamps.put(javaProject, manifestFile.getLocalTimeStamp());
-			}
-			finally {
+			} finally {
 				w.unlock();
 			}
 			if (testBundle) {
 				bundleManifestChanged(null, null, bundleManifest, oldBundleManifest, javaProject);
-			}
-			else {
+			} else {
 				bundleManifestChanged(bundleManifest, oldBundleManifest, null, null, javaProject);
 			}
 			return bundleManifest;
@@ -277,16 +266,14 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void addBundleManifestChangeListener(
-			IBundleManifestChangeListener bundleManifestChangeListener) {
+	public void addBundleManifestChangeListener(IBundleManifestChangeListener bundleManifestChangeListener) {
 		this.bundleManifestChangeListeners.add(bundleManifestChangeListener);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void removeBundleManifestChangeListener(
-			IBundleManifestChangeListener bundleManifestChangeListener) {
+	public void removeBundleManifestChangeListener(IBundleManifestChangeListener bundleManifestChangeListener) {
 		if (bundleManifestChangeListeners.contains(bundleManifestChangeListener)) {
 			bundleManifestChangeListeners.remove(bundleManifestChangeListener);
 		}
@@ -295,26 +282,24 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 	/**
 	 * Notifies {@link IBundleManifestChangeListener} of changes.
 	 */
-	private void bundleManifestChanged(BundleManifest newBundleManifest,
-			BundleManifest oldBundleManifest, BundleManifest newTestBundleManifest,
-			BundleManifest oldTestBundleManifest, IJavaProject javaProject) {
+	private void bundleManifestChanged(BundleManifest newBundleManifest, BundleManifest oldBundleManifest,
+			BundleManifest newTestBundleManifest, BundleManifest oldTestBundleManifest, IJavaProject javaProject) {
 		Set<IBundleManifestChangeListener.Type> types = new HashSet<IBundleManifestChangeListener.Type>();
 		types.addAll(BundleManifestDiffer.diff(newBundleManifest, oldBundleManifest));
 		types.addAll(BundleManifestDiffer.diff(newTestBundleManifest, oldTestBundleManifest));
-		bundleManifestChanged(newBundleManifest, oldBundleManifest, newTestBundleManifest,
-				oldTestBundleManifest, types, javaProject);
+		bundleManifestChanged(newBundleManifest, oldBundleManifest, newTestBundleManifest, oldTestBundleManifest,
+				types, javaProject);
 	}
 
 	/**
 	 * Notifies {@link IBundleManifestChangeListener} of changes.
 	 */
-	private void bundleManifestChanged(BundleManifest newBundleManifest,
-			BundleManifest oldBundleManifest, BundleManifest newTestBundleManifest,
-			BundleManifest oldTestBundleManifest, Set<IBundleManifestChangeListener.Type> types,
-			IJavaProject javaProject) {
+	private void bundleManifestChanged(BundleManifest newBundleManifest, BundleManifest oldBundleManifest,
+			BundleManifest newTestBundleManifest, BundleManifest oldTestBundleManifest,
+			Set<IBundleManifestChangeListener.Type> types, IJavaProject javaProject) {
 		for (IBundleManifestChangeListener listener : bundleManifestChangeListeners) {
-			listener.bundleManifestChanged(newBundleManifest, oldBundleManifest,
-					newTestBundleManifest, oldTestBundleManifest, types, javaProject);
+			listener.bundleManifestChanged(newBundleManifest, oldBundleManifest, newTestBundleManifest,
+					oldTestBundleManifest, types, javaProject);
 		}
 	}
 
@@ -359,30 +344,29 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 			protected boolean resourceChanged(IResource resource, int flags) {
 				if (resource instanceof IFile) {
 					if ((flags & IResourceDelta.CONTENT) != 0) {
-						if ((FacetUtils.isBundleProject(resource) ||  FacetUtils.hasProjectFacet(resource, FacetCorePlugin.WEB_FACET_ID))) {
+						if ((FacetUtils.isBundleProject(resource) || FacetUtils.hasProjectFacet(resource,
+								FacetCorePlugin.WEB_FACET_ID))) {
 							if (isManifest(resource)) {
 								updateBundleManifest(JavaCore.create(resource.getProject()), false);
-							}
-							else if (isTestManifest(resource)) {
+							} else if (isTestManifest(resource)) {
 								updateBundleManifest(JavaCore.create(resource.getProject()), true);
-							}
-							else if (resource.getName().equals(".classpath") && resource.getParent() instanceof IProject) {
+							} else if (resource.getName().equals(".classpath")
+									&& resource.getParent() instanceof IProject) {
 								updateBundleManifest(JavaCore.create(resource.getProject()), false);
 								updateBundleManifest(JavaCore.create(resource.getProject()), true);
 							}
 						}
 
-						if (resource.getName().equals(
-								"org.eclipse.wst.common.project.facet.core.xml")
-								|| resource.getName().equals(
-										"org.eclipse.virgo.ide.runtime.core.par.xml")) {
+						if (resource.getName().equals("org.eclipse.wst.common.project.facet.core.xml")
+								|| resource.getName().equals("org.eclipse.virgo.ide.runtime.core.par.xml")) {
 							// target of a par project or par bundles has changed
 							if (FacetUtils.isParProject(resource)) {
 								Par par = FacetUtils.getParDefinition(resource.getProject());
 								if (par != null && par.getBundle() != null) {
 									for (Bundle bundle : par.getBundle()) {
 										IProject bundleProject = ResourcesPlugin.getWorkspace()
-												.getRoot().getProject(bundle.getSymbolicName());
+												.getRoot()
+												.getProject(bundle.getSymbolicName());
 										if (FacetUtils.isBundleProject(bundleProject)) {
 											updateBundleManifestForResource(bundleProject);
 										}
@@ -404,8 +388,8 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 				IJavaProject javaProject = JavaCore.create(resource.getProject());
 				BundleManifest bundleManifest = getBundleManifest(javaProject);
 				BundleManifest testBundleManifest = getTestBundleManifest(javaProject);
-				bundleManifestChanged(bundleManifest, bundleManifest, testBundleManifest,
-						testBundleManifest, IMPORTS_CHANGED, javaProject);
+				bundleManifestChanged(bundleManifest, bundleManifest, testBundleManifest, testBundleManifest,
+						IMPORTS_CHANGED, javaProject);
 			}
 
 			protected boolean resourceOpened(IResource resource) {
@@ -415,19 +399,17 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 			protected boolean resourceRemoved(IResource resource) {
 				if (isManifest(resource)) {
 					updateBundleManifest(JavaCore.create(resource.getProject()), false);
-				}
-				else if (isTestManifest(resource)) {
+				} else if (isTestManifest(resource)) {
 					updateBundleManifest(JavaCore.create(resource.getProject()), true);
 				}
 				return true;
 			}
 		}
 
-		public static final int LISTENER_FLAGS = IResourceChangeEvent.PRE_CLOSE
-				| IResourceChangeEvent.PRE_DELETE | IResourceChangeEvent.PRE_BUILD;
+		public static final int LISTENER_FLAGS = IResourceChangeEvent.PRE_CLOSE | IResourceChangeEvent.PRE_DELETE
+				| IResourceChangeEvent.PRE_BUILD;
 
-		private static final int VISITOR_FLAGS = IResourceDelta.ADDED | IResourceDelta.CHANGED
-				| IResourceDelta.REMOVED;
+		private static final int VISITOR_FLAGS = IResourceDelta.ADDED | IResourceDelta.CHANGED | IResourceDelta.REMOVED;
 
 		public void resourceChanged(IResourceChangeEvent event) {
 			if (event.getSource() instanceof IWorkspace) {
@@ -438,15 +420,15 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 					if (delta != null) {
 						try {
 							delta.accept(getVisitor(eventType), VISITOR_FLAGS);
-						}
-						catch (CoreException e) {
-							StatusManager.getManager().handle(new Status(IStatus.ERROR, BundleManifestCorePlugin.PLUGIN_ID, "Error while traversing resource change delta", e));
+						} catch (CoreException e) {
+							StatusManager.getManager().handle(
+									new Status(IStatus.ERROR, BundleManifestCorePlugin.PLUGIN_ID,
+											"Error while traversing resource change delta", e));
 						}
 					}
 					break;
 				}
-			}
-			else if (event.getSource() instanceof IProject) {
+			} else if (event.getSource() instanceof IProject) {
 				int eventType = event.getType();
 				switch (eventType) {
 				case IResourceChangeEvent.POST_CHANGE:
@@ -454,9 +436,10 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 					if (delta != null) {
 						try {
 							delta.accept(getVisitor(eventType), VISITOR_FLAGS);
-						}
-						catch (CoreException e) {
-							StatusManager.getManager().handle(new Status(IStatus.ERROR, BundleManifestCorePlugin.PLUGIN_ID, "Error while traversing resource change delta", e));
+						} catch (CoreException e) {
+							StatusManager.getManager().handle(
+									new Status(IStatus.ERROR, BundleManifestCorePlugin.PLUGIN_ID,
+											"Error while traversing resource change delta", e));
 						}
 					}
 					break;
@@ -470,23 +453,16 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 		}
 
 		public boolean isTestManifest(IResource resource) {
-			return resource != null
-					&& resource.isAccessible()
-					&& resource.getType() == IResource.FILE
-					&& resource.getName().equals("TEST.MF")
-					&& resource.getParent() != null
-					&& resource.getParent().getProjectRelativePath().lastSegment().equals(
-							"META-INF");
+			return resource != null && resource.isAccessible() && resource.getType() == IResource.FILE
+					&& resource.getName().equals("TEST.MF") && resource.getParent() != null
+					&& resource.getParent().getProjectRelativePath().lastSegment().equals("META-INF");
 		}
 
 		public boolean isManifest(IResource resource) {
-			return resource != null
-					&& resource.isAccessible()
-					&& resource.getType() == IResource.FILE
+			return resource != null && resource.isAccessible() && resource.getType() == IResource.FILE
 					&& resource.getName().equals(BundleManifestCorePlugin.MANIFEST_FILE_NAME)
 					&& resource.getParent() != null
-					&& resource.getParent().getProjectRelativePath().lastSegment().equals(
-							"META-INF");
+					&& resource.getParent().getProjectRelativePath().lastSegment().equals("META-INF");
 		}
 
 	}

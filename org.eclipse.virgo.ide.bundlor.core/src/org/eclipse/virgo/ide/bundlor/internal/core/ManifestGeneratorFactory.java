@@ -23,19 +23,19 @@ import org.eclipse.virgo.bundlor.support.ManifestGeneratorContributors;
 import org.eclipse.virgo.bundlor.support.ManifestModifier;
 import org.eclipse.virgo.bundlor.support.ManifestTemplateModifier;
 import org.eclipse.virgo.bundlor.support.StandardManifestGenerator;
-import org.eclipse.virgo.bundlor.support.contributors.xml.BlueprintArtifactAnalyzer;
 import org.eclipse.virgo.bundlor.support.contributors.BundleClassPathArtifactAnalyzer;
 import org.eclipse.virgo.bundlor.support.contributors.ExcludedImportAndExportPartialManifestModifier;
-import org.eclipse.virgo.bundlor.support.contributors.xml.HibernateMappingArtifactAnalyzer;
 import org.eclipse.virgo.bundlor.support.contributors.IgnoredExistingHeadersManifestModifier;
-import org.eclipse.virgo.bundlor.support.contributors.xml.JpaPersistenceArtifactAnalyzer;
 import org.eclipse.virgo.bundlor.support.contributors.JspArtifactAnalyzer;
-import org.eclipse.virgo.bundlor.support.contributors.xml.Log4JXmlArtifactAnalyzer;
 import org.eclipse.virgo.bundlor.support.contributors.ManifestTemplateDirectiveMigrator;
 import org.eclipse.virgo.bundlor.support.contributors.OsgiProfileManifestTemplateModifier;
-import org.eclipse.virgo.bundlor.support.contributors.xml.SpringApplicationContextArtifactAnalyzer;
 import org.eclipse.virgo.bundlor.support.contributors.StaticResourceArtifactAnalyzer;
 import org.eclipse.virgo.bundlor.support.contributors.ToolStampManifestModifier;
+import org.eclipse.virgo.bundlor.support.contributors.xml.BlueprintArtifactAnalyzer;
+import org.eclipse.virgo.bundlor.support.contributors.xml.HibernateMappingArtifactAnalyzer;
+import org.eclipse.virgo.bundlor.support.contributors.xml.JpaPersistenceArtifactAnalyzer;
+import org.eclipse.virgo.bundlor.support.contributors.xml.Log4JXmlArtifactAnalyzer;
+import org.eclipse.virgo.bundlor.support.contributors.xml.SpringApplicationContextArtifactAnalyzer;
 import org.eclipse.virgo.bundlor.support.contributors.xml.WebApplicationArtifactAnalyzer;
 import org.eclipse.virgo.bundlor.support.partialmanifest.ReadablePartialManifest;
 import org.eclipse.virgo.bundlor.support.partialmanifest.StandardPartialManifestResolver;
@@ -46,6 +46,7 @@ import org.eclipse.virgo.util.parser.manifest.ManifestContents;
 
 /**
  * Factory to create {@link ManifestGenerator}.
+ * 
  * @author Christian Dupuis
  * @since 2.3.0
  */
@@ -65,7 +66,7 @@ class ManifestGeneratorFactory {
 		if (partialManifest instanceof EntryScannerListener) {
 			contributors.addEntryScannerListener((EntryScannerListener) partialManifest);
 		}
-		
+
 		return new StandardManifestGenerator(contributors);
 	}
 
@@ -79,7 +80,7 @@ class ManifestGeneratorFactory {
 		IgnoredExistingHeadersManifestModifier ignoredExistingHeadersManifestModifier = new IgnoredExistingHeadersManifestModifier();
 		ExcludedImportAndExportPartialManifestModifier excludedImportAndExportPartialManifestModifier = new ExcludedImportAndExportPartialManifestModifier();
 		PlaceholderManifestAndTemplateModifier placeholderManifestAndTemplateModifier = new PlaceholderManifestAndTemplateModifier(
-				properties);
+			properties);
 		ManifestTemplateDirectiveMigrator manifestTemplateDirectiveMigrator = new ManifestTemplateDirectiveMigrator();
 		StandardPartialManifestResolver partialManifestResolver = new StandardPartialManifestResolver();
 
@@ -150,15 +151,15 @@ class ManifestGeneratorFactory {
 	private static Properties combineProperties(PropertiesSource... propertiesSources) {
 		PropertiesSource[] sortedPropertiesSources = new PropertiesSource[propertiesSources.length];
 		System.arraycopy(propertiesSources, 0, sortedPropertiesSources, 0, propertiesSources.length);
-		// Sort by priority so that sources with lower priority are added first into the final
+		// Sort by priority so that sources with lower priority are added first
+		// into the final
 		// Properties instance to allow for overriding by later instances
 		Arrays.sort(sortedPropertiesSources, new Comparator<PropertiesSource>() {
 
 			public int compare(PropertiesSource o1, PropertiesSource o2) {
 				if (o1.getPriority() == o2.getPriority()) {
 					return 0;
-				}
-				else if (o1.getPriority() > o2.getPriority()) {
+				} else if (o1.getPriority() > o2.getPriority()) {
 					return 1;
 				}
 				return -1;

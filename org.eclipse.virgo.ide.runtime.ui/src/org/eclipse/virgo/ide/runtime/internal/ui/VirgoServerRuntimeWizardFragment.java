@@ -19,13 +19,12 @@ import org.eclipse.wst.server.core.TaskModel;
 import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 import org.eclipse.wst.server.ui.wizard.WizardFragment;
 
-
 /**
  * @author Terry Hon
  * @author Christian Dupuis
  */
 public class VirgoServerRuntimeWizardFragment extends WizardFragment {
-	
+
 	protected ServerRuntimeComposite comp;
 
 	@Override
@@ -36,7 +35,7 @@ public class VirgoServerRuntimeWizardFragment extends WizardFragment {
 	@Override
 	public boolean isComplete() {
 		IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
-		
+
 		if (runtime == null) {
 			return false;
 		}
@@ -48,7 +47,8 @@ public class VirgoServerRuntimeWizardFragment extends WizardFragment {
 	public Composite createComposite(Composite parent, IWizardHandle wizard) {
 		String wizardTitle = ServerUiPlugin.getResourceString("virgoWizardTitle");
 		String wizardDescription = ServerUiPlugin.getResourceString("virgoWizardDescription");
-		comp = new ServerRuntimeComposite(parent, wizard, wizardTitle, wizardDescription, ServerUiImages.DESC_WIZB_VIRGO_SERVER);
+		comp = new ServerRuntimeComposite(parent, wizard, wizardTitle, wizardDescription,
+				ServerUiImages.DESC_WIZB_VIRGO_SERVER);
 		return comp;
 	}
 

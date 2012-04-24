@@ -12,9 +12,9 @@ package org.eclipse.virgo.ide.runtime.core;
 
 import java.util.List;
 
-
 /**
  * dm Server specific interface to be implemented by a server
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
@@ -40,14 +40,14 @@ public interface IServer {
 
 	/** Property indicating the port of the deployer JMX control */
 	String PROPERTY_STATIC_FILENAMES = ServerCorePlugin.PLUGIN_ID + "filenames.static";
-	
+
 	/** Property if the server should tail log files */
 	String PROPERTY_TAIL_LOG_FILES = ServerCorePlugin.PLUGIN_ID + "tail.log.files";
-	
+
 	String PROPERTY_CLEAN_STARTUP = ServerCorePlugin.PLUGIN_ID + "clean.startup";
-	
+
 	String PROPERTY_ARTEFACT_ORDER = ServerCorePlugin.PLUGIN_ID + "artefact.deploy.order";
-	
+
 	/**
 	 * Returns the deploy directory.
 	 */
@@ -72,15 +72,15 @@ public interface IServer {
 	 * Returns the password of the JMX deployer control
 	 */
 	String getMBeanServerPassword();
-	
+
 	/**
-	 * Returns <code>true</code> if the server should tail log files 
+	 * Returns <code>true</code> if the server should tail log files
 	 */
 	boolean shouldTailTraceFiles();
 
 	boolean shouldCleanStartup();
-	
+
 	List<String> getArtefactOrder();
-	
+
 	String getStaticFilenamePatterns();
 }

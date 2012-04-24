@@ -18,7 +18,6 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.virgo.ide.jdt.internal.core.util.ClasspathUtils;
 
-
 /**
  * @author Christian Dupuis
  * @since 1.1.3

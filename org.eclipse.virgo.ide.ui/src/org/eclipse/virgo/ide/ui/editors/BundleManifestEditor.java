@@ -127,10 +127,8 @@ public class BundleManifestEditor extends ManifestEditor {
 			BundleRuntimePage runtimePage = new BundleRuntimePage(this);
 			addPage(runtimePage);
 			saveListeners.add(runtimePage);
-		}
-		catch (PartInitException e) {
-			StatusHandler
-					.log(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Failed to create editor pages", e));
+		} catch (PartInitException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Failed to create editor pages", e));
 		}
 		addSourcePage(BundleInputContext.CONTEXT_ID);
 	}
@@ -197,8 +195,7 @@ public class BundleManifestEditor extends ManifestEditor {
 	}
 
 	/**
-	 * Copy of super method with work-around to maintain compatibility with
-	 * Eclipse 3.4 and 3.5.
+	 * Copy of super method with work-around to maintain compatibility with Eclipse 3.4 and 3.5.
 	 * 
 	 * @see #createSystemFileContexts(InputContextManager, IEditorInput)
 	 */
@@ -207,15 +204,12 @@ public class BundleManifestEditor extends ManifestEditor {
 		if (input instanceof IFileEditorInput) {
 			// resource - find the project
 			createResourceContexts(contextManager, (IFileEditorInput) input);
-		}
-		else if (PdeCompatibilityUtil.isSystemFileEditorInput(input)) {
+		} else if (PdeCompatibilityUtil.isSystemFileEditorInput(input)) {
 			// system file - find the file system folder
 			createSystemFileContexts(contextManager, input);
-		}
-		else if (input instanceof IStorageEditorInput) {
+		} else if (input instanceof IStorageEditorInput) {
 			createStorageContexts(contextManager, (IStorageEditorInput) input);
-		}
-		else if (input instanceof IURIEditorInput) {
+		} else if (input instanceof IURIEditorInput) {
 			IURIEditorInput uriEditorInput = (IURIEditorInput) input;
 			try {
 				IFileStore store = EFS.getStore(uriEditorInput.getURI());
@@ -237,11 +231,11 @@ public class BundleManifestEditor extends ManifestEditor {
 	}
 
 	/**
-	 * The signature of createSystemFileContexts() has changed between Eclipse
-	 * 3.4 and 3.5. This method serves as a work-around with a more generic
-	 * signature.
+	 * The signature of createSystemFileContexts() has changed between Eclipse 3.4 and 3.5. This method serves as a
+	 * work-around with a more generic signature.
 	 * 
-	 * @param input either a SystemFileEditorInput or FileStoreEditorInput
+	 * @param input
+	 *            either a SystemFileEditorInput or FileStoreEditorInput
 	 */
 	protected void createSystemFileContexts(InputContextManager manager, IEditorInput input) {
 		File file = (File) input.getAdapter(File.class);
@@ -266,8 +260,7 @@ public class BundleManifestEditor extends ManifestEditor {
 				}
 				manager.putContext(in, new SpringBundleInputContext(this, in, file == manifestFile));
 			}
-		}
-		catch (CoreException e) {
+		} catch (CoreException e) {
 			PDEPlugin.logException(e);
 		}
 	}
@@ -296,17 +289,17 @@ public class BundleManifestEditor extends ManifestEditor {
 
 			if (zip.getEntry("META-INF/MANIFEST.MF") != null) { //$NON-NLS-1$
 				input = new JarEntryEditorInput(new JarEntryFile(zip, "META-INF/MANIFEST.MF")); //$NON-NLS-1$
-				manager.putContext(input,
-						new SpringBundleInputContext(this, input, storage.getName().equals(BundleModelUtility.F_MANIFEST))); //$NON-NLS-1$
+				manager.putContext(
+						input,
+						new SpringBundleInputContext(this, input, storage.getName().equals(
+								BundleModelUtility.F_MANIFEST))); //$NON-NLS-1$
 			}
-		}
-		finally {
+		} finally {
 			try {
 				if (zip != null) {
 					zip.close();
 				}
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 			}
 		}
 	}
@@ -351,8 +344,7 @@ public class BundleManifestEditor extends ManifestEditor {
 		if (model.getUnderlyingResource() != null) {
 			if (model.getUnderlyingResource().getName().equals("TEST.MF")) {
 				builder.append("test: ");
-			}
-			else if (model.getUnderlyingResource().getName().equals("template.mf")) {
+			} else if (model.getUnderlyingResource().getName().equals("template.mf")) {
 				builder.append("template: ");
 			}
 		}
@@ -416,19 +408,16 @@ public class BundleManifestEditor extends ManifestEditor {
 				if (zipFile.getEntry(filename) != null) {
 					input = new JarEntryEditorInput(new JarEntryFile(zipFile, filename));
 				}
+			} catch (IOException e) {
 			}
-			catch (IOException e) {
-			}
-		}
-		else {
+		} else {
 			File file = new File(location, filename);
 			if (file.exists()) {
 				IFileStore store;
 				try {
 					store = EFS.getStore(file.toURI());
 					input = new FileStoreEditorInput(store);
-				}
-				catch (CoreException e) {
+				} catch (CoreException e) {
 				}
 			}
 		}
@@ -439,8 +428,7 @@ public class BundleManifestEditor extends ManifestEditor {
 		if (input != null) {
 			try {
 				return PDEPlugin.getActivePage().openEditor(input, BundleManifestEditor.ID_EDITOR);
-			}
-			catch (PartInitException e) {
+			} catch (PartInitException e) {
 				PDEPlugin.logException(e);
 			}
 		}
@@ -471,8 +459,7 @@ public class BundleManifestEditor extends ManifestEditor {
 					return;
 				}
 			}
-		}
-		else {
+		} else {
 			super.performGlobalAction(id);
 		}
 	}
@@ -493,8 +480,7 @@ public class BundleManifestEditor extends ManifestEditor {
 				Object obj = objects[i];
 				if (objClass == null) {
 					objClass = obj.getClass();
-				}
-				else if (objClass.equals(obj.getClass()) == false) {
+				} else if (objClass.equals(obj.getClass()) == false) {
 					return;
 				}
 				if (obj instanceof IWritable) {
@@ -504,8 +490,7 @@ public class BundleManifestEditor extends ManifestEditor {
 						((IWritableDelimiter) obj).writeDelimeter(pwriter);
 					}
 					((IWritable) obj).write("", pwriter); //$NON-NLS-1$
-				}
-				else if (obj instanceof String) {
+				} else if (obj instanceof String) {
 					// Delimiter is always a newline
 					pwriter.println((String) obj);
 				}
@@ -515,11 +500,9 @@ public class BundleManifestEditor extends ManifestEditor {
 			try {
 				pwriter.close();
 				writer.close();
+			} catch (IOException e) {
 			}
-			catch (IOException e) {
-			}
-		}
-		else if (selection instanceof ITextSelection) {
+		} else if (selection instanceof ITextSelection) {
 			textVersion = ((ITextSelection) selection).getText();
 		}
 		if ((textVersion == null || textVersion.length() == 0) && objects == null) {
@@ -531,12 +514,10 @@ public class BundleManifestEditor extends ManifestEditor {
 		if (objects == null) {
 			o = new Object[] { textVersion };
 			t = new Transfer[] { TextTransfer.getInstance() };
-		}
-		else if (textVersion == null || textVersion.length() == 0) {
+		} else if (textVersion == null || textVersion.length() == 0) {
 			o = new Object[] { objects };
 			t = new Transfer[] { ModelDataTransfer.getInstance() };
-		}
-		else {
+		} else {
 			o = new Object[] { objects, textVersion };
 			t = new Transfer[] { ModelDataTransfer.getInstance(), TextTransfer.getInstance() };
 		}

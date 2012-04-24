@@ -45,9 +45,9 @@ import org.eclipse.wst.web.internal.ResourceHandler;
 import org.eclipse.wst.web.ui.internal.wizards.DataModelFacetCreationWizardPage;
 
 /**
- * SpringSource Tool Suite Team - Portions of this class were copied from
- * WebTools' DataModelWizardPage and DataModelFacetCreationWizardPage in order
- * to add runtime environment selection functionality to the ProjectContentPage.
+ * SpringSource Tool Suite Team - Portions of this class were copied from WebTools' DataModelWizardPage and
+ * DataModelFacetCreationWizardPage in order to add runtime environment selection functionality to the
+ * ProjectContentPage.
  */
 @SuppressWarnings("restriction")
 public abstract class RuntimeConfigurationPage extends ProjectContentPage implements IDataModelListener,
@@ -155,8 +155,7 @@ public abstract class RuntimeConfigurationPage extends ProjectContentPage implem
 		validationPropertyNames = getValidationPropertyNames();
 		if (validationPropertyNames == null || validationPropertyNames.length == 0) {
 			validationMap = Collections.EMPTY_MAP;
-		}
-		else {
+		} else {
 			validationMap = new HashMap(validationPropertyNames.length);
 			for (int i = 0; i < validationPropertyNames.length; i++) {
 				validationMap.put(validationPropertyNames[i], new Integer(i));
@@ -223,24 +222,20 @@ public abstract class RuntimeConfigurationPage extends ProjectContentPage implem
 			if (warning == null) {
 				if (getMessage() != null && getMessageType() == IMessageProvider.WARNING) {
 					setMessage(null, IMessageProvider.WARNING);
-				}
-				else {
+				} else {
 					String info = status.getLastInfoMsg();
 					if (info == null) {
 						if (getMessage() != null && getMessageType() == IMessageProvider.INFORMATION) {
 							setMessage(null, IMessageProvider.INFORMATION);
 						}
-					}
-					else if (!info.equals(getMessage())) {
+					} else if (!info.equals(getMessage())) {
 						setMessage(info, IMessageProvider.INFORMATION);
 					}
 				}
-			}
-			else if (!warning.equals(getMessage())) {
+			} else if (!warning.equals(getMessage())) {
 				setMessage(warning, IMessageProvider.WARNING);
 			}
-		}
-		else if (!error.equals(getErrorMessage())) {
+		} else if (!error.equals(getErrorMessage())) {
 			setErrorMessage(error);
 		}
 	}

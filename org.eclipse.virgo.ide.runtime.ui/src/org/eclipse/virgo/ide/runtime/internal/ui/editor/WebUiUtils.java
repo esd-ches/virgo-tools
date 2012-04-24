@@ -43,39 +43,29 @@ public class WebUiUtils {
 			}
 			if (WebBrowserPreference.getBrowserChoice() == WebBrowserPreference.EXTERNAL) {
 				try {
-					IWorkbenchBrowserSupport support = PlatformUI.getWorkbench()
-							.getBrowserSupport();
+					IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
 					support.getExternalBrowser().openURL(url);
+				} catch (Exception e) {
 				}
-				catch (Exception e) {
-				}
-			}
-			else {
+			} else {
 				IWebBrowser browser = null;
 				int flags = customFlags;
 				if (WorkbenchBrowserSupport.getInstance().isInternalWebBrowserAvailable()) {
-					flags |= IWorkbenchBrowserSupport.AS_EDITOR
-							| IWorkbenchBrowserSupport.LOCATION_BAR
+					flags |= IWorkbenchBrowserSupport.AS_EDITOR | IWorkbenchBrowserSupport.LOCATION_BAR
 							| IWorkbenchBrowserSupport.NAVIGATION_BAR;
-				}
-				else {
-					flags |= IWorkbenchBrowserSupport.AS_EXTERNAL
-							| IWorkbenchBrowserSupport.LOCATION_BAR
+				} else {
+					flags |= IWorkbenchBrowserSupport.AS_EXTERNAL | IWorkbenchBrowserSupport.LOCATION_BAR
 							| IWorkbenchBrowserSupport.NAVIGATION_BAR;
 				}
 
-				String generatedId = "org.eclipse.mylyn.web.browser-"
-						+ Calendar.getInstance().getTimeInMillis();
-				browser = WorkbenchBrowserSupport.getInstance().createBrowser(flags, generatedId,
-						null, null);
+				String generatedId = "org.eclipse.mylyn.web.browser-" + Calendar.getInstance().getTimeInMillis();
+				browser = WorkbenchBrowserSupport.getInstance().createBrowser(flags, generatedId, null, null);
 				browser.openURL(url);
 			}
-		}
-		catch (PartInitException e) {
+		} catch (PartInitException e) {
 			MessageDialog.openError(Display.getDefault().getActiveShell(), "Browser init error",
 					"Browser could not be initiated");
-		}
-		catch (MalformedURLException e) {
+		} catch (MalformedURLException e) {
 		}
 	}
 

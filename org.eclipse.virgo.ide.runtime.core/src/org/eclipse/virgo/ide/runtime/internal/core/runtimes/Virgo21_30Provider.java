@@ -30,14 +30,14 @@ import org.eclipse.wst.server.core.IRuntime;
  */
 public class Virgo21_30Provider extends VirgoRuntimeProvider {
 
-	//Assumes Stateless
+	// Assumes Stateless
 	public static final VirgoRuntimeProvider INSTANCE = new Virgo21_30Provider();
-	
+
 	private static final String SERVER_VIRGO_21x_31x = SERVER_VIRGO_BASE;
 
 	Virgo21_30Provider() {
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -80,11 +80,11 @@ public class Virgo21_30Provider extends VirgoRuntimeProvider {
 	public String getID() {
 		return SERVER_VIRGO_21x_31x;
 	}
-	
+
 	public String getSupportedVersions() {
 		return "2.1-3.0";
 	}
-	
+
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#createDependencyLocator(org.eclipse.wst.server.core.IRuntime,
 	 *      java.lang.String, java.lang.String[], java.lang.String,

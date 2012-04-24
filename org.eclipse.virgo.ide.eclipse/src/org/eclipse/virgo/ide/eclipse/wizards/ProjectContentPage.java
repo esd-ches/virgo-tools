@@ -32,9 +32,8 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * SpringSource Tool Suite Team - Portions of this class were copied from PDE's
- * ContentPage and PluginContentPage in Eclipse 3.4 in order to provide a bundle
- * content wizard page outside of the new plugin project wizard.
+ * SpringSource Tool Suite Team - Portions of this class were copied from PDE's ContentPage and PluginContentPage in
+ * Eclipse 3.4 in order to provide a bundle content wizard page outside of the new plugin project wizard.
  */
 @SuppressWarnings("restriction")
 public abstract class ProjectContentPage extends WizardPage {
@@ -186,8 +185,7 @@ public abstract class ProjectContentPage extends WizardPage {
 			}
 			if (fInitialized) {
 				validatePage();
-			}
-			else {
+			} else {
 				fInitialized = true;
 			}
 		}
@@ -246,8 +244,7 @@ public abstract class ProjectContentPage extends WizardPage {
 		if (!fInitialized) {
 			if (!fIdText.getText().trim().equals(fProjectProvider.getProjectName())) {
 				setMessage(PdeMessageStrings.ContentPage_illegalCharactersInID, INFORMATION);
-			}
-			else {
+			} else {
 				setMessage(null);
 			}
 			return null;
@@ -284,8 +281,7 @@ public abstract class ProjectContentPage extends WizardPage {
 		if (text.getText().trim().length() == 0) {
 			return PDELabelUtility.qualifyMessage(PDELabelUtility.getFieldLabel(text),
 					PdeMessageStrings.ControlValidationUtility_errorMsgValueMustBeSpecified);
-		}
-		else if (!isVersionValid(text.getText().trim())) {
+		} else if (!isVersionValid(text.getText().trim())) {
 			return PDELabelUtility.qualifyMessage(PDELabelUtility.getFieldLabel(text),
 					PdeMessageStrings.BundleErrorReporter_InvalidFormatInBundleVersion);
 		}

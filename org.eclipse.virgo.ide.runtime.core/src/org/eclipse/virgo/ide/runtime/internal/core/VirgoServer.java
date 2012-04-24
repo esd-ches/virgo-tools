@@ -15,6 +15,7 @@ import org.eclipse.virgo.ide.runtime.core.IServerWorkingCopy;
 
 /**
  * Default Virgo server implementation.
+ * 
  * @author Terry Hon
  * @author Christian Dupuis
  * @since 1.0.0

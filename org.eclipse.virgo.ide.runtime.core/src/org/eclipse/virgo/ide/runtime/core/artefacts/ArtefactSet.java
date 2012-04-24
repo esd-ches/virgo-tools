@@ -75,7 +75,8 @@ public class ArtefactSet implements IArtefactTyped {
 	public boolean equals(Object obj) {
 		if (obj instanceof ArtefactSet) {
 			ArtefactSet set = (ArtefactSet) obj;
-			return (getArtefactType() == set.getArtefactType() && ObjectUtils.equals(getRepository(), set.getRepository()));
+			return (getArtefactType() == set.getArtefactType() && ObjectUtils.equals(	getRepository(),
+																						set.getRepository()));
 		}
 		return super.equals(obj);
 	}

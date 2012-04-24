@@ -25,14 +25,14 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
+import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
+import org.eclipse.virgo.util.osgi.manifest.BundleManifestFactory;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 
-import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
-import org.eclipse.virgo.util.osgi.manifest.BundleManifestFactory;
-
 /**
  * Export wizard page for exporting par project
+ * 
  * @author Christian Dupuis
  * @author Terry Hon
  */
@@ -54,8 +54,7 @@ public class ParExportWizardPage extends AbstractProjectExportWizardPage {
 				if (element instanceof IPackageFragmentRoot) {
 					IPackageFragmentRoot root = (IPackageFragmentRoot) element;
 					return !root.isArchive() && !root.isExternal();
-				}
-				else if (element instanceof IProject) {
+				} else if (element instanceof IProject) {
 					IProject project = (IProject) element;
 					try {
 						IFacetedProject facetedProject = ProjectFacetsManager.create(project);
@@ -63,8 +62,7 @@ public class ParExportWizardPage extends AbstractProjectExportWizardPage {
 							return false;
 						return facetedProject.hasProjectFacet(ProjectFacetsManager.getProjectFacet(
 								FacetCorePlugin.PAR_FACET_ID).getDefaultVersion());
-					}
-					catch (CoreException e) {
+					} catch (CoreException e) {
 						return false;
 					}
 				}
@@ -108,8 +106,7 @@ public class ParExportWizardPage extends AbstractProjectExportWizardPage {
 					IContainer container = (IContainer) parentElement;
 					try {
 						return container.members();
-					}
-					catch (CoreException e) {
+					} catch (CoreException e) {
 					}
 				}
 				return NO_CHILDREN;
@@ -148,15 +145,12 @@ public class ParExportWizardPage extends AbstractProjectExportWizardPage {
 		IFile manifestFile = (IFile) project.findMember(path);
 		if (manifestFile != null) {
 			try {
-				return BundleManifestFactory.createBundleManifest(new InputStreamReader(manifestFile
-						.getContents(true)));
-			}
-			catch (IOException e) {
-			}
-			catch (CoreException e) {
+				return BundleManifestFactory.createBundleManifest(new InputStreamReader(manifestFile.getContents(true)));
+			} catch (IOException e) {
+			} catch (CoreException e) {
 			}
 		}
-		return BundleManifestFactory.createBundleManifest(); 
+		return BundleManifestFactory.createBundleManifest();
 	}
 
 }

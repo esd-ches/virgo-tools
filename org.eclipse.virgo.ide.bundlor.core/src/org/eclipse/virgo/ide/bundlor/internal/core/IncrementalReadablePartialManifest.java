@@ -21,8 +21,9 @@ import org.eclipse.virgo.bundlor.EntryScannerListener;
 import org.eclipse.virgo.bundlor.support.partialmanifest.StandardReadablePartialManifest;
 
 /**
- * Extension to {@link StandardReadablePartialManifest} to allow for re-recording of type dependencies in an incremental
- * manner </p>.
+ * Extension to {@link StandardReadablePartialManifest} to allow for
+ * re-recording of type dependencies in an incremental manner </p>.
+ * 
  * @author Christian Dupuis
  */
 public final class IncrementalReadablePartialManifest extends StandardReadablePartialManifest implements
@@ -79,7 +80,8 @@ public final class IncrementalReadablePartialManifest extends StandardReadablePa
 	}
 
 	/**
-	 * Remove a recorded type from the partial manifest; also removes all induced dependencies that this type created.
+	 * Remove a recorded type from the partial manifest; also removes all
+	 * induced dependencies that this type created.
 	 * 
 	 * @param fullyQualifiedTypeName the type to remove
 	 */
@@ -209,7 +211,7 @@ public final class IncrementalReadablePartialManifest extends StandardReadablePa
 
 		void addUses(String usingPackage, String usedPackage) {
 			if (isRecordablePackage(usingPackage) && isRecordablePackage(usedPackage)
-					&& !usingPackage.equals(usedPackage)) {
+				&& !usingPackage.equals(usedPackage)) {
 				Set<String> usesSet = getUsesSet(usingPackage);
 				usesSet.add(usedPackage);
 			}

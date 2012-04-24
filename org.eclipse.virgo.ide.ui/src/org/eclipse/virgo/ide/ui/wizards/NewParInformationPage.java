@@ -19,7 +19,6 @@ import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.ui.ServerIdeUiPlugin;
 import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 
-
 /**
  * @author Christian Dupuis
  */

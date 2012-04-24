@@ -29,7 +29,6 @@ import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.virgo.ide.runtime.internal.core.Server;
 import org.eclipse.virgo.ide.runtime.internal.core.utils.StatusUtil;
 
-
 /**
  * @author Christian Dupuis
  * @since 1.0.1
@@ -58,7 +57,7 @@ public abstract class AbstractJmxServerCommand {
 			throw new IOException("MBean server not open for connection");
 		}
 		String connectorUrl = String.format(JMX_CONNECTOR_URL, serverBehaviour.getMBeanServerIp(),
-				server.getMBeanServerPort());
+											server.getMBeanServerPort());
 		return JMXConnectorFactory.connect(new JMXServiceURL(connectorUrl), h);
 	}
 
@@ -71,13 +70,11 @@ public abstract class AbstractJmxServerCommand {
 				try {
 					connector = getJmxConnector();
 					return template.invokeOperation(connector.getMBeanServerConnection());
-				}
-				finally {
+				} finally {
 					if (connector != null) {
 						try {
 							connector.close();
-						}
-						catch (IOException e) {
+						} catch (IOException e) {
 							StatusUtil.error(e);
 						}
 					}
@@ -90,11 +87,9 @@ public abstract class AbstractJmxServerCommand {
 
 		try {
 			return task.get(30, TimeUnit.SECONDS);
-		}
-		catch (InterruptedException e) {
+		} catch (InterruptedException e) {
 			// swallow exception here
-		}
-		catch (ExecutionException e) {
+		} catch (ExecutionException e) {
 			// swallow exception here
 		}
 

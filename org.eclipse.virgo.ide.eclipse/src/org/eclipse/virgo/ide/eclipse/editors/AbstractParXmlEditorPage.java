@@ -30,9 +30,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.ScrolledForm;
 
 /**
- * SpringSource Tool Suite Team - Portions of this class were copied from PDE's
- * DependenciesPage in order to provide a dependency editor-like form page
- * outside of the PDEFormEditor.
+ * SpringSource Tool Suite Team - Portions of this class were copied from PDE's DependenciesPage in order to provide a
+ * dependency editor-like form page outside of the PDEFormEditor.
  */
 @SuppressWarnings("restriction")
 public abstract class AbstractParXmlEditorPage extends AbstractPdeFormPage {

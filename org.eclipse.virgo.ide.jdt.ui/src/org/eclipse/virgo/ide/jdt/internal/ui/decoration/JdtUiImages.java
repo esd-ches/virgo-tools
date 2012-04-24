@@ -21,22 +21,16 @@ import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.virgo.ide.jdt.ui.JdtUiPlugin;
 
-
 /**
- * The images provided by the Spring UI plugin. Initialize the image registry by
- * declaring all of the required graphics. This involves creating JFace image
- * descriptors describing how to create/find the image should it be needed. The
- * image is not actually allocated until requested.
- * Prefix conventions Wizard Banners WIZBAN_ Preference Banners PREF_BAN_
- * Property Page Banners PROPBAN_ Color toolbar CTOOL_ Enable toolbar ETOOL_
- * Disable toolbar DTOOL_ Local enabled toolbar ELCL_ Local Disable toolbar
- * DLCL_ Object large OBJL_ Object small OBJS_ View VIEW_ Product images PROD_
- * Misc images MISC_
- * Where are the images? The images (typically gifs) are found in the same
- * location as this plugin class. This may mean the same package directory as
- * the package holding this class. The images are declared using
- * <code>this.getClass()</code> to ensure they are looked up via this plugin
- * class.
+ * The images provided by the Spring UI plugin. Initialize the image registry by declaring all of the required graphics.
+ * This involves creating JFace image descriptors describing how to create/find the image should it be needed. The image
+ * is not actually allocated until requested. Prefix conventions Wizard Banners WIZBAN_ Preference Banners PREF_BAN_
+ * Property Page Banners PROPBAN_ Color toolbar CTOOL_ Enable toolbar ETOOL_ Disable toolbar DTOOL_ Local enabled
+ * toolbar ELCL_ Local Disable toolbar DLCL_ Object large OBJL_ Object small OBJS_ View VIEW_ Product images PROD_ Misc
+ * images MISC_ Where are the images? The images (typically gifs) are found in the same location as this plugin class.
+ * This may mean the same package directory as the package holding this class. The images are declared using
+ * <code>this.getClass()</code> to ensure they are looked up via this plugin class.
+ * 
  * @author Christian Dupuis
  * @see org.eclipse.jface.resource.ImageRegistry
  */
@@ -53,10 +47,8 @@ public class JdtUiImages {
 
 	static {
 		try {
-			ICON_BASE_URL = new URL(JdtUiPlugin.getDefault().getBundle().getEntry("/"),
-					ICON_PATH_PREFIX);
-		}
-		catch (MalformedURLException e) {
+			ICON_BASE_URL = new URL(JdtUiPlugin.getDefault().getBundle().getEntry("/"), ICON_PATH_PREFIX);
+		} catch (MalformedURLException e) {
 		}
 	}
 
@@ -67,6 +59,7 @@ public class JdtUiImages {
 	private static ImageRegistry imageRegistry;
 
 	public static final String IMG_OVR_LOCKED = NAME_PREFIX + "locked_ovr.gif";
+
 	public static final String IMG_OVR_EXPORTED = NAME_PREFIX + "package_export_ovr.gif";
 
 	private final static String OVR = "ovr16/"; // basic colors -
@@ -74,6 +67,7 @@ public class JdtUiImages {
 	// size 16x16
 
 	public static final ImageDescriptor DESC_OVR_LOCKED = createManaged(OVR, IMG_OVR_LOCKED);
+
 	public static final ImageDescriptor DESC_OVR_EXPORTED = createManaged(OVR, IMG_OVR_EXPORTED);
 
 	/**
@@ -85,16 +79,16 @@ public class JdtUiImages {
 	}
 
 	/**
-	 * Sets the three image descriptors for enabled, disabled, and hovered to an
-	 * action. The actions are retrieved from the *tool16 folders.
+	 * Sets the three image descriptors for enabled, disabled, and hovered to an action. The actions are retrieved from
+	 * the *tool16 folders.
 	 */
 	public static void setToolImageDescriptors(IAction action, String iconName) {
 		setImageDescriptors(action, "tool16", iconName);
 	}
 
 	/**
-	 * Sets the three image descriptors for enabled, disabled, and hovered to an
-	 * action. The actions are retrieved from the *lcl16 folders.
+	 * Sets the three image descriptors for enabled, disabled, and hovered to an action. The actions are retrieved from
+	 * the *lcl16 folders.
 	 */
 	public static void setLocalImageDescriptors(IAction action, String iconName) {
 		setImageDescriptors(action, "lcl16", iconName);
@@ -120,13 +114,11 @@ public class JdtUiImages {
 
 	private static void setImageDescriptors(IAction action, String type, String relPath) {
 		try {
-			ImageDescriptor id = ImageDescriptor
-					.createFromURL(makeIconFileURL("d" + type, relPath));
+			ImageDescriptor id = ImageDescriptor.createFromURL(makeIconFileURL("d" + type, relPath));
 			if (id != null) {
 				action.setDisabledImageDescriptor(id);
 			}
-		}
-		catch (MalformedURLException e) {
+		} catch (MalformedURLException e) {
 		}
 		/*
 		 * try { ImageDescriptor id =
@@ -139,8 +131,8 @@ public class JdtUiImages {
 
 	private static ImageDescriptor createManaged(String prefix, String name) {
 		try {
-			ImageDescriptor result = ImageDescriptor.createFromURL(makeIconFileURL(prefix, name
-					.substring(NAME_PREFIX_LENGTH)));
+			ImageDescriptor result = ImageDescriptor.createFromURL(makeIconFileURL(prefix,
+					name.substring(NAME_PREFIX_LENGTH)));
 			if (imageDescriptors == null) {
 				imageDescriptors = new HashMap<String, ImageDescriptor>();
 			}
@@ -148,8 +140,7 @@ public class JdtUiImages {
 			if (imageRegistry != null) {
 			}
 			return result;
-		}
-		catch (MalformedURLException e) {
+		} catch (MalformedURLException e) {
 			return ImageDescriptor.getMissingImageDescriptor();
 		}
 	}
@@ -157,8 +148,7 @@ public class JdtUiImages {
 	private static ImageDescriptor create(String prefix, String name) {
 		try {
 			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));
-		}
-		catch (MalformedURLException e) {
+		} catch (MalformedURLException e) {
 			return ImageDescriptor.getMissingImageDescriptor();
 		}
 	}

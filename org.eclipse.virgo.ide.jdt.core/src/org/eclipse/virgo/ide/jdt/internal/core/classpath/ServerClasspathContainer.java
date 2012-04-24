@@ -63,6 +63,7 @@ import org.eclipse.wst.server.core.IRuntime;
  * <p>
  * This implementation creates very rigorous accessibility rules on every {@link IClasspathEntry} that it creates. Those
  * rules match the OSGi runtime environment and therefore mirror the runtime class path in the SpringSource AP.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
@@ -94,8 +95,8 @@ public class ServerClasspathContainer implements IClasspathContainer {
 	/**
 	 * {@link IClasspathAttribute} to prevent WTP warning of non exportable container
 	 */
-	public static final IClasspathAttribute[] CLASSPATH_CONTAINER_ATTRIBUTE = new IClasspathAttribute[] { JavaCore
-			.newClasspathAttribute("org.eclipse.jst.component.nondependency", "") };
+	public static final IClasspathAttribute[] CLASSPATH_CONTAINER_ATTRIBUTE = new IClasspathAttribute[] { JavaCore.newClasspathAttribute(
+			"org.eclipse.jst.component.nondependency", "") };
 
 	/** Internal cache of {@link IAccessRule}s keyed by a {@link IPath} */
 	private static Map<IPath, IAccessRule> accessibleRules = new ConcurrentHashMap<IPath, IAccessRule>();
@@ -104,8 +105,8 @@ public class ServerClasspathContainer implements IClasspathContainer {
 	 * {@link IClasspathAttribute} that is installed on a {@link IClasspathEntry} to indicate that a certain entry has
 	 * been created by this class path container
 	 */
-	private static final IClasspathAttribute[] CLASSPATH_ATTRIBUTES = new IClasspathAttribute[] { JavaCore
-			.newClasspathAttribute(CLASSPATH_ATTRIBUTE_VALUE, "true") };
+	private static final IClasspathAttribute[] CLASSPATH_ATTRIBUTES = new IClasspathAttribute[] { JavaCore.newClasspathAttribute(
+			CLASSPATH_ATTRIBUTE_VALUE, "true") };
 
 	/** Wildcard string used to append to a package */
 	private static final String PACKAGE_WILDCARD = "/*";
@@ -114,8 +115,8 @@ public class ServerClasspathContainer implements IClasspathContainer {
 	 * {@link IClasspathAttribute} that is installed on a {@link IClasspathEntry} to indicate that a certain entry has
 	 * been created by this class path container and is a test dependency
 	 */
-	private static final IClasspathAttribute[] TEST_CLASSPATH_ATTRIBUTES = new IClasspathAttribute[] { JavaCore
-			.newClasspathAttribute(TEST_CLASSPATH_ATTRIBUTE_VALUE, "true") };
+	private static final IClasspathAttribute[] TEST_CLASSPATH_ATTRIBUTES = new IClasspathAttribute[] { JavaCore.newClasspathAttribute(
+			TEST_CLASSPATH_ATTRIBUTE_VALUE, "true") };
 
 	/** Wildcard string indicating the entire packages in a certain {@link IClasspathEntry} */
 	private static final String WILDCARD_PATH = "**/*";
@@ -134,7 +135,9 @@ public class ServerClasspathContainer implements IClasspathContainer {
 
 	/**
 	 * Looks up and returns a {@link IAccessRule} for the given <code>path</code>.
-	 * @param path the path to look up or create the access rule for
+	 * 
+	 * @param path
+	 *            the path to look up or create the access rule for
 	 * @return a {@link IAccessRule} that allows to access the given <code>path</code>
 	 */
 	private static IAccessRule getAccessibleRule(IPath path) {
@@ -164,7 +167,9 @@ public class ServerClasspathContainer implements IClasspathContainer {
 
 	/**
 	 * Constructor to create a new class path container
-	 * @param javaProject the {@link IJavaProject} that this container is responsible for
+	 * 
+	 * @param javaProject
+	 *            the {@link IJavaProject} that this container is responsible for
 	 */
 	public ServerClasspathContainer(IJavaProject javaProject) {
 		this.javaProject = javaProject;
@@ -173,8 +178,11 @@ public class ServerClasspathContainer implements IClasspathContainer {
 
 	/**
 	 * Constructor to create a new class path container
-	 * @param javaProject the {@link IJavaProject} that this container is responsible for
-	 * @param entries populate the list of {@link IClasspathEntry}s with the given list
+	 * 
+	 * @param javaProject
+	 *            the {@link IJavaProject} that this container is responsible for
+	 * @param entries
+	 *            populate the list of {@link IClasspathEntry}s with the given list
 	 */
 	public ServerClasspathContainer(IJavaProject javaProject, IClasspathEntry[] entries) {
 		this.javaProject = javaProject;
@@ -207,6 +215,7 @@ public class ServerClasspathContainer implements IClasspathContainer {
 
 	/**
 	 * Returns the {@link IRuntime} that is project is targeted against
+	 * 
 	 * @return the serverRuntimes
 	 */
 	public String getDescriptionSuffix() {
@@ -270,11 +279,9 @@ public class ServerClasspathContainer implements IClasspathContainer {
 					resolveDependencies(entries, testManifest, locator, true);
 				}
 			}
-		}
-		catch (Throwable e) {
+		} catch (Throwable e) {
 			JdtCorePlugin.log(e);
-		}
-		finally {
+		} finally {
 			// Shutdown DependencyLocator
 			if (locator != null) {
 				locator.shutdown();
@@ -308,10 +315,9 @@ public class ServerClasspathContainer implements IClasspathContainer {
 	private void saveTimestamp(IFile manifestFile) {
 		if (manifestFile != null && manifestFile.exists()) {
 			try {
-				manifestFile.setPersistentProperty(new QualifiedName(JdtCorePlugin.PLUGIN_ID, MANIFEST_TIMESTAMP), Long
-						.toString(manifestFile.getLocalTimeStamp()));
-			}
-			catch (CoreException e) {
+				manifestFile.setPersistentProperty(new QualifiedName(JdtCorePlugin.PLUGIN_ID, MANIFEST_TIMESTAMP),
+						Long.toString(manifestFile.getLocalTimeStamp()));
+			} catch (CoreException e) {
 				JdtCorePlugin.log(e);
 			}
 		}
@@ -319,8 +325,11 @@ public class ServerClasspathContainer implements IClasspathContainer {
 
 	/**
 	 * Create and add the classpath entries for the given {@link BundleManifest}.
-	 * @param manifest the given {@link BundleManifest} to add classpath entries for
-	 * @param testManifest <code>true</code> if the manifest is the TEST.MF
+	 * 
+	 * @param manifest
+	 *            the given {@link BundleManifest} to add classpath entries for
+	 * @param testManifest
+	 *            <code>true</code> if the manifest is the TEST.MF
 	 */
 	private void addClasspathEntriesFromBundleClassPath(List<IClasspathEntry> entries, BundleManifest manifest,
 			boolean testManifest) {
@@ -342,8 +351,11 @@ public class ServerClasspathContainer implements IClasspathContainer {
 
 	/**
 	 * Creates and adds {@link IClasspathEntry}s to the given set.
-	 * @param entries set to add the newly create {@link IClasspathEntry}s to
-	 * @param dependencies the resolved dependencies keyed by {@link File}
+	 * 
+	 * @param entries
+	 *            set to add the newly create {@link IClasspathEntry}s to
+	 * @param dependencies
+	 *            the resolved dependencies keyed by {@link File}
 	 */
 	// TODO CD merge if classpath entry already exists when resolving the test manifest
 	private void addClasspathEntriesFromResolutionResult(List<IClasspathEntry> entries,
@@ -358,13 +370,12 @@ public class ServerClasspathContainer implements IClasspathContainer {
 					// Adjust file name to eliminate cross platform problems
 					String fileName = file.toString().replace("\\", "/");
 					if (manifestLocationsByProject.containsKey(fileName)) {
-						createClasspathForProject(entries, fileName, testManifest, allowedRules
-								.toArray(new IAccessRule[allowedRules.size()]));
+						createClasspathForProject(entries, fileName, testManifest,
+								allowedRules.toArray(new IAccessRule[allowedRules.size()]));
 					}
-				}
-				else {
-					createClasspathEntryForFile(entries, file, testManifest, allowedRules
-							.toArray(new IAccessRule[allowedRules.size()]));
+				} else {
+					createClasspathEntryForFile(entries, file, testManifest,
+							allowedRules.toArray(new IAccessRule[allowedRules.size()]));
 				}
 			}
 			if (!testManifest) {
@@ -385,8 +396,11 @@ public class ServerClasspathContainer implements IClasspathContainer {
 
 	/**
 	 * Adds the given project as a workspace project to the list
-	 * @param workspaceBundles the already existing workspace bundles
-	 * @param project the bundle project to add
+	 * 
+	 * @param workspaceBundles
+	 *            the already existing workspace bundles
+	 * @param project
+	 *            the bundle project to add
 	 */
 	private void addWorkspaceBundle(Set<String> workspaceBundles, IProject project) {
 		if (project.isAccessible() && FacetUtils.isBundleProject(project)) {
@@ -402,7 +416,9 @@ public class ServerClasspathContainer implements IClasspathContainer {
 	 * Creates {@link IAccessRule}s for the given list of imported packages.
 	 * <p>
 	 * Only those packages from the {@link IClasspathEntry} that are imported will be visible.
-	 * @param packageImports the resolved and explicit package imports
+	 * 
+	 * @param packageImports
+	 *            the resolved and explicit package imports
 	 * @return the set of {@link IAccessRule}s
 	 */
 	private Set<IAccessRule> createAccessRulesFromPackageImports(List<String> packageImports) {
@@ -416,9 +432,13 @@ public class ServerClasspathContainer implements IClasspathContainer {
 
 	/**
 	 * Creates a single {@link IClasspathEntry} for the given <code>file</code> and <code>allowedRules</code>.
-	 * @param entries the list of {@link IClasspathEntry}
-	 * @param file the {@link File} representing a JAR file
-	 * @param allowedRules the set if {@link IAccessRule}s indicating package export restrictions
+	 * 
+	 * @param entries
+	 *            the list of {@link IClasspathEntry}
+	 * @param file
+	 *            the {@link File} representing a JAR file
+	 * @param allowedRules
+	 *            the set if {@link IAccessRule}s indicating package export restrictions
 	 */
 	private void createClasspathEntryForFile(List<IClasspathEntry> entries, File file, boolean testManifest,
 			IAccessRule... allowedRules) {
@@ -428,8 +448,7 @@ public class ServerClasspathContainer implements IClasspathContainer {
 		if (testManifest) {
 			entries.add(JavaCore.newLibraryEntry(new Path(file.getAbsolutePath()), getSourceAttachmentPath(file), null,
 					allowedRules, TEST_CLASSPATH_ATTRIBUTES, false));
-		}
-		else {
+		} else {
 			entries.add(JavaCore.newLibraryEntry(new Path(file.getAbsolutePath()), getSourceAttachmentPath(file), null,
 					allowedRules, CLASSPATH_ATTRIBUTES, false));
 		}
@@ -441,9 +460,13 @@ public class ServerClasspathContainer implements IClasspathContainer {
 	 * <p>
 	 * The <code>file</code> actually points to the workspace source folder and therefore this method creates a project
 	 * reference in contrast to a JAR reference.
-	 * @param entries the list of {@link IClasspathEntry}
-	 * @param fileName the file name representing a source folder
-	 * @param allowedRules the set if {@link IAccessRule}s indicating package export restrictions
+	 * 
+	 * @param entries
+	 *            the list of {@link IClasspathEntry}
+	 * @param fileName
+	 *            the file name representing a source folder
+	 * @param allowedRules
+	 *            the set if {@link IAccessRule}s indicating package export restrictions
 	 */
 	private void createClasspathForProject(List<IClasspathEntry> entries, String fileName, boolean testManifest,
 			IAccessRule... allowedRules) {
@@ -457,8 +480,7 @@ public class ServerClasspathContainer implements IClasspathContainer {
 
 		if (testManifest) {
 			entries.add(JavaCore.newProjectEntry(path, allowedRules, false, TEST_CLASSPATH_ATTRIBUTES, false));
-		}
-		else {
+		} else {
 			entries.add(JavaCore.newProjectEntry(path, allowedRules, false, CLASSPATH_ATTRIBUTES, false));
 		}
 	}
@@ -473,17 +495,13 @@ public class ServerClasspathContainer implements IClasspathContainer {
 					public int compare(IAccessRule o1, IAccessRule o2) {
 						if (o1.getKind() == o2.getKind()) {
 							return o1.getPattern().toString().compareTo(o2.getPattern().toString());
-						}
-						else if (o1.getKind() == IAccessRule.K_NON_ACCESSIBLE) {
+						} else if (o1.getKind() == IAccessRule.K_NON_ACCESSIBLE) {
 							return 1;
-						}
-						else if (o2.getKind() == IAccessRule.K_NON_ACCESSIBLE) {
+						} else if (o2.getKind() == IAccessRule.K_NON_ACCESSIBLE) {
 							return -1;
-						}
-						else if (o1.getKind() == IAccessRule.K_ACCESSIBLE) {
+						} else if (o1.getKind() == IAccessRule.K_ACCESSIBLE) {
 							return 1;
-						}
-						else if (o2.getKind() == IAccessRule.K_ACCESSIBLE) {
+						} else if (o2.getKind() == IAccessRule.K_ACCESSIBLE) {
 							return -1;
 						}
 						return 0;
@@ -506,7 +524,9 @@ public class ServerClasspathContainer implements IClasspathContainer {
 
 	/**
 	 * Creates the {@link DependencyLocator} to be used for resolution.
-	 * @param javaProject the {@link IJavaProject} to resolve dependencies for.
+	 * 
+	 * @param javaProject
+	 *            the {@link IJavaProject} to resolve dependencies for.
 	 * @return a configured and ready to use {@link DependencyLocator}
 	 * @throws IOException
 	 */
@@ -544,8 +564,7 @@ public class ServerClasspathContainer implements IClasspathContainer {
 								if (resolvedJarLocation != null) {
 									workspaceBundles.add(resolvedJarLocation.removeLastSegments(1).toString()
 											+ File.separator + "{bundle}");
-								}
-								else {
+								} else {
 									workspaceBundles.add(jarLocation.removeLastSegments(1).toString() + File.separator
 											+ "{bundle}");
 								}
@@ -574,15 +593,17 @@ public class ServerClasspathContainer implements IClasspathContainer {
 		ClasspathUtils.adjustLastModifiedDate(javaProject, true);
 
 		// Create DependencyLocator with path to server.config and server.profile
-		return ServerUtils.createDependencyLocator(javaProject.getProject(), workspaceBundles
-				.toArray(new String[workspaceBundles.size()]));
+		return ServerUtils.createDependencyLocator(javaProject.getProject(),
+				workspaceBundles.toArray(new String[workspaceBundles.size()]));
 	}
 
 	/**
 	 * Returns a path to the source attachment following the BRITS conventions if the sources jar can be find.
 	 * <p>
 	 * First checks if the user has overridden the convention and attached a custom archive.
-	 * @param file the JAR file to
+	 * 
+	 * @param file
+	 *            the JAR file to
 	 * @return the source JAR path
 	 */
 	private IPath getSourceAttachmentPath(File file) {
@@ -603,7 +624,9 @@ public class ServerClasspathContainer implements IClasspathContainer {
 
 	/**
 	 * Creates error markers for unresolved dependencies stored in the {@link DependencyLocationException}.
-	 * @param e a {@link DependencyLocationException} occurred during resolution
+	 * 
+	 * @param e
+	 *            a {@link DependencyLocationException} occurred during resolution
 	 */
 	private void handleDependencyLocationException(DependencyLocationException e, boolean testManifest) {
 		MarkerUtils.createErrorMarkers(e, javaProject, testManifest);
@@ -611,10 +634,15 @@ public class ServerClasspathContainer implements IClasspathContainer {
 
 	/**
 	 * Resolve the dependencies of the given {@link BundleManifest}.
-	 * @param entries the already collected {@link IClasspathEntry}
-	 * @param manifest the {@link BundleManifest} to add dependencies for
-	 * @param locator the {@link DependencyLocator} instance to use
-	 * @param testManifest <code>true</code>
+	 * 
+	 * @param entries
+	 *            the already collected {@link IClasspathEntry}
+	 * @param manifest
+	 *            the {@link BundleManifest} to add dependencies for
+	 * @param locator
+	 *            the {@link DependencyLocator} instance to use
+	 * @param testManifest
+	 *            <code>true</code>
 	 */
 	private void resolveDependencies(List<IClasspathEntry> entries, BundleManifest manifest,
 			IDependencyLocator locator, boolean testManifest) {
@@ -626,8 +654,7 @@ public class ServerClasspathContainer implements IClasspathContainer {
 
 				// Add classpath entries that are configured in the bundle manifest
 				addClasspathEntriesFromBundleClassPath(entries, manifest, testManifest);
-			}
-			catch (DependencyLocationException e) {
+			} catch (DependencyLocationException e) {
 
 				// Store for later removal of error markers
 				dependencyLocationException = e;
@@ -638,8 +665,7 @@ public class ServerClasspathContainer implements IClasspathContainer {
 				// Add classpath entries that are configured in the bundle manifest
 				addClasspathEntriesFromBundleClassPath(entries, manifest, testManifest);
 
-			}
-			finally {
+			} finally {
 				// Create error markers for un-resolved dependencies
 				handleDependencyLocationException(dependencyLocationException, testManifest);
 			}

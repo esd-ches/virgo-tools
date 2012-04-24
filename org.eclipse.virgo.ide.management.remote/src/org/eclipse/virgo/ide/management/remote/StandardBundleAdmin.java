@@ -26,14 +26,11 @@ import org.eclipse.osgi.service.resolver.ExportPackageDescription;
 import org.eclipse.osgi.service.resolver.PlatformAdmin;
 import org.eclipse.virgo.ide.management.remote.ServiceReference.Type;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.util.tracker.ServiceTracker;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
-import org.springframework.osgi.util.OsgiServiceReferenceUtils;
-
 
 /**
  * @author Christian Dupuis
@@ -50,13 +47,11 @@ public class StandardBundleAdmin implements BundleAdmin {
 
 	private ServiceTracker consoleProviderTracker;
 
-	public StandardBundleAdmin(PlatformAdmin platformAdmin,
-			PackageAdmin packageAdmin, BundleContext bundleContext) {
+	public StandardBundleAdmin(PlatformAdmin platformAdmin, PackageAdmin packageAdmin, BundleContext bundleContext) {
 		this.platformAdmin = platformAdmin;
 		this.packageAdmin = packageAdmin;
 		this.bundleContext = bundleContext;
-		this.consoleProviderTracker = new ServiceTracker(bundleContext,
-				CommandProvider.class.getName(), null);
+		this.consoleProviderTracker = new ServiceTracker(bundleContext, CommandProvider.class.getName(), null);
 		this.consoleProviderTracker.open();
 	}
 
@@ -85,8 +80,7 @@ public class StandardBundleAdmin implements BundleAdmin {
 		StringWriter writer = new StringWriter();
 		PrintWriter printWriter = new PrintWriter(writer);
 		try {
-			ServerCommandInterpreter interpreter = new ServerCommandInterpreter(
-					cmdLine, getServices(), printWriter);
+			ServerCommandInterpreter interpreter = new ServerCommandInterpreter(cmdLine, getServices(), printWriter);
 			interpreter.execute(interpreter.nextArgument());
 			try {
 				writer.close();
@@ -109,8 +103,8 @@ public class StandardBundleAdmin implements BundleAdmin {
 		for (org.osgi.framework.Bundle b : bundleContext.getBundles()) {
 
 			Object version = b.getHeaders().get("Bundle-Version");
-			Bundle bundle = new Bundle(Long.toString(b.getBundleId()), b
-					.getSymbolicName(), (version != null ? version.toString()
+			Bundle bundle = new Bundle(Long.toString(b.getBundleId()), b.getSymbolicName(), (version != null
+					? version.toString()
 					: "0"), getState(b), b.getLocation());
 
 			Dictionary<?, ?> headers = b.getHeaders();
@@ -121,33 +115,26 @@ public class StandardBundleAdmin implements BundleAdmin {
 				bundle.addHeader(key.toString(), value.toString());
 			}
 
-			BundleDescription bundleDescription = platformAdmin.getState(false)
-					.getBundle(b.getBundleId());
+			BundleDescription bundleDescription = platformAdmin.getState(false).getBundle(b.getBundleId());
 
-			ExportPackageDescription[] exportedPackages = bundleDescription
-					.getExportPackages();
+			ExportPackageDescription[] exportedPackages = bundleDescription.getExportPackages();
 
 			if (exportedPackages != null) {
 				for (ExportPackageDescription exportedPackage : exportedPackages) {
-					PackageExport packageExport = new PackageExport(
-							exportedPackage.getName(), (exportedPackage
-									.getVersion() != null ? exportedPackage
-									.getVersion().toString() : "0"));
+					PackageExport packageExport = new PackageExport(exportedPackage.getName(),
+							(exportedPackage.getVersion() != null ? exportedPackage.getVersion().toString() : "0"));
 					bundle.addPackageExport(packageExport);
 				}
 			}
 
-			ExportPackageDescription[] visiblePackages = platformAdmin
-					.getStateHelper().getVisiblePackages(bundleDescription);
+			ExportPackageDescription[] visiblePackages = platformAdmin.getStateHelper().getVisiblePackages(
+					bundleDescription);
 
 			if (visiblePackages != null) {
 				for (ExportPackageDescription visiblePackage : visiblePackages) {
-					PackageImport packageImport = new PackageImport(
-							visiblePackage.getName(), (visiblePackage
-									.getVersion() != null ? visiblePackage
-									.getVersion().toString() : "0"), Long
-									.toString(visiblePackage.getSupplier()
-											.getBundleId()));
+					PackageImport packageImport = new PackageImport(visiblePackage.getName(),
+							(visiblePackage.getVersion() != null ? visiblePackage.getVersion().toString() : "0"),
+							Long.toString(visiblePackage.getSupplier().getBundleId()));
 					bundle.addPackageImport(packageImport);
 				}
 			}
@@ -156,22 +143,18 @@ public class StandardBundleAdmin implements BundleAdmin {
 				for (ServiceReference ref : b.getRegisteredServices()) {
 					org.eclipse.virgo.ide.management.remote.ServiceReference reference = new org.eclipse.virgo.ide.management.remote.ServiceReference(
 							Type.REGISTERED, ref.getBundle().getBundleId(),
-							OsgiServiceReferenceUtils
-									.getServiceObjectClasses(ref));
-					Map<?, ?> props = OsgiServiceReferenceUtils
-							.getServicePropertiesAsMap(ref);
+							OsgiServiceReferenceUtils.getServiceObjectClasses(ref));
+					Map<?, ?> props = OsgiServiceReferenceUtils.getServicePropertiesAsMap(ref);
 					for (Object key : props.keySet()) {
 						String value = props.get(key).toString();
 						if (props.get(key).getClass().isArray()) {
-							value = Arrays.deepToString((Object[]) props
-									.get(key));
+							value = Arrays.deepToString((Object[]) props.get(key));
 						}
 						reference.addProperty(key.toString(), value);
 					}
 
 					if (ref.getUsingBundles() != null) {
-						for (org.osgi.framework.Bundle usingBundle : ref
-								.getUsingBundles()) {
+						for (org.osgi.framework.Bundle usingBundle : ref.getUsingBundles()) {
 							reference.addUsingBundle(usingBundle.getBundleId());
 						}
 					}
@@ -183,22 +166,18 @@ public class StandardBundleAdmin implements BundleAdmin {
 				for (ServiceReference ref : b.getServicesInUse()) {
 					org.eclipse.virgo.ide.management.remote.ServiceReference reference = new org.eclipse.virgo.ide.management.remote.ServiceReference(
 							Type.IN_USE, ref.getBundle().getBundleId(),
-							OsgiServiceReferenceUtils
-									.getServiceObjectClasses(ref));
-					Map<?, ?> props = OsgiServiceReferenceUtils
-							.getServicePropertiesAsMap(ref);
+							OsgiServiceReferenceUtils.getServiceObjectClasses(ref));
+					Map<?, ?> props = OsgiServiceReferenceUtils.getServicePropertiesAsMap(ref);
 					for (Object key : props.keySet()) {
 						String value = props.get(key).toString();
 						if (props.get(key).getClass().isArray()) {
-							value = Arrays.deepToString((Object[]) props
-									.get(key));
+							value = Arrays.deepToString((Object[]) props.get(key));
 						}
 						reference.addProperty(key.toString(), value);
 					}
 
 					if (ref.getUsingBundles() != null) {
-						for (org.osgi.framework.Bundle usingBundle : ref
-								.getUsingBundles()) {
+						for (org.osgi.framework.Bundle usingBundle : ref.getUsingBundles()) {
 							reference.addUsingBundle(usingBundle.getBundleId());
 						}
 					}
@@ -212,8 +191,7 @@ public class StandardBundleAdmin implements BundleAdmin {
 	}
 
 	private Object[] getServices() {
-		ServiceReference[] serviceRefs = consoleProviderTracker
-				.getServiceReferences();
+		ServiceReference[] serviceRefs = consoleProviderTracker.getServiceReferences();
 		if (serviceRefs == null)
 			return new Object[0];
 		Util.dsort(serviceRefs, 0, serviceRefs.length);

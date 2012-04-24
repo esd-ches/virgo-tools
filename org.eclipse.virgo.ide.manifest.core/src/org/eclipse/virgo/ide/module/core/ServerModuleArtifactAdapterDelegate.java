@@ -19,9 +19,9 @@ import org.eclipse.wst.server.core.IModuleArtifact;
 import org.eclipse.wst.server.core.ServerUtil;
 import org.eclipse.wst.server.core.model.ModuleArtifactAdapterDelegate;
 
-
 /**
  * {@link ModuleArtifactAdapterDelegate} implementation for dm Server specific project types.
+ * 
  * @author Christian Dupuis
  * @author Terry Hon
  * @since 2.0.0
@@ -37,7 +37,7 @@ public class ServerModuleArtifactAdapterDelegate extends ModuleArtifactAdapterDe
 		if (obj instanceof IAdaptable) {
 			resource = (IResource) ((IAdaptable) obj).getAdapter(IResource.class);
 		}
-		
+
 		if (resource != null) {
 			IProject project = resource.getProject();
 			for (IModule module : ServerUtil.getModules(FacetCorePlugin.WEB_FACET_ID)) {
@@ -64,17 +64,17 @@ public class ServerModuleArtifactAdapterDelegate extends ModuleArtifactAdapterDe
 		System.out.println(obj);
 		return null;
 	}
-	
+
 	/**
-	 * {@link IModuleArtifact} implementation carrying {@link IModule} instances. 
+	 * {@link IModuleArtifact} implementation carrying {@link IModule} instances.
 	 */
 	class ServerModuleArtifact implements IModuleArtifact {
 		private final IModule module;
-		
+
 		public ServerModuleArtifact(IModule module) {
 			this.module = module;
 		}
-		
+
 		public IModule getModule() {
 			return module;
 		}

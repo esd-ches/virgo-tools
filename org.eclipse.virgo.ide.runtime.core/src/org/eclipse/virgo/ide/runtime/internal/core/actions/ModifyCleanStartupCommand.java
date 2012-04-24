@@ -18,9 +18,9 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.virgo.ide.runtime.core.IServerWorkingCopy;
 
-
 /**
  * {@link AbstractOperation} to modify the clean startup setting
+ * 
  * @author Christian Dupuis
  * @since 2.0.0
  */

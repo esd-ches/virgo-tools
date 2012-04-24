@@ -42,6 +42,7 @@ import org.w3c.dom.Node;
 
 /**
  * Content assist processor for plan files.
+ * 
  * @author Christian Dupuis
  * @author Leo Dos Santos
  * @since 2.3.1
@@ -57,11 +58,9 @@ public class PlanContentAssistProcessor extends DefaultXMLCompletionProposalComp
 		if (attr != null) {
 			if (attr.equals("type")) {
 				computeTypeContentProposals(request, context);
-			}
-			else if (attr.equals("name")) {
+			} else if (attr.equals("name")) {
 				computeNameContentProposals(request, context);
-			}
-			else if (attr.equals("version")) {
+			} else if (attr.equals("version")) {
 				computeVersionContentProposals(request, context);
 			}
 		}
@@ -76,9 +75,9 @@ public class PlanContentAssistProcessor extends DefaultXMLCompletionProposalComp
 				Set<Artefact> bundles = RepositoryUtils.getImportBundleProposals(file.getProject(), prefix);
 				for (IArtefact bundle : bundles) {
 					String value = "\"" + bundle.getSymbolicName() + "\"";
-					request.addProposal(new CompletionProposal(value, request.getReplacementBeginPosition(), request
-							.getReplacementLength(), value.length(), ServerIdeUiPlugin
-							.getImage("full/obj16/osgi_obj.gif"), value, null, null));
+					request.addProposal(new CompletionProposal(value, request.getReplacementBeginPosition(),
+							request.getReplacementLength(), value.length(),
+							ServerIdeUiPlugin.getImage("full/obj16/osgi_obj.gif"), value, null, null));
 				}
 			}
 		}
@@ -89,8 +88,8 @@ public class PlanContentAssistProcessor extends DefaultXMLCompletionProposalComp
 		for (String type : TYPES) {
 			if (type.startsWith(prefix)) {
 				String value = "\"" + type + "\"";
-				request.addProposal(new CompletionProposal(value, request.getReplacementBeginPosition(), request
-						.getReplacementLength(), value.length()));
+				request.addProposal(new CompletionProposal(value, request.getReplacementBeginPosition(),
+						request.getReplacementLength(), value.length()));
 				;
 			}
 		}
@@ -112,8 +111,8 @@ public class PlanContentAssistProcessor extends DefaultXMLCompletionProposalComp
 							if (proposalValue.regionMatches(0, prefix, 0, prefix.length())) {
 								String value = "\"" + proposalValue + "\"";
 								request.addProposal(new CompletionProposal(value,
-										request.getReplacementBeginPosition(), request.getReplacementLength(), value
-												.length()));
+										request.getReplacementBeginPosition(), request.getReplacementLength(),
+										value.length()));
 							}
 						}
 					}
@@ -163,8 +162,7 @@ public class PlanContentAssistProcessor extends DefaultXMLCompletionProposalComp
 			try {
 				model = StructuredModelManager.getModelManager().getExistingModelForRead(document);
 				location = model.getBaseLocation();
-			}
-			finally {
+			} finally {
 				if (model != null) {
 					model.releaseFromRead();
 				}

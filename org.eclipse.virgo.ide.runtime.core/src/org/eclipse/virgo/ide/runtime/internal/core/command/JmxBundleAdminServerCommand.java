@@ -24,13 +24,11 @@ import org.eclipse.libra.framework.editor.core.model.IBundle;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 
-
 /**
  * @author Christian Dupuis
  * @author Kaloyan Raev
  */
-public class JmxBundleAdminServerCommand extends AbstractJmxServerCommand implements
-		IServerCommand<Map<Long, IBundle>> {
+public class JmxBundleAdminServerCommand extends AbstractJmxServerCommand implements IServerCommand<Map<Long, IBundle>> {
 
 	public JmxBundleAdminServerCommand(IServerBehaviour serverBehaviour) {
 		super(serverBehaviour);
@@ -42,29 +40,26 @@ public class JmxBundleAdminServerCommand extends AbstractJmxServerCommand implem
 		return (Map<Long, IBundle>) execute(new JmxServerCommandTemplate() {
 
 			public Object invokeOperation(MBeanServerConnection connection) throws Exception {
-				ObjectName name = ObjectName
-						.getInstance("org.eclipse.virgo.kernel:type=BundleAdmin");
+				ObjectName name = ObjectName.getInstance("org.eclipse.virgo.kernel:type=BundleAdmin");
 
 				// Verify that the BundleAdmin exists and runs
 				checkBundleAdminAndInstall(serverBehaviour, connection, name);
- 
+
 				return connection.invoke(name, "retrieveBundles", null, null);
 			}
 
-			
 		});
 	}
-	
+
 	private static void checkBundleAdminAndInstall(IServerBehaviour behaviour, MBeanServerConnection connection,
 			ObjectName name) throws IOException, TimeoutException, URISyntaxException {
 		try {
 			// Check if BundleAdmin MBean is registered
 			connection.getObjectInstance(name);
-		}
-		catch (InstanceNotFoundException e) {
+		} catch (InstanceNotFoundException e) {
 			// Install the BundleAdmin bundle
-			behaviour.getVersionHandler().getServerDeployCommand(behaviour,
-					ServerCorePlugin.getDefault().getConnectorBundleUri()).execute();
+			behaviour.getVersionHandler()
+					.getServerDeployCommand(behaviour, ServerCorePlugin.getDefault().getConnectorBundleUri()).execute();
 		}
 	}
 

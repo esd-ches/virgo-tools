@@ -24,7 +24,7 @@ public class BundleManifestHeaderElement extends AbstractManifestElement {
 	private static final int BUNDLE_MANIFEST_HEADER_ELEMENT_TYPE = 2;
 
 	private ManifestElement manifestElement;
-	
+
 	public BundleManifestHeaderElement(BundleManifestHeader parent, ManifestElement manifestElement) {
 		super(parent, manifestElement.toString());
 		this.manifestElement = manifestElement;
@@ -33,14 +33,14 @@ public class BundleManifestHeaderElement extends AbstractManifestElement {
 	public int getElementType() {
 		return BUNDLE_MANIFEST_HEADER_ELEMENT_TYPE;
 	}
-	
+
 	public ManifestElement getManifestElement() {
 		return manifestElement;
 	}
-	
+
 	@Override
 	public String toString() {
 		return new StringBuilder().append(manifestElement.getValue()).toString();
 	}
-	
+
 }

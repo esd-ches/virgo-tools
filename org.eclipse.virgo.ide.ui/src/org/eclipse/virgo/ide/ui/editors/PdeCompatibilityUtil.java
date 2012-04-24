@@ -33,11 +33,9 @@ class PdeCompatibilityUtil {
 			try {
 				systemFileEditorInputClass = Class.forName("org.eclipse.pde.internal.ui.editor.SystemFileEditorInput");
 				return systemFileEditorInputClass.isInstance(input);
-			}
-			catch (ClassNotFoundException e) {
+			} catch (ClassNotFoundException e) {
 				isEclipse34 = false;
-			}
-			catch (Throwable e) {
+			} catch (Throwable e) {
 				StatusManager.getManager().handle(
 						new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID,
 								"Failed to check for instance of SystemFileEditorInput"));
@@ -58,11 +56,9 @@ class PdeCompatibilityUtil {
 				systemFileEditorInputClass = Class.forName("org.eclipse.pde.internal.ui.editor.SystemFileEditorInput");
 				Constructor<?> constructor = systemFileEditorInputClass.getConstructor(File.class);
 				return (IEditorInput) constructor.newInstance(file);
-			}
-			catch (ClassNotFoundException e) {
+			} catch (ClassNotFoundException e) {
 				isEclipse34 = false;
-			}
-			catch (Throwable e) {
+			} catch (Throwable e) {
 				StatusManager.getManager().handle(
 						new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID,
 								"Failed to create instance of SystemFileEditorInput"));

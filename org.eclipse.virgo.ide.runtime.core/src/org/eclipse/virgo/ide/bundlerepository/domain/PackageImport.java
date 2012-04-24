@@ -13,8 +13,9 @@ package org.eclipse.virgo.ide.bundlerepository.domain;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepositoryManager;
 
 /**
- * Represent an import-package declaration for an OSGi bundle. Ignores matching attributes and only worries about
- * version range and optionality.
+ * Represent an import-package declaration for an OSGi bundle. Ignores matching
+ * attributes and only worries about version range and optionality.
+ * 
  * @author acolyer
  */
 public class PackageImport {
@@ -23,7 +24,8 @@ public class PackageImport {
 
 	private boolean isOptional; // whether or not this import is optional
 
-	private VersionRange importRange; // the range of version that are acceptable
+	private VersionRange importRange; // the range of version that are
+										// acceptable
 
 	/** for persistence use only */
 	protected PackageImport() {
@@ -31,6 +33,7 @@ public class PackageImport {
 
 	/**
 	 * Create a new package import.
+	 * 
 	 * @param name the name of the package to be imported
 	 * @param isOptional true if this is an optional import
 	 * @param range the range of versions that are acceptable
@@ -55,6 +58,7 @@ public class PackageImport {
 
 	/**
 	 * Return true if this import can be satisfied by the given exported package
+	 * 
 	 * @param pkg the candidate package for satisfying this import
 	 */
 	public boolean isSatisfiedBy(PackageExport pkg) {

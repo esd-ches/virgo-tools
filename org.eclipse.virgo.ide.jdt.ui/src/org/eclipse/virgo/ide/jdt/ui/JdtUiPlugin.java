@@ -15,20 +15,21 @@ import org.osgi.framework.BundleContext;
 
 /**
  * Bundle {@link AbstractUIPlugin} for the jdt.ui plug-in.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
 public class JdtUiPlugin extends AbstractUIPlugin {
-	
+
 	/** The bundle-symbolic name */
 	public static final String PLUGIN_ID = "org.eclipse.virgo.ide.jdt.ui";
-	
+
 	/** Id for the decorator */
-	public static final String DECORATOR_ID  = PLUGIN_ID + ".notAccessibleJavaElementDecorator";
+	public static final String DECORATOR_ID = PLUGIN_ID + ".notAccessibleJavaElementDecorator";
 
 	// The shared instance
 	private static JdtUiPlugin plugin;
-	
+
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;

@@ -164,8 +164,7 @@ public class SpringBundleSourcePage extends BundleSourcePage {
 					fConfiguration.adaptToPreferenceChange(event);
 				}
 			}
-		}
-		finally {
+		} finally {
 			super.handlePreferenceStoreChanged(event);
 		}
 	}
@@ -235,8 +234,7 @@ public class SpringBundleSourcePage extends BundleSourcePage {
 			try {
 				field = classAncestor.getDeclaredField("fSelection");
 				break;
-			}
-			catch (NoSuchFieldException e) {
+			} catch (NoSuchFieldException e) {
 			}
 			// meh, just move up the hierarchy
 			classAncestor = classAncestor.getSuperclass();
@@ -246,43 +244,36 @@ public class SpringBundleSourcePage extends BundleSourcePage {
 			Object selection;
 			try {
 				selection = field.get(this);
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				throw new RuntimeException("Internal Error", e);
 			}
 
 			if (selection instanceof ImportLibraryObject) {
 				return getSpecificRange(((ImportLibraryObject) selection).getModel(), IHeaderConstants.IMPORT_LIBRARY,
 						((ImportLibraryObject) selection).getId());
-			}
-			else if (selection instanceof ImportBundleObject) {
+			} else if (selection instanceof ImportBundleObject) {
 				return getSpecificRange(((ImportBundleObject) selection).getModel(), IHeaderConstants.IMPORT_BUNDLE,
 						((ImportBundleObject) selection).getId());
-			}
-			else if (selection instanceof ImportPackageObject) {
+			} else if (selection instanceof ImportPackageObject) {
 				ImportPackageObject impObj = (ImportPackageObject) selection;
 				String key = impObj.getHeader().getKey();
 				if (key != null && key.equalsIgnoreCase(IHeaderConstants.IMPORT_TEMPLATE)) {
 					return getSpecificRange(((ImportPackageObject) selection).getModel(),
 							IHeaderConstants.IMPORT_TEMPLATE, ((ImportPackageObject) selection).getValue());
-				}
-				else if (key != null && key.equalsIgnoreCase(IHeaderConstants.EXCLUDED_IMPORTS)) {
+				} else if (key != null && key.equalsIgnoreCase(IHeaderConstants.EXCLUDED_IMPORTS)) {
 					return getSpecificRange(((ImportPackageObject) selection).getModel(),
 							IHeaderConstants.EXCLUDED_IMPORTS, ((ImportPackageObject) selection).getValue());
-				}
-				else if (key != null && key.equalsIgnoreCase(IHeaderConstants.UNVERSIONED_IMPORTS)) {
+				} else if (key != null && key.equalsIgnoreCase(IHeaderConstants.UNVERSIONED_IMPORTS)) {
 					return getSpecificRange(((ImportPackageObject) selection).getModel(),
 							IHeaderConstants.UNVERSIONED_IMPORTS, ((ImportPackageObject) selection).getValue());
 				}
-			}
-			else if (selection instanceof ExportPackageObject) {
+			} else if (selection instanceof ExportPackageObject) {
 				ExportPackageObject expObj = (ExportPackageObject) selection;
 				String key = expObj.getHeader().getKey();
 				if (key != null && key.equalsIgnoreCase(IHeaderConstants.EXPORT_TEMPLATE)) {
 					return getSpecificRange(((ExportPackageObject) selection).getModel(),
 							IHeaderConstants.EXPORT_TEMPLATE, ((ExportPackageObject) selection).getValue());
-				}
-				else if (key != null && key.equalsIgnoreCase(IHeaderConstants.EXCLUDED_EXPORTS)) {
+				} else if (key != null && key.equalsIgnoreCase(IHeaderConstants.EXCLUDED_EXPORTS)) {
 					return getSpecificRange(((ExportPackageObject) selection).getModel(),
 							IHeaderConstants.EXCLUDED_EXPORTS, ((ExportPackageObject) selection).getValue());
 				}
@@ -297,23 +288,17 @@ public class SpringBundleSourcePage extends BundleSourcePage {
 			// Need an identifying class for label provider
 			if (parent instanceof ImportPackageHeader) {
 				return ((ImportPackageHeader) parent).getPackages();
-			}
-			else if (parent instanceof ExportPackageHeader) {
+			} else if (parent instanceof ExportPackageHeader) {
 				return ((ExportPackageHeader) parent).getPackages();
-			}
-			else if (parent instanceof RequiredExecutionEnvironmentHeader) {
+			} else if (parent instanceof RequiredExecutionEnvironmentHeader) {
 				return ((RequiredExecutionEnvironmentHeader) parent).getEnvironments();
-			}
-			else if (parent instanceof RequireBundleHeader) {
+			} else if (parent instanceof RequireBundleHeader) {
 				return ((RequireBundleHeader) parent).getRequiredBundles();
-			}
-			else if (parent instanceof BundleClasspathHeader) {
+			} else if (parent instanceof BundleClasspathHeader) {
 				return getPluginLibraries();
-			}
-			else if (parent instanceof ImportBundleHeader) {
+			} else if (parent instanceof ImportBundleHeader) {
 				return ((ImportBundleHeader) parent).getImportedBundles();
-			}
-			else if (parent instanceof ImportLibraryHeader) {
+			} else if (parent instanceof ImportLibraryHeader) {
 				return ((ImportLibraryHeader) parent).getImportedLibraries();
 			}
 			return new Object[0];
@@ -374,20 +359,15 @@ public class SpringBundleSourcePage extends BundleSourcePage {
 		public String getText(Object obj) {
 			if (obj instanceof PackageObject) {
 				return ((PackageObject) obj).getName();
-			}
-			else if (obj instanceof ExecutionEnvironment) {
+			} else if (obj instanceof ExecutionEnvironment) {
 				return ((ExecutionEnvironment) obj).getName();
-			}
-			else if (obj instanceof RequireBundleObject) {
+			} else if (obj instanceof RequireBundleObject) {
 				return getTextRequireBundle(((RequireBundleObject) obj));
-			}
-			else if (obj instanceof ImportLibraryObject) {
+			} else if (obj instanceof ImportLibraryObject) {
 				return ((ImportLibraryObject) obj).getId();
-			}
-			else if (obj instanceof ImportBundleObject) {
+			} else if (obj instanceof ImportBundleObject) {
 				return ((ImportBundleObject) obj).getId();
-			}
-			else if (obj instanceof ManifestHeader) {
+			} else if (obj instanceof ManifestHeader) {
 				return ((ManifestHeader) obj).getName();
 			}
 			return super.getText(obj);
@@ -430,30 +410,24 @@ public class SpringBundleSourcePage extends BundleSourcePage {
 			PDELabelProvider labelProvider = PDEPlugin.getDefault().getLabelProvider();
 			if (obj instanceof PackageObject) {
 				return labelProvider.get(PDEPluginImages.DESC_PACKAGE_OBJ);
-			}
-			else if (obj instanceof ExecutionEnvironment) {
+			} else if (obj instanceof ExecutionEnvironment) {
 				return labelProvider.get(PDEPluginImages.DESC_JAVA_LIB_OBJ);
-			}
-			else if (obj instanceof RequireBundleObject) {
+			} else if (obj instanceof RequireBundleObject) {
 				int flags = SharedLabelProvider.F_EXTERNAL;
 				if (((RequireBundleObject) obj).isReexported()) {
 					flags = flags | SharedLabelProvider.F_EXPORT;
 				}
 				return labelProvider.get(PDEPluginImages.DESC_REQ_PLUGIN_OBJ, flags);
-			}
-			else if (obj instanceof ImportLibraryObject) {
+			} else if (obj instanceof ImportLibraryObject) {
 				return labelProvider.get(PDEPluginImages.DESC_JAR_LIB_OBJ);
-			}
-			else if (obj instanceof ImportBundleObject) {
+			} else if (obj instanceof ImportBundleObject) {
 				return labelProvider.get(PDEPluginImages.DESC_BUNDLE_OBJ);
-			}
-			else if (obj instanceof ManifestHeader) {
+			} else if (obj instanceof ManifestHeader) {
 				if (isSpringHeader(((ManifestHeader) obj).getKey())) {
 					return labelProvider.get(ServerIdeUiPlugin.getImageDescriptor("full/view16/green_ball_obj.gif"));
 				}
 				return labelProvider.get(PDEPluginImages.DESC_BUILD_VAR_OBJ);
-			}
-			else if (obj instanceof IPluginLibrary) {
+			} else if (obj instanceof IPluginLibrary) {
 				return labelProvider.get(PDEPluginImages.DESC_JAVA_LIB_OBJ);
 			}
 			return null;

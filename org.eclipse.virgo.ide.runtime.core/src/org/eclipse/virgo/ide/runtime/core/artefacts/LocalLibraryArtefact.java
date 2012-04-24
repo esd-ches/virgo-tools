@@ -15,13 +15,14 @@ import java.net.URI;
 
 import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 
-
 /**
- * An extension to {@link BundleArtefact} to take some more information of local bundles.
+ * An extension to {@link BundleArtefact} to take some more information of local
+ * bundles.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
-public class LocalLibraryArtefact extends LibraryArtefact implements ILocalArtefact  {
+public class LocalLibraryArtefact extends LibraryArtefact implements ILocalArtefact {
 
 	private static final long serialVersionUID = 2752279714525304374L;
 

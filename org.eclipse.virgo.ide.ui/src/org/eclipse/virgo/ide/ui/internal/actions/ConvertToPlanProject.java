@@ -32,8 +32,8 @@ import org.eclipse.wst.common.project.facet.core.IFacetedProject;
 import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 
 /**
- * Menu action to add or remove the SpringSource Plan bundle project
- * nature/facet from a given project.
+ * Menu action to add or remove the SpringSource Plan bundle project nature/facet from a given project.
+ * 
  * @author Christian Dupuis
  * @since 2.3.1
  */
@@ -47,8 +47,7 @@ public class ConvertToPlanProject implements IObjectActionDelegate {
 			IProject project = iter.next();
 			if (FacetUtils.isPlanProject(project)) {
 				removeFacetsFromProject(project);
-			}
-			else {
+			} else {
 				addFacetsToProject(project);
 			}
 		}
@@ -69,12 +68,10 @@ public class ConvertToPlanProject implements IObjectActionDelegate {
 					if (!project.isOpen()) {
 						enabled = false;
 						break;
-					}
-					else {
+					} else {
 						selected.add(project);
 					}
-				}
-				else {
+				} else {
 					enabled = false;
 					break;
 				}
@@ -97,8 +94,7 @@ public class ConvertToPlanProject implements IObjectActionDelegate {
 
 		try {
 			ResourcesPlugin.getWorkspace().run(oper, new NullProgressMonitor());
-		}
-		catch (CoreException e) {
+		} catch (CoreException e) {
 		}
 	}
 
@@ -113,8 +109,7 @@ public class ConvertToPlanProject implements IObjectActionDelegate {
 
 		try {
 			ResourcesPlugin.getWorkspace().run(oper, new NullProgressMonitor());
-		}
-		catch (CoreException e) {
+		} catch (CoreException e) {
 		}
 	}
 }

@@ -28,7 +28,6 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.ui.IURIEditorInput;
 import org.eclipse.virgo.ide.manifest.core.editor.model.SpringBundleModel;
 
-
 /**
  * @author Christian Dupuis
  * @author Steffen Pingel
@@ -50,24 +49,20 @@ public class SpringBundleInputContext extends BundleInputContext {
 			IFile file = ((IFileEditorInput) input).getFile();
 			model.setUnderlyingResource(file);
 			model.setCharset(file.getCharset());
-		}
-		else if (PdeCompatibilityUtil.isSystemFileEditorInput(input)) {
+		} else if (PdeCompatibilityUtil.isSystemFileEditorInput(input)) {
 			File file = (File) (input).getAdapter(File.class);
 			IPath path = new Path(file.getAbsolutePath()).removeLastSegments(2);
 			model.setInstallLocation(path.addTrailingSeparator().toString());
 			model.setCharset(getDefaultCharset());
-		}
-		else if (input instanceof IURIEditorInput) {
+		} else if (input instanceof IURIEditorInput) {
 			IFileStore store = EFS.getStore(((IURIEditorInput) input).getURI());
 			model.setInstallLocation(store.getParent().getParent().toString());
 			model.setCharset(getDefaultCharset());
-		}
-		else if (input instanceof JarEntryEditorInput) {
+		} else if (input instanceof JarEntryEditorInput) {
 			File file = (File) ((JarEntryEditorInput) input).getAdapter(File.class);
 			model.setInstallLocation(file.toString());
 			model.setCharset(getDefaultCharset());
-		}
-		else {
+		} else {
 			model.setCharset(getDefaultCharset());
 		}
 		model.load();

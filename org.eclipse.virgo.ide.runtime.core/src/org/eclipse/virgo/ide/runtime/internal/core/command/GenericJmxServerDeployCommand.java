@@ -20,14 +20,14 @@ import javax.management.openmbean.CompositeData;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.internal.core.DeploymentIdentity;
 
-
 /**
  * {@link IServerCommand} to deploy a PAR or bundle.
+ * 
  * @author Christian Dupuis
  * @since 1.0.1
  */
-public class GenericJmxServerDeployCommand extends AbstractJmxServerDeployerCommand<CompositeData>
-		implements IServerCommand<DeploymentIdentity> {
+public class GenericJmxServerDeployCommand extends AbstractJmxServerDeployerCommand<CompositeData> implements
+		IServerCommand<DeploymentIdentity> {
 
 	private static final String ITEM_SYMBOLIC_NAME = "symbolicName"; //$NON-NLS-1$
 

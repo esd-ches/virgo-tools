@@ -14,6 +14,7 @@ import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 
 /**
  * Represents an artefact in the repository :- bundle or library
+ * 
  * @author adriancolyer
  * 
  */
@@ -25,24 +26,29 @@ public abstract class Artefact implements IArtefact {
 
 	private OsgiVersion version; // artefact version
 
-	private byte[] organisationName; // organisation name as defined in ivy.xml and used in artefact path
+	private byte[] organisationName; // organisation name as defined in ivy.xml
+										// and used in artefact path
 
-	private byte[] moduleName; // module name as defined in ivy.xml and used in artefact path
+	private byte[] moduleName; // module name as defined in ivy.xml and used in
+								// artefact path
 
-	private boolean sourceAvailable = false; // indicates if source code is available
+	private boolean sourceAvailable = false; // indicates if source code is
+												// available
 
 	private ArtefactRepository repository;
 
 	private ArtefactSet set;
-	
+
 	/** for persistence use only */
 	protected Artefact() {
 	}
 
 	/**
 	 * Construct a new artefact
+	 * 
 	 * @param name human readable artefact name (e.g. "Spring Framework")
-	 * @param symbolicName uniquely identifying name (e.g. "org.springframework")
+	 * @param symbolicName uniquely identifying name (e.g.
+	 *        "org.springframework")
 	 * @param version version of the artefact, following OSGi Version semantics
 	 * @param organisationName organisation name as defined in ivy.xml
 	 * @param moduleName module name as defined in ivy.xml
@@ -103,7 +109,7 @@ public abstract class Artefact implements IArtefact {
 	public void setSourceAvailable(boolean sourceAvailable) {
 		this.sourceAvailable = sourceAvailable;
 	}
-	
+
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact#getRelativeUrlPath()
 	 */
@@ -114,13 +120,13 @@ public abstract class Artefact implements IArtefact {
 	 */
 	public String getRelativeLicenseUrlPath() {
 		return "/" + getOrganisationName() + "/" + getModuleName() + "/" + getVersion() + "/license-" + getVersion()
-				+ ".txt";
+			+ ".txt";
 	}
 
 	public String getSignature() {
 		return getSymbolicName() + ";" + getVersion() + ";" + getArtefactType().getLabel();
 	}
-	
+
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact#isMatch(org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact)
 	 */
@@ -138,7 +144,7 @@ public abstract class Artefact implements IArtefact {
 		}
 		return false;
 	}
-	
+
 	public ArtefactRepository getRepository() {
 		return repository;
 	}

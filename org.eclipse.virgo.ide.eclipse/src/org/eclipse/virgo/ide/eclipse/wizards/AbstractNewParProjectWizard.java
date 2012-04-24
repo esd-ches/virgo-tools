@@ -37,9 +37,8 @@ import org.eclipse.ui.wizards.newresource.BasicNewProjectResourceWizard;
 import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 
 /**
- * SpringSource Tool Suite Team - Portions of this class were copied from
- * BasicNewProjectResourceWizard. This allows us to create our own wizard around
- * the required functions instead of extending and overriding the entire
+ * SpringSource Tool Suite Team - Portions of this class were copied from BasicNewProjectResourceWizard. This allows us
+ * to create our own wizard around the required functions instead of extending and overriding the entire
  * BasicNewProjectResourceWizard.
  */
 @SuppressWarnings("restriction")
@@ -92,8 +91,7 @@ public abstract class AbstractNewParProjectWizard extends BasicNewResourceWizard
 					// not preserved. Making this undoable resulted in too many
 					// accidental file deletions.
 					op.execute(monitor, WorkspaceUndoUtil.getUIInfoAdapter(getShell()));
-				}
-				catch (ExecutionException e) {
+				} catch (ExecutionException e) {
 					throw new InvocationTargetException(e);
 				}
 			}
@@ -102,27 +100,24 @@ public abstract class AbstractNewParProjectWizard extends BasicNewResourceWizard
 		// run the new project creation operation
 		try {
 			getContainer().run(true, true, op);
-		}
-		catch (InterruptedException e) {
+		} catch (InterruptedException e) {
 			return null;
-		}
-		catch (InvocationTargetException e) {
+		} catch (InvocationTargetException e) {
 			Throwable t = e.getTargetException();
 			if (t instanceof ExecutionException && t.getCause() instanceof CoreException) {
 				CoreException cause = (CoreException) t.getCause();
 				StatusAdapter status;
 				if (cause.getStatus().getCode() == IResourceStatus.CASE_VARIANT_EXISTS) {
-					status = new StatusAdapter(StatusUtil.newStatus(IStatus.WARNING, NLS.bind(
-							ResourceMessages.NewProject_caseVariantExistsError, newProjectHandle.getName()), cause));
-				}
-				else {
+					status = new StatusAdapter(StatusUtil.newStatus(IStatus.WARNING,
+							NLS.bind(ResourceMessages.NewProject_caseVariantExistsError, newProjectHandle.getName()),
+							cause));
+				} else {
 					status = new StatusAdapter(StatusUtil.newStatus(cause.getStatus().getSeverity(),
 							ResourceMessages.NewProject_errorMessage, cause));
 				}
 				status.setProperty(StatusAdapter.TITLE_PROPERTY, ResourceMessages.NewProject_errorMessage);
 				StatusManager.getManager().handle(status, StatusManager.BLOCK);
-			}
-			else {
+			} else {
 				StatusAdapter status = new StatusAdapter(new Status(IStatus.WARNING, IDEWorkbenchPlugin.IDE_WORKBENCH,
 						0, NLS.bind(ResourceMessages.NewProject_internalError, t.getMessage()), t));
 				status.setProperty(StatusAdapter.TITLE_PROPERTY, ResourceMessages.NewProject_errorMessage);

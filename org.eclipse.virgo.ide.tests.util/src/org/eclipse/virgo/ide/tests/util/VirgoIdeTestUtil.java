@@ -71,8 +71,7 @@ public class VirgoIdeTestUtil {
 		try {
 			StyledText.class.getMethod("setTabStops", int[].class); //$NON-NLS-1$
 			found = true;
-		}
-		catch (NoSuchMethodException e) {
+		} catch (NoSuchMethodException e) {
 		}
 		ECLIPSE_3_6_OR_LATER = found;
 	}
@@ -99,8 +98,7 @@ public class VirgoIdeTestUtil {
 	}
 
 	/**
-	 * Copy file from src (path to the original file) to dest (path to the
-	 * destination file).
+	 * Copy file from src (path to the original file) to dest (path to the destination file).
 	 */
 	private static void copy(File src, File dest) throws IOException {
 		InputStream in = new FileInputStream(src);
@@ -112,19 +110,16 @@ public class VirgoIdeTestUtil {
 				while ((len = in.read(buf)) > 0) {
 					out.write(buf, 0, len);
 				}
-			}
-			finally {
+			} finally {
 				out.close();
 			}
-		}
-		finally {
+		} finally {
 			in.close();
 		}
 	}
 
 	/**
-	 * Copy the given source directory (and all its contents) to the given
-	 * target directory.
+	 * Copy the given source directory (and all its contents) to the given target directory.
 	 */
 	private static void copyDirectory(File source, File target) throws IOException {
 		if (!target.exists()) {
@@ -142,8 +137,7 @@ public class VirgoIdeTestUtil {
 			File targetChild = new File(target, name);
 			if (sourceChild.isDirectory()) {
 				copyDirectory(sourceChild, targetChild);
-			}
-			else {
+			} else {
 				copy(sourceChild, targetChild);
 			}
 		}
@@ -197,17 +191,14 @@ public class VirgoIdeTestUtil {
 		CoreException lastException = null;
 		try {
 			resource.delete(force, null);
-		}
-		catch (CoreException e) {
+		} catch (CoreException e) {
 			lastException = e;
 			// just print for info
 			System.out.println("(CoreException): " + e.getMessage() + " Resource " + resource.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
 			e.printStackTrace();
-		}
-		catch (IllegalArgumentException iae) {
+		} catch (IllegalArgumentException iae) {
 			// just print for info
-			System.out
-					.println("(IllegalArgumentException): " + iae.getMessage() + ", resource " + resource.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
+			System.out.println("(IllegalArgumentException): " + iae.getMessage() + ", resource " + resource.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		if (!force) {
 			return;
@@ -217,22 +208,17 @@ public class VirgoIdeTestUtil {
 			waitForAutoBuild();
 			try {
 				Thread.sleep(1000);
-			}
-			catch (InterruptedException e) {
+			} catch (InterruptedException e) {
 			}
 			try {
 				resource.delete(true, null);
-			}
-			catch (CoreException e) {
+			} catch (CoreException e) {
 				lastException = e;
 				// just print for info
-				System.out
-						.println("(CoreException) Retry " + retryCount + ": " + e.getMessage() + ", resource " + resource.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-			}
-			catch (IllegalArgumentException iae) {
+				System.out.println("(CoreException) Retry " + retryCount + ": " + e.getMessage() + ", resource " + resource.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+			} catch (IllegalArgumentException iae) {
 				// just print for info
-				System.out
-						.println("(IllegalArgumentException) Retry " + retryCount + ": " + iae.getMessage() + ", resource " + resource.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				System.out.println("(IllegalArgumentException) Retry " + retryCount + ": " + iae.getMessage() + ", resource " + resource.getFullPath()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		}
 		if (!resource.isAccessible()) {
@@ -274,8 +260,7 @@ public class VirgoIdeTestUtil {
 		try {
 			URL platformURL = Platform.getBundle(bundleName).getEntry("/"); //$NON-NLS-1$ 
 			return new File(FileLocator.toFileURL(platformURL).getFile()).getAbsolutePath();
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
@@ -285,11 +270,10 @@ public class VirgoIdeTestUtil {
 	}
 
 	/**
-	 * Get an IResource indicated by a given path starting at the workspace
-	 * root.
+	 * Get an IResource indicated by a given path starting at the workspace root.
 	 * <p>
-	 * Different type of resource is returned based on the length of the path
-	 * and whether or not it ends with a path separator.
+	 * Different type of resource is returned based on the length of the path and whether or not it ends with a path
+	 * separator.
 	 */
 	public static IResource getResource(IPath path) {
 		try {
@@ -303,12 +287,10 @@ public class VirgoIdeTestUtil {
 			}
 			if (path.hasTrailingSeparator()) {
 				return root.getFolder(path);
-			}
-			else {
+			} else {
 				return root.getFile(path);
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 			return null;
 		}
@@ -317,14 +299,11 @@ public class VirgoIdeTestUtil {
 	/**
 	 * Get an IResource from a path String starting at the workspace root.
 	 * <p>
-	 * Different type of resource is returned based on the length of the path
-	 * and whether or not it ends with a path separator.
+	 * Different type of resource is returned based on the length of the path and whether or not it ends with a path
+	 * separator.
 	 * <p>
-	 * For example
-	 * 
-	 * "" length = 0 => type of resource is IWorkspaceRoot "foo" length = 1 =>
-	 * type of resource is IProject "foo/src/Foo.java" length > 1 and no
-	 * trailing "/" => type is IFile
+	 * For example "" length = 0 => type of resource is IWorkspaceRoot "foo" length = 1 => type of resource is IProject
+	 * "foo/src/Foo.java" length > 1 and no trailing "/" => type is IFile
 	 * "foo/src/          length > 1 and a trailing "/" => type is IFolder
 	 */
 	public static IResource getResource(String pathToFile) {
@@ -381,16 +360,14 @@ public class VirgoIdeTestUtil {
 				project.create(null);
 				try {
 					project.open(null);
-				}
-				catch (ConcurrentModificationException e) {
+				} catch (ConcurrentModificationException e) {
 					// wait and try again to work-around
 					// ConcurrentModificationException (bug 280488)
 					try {
 						Thread.sleep(500);
 						project.open(null);
 						project.refreshLocal(IResource.DEPTH_INFINITE, null);
-					}
-					catch (InterruptedException e1) {
+					} catch (InterruptedException e1) {
 						Thread.currentThread().interrupt();
 					}
 				}
@@ -425,11 +402,9 @@ public class VirgoIdeTestUtil {
 			try {
 				Job.getJobManager().join(jobFamily, null);
 				wasInterrupted = false;
-			}
-			catch (OperationCanceledException e) {
+			} catch (OperationCanceledException e) {
 				e.printStackTrace();
-			}
-			catch (InterruptedException e) {
+			} catch (InterruptedException e) {
 				wasInterrupted = true;
 			}
 		} while (wasInterrupted);

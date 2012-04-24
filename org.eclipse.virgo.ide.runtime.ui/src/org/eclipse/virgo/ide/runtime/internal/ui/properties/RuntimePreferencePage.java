@@ -22,17 +22,16 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.dialogs.PropertyPage;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 
-
 /**
  * {@link PropertyPage} to configure loading of class and resource names from the repository index
+ * 
  * @author Christian Dupuis
  * @since 2.3.0
  */
-public class RuntimePreferencePage extends PropertyPage implements
-		IWorkbenchPreferencePage {
+public class RuntimePreferencePage extends PropertyPage implements IWorkbenchPreferencePage {
 
 	private BooleanFieldEditor booleanEditor;
-	
+
 	protected Control createContents(Composite parent) {
 
 		Composite entryTable = new Composite(parent, SWT.NULL);
@@ -47,7 +46,7 @@ public class RuntimePreferencePage extends PropertyPage implements
 
 		Label label = new Label(entryTable, SWT.NONE);
 		label.setText("Use this preference page to enable loading of class and resource names\n"
-					+ "from the Bundle Repository Index so that they will be included in searches.");
+				+ "from the Bundle Repository Index so that they will be included in searches.");
 
 		Composite radioComposite = new Composite(entryTable, SWT.NONE);
 		radioComposite.setLayout(new GridLayout());
@@ -60,8 +59,8 @@ public class RuntimePreferencePage extends PropertyPage implements
 		layout.marginHeight = 3;
 		radioComposite2.setLayout(layout);
 		radioComposite2.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		booleanEditor = new BooleanFieldEditor(ServerCorePlugin.PREF_LOAD_CLASSES_KEY,
-				"Load class and resource names", radioComposite2);
+		booleanEditor = new BooleanFieldEditor(ServerCorePlugin.PREF_LOAD_CLASSES_KEY, "Load class and resource names",
+				radioComposite2);
 		booleanEditor.setPage(this);
 		booleanEditor.setPreferenceStore(getPreferenceStore());
 		booleanEditor.load();

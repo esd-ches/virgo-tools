@@ -47,9 +47,9 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.virgo.bundlor.support.partialmanifest.PartialManifest;
 
 /**
- * {@link MethodVisitor} that is based on JDT's AST </p>
- * <strong>Concurrent Semantics</strong><br />
+ * {@link MethodVisitor} that is based on JDT's AST </p> <strong>Concurrent Semantics</strong><br />
  * Not thread safe.
+ * 
  * @author Christian Dupuis
  * @author Glyn Normington
  */
@@ -110,21 +110,17 @@ public class ArtifactAnalyserTypeVisitor extends ASTVisitor {
 			IBinding binding = node.resolveBinding();
 			if (binding instanceof IPackageBinding) {
 				partialManifest.recordReferencedPackage(((IPackageBinding) binding).getName());
-			}
-			else if (binding instanceof ITypeBinding) {
+			} else if (binding instanceof ITypeBinding) {
 				recordTypeBinding((ITypeBinding) binding);
 			}
-		}
-		else {
+		} else {
 			if (!node.isOnDemand() && !node.isStatic()) {
 				Name importElementName = node.getName();
 				recordFullyQualifiedName(importElementName.getFullyQualifiedName());
-			}
-			else if (node.isOnDemand() && !node.isStatic()) {
+			} else if (node.isOnDemand() && !node.isStatic()) {
 				Name importElementName = node.getName();
 				partialManifest.recordReferencedPackage(importElementName.getFullyQualifiedName());
-			}
-			else if (!node.isOnDemand() && node.isStatic()) {
+			} else if (!node.isOnDemand() && node.isStatic()) {
 				Name importElementName = node.getName();
 				String fqn = importElementName.getFullyQualifiedName().substring(0,
 						importElementName.getFullyQualifiedName().lastIndexOf('.'));
@@ -223,8 +219,7 @@ public class ArtifactAnalyserTypeVisitor extends ASTVisitor {
 					recordTypeBinding(parameterBinding);
 				}
 			}
-		}
-		else {
+		} else {
 
 		}
 		return true;
@@ -274,7 +269,8 @@ public class ArtifactAnalyserTypeVisitor extends ASTVisitor {
 	 * It is important to record the type binding only if it is not recovered. Recovered bindings occur for invalid
 	 * source code and incomplete class paths.
 	 * 
-	 * @param binding the binding which may be recorded
+	 * @param binding
+	 *            the binding which may be recorded
 	 * @return <code>true</code> if and only if the binding should be recorded
 	 */
 	private boolean isValid(IBinding binding) {
@@ -288,8 +284,7 @@ public class ArtifactAnalyserTypeVisitor extends ASTVisitor {
 	public boolean visit(SimpleType node) {
 		if (isValid(node.resolveBinding())) {
 			recordTypeBinding(node.resolveBinding());
-		}
-		else {
+		} else {
 			Name simpleName = node.getName();
 			String fqn = simpleName.getFullyQualifiedName();
 			recordFullyQualifiedName(fqn);
@@ -411,8 +406,7 @@ public class ArtifactAnalyserTypeVisitor extends ASTVisitor {
 		if (binding != null) {
 			if (binding.isArray()) {
 				return getPackageBinding(binding.getComponentType());
-			}
-			else {
+			} else {
 				return binding.getPackage();
 			}
 		}
@@ -424,8 +418,7 @@ public class ArtifactAnalyserTypeVisitor extends ASTVisitor {
 			if (this.typePackage == null) {
 				this.referencedTypes.add(fqn);
 				return fqn;
-			}
-			else if (fqn != null && !this.typePackage.equals(getPackageName(fqn))) {
+			} else if (fqn != null && !this.typePackage.equals(getPackageName(fqn))) {
 				// This is required to get FQCNs of the form
 				// org.springframework.util.ReflectionUtils.MethodCallback correctly detected
 				StringTokenizer segments = new StringTokenizer(fqn, ".");
@@ -465,8 +458,7 @@ public class ArtifactAnalyserTypeVisitor extends ASTVisitor {
 		if (binding != null) {
 			if (binding.isArray()) {
 				return recordTypeBinding(binding.getComponentType());
-			}
-			else {
+			} else {
 				String fqn = binding.getBinaryName();
 				return recordFullyQualifiedName(fqn);
 			}

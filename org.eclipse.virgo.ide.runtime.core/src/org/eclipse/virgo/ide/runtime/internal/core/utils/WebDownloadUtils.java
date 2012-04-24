@@ -32,9 +32,10 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.osgi.framework.ServiceReference;
 
-
 /**
- * Utility to download files using Apache HTTPClient with using Eclipse's proxy service.
+ * Utility to download files using Apache HTTPClient with using Eclipse's proxy
+ * service.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
@@ -51,8 +52,7 @@ public class WebDownloadUtils {
 		if (i > 0 && i < proxyData.getUserId().length() - 1) {
 			return new NTCredentials(proxyData.getUserId().substring(i + 1), proxyData.getPassword(), host, proxyData
 					.getUserId().substring(0, i));
-		}
-		else {
+		} else {
 			return new UsernamePasswordCredentials(proxyData.getUserId(), proxyData.getPassword());
 		}
 	}
@@ -73,14 +73,11 @@ public class WebDownloadUtils {
 		// minimum positive, or string length
 		if (colonPort > 0 && requestPath > 0) {
 			substringEnd = Math.min(colonPort, requestPath);
-		}
-		else if (colonPort > 0) {
+		} else if (colonPort > 0) {
 			substringEnd = colonPort;
-		}
-		else if (requestPath > 0) {
+		} else if (requestPath > 0) {
 			substringEnd = requestPath;
-		}
-		else {
+		} else {
 			substringEnd = result.length();
 		}
 
@@ -120,30 +117,25 @@ public class WebDownloadUtils {
 					return DateUtil.parseDate(lastModified.getValue());
 				}
 			}
-		}
-		catch (Exception e) {
-		}
-		finally {
+		} catch (Exception e) {
+		} finally {
 			try {
 				if (method != null) {
 					method.releaseConnection();
 				}
-			}
-			catch (Exception e2) {
+			} catch (Exception e2) {
 			}
 			try {
 				if (bis != null) {
 					bis.close();
 				}
-			}
-			catch (Exception e2) {
+			} catch (Exception e2) {
 			}
 			try {
 				if (fos != null) {
 					fos.close();
 				}
-			}
-			catch (Exception e2) {
+			} catch (Exception e2) {
 			}
 		}
 		return null;
@@ -199,7 +191,7 @@ public class WebDownloadUtils {
 					bytesRead = bytesRead + count;
 					float percent = (Float.valueOf(bytesRead) / Float.valueOf(totalBytes)) * 100;
 					monitor.subTask("Downloading file '" + fileName + "': " + bytesRead + "bytes/" + totalBytes
-							+ "bytes (" + Math.round(percent) + "%)");
+						+ "bytes (" + Math.round(percent) + "%)");
 					fos.write(bytes, 0, count);
 					count = bis.read(bytes);
 				}
@@ -209,32 +201,29 @@ public class WebDownloadUtils {
 			}
 
 			return outputFile;
-		}
-		catch (Exception e) {
-			ServerCorePlugin.getDefault().getLog().log(
-					new Status(Status.ERROR, ServerCorePlugin.PLUGIN_ID, 1, "Error downloading bundle/library", e));
-		}
-		finally {
+		} catch (Exception e) {
+			ServerCorePlugin
+					.getDefault()
+					.getLog()
+					.log(new Status(Status.ERROR, ServerCorePlugin.PLUGIN_ID, 1, "Error downloading bundle/library", e));
+		} finally {
 			try {
 				if (method != null) {
 					method.releaseConnection();
 				}
-			}
-			catch (Exception e2) {
+			} catch (Exception e2) {
 			}
 			try {
 				if (bis != null) {
 					bis.close();
 				}
-			}
-			catch (Exception e2) {
+			} catch (Exception e2) {
 			}
 			try {
 				if (fos != null) {
 					fos.close();
 				}
-			}
-			catch (Exception e2) {
+			} catch (Exception e2) {
 			}
 		}
 
@@ -242,8 +231,8 @@ public class WebDownloadUtils {
 	}
 
 	private static void configureHttpClientProxy(String url, HttpClient client, HostConfiguration hostConfiguration) {
-		ServiceReference services = ServerCorePlugin.getDefault().getBundle().getBundleContext().getServiceReference(
-				IProxyService.class.getName());
+		ServiceReference services = ServerCorePlugin.getDefault().getBundle().getBundleContext()
+				.getServiceReference(IProxyService.class.getName());
 		if (services != null) {
 			IProxyService proxyService = (IProxyService) ServerCorePlugin.getDefault().getBundle().getBundleContext()
 					.getService(services);

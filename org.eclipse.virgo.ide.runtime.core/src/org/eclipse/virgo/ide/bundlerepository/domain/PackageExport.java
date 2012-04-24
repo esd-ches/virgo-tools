@@ -16,7 +16,6 @@ import java.util.Set;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepositoryManager;
 import org.eclipse.virgo.ide.runtime.core.artefacts.BundleArtefact;
 
-
 /**
  * A package exported by one or more bundles
  */
@@ -24,7 +23,8 @@ public class PackageExport {
 
 	private byte[] name; // the fully-qualified package name
 
-	private OsgiVersion version; // the version of the package as exported by the owning bundle
+	private OsgiVersion version; // the version of the package as exported by
+									// the owning bundle
 
 	private Set<PackageMember> exports; // the contents of the exported package
 
@@ -35,7 +35,9 @@ public class PackageExport {
 	}
 
 	/**
-	 * Create a new package exported by the given bundle, with the given name and version
+	 * Create a new package exported by the given bundle, with the given name
+	 * and version
+	 * 
 	 * @param bundle bundle exporting the package
 	 * @param name the fully-qualified name of the package
 	 * @param version the exported version of the package
@@ -84,6 +86,7 @@ public class PackageExport {
 
 	/**
 	 * Add a new class to the set of classes exported by this package
+	 * 
 	 * @param className the fully-qualified name of the class to add
 	 */
 	public void addClassExport(String className) {
@@ -92,6 +95,7 @@ public class PackageExport {
 
 	/**
 	 * Add a new resource to the set of resources exported by this package
+	 * 
 	 * @param resourceName the full path to the resource in the exported package
 	 */
 	public void addResourceExport(String resourceName) {

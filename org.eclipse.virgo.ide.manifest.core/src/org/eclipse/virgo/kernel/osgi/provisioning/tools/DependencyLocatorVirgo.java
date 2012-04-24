@@ -27,9 +27,9 @@ import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
  * @since 2.0.0
  */
 public class DependencyLocatorVirgo implements IDependencyLocator {
-	
+
 	private final DependencyLocator dependencyLocator;
-	
+
 	public DependencyLocatorVirgo(String serverHomePath, String[] additionalSearchPaths, String indexDirectoryPath,
 			JavaVersion javaVersion) throws IOException {
 		// Some platform dependent string matching
@@ -38,11 +38,12 @@ public class DependencyLocatorVirgo implements IDependencyLocator {
 			indexDirectoryPath = indexDirectoryPath.replace('/', '\\');
 			for (int i = 0; i < additionalSearchPaths.length; i++) {
 				additionalSearchPaths[i] = additionalSearchPaths[i].replace('/', '\\');
-			} 
+			}
 		}
-		dependencyLocator = new DependencyLocator(serverHomePath, additionalSearchPaths, indexDirectoryPath, new NoOpEventLogger());
+		dependencyLocator = new DependencyLocator(serverHomePath, additionalSearchPaths, indexDirectoryPath,
+				new NoOpEventLogger());
 	}
-	
+
 	public Map<File, List<String>> locateDependencies(BundleManifest manifest) throws DependencyLocationException {
 		return dependencyLocator.locateDependencies(manifest);
 	}

@@ -51,11 +51,11 @@ import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
 import org.eclipse.virgo.ide.par.Bundle;
 import org.eclipse.virgo.ide.par.Par;
-
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 
 /**
  * Export wizard for exporting par project
+ * 
  * @author Christian Dupuis
  * @author Terry Hon
  */
@@ -79,10 +79,12 @@ public class ParExportWizard extends Wizard implements IExportWizard {
 	public boolean performFinish() {
 		IProject project = wizardPage.getSelectedProject();
 		IPath jarLocation = wizardPage.getJarLocation();
-		
-		if (jarLocation.toFile().exists() && ! wizardPage.getOverwrite()) {
-			boolean overwrite = MessageDialog.openQuestion(getShell(), "Overwrite File", "The file " + jarLocation.toOSString() + " already exists. Do you want to overwrite the existing file?");
-			if (! overwrite) {
+
+		if (jarLocation.toFile().exists() && !wizardPage.getOverwrite()) {
+			boolean overwrite = MessageDialog.openQuestion(getShell(), "Overwrite File",
+					"The file " + jarLocation.toOSString()
+							+ " already exists. Do you want to overwrite the existing file?");
+			if (!overwrite) {
 				return false;
 			}
 		}
@@ -97,7 +99,7 @@ public class ParExportWizard extends Wizard implements IExportWizard {
 		IPath settingsPath = settingsFolder.getLocation();
 
 		List<IStatus> warnings = new ArrayList<IStatus>();
-		
+
 		URI fileURI = URI.createPlatformResourceURI(parFile.getFullPath().toString(), true);
 		ResourceSet resourceSet = new ResourceSetImpl();
 		Resource resource = resourceSet.getResource(fileURI, true);
@@ -117,11 +119,11 @@ public class ParExportWizard extends Wizard implements IExportWizard {
 							&& manifest.getBundleSymbolicName() != null) {
 						String version = manifest.getBundleVersion().toString();
 						String name = (manifest.getBundleSymbolicName() != null
-								&& manifest.getBundleSymbolicName().getSymbolicName() != null ? manifest
-								.getBundleSymbolicName().getSymbolicName() : bundleProject.getName());
+								&& manifest.getBundleSymbolicName().getSymbolicName() != null
+								? manifest.getBundleSymbolicName().getSymbolicName()
+								: bundleProject.getName());
 						jarName = name + "-" + version;
-					}
-					else {
+					} else {
 						jarName = bundleProject.getProject().toString();
 					}
 
@@ -134,12 +136,11 @@ public class ParExportWizard extends Wizard implements IExportWizard {
 								parElements.add(bundleJar);
 							}
 						}
-					}
-					else {
+					} else {
 						IJavaProject javaBundleProject = JavaCore.create(bundleProject);
 						jarName = jarName + ".jar";
 						IPath jarPath = settingsPath.append(jarName);
-						
+
 						IJarExportRunnable op = BundleExportUtils.createExportOperation(javaBundleProject, jarPath,
 								shell, warnings);
 						if (BundleExportUtils.executeExportOperation(op, false, context, shell, warnings)) {
@@ -161,8 +162,7 @@ public class ParExportWizard extends Wizard implements IExportWizard {
 					jarElements.add(rootMember);
 				}
 			}
-		}
-		catch (CoreException e1) {
+		} catch (CoreException e1) {
 		}
 
 		JarPackageData parPackage = new JarPackageData();
@@ -177,8 +177,7 @@ public class ParExportWizard extends Wizard implements IExportWizard {
 		if (manifestPath != null) {
 			parPackage.setGenerateManifest(false);
 			parPackage.setManifestLocation(manifestPath);
-		}
-		else {
+		} else {
 			parPackage.setGenerateManifest(true);
 		}
 
@@ -189,26 +188,25 @@ public class ParExportWizard extends Wizard implements IExportWizard {
 				if (elem instanceof IFile) {
 					try {
 						builder.writeFile((IFile) elem, new Path(elem.getName()));
-					}
-					catch (CoreException e) {
+					} catch (CoreException e) {
 					}
 				}
 			}
 			builder.close();
-		}
-		catch (CoreException e1) {
+		} catch (CoreException e1) {
 		}
 
 		for (IResource parElement : parElements) {
 			try {
 				parElement.delete(true, new NullProgressMonitor());
-			}
-			catch (CoreException e) {
+			} catch (CoreException e) {
 			}
 		}
-		
+
 		if (warnings.size() > 0) {
-			ErrorDialog.openError(shell, "PAR export warnings", null, new MultiStatus(ServerExportPlugin.PLUGIN_ID, Status.WARNING, warnings.toArray(new IStatus[0]), "There were warnings while export the PAR project. Click Details to see more...", null));
+			ErrorDialog.openError(shell, "PAR export warnings", null, new MultiStatus(ServerExportPlugin.PLUGIN_ID,
+					Status.WARNING, warnings.toArray(new IStatus[0]),
+					"There were warnings while export the PAR project. Click Details to see more...", null));
 		}
 		return true;
 	}

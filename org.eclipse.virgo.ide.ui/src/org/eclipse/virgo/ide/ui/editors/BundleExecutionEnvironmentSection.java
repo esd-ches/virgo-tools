@@ -70,7 +70,8 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.osgi.framework.Constants;
 
 /**
- * Adapted from PDE's <code>ExcecutionEnvironmentSection</code>. * 
+ * Adapted from PDE's <code>ExcecutionEnvironmentSection</code>. *
+ * 
  * @author Christian Dupuis
  * @author Steffen Pingel
  */
@@ -139,8 +140,7 @@ public class BundleExecutionEnvironmentSection extends TableSection {
 		section.setText(PDEUIMessages.RequiredExecutionEnvironmentSection_title);
 		if (isFragment()) {
 			section.setDescription(PDEUIMessages.RequiredExecutionEnvironmentSection_fragmentDesc);
-		}
-		else {
+		} else {
 			section.setDescription(PDEUIMessages.RequiredExecutionEnvironmentSection_pluginDesc);
 		}
 
@@ -316,11 +316,9 @@ public class BundleExecutionEnvironmentSection extends TableSection {
 				String id = null;
 				if (element instanceof IExecutionEnvironment) {
 					id = ((IExecutionEnvironment) element).getId();
-				}
-				else if (element instanceof ExecutionEnvironment) {
+				} else if (element instanceof ExecutionEnvironment) {
 					id = ((ExecutionEnvironment) element).getName();
-				}
-				else {
+				} else {
 					continue;
 				}
 				if (buffer.length() > 0) {
@@ -331,8 +329,7 @@ public class BundleExecutionEnvironmentSection extends TableSection {
 				buffer.append(id);
 			}
 			getBundle().setHeader(Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT, buffer.toString());
-		}
-		else {
+		} else {
 			RequiredExecutionEnvironmentHeader ee = (RequiredExecutionEnvironmentHeader) header;
 			ee.addExecutionEnvironments(result);
 		}
@@ -366,8 +363,7 @@ public class BundleExecutionEnvironmentSection extends TableSection {
 	public void modelChanged(IModelChangedEvent e) {
 		if (e.getChangeType() == IModelChangedEvent.WORLD_CHANGED) {
 			markStale();
-		}
-		else if (e.getChangeType() == IModelChangedEvent.REMOVE) {
+		} else if (e.getChangeType() == IModelChangedEvent.REMOVE) {
 			Object[] objects = e.getChangedObjects();
 			for (Object element : objects) {
 				Table table = fEETable.getTable();
@@ -378,8 +374,7 @@ public class BundleExecutionEnvironmentSection extends TableSection {
 				}
 			}
 			updateButtons();
-		}
-		else if (e.getChangeType() == IModelChangedEvent.INSERT) {
+		} else if (e.getChangeType() == IModelChangedEvent.INSERT) {
 			Object[] objects = e.getChangedObjects();
 			for (Object element : objects) {
 				if (element instanceof ExecutionEnvironment) {
@@ -390,8 +385,7 @@ public class BundleExecutionEnvironmentSection extends TableSection {
 				fEETable.setSelection(new StructuredSelection(objects[objects.length - 1]));
 			}
 			updateButtons();
-		}
-		else if (Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT.equals(e.getChangedProperty())) {
+		} else if (Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT.equals(e.getChangedProperty())) {
 			refresh();
 		}
 	}
@@ -494,8 +488,7 @@ public class BundleExecutionEnvironmentSection extends TableSection {
 			protected IStatus run(IProgressMonitor monitor) {
 				try {
 					project.build(IncrementalProjectBuilder.FULL_BUILD, JavaCore.BUILDER_ID, null, monitor);
-				}
-				catch (CoreException e) {
+				} catch (CoreException e) {
 				}
 				return Status.OK_STATUS;
 			}

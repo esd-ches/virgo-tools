@@ -42,11 +42,10 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 
 /**
- * This abstract class is essentially a copy of GeneralInfoSection from PDE with
- * visibility increased to "protected" as required to re-use this code without
- * unnecessary copying into subclasses.
- * This class should not be further modified to keep the separation between PDE
- * and non-PDE code.
+ * This abstract class is essentially a copy of GeneralInfoSection from PDE with visibility increased to "protected" as
+ * required to re-use this code without unnecessary copying into subclasses. This class should not be further modified
+ * to keep the separation between PDE and non-PDE code.
+ * 
  * @author Christian Dupuis
  */
 public abstract class AbstractPdeGeneralInfoSection extends PDESection {
@@ -121,9 +120,9 @@ public abstract class AbstractPdeGeneralInfoSection extends PDESection {
 	}
 
 	/**
-	 * Not using the aggregate model from the form editor because it is a
-	 * different model instance from the one used by the bundle error reporter.
-	 * Things get out of sync between the form validator and source validator
+	 * Not using the aggregate model from the form editor because it is a different model instance from the one used by
+	 * the bundle error reporter. Things get out of sync between the form validator and source validator
+	 * 
 	 * @return
 	 */
 	protected IPluginModelBase getModelBase() {
@@ -159,8 +158,7 @@ public abstract class AbstractPdeGeneralInfoSection extends PDESection {
 			public void textValueChanged(FormEntry entry) {
 				try {
 					getPluginBase().setId(entry.getValue());
-				}
-				catch (CoreException e) {
+				} catch (CoreException e) {
 					PDEPlugin.logException(e);
 				}
 			}
@@ -191,8 +189,7 @@ public abstract class AbstractPdeGeneralInfoSection extends PDESection {
 			public void textValueChanged(FormEntry entry) {
 				try {
 					getPluginBase().setVersion(entry.getValue());
-				}
-				catch (CoreException e) {
+				} catch (CoreException e) {
 					PDEPlugin.logException(e);
 				}
 			}
@@ -227,8 +224,7 @@ public abstract class AbstractPdeGeneralInfoSection extends PDESection {
 			public void textValueChanged(FormEntry entry) {
 				try {
 					getPluginBase().setName(entry.getValue());
-				}
-				catch (CoreException e) {
+				} catch (CoreException e) {
 					PDEPlugin.logException(e);
 				}
 			}
@@ -264,8 +260,7 @@ public abstract class AbstractPdeGeneralInfoSection extends PDESection {
 			public void textValueChanged(FormEntry entry) {
 				try {
 					getPluginBase().setProviderName(entry.getValue());
-				}
-				catch (CoreException e) {
+				} catch (CoreException e) {
 					PDEPlugin.logException(e);
 				}
 			}

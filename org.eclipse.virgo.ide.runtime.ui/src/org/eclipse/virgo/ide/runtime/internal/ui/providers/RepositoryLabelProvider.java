@@ -22,9 +22,7 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.editor.IServerEditorPartFactory;
 
 /**
- * 
  * @author Miles Parker
- * 
  */
 public class RepositoryLabelProvider extends ArtefactLabelProvider {
 

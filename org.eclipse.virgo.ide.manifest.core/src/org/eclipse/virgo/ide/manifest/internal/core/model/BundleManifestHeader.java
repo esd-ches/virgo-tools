@@ -20,7 +20,6 @@ import org.eclipse.osgi.util.NLS;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCoreMessages;
 import org.osgi.framework.BundleException;
 
-
 /**
  * @author Christian Dupuis
  * @since 1.0.0
@@ -89,26 +88,19 @@ public class BundleManifestHeader extends AbstractManifestElement {
 					if (StringUtils.countMatches(getValue(), "\"") % 2 != 0) {
 						throw new BundleException("");
 					}
-					
+
 					List<BundleManifestHeaderElement> headerElements = new ArrayList<BundleManifestHeaderElement>();
-					ManifestElement[] elements = ManifestElement.parseHeader(getName(),
-							getValue());
+					ManifestElement[] elements = ManifestElement.parseHeader(getName(), getValue());
 					for (ManifestElement element : elements) {
 						headerElements.add(new BundleManifestHeaderElement(this, element));
 					}
-					this.manifestElements = headerElements
-							.toArray(new BundleManifestHeaderElement[headerElements.size()]);
-				}
-				catch (BundleException be) {
-					String message = NLS.bind(
-							BundleManifestCoreMessages.BundleErrorReporter_parseHeader,
-							getName());
-					((BundleManifest) getParent()).error(IMarker.SEVERITY_ERROR, message,
-							getLineNumber() + 1);
+					this.manifestElements = headerElements.toArray(new BundleManifestHeaderElement[headerElements.size()]);
+				} catch (BundleException be) {
+					String message = NLS.bind(BundleManifestCoreMessages.BundleErrorReporter_parseHeader, getName());
+					((BundleManifest) getParent()).error(IMarker.SEVERITY_ERROR, message, getLineNumber() + 1);
 					this.manifestElements = new BundleManifestHeaderElement[0];
 				}
-			}
-			else {
+			} else {
 				this.manifestElements = new BundleManifestHeaderElement[0];
 			}
 		}
@@ -117,8 +109,13 @@ public class BundleManifestHeader extends AbstractManifestElement {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("[").append(lineNumber).append("] ").append(getName()).append(" <")
-				.append(lines).append("> :\n");
+		builder.append("[")
+				.append(lineNumber)
+				.append("] ")
+				.append(getName())
+				.append(" <")
+				.append(lines)
+				.append("> :\n");
 		for (AbstractManifestElement element : getChildren()) {
 			builder.append("   ").append(element.toString());
 		}

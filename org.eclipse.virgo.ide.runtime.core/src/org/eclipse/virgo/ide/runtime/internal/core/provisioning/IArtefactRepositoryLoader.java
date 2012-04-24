@@ -14,7 +14,6 @@ import java.io.File;
 
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepository;
 
-
 /**
  * @author Christian Dupuis
  * @since 1.0.0

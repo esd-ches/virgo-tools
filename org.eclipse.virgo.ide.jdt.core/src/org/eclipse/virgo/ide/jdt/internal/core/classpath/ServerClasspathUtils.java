@@ -30,10 +30,10 @@ import org.eclipse.virgo.ide.jdt.core.JdtCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.virgo.util.io.FileCopyUtils;
 
-
 /**
  * Utility that persists and reads persisted {@link IClasspathEntry}s from a file called
  * <code>.settings/org.eclipse.virgo.ide.jdt.core.xml</code>.
+ * 
  * @author Christian Dupuis
  * @author Terry Hon
  * @since 1.0.1
@@ -50,8 +50,8 @@ class ServerClasspathUtils {
 	private static void saveFile(final IJavaProject project, final StringBuilder builder) {
 
 		// Get the file from the project
-		File file = new File(ServerCorePlugin.getDefault().getStateLocation().toFile(), project
-				.getProject().getName()	+ CLASSPATH_FILE);
+		File file = new File(ServerCorePlugin.getDefault().getStateLocation().toFile(), project.getProject().getName()
+				+ CLASSPATH_FILE);
 		FileOutputStream os = null;
 		try {
 
@@ -62,20 +62,15 @@ class ServerClasspathUtils {
 			os = new FileOutputStream(file);
 			os.write(builder.toString().getBytes("UTF-8"));
 			os.flush();
-		}
-		catch (UnsupportedEncodingException e) {
+		} catch (UnsupportedEncodingException e) {
 			// can't happen as default UTF-8 is used
-		}
-		catch (IOException e) {
-			JdtCorePlugin.log("Cannot save classpath entries to '" + file.getAbsolutePath() + "'",
-					e);
-		}
-		finally {
+		} catch (IOException e) {
+			JdtCorePlugin.log("Cannot save classpath entries to '" + file.getAbsolutePath() + "'", e);
+		} finally {
 			if (os != null) {
 				try {
 					os.close();
-				}
-				catch (IOException e) {
+				} catch (IOException e) {
 				}
 			}
 		}
@@ -105,26 +100,24 @@ class ServerClasspathUtils {
 	}
 
 	/**
-	 * Reads the persisted classpath entries for the given <code>project</code> and returns the
-	 * {@link IClasspathEntry}s.
+	 * Reads the persisted classpath entries for the given <code>project</code> and returns the {@link IClasspathEntry}
+	 * s.
 	 * <p>
 	 * This method returns <code>null</code> to indicate that the file could not be read.
 	 */
 	@SuppressWarnings({ "rawtypes" })
 	protected static IClasspathEntry[] readPersistedClasspathEntries(IJavaProject project) {
-		File file = new File(ServerCorePlugin.getDefault().getStateLocation().toFile(), project
-				.getProject().getName()	+ CLASSPATH_FILE);
+		File file = new File(ServerCorePlugin.getDefault().getStateLocation().toFile(), project.getProject().getName()
+				+ CLASSPATH_FILE);
 
 		String xmlClasspath = null;
 		if (file.exists()) {
 			try {
 				byte[] bytes = FileCopyUtils.copyToByteArray(file);
 				xmlClasspath = new String(bytes, org.eclipse.jdt.internal.compiler.util.Util.UTF_8);
-			}
-			catch (UnsupportedEncodingException e) {
+			} catch (UnsupportedEncodingException e) {
 				// can't happen as default UTF-8 is used
-			}
-			catch (IOException e) {
+			} catch (IOException e) {
 			}
 		}
 
@@ -136,7 +129,7 @@ class ServerClasspathUtils {
 			JavaProject javaProject = (JavaProject) project;
 			try {
 				Object decodedClassPath;
-				
+
 				try {
 					// needs reflection since return type of decodeClasspath has changed in Eclipse 3.6
 					Method method = javaProject.getClass().getMethod("decodeClasspath", String.class, Map.class);
@@ -147,16 +140,14 @@ class ServerClasspathUtils {
 							decodedEntries.addAll(Arrays.asList(entry));
 						}
 						return decodedEntries.toArray(new IClasspathEntry[decodedEntries.size()]);
-					}
-					else if (decodedClassPath instanceof IClasspathEntry[]) {
+					} else if (decodedClassPath instanceof IClasspathEntry[]) {
 						return (IClasspathEntry[]) decodedClassPath;
 					}
 				} catch (Exception e) {
 					JdtCorePlugin.log(e);
 				}
-				
-			}
-			catch (AssertionFailedException e) {
+
+			} catch (AssertionFailedException e) {
 				JdtCorePlugin.log(e);
 			}
 		}

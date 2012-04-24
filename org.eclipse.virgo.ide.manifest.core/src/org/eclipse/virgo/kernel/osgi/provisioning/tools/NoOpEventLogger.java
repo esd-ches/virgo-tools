@@ -16,6 +16,7 @@ import org.eclipse.virgo.medic.eventlog.LogEvent;
 
 /**
  * NoOp {@link EventLogger} implementation
+ * 
  * @author Christian Dupuis
  * @since 2.1.1
  */

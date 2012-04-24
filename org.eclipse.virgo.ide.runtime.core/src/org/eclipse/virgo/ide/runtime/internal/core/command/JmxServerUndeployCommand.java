@@ -21,9 +21,9 @@ import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.internal.core.DeploymentIdentity;
 import org.eclipse.wst.server.core.IModule;
 
-
 /**
  * {@link IServerCommand} to undeploy artifacts on dm Server 2.0.
+ * 
  * @author Christian Dupuis
  * @since 2.3.1
  */
@@ -36,7 +36,7 @@ public class JmxServerUndeployCommand extends AbstractJmxServerCommand implement
 	private final IModule module;
 
 	private final String bundleObjectName;
-	
+
 	private final String parObjectName;
 
 	private final String planObjectName;
@@ -45,7 +45,7 @@ public class JmxServerUndeployCommand extends AbstractJmxServerCommand implement
 	 * Creates a new {@link JmxServerUndeployCommand}.
 	 */
 	public JmxServerUndeployCommand(IServerBehaviour serverBehaviour, IModule module, String bundleObjectName,
-			String parObjectName, String planObjectName) {
+		String parObjectName, String planObjectName) {
 		super(serverBehaviour);
 		this.module = module;
 		this.identity = serverBehaviour.getDeploymentIdentities().remove(module.getId());
@@ -64,16 +64,14 @@ public class JmxServerUndeployCommand extends AbstractJmxServerCommand implement
 			public Object invokeOperation(MBeanServerConnection connection) throws Exception {
 				ObjectName objectName = null;
 				if (FacetCorePlugin.PAR_FACET_ID.equals(module.getModuleType().getId())) {
-					objectName = ObjectName.getInstance(parObjectName.replace("$VERSION",
-							identity.getVersion()).replace("$NAME", identity.getSymbolicName()));
-				}
-				else if (FacetCorePlugin.PLAN_FACET_ID.equals(module.getModuleType().getId())) {
-					objectName = ObjectName.getInstance(planObjectName.replace("$VERSION",
-							identity.getVersion()).replace("$NAME", identity.getSymbolicName()));
-				}
-				else {
-					objectName = ObjectName.getInstance(bundleObjectName.replace("$VERSION",
-							identity.getVersion()).replace("$NAME", identity.getSymbolicName()));
+					objectName = ObjectName.getInstance(parObjectName.replace("$VERSION", identity.getVersion())
+							.replace("$NAME", identity.getSymbolicName()));
+				} else if (FacetCorePlugin.PLAN_FACET_ID.equals(module.getModuleType().getId())) {
+					objectName = ObjectName.getInstance(planObjectName.replace("$VERSION", identity.getVersion())
+							.replace("$NAME", identity.getSymbolicName()));
+				} else {
+					objectName = ObjectName.getInstance(bundleObjectName.replace("$VERSION", identity.getVersion())
+							.replace("$NAME", identity.getSymbolicName()));
 				}
 
 				return connection.invoke(objectName, "uninstall", null, null);

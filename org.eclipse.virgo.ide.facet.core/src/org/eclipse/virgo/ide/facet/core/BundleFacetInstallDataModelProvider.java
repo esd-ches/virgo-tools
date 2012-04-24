@@ -19,14 +19,12 @@ import org.eclipse.jst.common.project.facet.JavaProjectFacetCreationDataModelPro
  * @author Martin Lippert
  * @since 1.1.3
  */
-public class BundleFacetInstallDataModelProvider extends
-		JavaProjectFacetCreationDataModelProvider {
+public class BundleFacetInstallDataModelProvider extends JavaProjectFacetCreationDataModelProvider {
 
 	public static final String ENABLE_SERVER_CLASSPATH_CONTAINER = FacetCorePlugin.PLUGIN_ID
 			+ ".ENABLE_BUNDLE_CLASSPATH_CONTAINER";
 
-	public static final String ENABLE_WEB_BUNDLE = FacetCorePlugin.PLUGIN_ID
-			+ ".ENABLE_WEB_BUNDLE";
+	public static final String ENABLE_WEB_BUNDLE = FacetCorePlugin.PLUGIN_ID + ".ENABLE_WEB_BUNDLE";
 
 	@SuppressWarnings("unchecked")
 	public Set getPropertyNames() {

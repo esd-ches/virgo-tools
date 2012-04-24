@@ -32,8 +32,7 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
 
 /**
- * Action implementation that opens a MANIFEST.MF or par.xml file of the
- * selected module.
+ * Action implementation that opens a MANIFEST.MF or par.xml file of the selected module.
  * 
  * @author Christian Dupuis
  * @since 1.0.0
@@ -55,7 +54,8 @@ public class OpenProjectManifestAction implements IObjectActionDelegate {
 			openResource(project.findMember(BundleManifestCorePlugin.MANIFEST_FILE_LOCATION));
 		} else {
 			try {
-				if (project.hasNature(JavaCore.NATURE_ID) && FacetedProjectFramework.hasProjectFacet(project, FacetCorePlugin.WEB_FACET_ID)) {
+				if (project.hasNature(JavaCore.NATURE_ID)
+						&& FacetedProjectFramework.hasProjectFacet(project, FacetCorePlugin.WEB_FACET_ID)) {
 					openResource(BundleManifestUtils.locateManifest(JavaCore.create(project), false));
 				}
 			} catch (CoreException e) {

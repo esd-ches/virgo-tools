@@ -49,17 +49,14 @@ public class NewBundleInformationPage extends RuntimeConfigurationPage {
 				page = (AbstractPropertiesPage) wizard.getPage(NullPropertiesPage.ID_PAGE);
 				if (page != null) {
 					wizard.setPropertiesPage(page);
-				}
-				else {
+				} else {
 					wizard.setPropertiesPage(new NullPropertiesPage());
 				}
-			}
-			else {
+			} else {
 				page = (AbstractPropertiesPage) wizard.getPage(WebModulePropertiesPage.ID_PAGE);
 				if (page != null) {
 					wizard.setPropertiesPage(page);
-				}
-				else {
+				} else {
 					wizard.setPropertiesPage(new WebModulePropertiesPage());
 				}
 			}
@@ -162,8 +159,7 @@ public class NewBundleInformationPage extends RuntimeConfigurationPage {
 		NewBundleProjectWizard wizard = (NewBundleProjectWizard) getWizard();
 		if (wizard.getPropertiesPage() instanceof NullPropertiesPage) {
 			return wizard.getFinalPage();
-		}
-		else {
+		} else {
 			return wizard.getPropertiesPage();
 		}
 	}

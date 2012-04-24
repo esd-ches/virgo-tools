@@ -32,7 +32,6 @@ import org.eclipse.ui.IFileEditorInput;
 import org.eclipse.virgo.ide.ui.editors.model.BundleModelModification;
 import org.eclipse.virgo.ide.ui.editors.model.BundleModelUtility;
 
-
 /**
  * @author Christian Dupuis
  * @author Leo Dos Santos
@@ -70,8 +69,7 @@ public class ManifestFormatOperation implements IRunnableWithProgress {
 					if (bundleModel.getBundle() instanceof Bundle) {
 						formatBundle((Bundle) bundleModel.getBundle());
 					}
-				}
-				else if (model instanceof IPluginModelBase) {
+				} else if (model instanceof IPluginModelBase) {
 					IPluginBase pluginModel = ((IPluginModelBase) model).getPluginBase();
 					if (pluginModel instanceof PluginBaseNode) {
 						formatXML((PluginBaseNode) pluginModel);

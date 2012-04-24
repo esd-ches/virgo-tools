@@ -70,7 +70,6 @@ import org.eclipse.virgo.ide.ui.ServerIdeUiPlugin;
 import org.eclipse.virgo.ide.ui.StatusHandler;
 import org.eclipse.virgo.ide.ui.editors.model.BundleModelUtility;
 
-
 /**
  * @author Christian Dupuis
  * @author Steffen Pingel
@@ -109,10 +108,8 @@ public class ParManifestEditor extends BundleManifestEditor {
 				initializeEditingDomain();
 				createParPages();
 			}
-		}
-		catch (PartInitException e) {
-			StatusHandler
-					.log(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Failed to create editor pages", e));
+		} catch (PartInitException e) {
+			StatusHandler.log(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Failed to create editor pages", e));
 		}
 		addSourcePage(BundleInputContext.CONTEXT_ID);
 	}
@@ -133,8 +130,7 @@ public class ParManifestEditor extends BundleManifestEditor {
 			}
 			manifestFile = file;
 			parFile = FacetUtils.getParFile(project);
-		}
-		else if (name.equalsIgnoreCase("org.eclipse.virgo.ide.runtime.core.par.xml")) {
+		} else if (name.equalsIgnoreCase("org.eclipse.virgo.ide.runtime.core.par.xml")) {
 			parFile = file;
 			manifestFile = container.getProject().getFile(new Path("META-INF/MANIFEST.MF")); //$NON-NLS-1$
 		}
@@ -171,8 +167,7 @@ public class ParManifestEditor extends BundleManifestEditor {
 			manifestFile = file;
 			File dir = file.getParentFile().getParentFile();
 			parFile = new File(dir, "org.eclipse.virgo.ide.runtime.core.par.xml");
-		}
-		else if (name.equals("org.eclipse.virgo.ide.runtime.core.par.xml")) {
+		} else if (name.equals("org.eclipse.virgo.ide.runtime.core.par.xml")) {
 			parFile = file;
 			File dir = file.getParentFile();
 			manifestFile = new File(dir.getParentFile(), "META-INF/MANIFEST.MF"); //$NON-NLS-1$
@@ -195,8 +190,7 @@ public class ParManifestEditor extends BundleManifestEditor {
 					parInput = new FileStoreEditorInput(store);
 				}
 			}
-		}
-		catch (CoreException e) {
+		} catch (CoreException e) {
 			PDEPlugin.logException(e);
 		}
 	}
@@ -271,8 +265,7 @@ public class ParManifestEditor extends BundleManifestEditor {
 			// Load the resource through the editing domain.
 			//
 			parResource = editingDomain.getResourceSet().getResource(resourceURI, true);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			ServerIdeUiPlugin.getDefault().log(e);
 			parResource = editingDomain.getResourceSet().getResource(resourceURI, false);
 		}
@@ -288,8 +281,7 @@ public class ParManifestEditor extends BundleManifestEditor {
 	protected void addParPages() {
 		try {
 			addPage(new ParXmlEditorPage(this, "org.eclipse.virgo.ide.ui.editor.par.dependencies", "Dependencies"));
-		}
-		catch (PartInitException e) {
+		} catch (PartInitException e) {
 			ServerIdeUiPlugin.getDefault().log(e);
 		}
 	}
@@ -318,8 +310,7 @@ public class ParManifestEditor extends BundleManifestEditor {
 						try {
 							savedResources.add(resource);
 							resource.save(saveOptions);
-						}
-						catch (IOException exception) {
+						} catch (IOException exception) {
 							handleError(exception);
 						}
 						first = false;
@@ -337,8 +328,7 @@ public class ParManifestEditor extends BundleManifestEditor {
 			//
 			((BasicCommandStack) editingDomain.getCommandStack()).saveIsDone();
 			firePropertyChange(IEditorPart.PROP_DIRTY);
-		}
-		catch (Exception exception) {
+		} catch (Exception exception) {
 			// Something went wrong that shouldn't.
 			//
 			ServerIdeUiPlugin.getDefault().log(exception);
@@ -354,8 +344,7 @@ public class ParManifestEditor extends BundleManifestEditor {
 				result = true;
 				stream.close();
 			}
-		}
-		catch (IOException e) {
+		} catch (IOException e) {
 			// Ignore
 		}
 		return result;

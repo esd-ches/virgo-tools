@@ -41,7 +41,6 @@ import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact;
 import org.eclipse.virgo.ide.runtime.core.artefacts.LibraryArtefact;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryUtils;
 
-
 /**
  * @author Christian Dupuis
  * @author Leo Dos Santos
@@ -73,8 +72,7 @@ public class BundleImportLibrarySection extends AbstractImportSection {
 					IHeaderConstants.IMPORT_LIBRARY);
 			if (header == null) {
 				return new Object[0];
-			}
-			else {
+			} else {
 				return header.getImportedLibraries();
 			}
 		}
@@ -96,11 +94,10 @@ public class BundleImportLibrarySection extends AbstractImportSection {
 		if (addRemote) {
 			ArtefactRepository bundleRepository = RepositoryUtils.searchForArtifacts("", false, true);
 			libraries = bundleRepository.getLibrarySet().toArray();
-		}
-		else {
+		} else {
 			Collection<Artefact> libraryList = RepositoryUtils.getImportLibraryProposals(project, "");
 			removeExistingLibraries(libraryList);
-			libraries = libraryList.toArray(new IArtefact[]{});
+			libraries = libraryList.toArray(new IArtefact[] {});
 		}
 		dialog.setElements(libraries);
 	}
@@ -152,8 +149,7 @@ public class BundleImportLibrarySection extends AbstractImportSection {
 
 			if (addRemote) {
 				addRemoteLibraries(selected);
-			}
-			else {
+			} else {
 				addLocalLibraries(selected);
 			}
 		}
@@ -302,8 +298,7 @@ public class BundleImportLibrarySection extends AbstractImportSection {
 				if (object.getVersion() != null || !(optional == object.isOptional())) {
 					return false;
 				}
-			}
-			else if (!version.equals(object.getVersion()) || !(optional == object.isOptional())) {
+			} else if (!version.equals(object.getVersion()) || !(optional == object.isOptional())) {
 				return false;
 			}
 		}
@@ -320,8 +315,7 @@ public class BundleImportLibrarySection extends AbstractImportSection {
 		SWTUtil.setDialogSize(dialog, 400, -1);
 		if (selected.length == 1) {
 			dialog.setTitle(((ImportLibraryObject) selected[0]).getValue());
-		}
-		else {
+		} else {
 			dialog.setTitle("Properties");
 		}
 		if (dialog.open() == Window.OK && isEditable()) {
@@ -343,8 +337,7 @@ public class BundleImportLibrarySection extends AbstractImportSection {
 	protected void buttonSelected(int index) {
 		if (index == ADD_REMOTE_BUNDLE_INDEX) {
 			internalHandleAdd(true);
-		}
-		else {
+		} else {
 			super.buttonSelected(index);
 		}
 	}

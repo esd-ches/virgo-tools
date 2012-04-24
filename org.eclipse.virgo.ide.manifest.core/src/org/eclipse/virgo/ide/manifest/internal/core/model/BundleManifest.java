@@ -65,8 +65,7 @@ public class BundleManifest extends AbstractManifestElement {
 
 	@Override
 	public AbstractManifestElement[] getChildren() {
-		List<BundleManifestHeader> headers = new ArrayList<BundleManifestHeader>(this.headerMap
-				.values());
+		List<BundleManifestHeader> headers = new ArrayList<BundleManifestHeader>(this.headerMap.values());
 		Collections.sort(headers, new Comparator<BundleManifestHeader>() {
 
 			public int compare(BundleManifestHeader o1, BundleManifestHeader o2) {
@@ -96,7 +95,7 @@ public class BundleManifest extends AbstractManifestElement {
 	public boolean isElementArchived() {
 		return false;
 	}
-	
+
 	public boolean isExternal() {
 		return false;
 	}
@@ -136,10 +135,9 @@ public class BundleManifest extends AbstractManifestElement {
 		try {
 			// brute force here as we need to get the final file contents as it might have been
 			// updated by bundlor
-			String contents =  convertStreamToString(file.getContents(true));
+			String contents = convertStreamToString(file.getContents(true));
 			return new Document(contents);
-		}
-		catch (CoreException e) {
+		} catch (CoreException e) {
 		}
 		return null;
 	}
@@ -170,17 +168,14 @@ public class BundleManifest extends AbstractManifestElement {
 				}
 				ByteBuffer byteBuf = charset.encode(line);
 				if (byteBuf.limit() + lineDelimiter.length() > 512) {
-					error(IMarker.SEVERITY_ERROR,
-							BundleManifestCoreMessages.BundleErrorReporter_lineTooLong, l + 1);
+					error(IMarker.SEVERITY_ERROR, BundleManifestCoreMessages.BundleErrorReporter_lineTooLong, l + 1);
 					return;
 				}
 				// parse
 				if (line.length() == 0) {
 					// Empty Line
 					if (l == 0) {
-						error(IMarker.SEVERITY_ERROR,
-								BundleManifestCoreMessages.BundleErrorReporter_noMainSection,
-								1);
+						error(IMarker.SEVERITY_ERROR, BundleManifestCoreMessages.BundleErrorReporter_noMainSection, 1);
 						return;
 					}
 					/* flush last line */
@@ -193,9 +188,7 @@ public class BundleManifest extends AbstractManifestElement {
 				if (line.charAt(0) == ' ') {
 					// Continuation Line
 					if (l == 0) { /* if no previous line */
-						error(IMarker.SEVERITY_ERROR,
-								BundleManifestCoreMessages.BundleErrorReporter_noMainSection,
-								1);
+						error(IMarker.SEVERITY_ERROR, BundleManifestCoreMessages.BundleErrorReporter_noMainSection, 1);
 						return;
 					}
 					if (header != null) {
@@ -212,42 +205,34 @@ public class BundleManifest extends AbstractManifestElement {
 
 				int colon = line.indexOf(':');
 				if (colon == -1) { /* no colon */
-					error(IMarker.SEVERITY_ERROR,
-							BundleManifestCoreMessages.BundleErrorReporter_noColon, l + 1);
+					error(IMarker.SEVERITY_ERROR, BundleManifestCoreMessages.BundleErrorReporter_noColon, l + 1);
 					return;
 				}
 				String headerName = getHeaderName(line);
 				if (headerName == null) {
-					error(IMarker.SEVERITY_ERROR,
-							BundleManifestCoreMessages.BundleErrorReporter_invalidHeaderName,
+					error(IMarker.SEVERITY_ERROR, BundleManifestCoreMessages.BundleErrorReporter_invalidHeaderName,
 							l + 1);
 					return;
 				}
 				if (line.length() < colon + 2 || line.charAt(colon + 1) != ' ') {
-					error(IMarker.SEVERITY_ERROR,
-							BundleManifestCoreMessages.BundleErrorReporter_noSpaceValue,
-							l + 1);
+					error(IMarker.SEVERITY_ERROR, BundleManifestCoreMessages.BundleErrorReporter_noSpaceValue, l + 1);
 					return;
 				}
 				if ("Name".equals(headerName)) { //$NON-NLS-1$
-					error(IMarker.SEVERITY_ERROR,
-							BundleManifestCoreMessages.BundleErrorReporter_nameHeaderInMain,
+					error(IMarker.SEVERITY_ERROR, BundleManifestCoreMessages.BundleErrorReporter_nameHeaderInMain,
 							l + 1);
 					return;
 				}
 				header = new BundleManifestHeader(this, headerName, line.substring(colon + 2), l);
 				if (headerMap.containsKey(header.getName().toLowerCase())) {
-					error(IMarker.SEVERITY_WARNING,
-							BundleManifestCoreMessages.BundleErrorReporter_duplicateHeader,
+					error(IMarker.SEVERITY_WARNING, BundleManifestCoreMessages.BundleErrorReporter_duplicateHeader,
 							l + 1);
 				}
 
 			}
 			if (header != null) {
 				// lingering header, line not terminated
-				error(IMarker.SEVERITY_ERROR,
-						BundleManifestCoreMessages.BundleErrorReporter_noLineTermination,
-						l + 1);
+				error(IMarker.SEVERITY_ERROR, BundleManifestCoreMessages.BundleErrorReporter_noLineTermination, l + 1);
 				return;
 			}
 			// If there is any more headers, not starting with a Name header
@@ -259,35 +244,32 @@ public class BundleManifest extends AbstractManifestElement {
 					continue;
 				}
 				if (!line.startsWith("Name:")) { //$NON-NLS-1$
-					error(IMarker.SEVERITY_ERROR,
-							BundleManifestCoreMessages.BundleErrorReporter_noNameHeader,
-							l);
+					error(IMarker.SEVERITY_ERROR, BundleManifestCoreMessages.BundleErrorReporter_noNameHeader, l);
 				}
 				break;
 			}
 
-		}
-		catch (BadLocationException ble) {
+		} catch (BadLocationException ble) {
 		}
 	}
-	
+
 	public String convertStreamToString(InputStream is) {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-        StringBuilder sb = new StringBuilder();
- 
-        String line = null;
-        try {
-            while ((line = reader.readLine()) != null) {
-                sb.append(line + "\n");
-            }
-        } catch (IOException e) {
-        } finally {
-            try {
-                is.close();
-            } catch (IOException e) {
-            }
-        }
- 
-        return sb.toString();
-    }
+		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+		StringBuilder sb = new StringBuilder();
+
+		String line = null;
+		try {
+			while ((line = reader.readLine()) != null) {
+				sb.append(line + "\n");
+			}
+		} catch (IOException e) {
+		} finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+			}
+		}
+
+		return sb.toString();
+	}
 }

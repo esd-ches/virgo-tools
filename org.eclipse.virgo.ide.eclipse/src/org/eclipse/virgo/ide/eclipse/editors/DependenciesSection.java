@@ -47,9 +47,8 @@ import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
 
 /**
- * SpringSource Tool Suite Team - Portions of this class were copied from PDE's
- * PDESection, StructuredViewerSection, TableSection, and RequiresSection in
- * order to provide a dependency editor-like section part outside of the
+ * SpringSource Tool Suite Team - Portions of this class were copied from PDE's PDESection, StructuredViewerSection,
+ * TableSection, and RequiresSection in order to provide a dependency editor-like section part outside of the
  * PDEFormEditor.
  */
 @SuppressWarnings("restriction")
@@ -110,8 +109,8 @@ public abstract class DependenciesSection extends SectionPart {
 
 		protected void updateLabel() {
 			if (fCount != null && !fCount.isDisposed()) {
-				fCount.setText(NLS.bind(PDEUIMessages.TableSection_itemCount, Integer.toString(getTableViewer()
-						.getTable().getItemCount())));
+				fCount.setText(NLS.bind(PDEUIMessages.TableSection_itemCount,
+						Integer.toString(getTableViewer().getTable().getItemCount())));
 			}
 		}
 	}

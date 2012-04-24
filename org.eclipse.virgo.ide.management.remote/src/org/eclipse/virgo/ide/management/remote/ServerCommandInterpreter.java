@@ -54,9 +54,8 @@ public class ServerCommandInterpreter implements CommandInterpreter {
 	}
 
 	/**
-	 * Get the next argument in the input.
-	 * 
-	 * E.g. if the commandline is hello world, the _hello method will get "world" as the first argument.
+	 * Get the next argument in the input. E.g. if the commandline is hello world, the _hello method will get "world" as
+	 * the first argument.
 	 * 
 	 * @return A string containing the next argument on the command line
 	 */
@@ -75,8 +74,7 @@ public class ServerCommandInterpreter implements CommandInterpreter {
 			arg = arg.substring(1) + remainingArg;
 			// skip to next whitespace separated token
 			tok.nextToken(WS_DELIM);
-		}
-		else if (arg.startsWith("'")) { //$NON-NLS-1$ //$NON-NLS-2$
+		} else if (arg.startsWith("'")) { //$NON-NLS-1$ //$NON-NLS-2$
 			if (arg.endsWith("'")) { //$NON-NLS-1$
 				if (arg.length() >= 2)
 					// strip the beginning and ending quotes
@@ -91,13 +89,13 @@ public class ServerCommandInterpreter implements CommandInterpreter {
 	}
 
 	/**
-	 * Execute a command line as if it came from the end user.
+	 * Execute a command line as if it came from the end user. Searches the list of command providers using
+	 * introspection until it finds one that contains a matching method. It searches for a method with the name "_cmd"
+	 * where cmd is the command to execute. For example, for a command of "launch" execute searches for a method called
+	 * "_launch".
 	 * 
-	 * Searches the list of command providers using introspection until it finds one that contains a matching method. It
-	 * searches for a method with the name "_cmd" where cmd is the command to execute. For example, for a command of
-	 * "launch" execute searches for a method called "_launch".
-	 * 
-	 * @param cmd The name of the command to execute.
+	 * @param cmd
+	 *            The name of the command to execute.
 	 * @return The object returned by the method executed.
 	 */
 	public Object execute(String cmd) {
@@ -112,17 +110,14 @@ public class ServerCommandInterpreter implements CommandInterpreter {
 				Method method = target.getClass().getMethod("_" + cmd, parameterTypes); //$NON-NLS-1$
 				retval = method.invoke(target, parameters);
 				executed = true; // stop after the command has been found
-			}
-			catch (NoSuchMethodException ite) {
+			} catch (NoSuchMethodException ite) {
 				// keep going - maybe another command provider will be able to
 				// execute this command
-			}
-			catch (InvocationTargetException ite) {
+			} catch (InvocationTargetException ite) {
 				executed = true; // don't want to keep trying - we found the
 				// method but got an error
 				printStackTrace(ite.getTargetException());
-			}
-			catch (Exception ee) {
+			} catch (Exception ee) {
 				executed = true; // don't want to keep trying - we got an error
 				// we don't understand
 				printStackTrace(ee);
@@ -136,8 +131,7 @@ public class ServerCommandInterpreter implements CommandInterpreter {
 					CommandProvider commandProvider = (CommandProvider) commandProviders[i];
 					out.print(commandProvider.getHelp());
 					out.flush();
-				}
-				catch (Exception ee) {
+				} catch (Exception ee) {
 					printStackTrace(ee);
 				}
 			}
@@ -153,7 +147,8 @@ public class ServerCommandInterpreter implements CommandInterpreter {
 	 * <p>
 	 * This method does not increment the line counter for the 'more' prompt.
 	 * 
-	 * @param o the string to be printed
+	 * @param o
+	 *            the string to be printed
 	 */
 	private void printline(Object o) {
 		print(o + newline);
@@ -162,7 +157,8 @@ public class ServerCommandInterpreter implements CommandInterpreter {
 	/**
 	 * Prints an object to the outputstream
 	 * 
-	 * @param o the object to be printed
+	 * @param o
+	 *            the object to be printed
 	 */
 	public void print(Object o) {
 		synchronized (out) {
@@ -181,7 +177,8 @@ public class ServerCommandInterpreter implements CommandInterpreter {
 	/**
 	 * Print a stack trace including nested exceptions.
 	 * 
-	 * @param t The offending exception
+	 * @param t
+	 *            The offending exception
 	 */
 	public void printStackTrace(Throwable t) {
 		t.printStackTrace(out);
@@ -203,10 +200,8 @@ public class ServerCommandInterpreter implements CommandInterpreter {
 						out.println(ConsoleMsg.CONSOLE_NESTED_EXCEPTION);
 						printStackTrace(nested);
 					}
-				}
-				catch (IllegalAccessException e) {
-				}
-				catch (InvocationTargetException e) {
+				} catch (IllegalAccessException e) {
+				} catch (InvocationTargetException e) {
 				}
 			}
 		}
@@ -220,7 +215,8 @@ public class ServerCommandInterpreter implements CommandInterpreter {
 	 * <p>
 	 * For this to work properly you should not embed "\n" etc. into the string.
 	 * 
-	 * @param o the object to be printed
+	 * @param o
+	 *            the object to be printed
 	 */
 	public void println(Object o) {
 		if (o == null) {
@@ -234,8 +230,10 @@ public class ServerCommandInterpreter implements CommandInterpreter {
 	/**
 	 * Prints the given dictionary sorted by keys.
 	 * 
-	 * @param dic the dictionary to print
-	 * @param title the header to print above the key/value pairs
+	 * @param dic
+	 *            the dictionary to print
+	 * @param title
+	 *            the header to print above the key/value pairs
 	 */
 	public void printDictionary(Dictionary dic, String title) {
 		if (dic == null)
@@ -262,8 +260,10 @@ public class ServerCommandInterpreter implements CommandInterpreter {
 	/**
 	 * Prints the given bundle resource if it exists
 	 * 
-	 * @param bundle the bundle containing the resource
-	 * @param resource the resource to print
+	 * @param bundle
+	 *            the bundle containing the resource
+	 * @param resource
+	 *            the resource to print
 	 */
 	public void printBundleResource(Bundle bundle, String resource) {
 		URL entry = null;
@@ -277,22 +277,18 @@ public class ServerCommandInterpreter implements CommandInterpreter {
 				try {
 					while ((read = in.read(buffer)) != -1)
 						print(new String(buffer, 0, read));
-				}
-				finally {
+				} finally {
 					if (in != null) {
 						try {
 							in.close();
-						}
-						catch (IOException e) {
+						} catch (IOException e) {
 						}
 					}
 				}
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				System.err.println(NLS.bind(ConsoleMsg.CONSOLE_ERROR_READING_RESOURCE, resource));
 			}
-		}
-		else {
+		} else {
 			println(NLS.bind(ConsoleMsg.CONSOLE_RESOURCE_NOT_IN_BUNDLE, resource, bundle.toString()));
 		}
 	}

@@ -16,7 +16,6 @@ import org.eclipse.pde.internal.ui.PDEPlugin;
 import org.eclipse.pde.internal.ui.editor.actions.FormatAction;
 import org.eclipse.ui.PlatformUI;
 
-
 /**
  * @author Christian Dupuis
  * @author Leo Dos Santos
@@ -30,13 +29,12 @@ public class ManifestFormatAction extends FormatAction {
 		}
 
 		try {
-			PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
-					new ManifestFormatOperation(new Object[] { fTextEditor.getEditorInput() }));
-		}
-		catch (InvocationTargetException e) {
+			PlatformUI.getWorkbench()
+					.getProgressService()
+					.busyCursorWhile(new ManifestFormatOperation(new Object[] { fTextEditor.getEditorInput() }));
+		} catch (InvocationTargetException e) {
 			PDEPlugin.log(e);
-		}
-		catch (InterruptedException e) {
+		} catch (InterruptedException e) {
 			PDEPlugin.log(e);
 		}
 	}

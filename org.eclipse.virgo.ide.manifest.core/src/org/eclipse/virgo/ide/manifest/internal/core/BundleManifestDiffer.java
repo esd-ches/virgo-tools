@@ -27,6 +27,7 @@ import org.osgi.framework.Constants;
 
 /**
  * Utility that checks two {@link BundleManifest} instances for equality.
+ * 
  * @author Christian Dupuis
  * @since 1.0.1
  */
@@ -34,16 +35,17 @@ class BundleManifestDiffer {
 
 	/**
 	 * Diffs the two given bundles and provides a set of changes.
-	 * @param bundleManifest1 the first manifest to check
-	 * @param bundleManifest2 the second manifest to check
-	 * @return {@link Set} of {@link IBundleManifestChangeListener.Type} expressing the actual
-	 * change.
+	 * 
+	 * @param bundleManifest1
+	 *            the first manifest to check
+	 * @param bundleManifest2
+	 *            the second manifest to check
+	 * @return {@link Set} of {@link IBundleManifestChangeListener.Type} expressing the actual change.
 	 */
 	static Set<Type> diff(BundleManifest bundleManifest1, BundleManifest bundleManifest2) {
 		if (bundleManifest1 == null && bundleManifest2 == null) {
 			return Collections.emptySet();
-		}
-		else if ((bundleManifest1 == null && bundleManifest2 != null)
+		} else if ((bundleManifest1 == null && bundleManifest2 != null)
 				|| (bundleManifest1 != null && bundleManifest2 == null)) {
 			return BundleManifestManager.IMPORTS_CHANGED;
 		}
@@ -63,10 +65,8 @@ class BundleManifestDiffer {
 		RequireBundle requireBundleHeader1 = bundleManifest1.getRequireBundle();
 		RequireBundle requireBundleHeader2 = bundleManifest2.getRequireBundle();
 
-		String execEnvironment1 = bundleManifest1.toDictionary().get(
-				Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT);
-		String execEnvironment2 = bundleManifest2.toDictionary().get(
-				Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT);
+		String execEnvironment1 = bundleManifest1.toDictionary().get(Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT);
+		String execEnvironment2 = bundleManifest2.toDictionary().get(Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT);
 
 		Set<Type> differences = new HashSet<Type>();
 

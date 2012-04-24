@@ -64,11 +64,12 @@ import org.xml.sax.SAXException;
 
 /**
  * {@link ProjectModule} extension that knows how to handle par and bundle projects.
+ * 
  * @author Christian Dupuis
  * @author Terry Hon
  * @since 1.0.0
  */
-@SuppressWarnings( { "deprecation", "restriction" })
+@SuppressWarnings({ "deprecation", "restriction" })
 public class ServerModuleDelegate extends ProjectModule {
 
 	/** Make */
@@ -93,8 +94,7 @@ public class ServerModuleDelegate extends ProjectModule {
 						resources.addAll(Arrays.asList(delegate.members()));
 					}
 				}
-			}
-			else {
+			} else {
 				resources.addAll(getMembers(getProject(), moduleRelativePath));
 			}
 		}
@@ -109,9 +109,10 @@ public class ServerModuleDelegate extends ProjectModule {
 				ModuleFolder folder = new ModuleFolder(null, moduleFolderName, Path.EMPTY);
 				folder.setMembers(getModuleResources(moduleRelativePath, (IContainer) metaInfFolder));
 				resources.add(folder);
-			}
-			else {
-				StatusManager.getManager().handle(new Status(IStatus.ERROR, BundleManifestCorePlugin.PLUGIN_ID, "Cannot find META-INF/MANIFEST.MF in project [" + getProject().getName() + "]"));
+			} else {
+				StatusManager.getManager().handle(
+						new Status(IStatus.ERROR, BundleManifestCorePlugin.PLUGIN_ID,
+								"Cannot find META-INF/MANIFEST.MF in project [" + getProject().getName() + "]"));
 			}
 
 			// Find linked or nested jars and add them to the deployment
@@ -137,8 +138,7 @@ public class ServerModuleDelegate extends ProjectModule {
 					for (IModuleResource member : members) {
 						if (member instanceof IModuleFile) {
 							resources.add(new ParModuleFile((IModuleFile) member, moduleRelativePath));
-						}
-						else if (member instanceof IModuleFolder) {
+						} else if (member instanceof IModuleFolder) {
 							resources.add(new ParModuleFolder((IModuleFolder) member, moduleRelativePath));
 						}
 					}
@@ -180,8 +180,7 @@ public class ServerModuleDelegate extends ProjectModule {
 					for (IModuleResource member : members) {
 						if (member instanceof IModuleFile) {
 							resources.add(new ParModuleFile((IModuleFile) member, moduleRelativePath));
-						}
-						else if (member instanceof IModuleFolder) {
+						} else if (member instanceof IModuleFolder) {
 							resources.add(new ParModuleFolder((IModuleFolder) member, moduleRelativePath));
 						}
 					}
@@ -194,8 +193,7 @@ public class ServerModuleDelegate extends ProjectModule {
 					folder.setMembers((IModuleResource[]) getMembers(module.getProject(), moduleRelativePath).toArray(
 							new IModuleResource[0]));
 					resources.add(folder);
-				}
-				else if (FacetUtils.isParProject(module.getProject())) {
+				} else if (FacetUtils.isParProject(module.getProject())) {
 					moduleRelativePath = new Path(module.getProject().getName() + ".par");
 					ModuleDelegate delegate = (ModuleDelegate) module.loadAdapter(ModuleDelegate.class, null);
 
@@ -203,8 +201,7 @@ public class ServerModuleDelegate extends ProjectModule {
 					for (IModuleResource member : members) {
 						if (member instanceof IModuleFile) {
 							resources.add(new ParModuleFile((IModuleFile) member, moduleRelativePath));
-						}
-						else if (member instanceof IModuleFolder) {
+						} else if (member instanceof IModuleFolder) {
 							resources.add(new ParModuleFolder((IModuleFolder) member, moduleRelativePath));
 						}
 					}
@@ -279,8 +276,7 @@ public class ServerModuleDelegate extends ProjectModule {
 								break;
 							}
 						}
-					}
-					else if (resource instanceof IFile) {
+					} else if (resource instanceof IFile) {
 						for (String filter : filters) {
 							if (relativePath.equals(filter.trim())) {
 								list.add(new ModuleFile((IFile) resource, name, path));
@@ -308,8 +304,9 @@ public class ServerModuleDelegate extends ProjectModule {
 			Par par = FacetUtils.getParDefinition(getProject());
 			if (par != null && par.getBundle() != null) {
 				for (Bundle bundle : par.getBundle()) {
-					IProject bundleProject = ResourcesPlugin.getWorkspace().getRoot().getProject(
-							bundle.getSymbolicName());
+					IProject bundleProject = ResourcesPlugin.getWorkspace()
+							.getRoot()
+							.getProject(bundle.getSymbolicName());
 					if (FacetUtils.isBundleProject(bundleProject)) {
 						for (IModule module : ServerUtil.getModules(bundleProject)) {
 							if (module.getId().equals(
@@ -322,8 +319,7 @@ public class ServerModuleDelegate extends ProjectModule {
 				}
 			}
 			return (IModule[]) modules.toArray(new IModule[modules.size()]);
-		}
-		else if (FacetUtils.isPlanProject(getProject())) {
+		} else if (FacetUtils.isPlanProject(getProject())) {
 			String fileName = getModule().getId();
 			fileName = fileName.substring(fileName.indexOf(':') + 1);
 			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(fileName));
@@ -397,6 +393,7 @@ public class ServerModuleDelegate extends ProjectModule {
 	/**
 	 * {@link IModuleFolder} implementation that wraps another {@link IModuleFolder} but moves the relative path into a
 	 * sub directory of a nested par module.
+	 * 
 	 * @see ParModuleFolder#members()
 	 */
 	static class ParModuleFolder implements IModuleFolder {
@@ -415,8 +412,7 @@ public class ServerModuleDelegate extends ProjectModule {
 			for (IModuleResource resource : wrappedFolder.members()) {
 				if (resource instanceof IModuleFile) {
 					members.add(new ParModuleFile((IModuleFile) resource, modulePath));
-				}
-				else if (resource instanceof IModuleFolder) {
+				} else if (resource instanceof IModuleFolder) {
 					members.add(new ParModuleFolder((IModuleFolder) resource, modulePath));
 				}
 			}
@@ -475,8 +471,7 @@ public class ServerModuleDelegate extends ProjectModule {
 					}
 				}
 			}
-		}
-		catch (JavaModelException e) {
+		} catch (JavaModelException e) {
 		}
 		return entries;
 	}
@@ -498,7 +493,7 @@ public class ServerModuleDelegate extends ProjectModule {
 		Set<IModule> modules = new HashSet<IModule>();
 
 		try {
-			DocumentBuilder docBuilder =  DocumentBuilderFactory.newInstance().newDocumentBuilder();
+			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document doc = docBuilder.parse(file.getContents(true));
 			NodeList artifactNodes = doc.getDocumentElement().getElementsByTagName("artifact");
 			for (int i = 0; i < artifactNodes.getLength(); i++) {
@@ -516,9 +511,10 @@ public class ServerModuleDelegate extends ProjectModule {
 							BundleManifest manifest = BundleManifestCorePlugin.getBundleManifestManager()
 									.getBundleManifest(JavaCore.create(candidate));
 
-							if ((manifest != null && manifest.getBundleSymbolicName() != null && manifest.
-									getBundleSymbolicName().getSymbolicName() != null && manifest.getBundleSymbolicName().
-									getSymbolicName().equals(name))
+							if ((manifest != null && manifest.getBundleSymbolicName() != null
+									&& manifest.getBundleSymbolicName().getSymbolicName() != null && manifest.getBundleSymbolicName()
+									.getSymbolicName()
+									.equals(name))
 									|| candidate.getName().equals(name)) {
 								for (IModule module : ServerUtil.getModules(candidate)) {
 									if (!module.getId().contains("$")) {
@@ -529,8 +525,7 @@ public class ServerModuleDelegate extends ProjectModule {
 							}
 						}
 					}
-				}
-				else if ("par".equals(type)) {
+				} else if ("par".equals(type)) {
 					IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
 					for (IProject candidate : projects) {
 
@@ -546,17 +541,20 @@ public class ServerModuleDelegate extends ProjectModule {
 					}
 				}
 			}
-		}
-		catch (SAXException e) {
-			StatusManager.getManager().handle(new Status(IStatus.ERROR,"Problem while getting plan dependencies.", BundleManifestCorePlugin.PLUGIN_ID, e));
-		}
-		catch (IOException e) {
-			StatusManager.getManager().handle(new Status(IStatus.ERROR,"Problem while getting plan dependencies.", BundleManifestCorePlugin.PLUGIN_ID, e));
-		}
-		catch (CoreException e) {
+		} catch (SAXException e) {
+			StatusManager.getManager().handle(
+					new Status(IStatus.ERROR, "Problem while getting plan dependencies.",
+							BundleManifestCorePlugin.PLUGIN_ID, e));
+		} catch (IOException e) {
+			StatusManager.getManager().handle(
+					new Status(IStatus.ERROR, "Problem while getting plan dependencies.",
+							BundleManifestCorePlugin.PLUGIN_ID, e));
+		} catch (CoreException e) {
 			StatusManager.getManager().handle(e, BundleManifestCorePlugin.PLUGIN_ID);
 		} catch (ParserConfigurationException e) {
-			StatusManager.getManager().handle(new Status(IStatus.ERROR,"Problem while getting plan dependencies.", BundleManifestCorePlugin.PLUGIN_ID, e));
+			StatusManager.getManager().handle(
+					new Status(IStatus.ERROR, "Problem while getting plan dependencies.",
+							BundleManifestCorePlugin.PLUGIN_ID, e));
 		}
 
 		return modules;

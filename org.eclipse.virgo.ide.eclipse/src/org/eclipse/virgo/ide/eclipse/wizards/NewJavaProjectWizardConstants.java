@@ -11,8 +11,8 @@
 package org.eclipse.virgo.ide.eclipse.wizards;
 
 /**
- * Strings and constants from 3.4's NewWizardMessages class which are necessary
- * for NewJavaProjectWizardPageOne and NewJavaProjectWizardPageTwo
+ * Strings and constants from 3.4's NewWizardMessages class which are necessary for NewJavaProjectWizardPageOne and
+ * NewJavaProjectWizardPageTwo
  */
 public class NewJavaProjectWizardConstants {
 

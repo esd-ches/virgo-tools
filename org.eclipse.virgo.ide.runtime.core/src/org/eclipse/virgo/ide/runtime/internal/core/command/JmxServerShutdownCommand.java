@@ -18,17 +18,16 @@ import javax.management.ObjectName;
 
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 
-
 /**
  * {@link IServerCommand} to shutdown a dm Server.
+ * 
  * @author Christian Dupuis
  * @since 1.0.1
  */
-public class JmxServerShutdownCommand extends AbstractJmxServerCommand implements
-		IServerCommand<Void> {
+public class JmxServerShutdownCommand extends AbstractJmxServerCommand implements IServerCommand<Void> {
 
 	/**
-	 * Creates a new {@link JmxServerShutdownCommand}. 
+	 * Creates a new {@link JmxServerShutdownCommand}.
 	 */
 	public JmxServerShutdownCommand(IServerBehaviour serverBehaviour) {
 		super(serverBehaviour);
@@ -42,8 +41,7 @@ public class JmxServerShutdownCommand extends AbstractJmxServerCommand implement
 		JmxServerCommandTemplate template = new JmxServerCommandTemplate() {
 
 			public Object invokeOperation(MBeanServerConnection connection) throws Exception {
-				ObjectName name = ObjectName.getInstance(serverBehaviour.getVersionHandler()
-						.getShutdownMBeanName());
+				ObjectName name = ObjectName.getInstance(serverBehaviour.getVersionHandler().getShutdownMBeanName());
 				return connection.invoke(name, "immediateShutdown", null, null);
 			}
 

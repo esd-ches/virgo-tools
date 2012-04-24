@@ -17,27 +17,25 @@ import java.util.concurrent.TimeoutException;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.wst.server.core.IModule;
 
-
 /**
  * {@link IServerCommand} to update a PAR or bundle on a dm Server.
+ * 
  * @author Christian Dupuis
  * @since 1.0.1
  */
-public class JmxServerRefreshCommand extends AbstractJmxServerDeployerCommand<Object> implements
-		IServerCommand<Void> {
-	
+public class JmxServerRefreshCommand extends AbstractJmxServerDeployerCommand<Object> implements IServerCommand<Void> {
+
 	/** Symbolic name of the bundle to update */
 	private final String bundleSymbolicName;
 
 	/**
 	 * Creates a new {@link JmxServerRefreshCommand}.
 	 */
-	public JmxServerRefreshCommand(IServerBehaviour serverBehaviour, IModule module,
-			String bundleSymbolicName) {
+	public JmxServerRefreshCommand(IServerBehaviour serverBehaviour, IModule module, String bundleSymbolicName) {
 		super(serverBehaviour, module);
 		this.bundleSymbolicName = bundleSymbolicName;
-	}	
-	
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -45,7 +43,7 @@ public class JmxServerRefreshCommand extends AbstractJmxServerDeployerCommand<Ob
 		doExecute();
 		return null;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

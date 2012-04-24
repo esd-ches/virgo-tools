@@ -37,7 +37,6 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.virgo.ide.export.ParExportWizard;
 import org.eclipse.virgo.ide.ui.ServerIdeUiPlugin;
 
-
 /**
  * @author Christian Dupuis
  */
@@ -134,8 +133,7 @@ public class ParOverviewPage extends PDEFormPage implements IHyperlinkListener {
 		FormText text = toolkit.createFormText(section, true);
 		try {
 			text.setText(content, parseTags, false);
-		}
-		catch (SWTException e) {
+		} catch (SWTException e) {
 			text.setText(e.getMessage(), false, false);
 		}
 		return text;
@@ -144,15 +142,14 @@ public class ParOverviewPage extends PDEFormPage implements IHyperlinkListener {
 	public void linkActivated(HyperlinkEvent e) {
 		if (e.getHref().equals("dependencies")) {
 			getEditor().setActivePage(ParXmlEditorPage.ID_EDITOR);
-		}
-		else if (e.getHref().equals("exportpar")) {
+		} else if (e.getHref().equals("exportpar")) {
 			Display.getDefault().asyncExec(new Runnable() {
 
 				public void run() {
 					ParExportWizard wizard = new ParExportWizard();
 					WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), wizard);
-					wizard.init(PlatformUI.getWorkbench(), new StructuredSelection(new Object[] { fInfoSection
-							.getParProject() }));
+					wizard.init(PlatformUI.getWorkbench(),
+							new StructuredSelection(new Object[] { fInfoSection.getParProject() }));
 					dialog.open();
 				}
 			});

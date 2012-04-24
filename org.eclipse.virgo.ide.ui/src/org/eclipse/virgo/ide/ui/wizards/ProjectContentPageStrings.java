@@ -12,6 +12,7 @@ package org.eclipse.virgo.ide.ui.wizards;
 
 /**
  * Strings used by classes that extend ProjectContentPage
+ * 
  * @author Christian Dupuis
  */
 public class ProjectContentPageStrings {

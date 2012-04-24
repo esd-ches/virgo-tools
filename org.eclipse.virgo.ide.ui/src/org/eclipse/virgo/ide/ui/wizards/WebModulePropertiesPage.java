@@ -49,7 +49,10 @@ public class WebModulePropertiesPage extends AbstractPropertiesPage {
 		contextPathLabel.setText("Web-ContextPath");
 
 		contextPathText = new Text(propertiesGroup, SWT.BORDER | SWT.SINGLE);
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).span(2, 1)
+		GridDataFactory.fillDefaults()
+				.align(SWT.FILL, SWT.CENTER)
+				.grab(true, false)
+				.span(2, 1)
 				.applyTo(contextPathText);
 	}
 

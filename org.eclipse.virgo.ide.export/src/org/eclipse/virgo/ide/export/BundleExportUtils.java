@@ -12,7 +12,6 @@ package org.eclipse.virgo.ide.export;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -24,11 +23,9 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.commands.ExecutionException;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
@@ -112,8 +109,7 @@ public class BundleExportUtils {
 	}
 
 	/**
-	 * Create export operation given project to be exported and location of the
-	 * JAR.
+	 * Create export operation given project to be exported and location of the JAR.
 	 * 
 	 * @param project
 	 * @param jarLocation
@@ -169,11 +165,11 @@ public class BundleExportUtils {
 
 					if (charactor != '\n') {
 						warnings.add(new Status(
-							Status.WARNING,
-							ServerExportPlugin.PLUGIN_ID,
-							"Manifest file for project "
-								+ project.getElementName()
-								+ " is missing a '\\n' at the end of file. The exported bundle might not work properly."));
+								Status.WARNING,
+								ServerExportPlugin.PLUGIN_ID,
+								"Manifest file for project "
+										+ project.getElementName()
+										+ " is missing a '\\n' at the end of file. The exported bundle might not work properly."));
 					}
 				} catch (IOException e) {
 					throw new RuntimeException(e);
@@ -191,9 +187,12 @@ public class BundleExportUtils {
 	/**
 	 * Util method for running IJarExportRunnable operation.
 	 * 
-	 * @param op export JAR operation
-	 * @param reportStatus true if export errors are displayed to the user
-	 * @param context runnable context
+	 * @param op
+	 *            export JAR operation
+	 * @param reportStatus
+	 *            true if export errors are displayed to the user
+	 * @param context
+	 *            runnable context
 	 * @param shell
 	 * @param warningMessages
 	 * @return if operation was performed successfully
@@ -217,9 +216,11 @@ public class BundleExportUtils {
 			}
 			children.addAll(warnings);
 
-			MultiStatus multiStatus = new MultiStatus(ServerExportPlugin.PLUGIN_ID, !status.isOK() ? status.getCode()
-				: Status.WARNING, children.toArray(new Status[0]), !status.isOK() ? status.getMessage()
-				: "There were warnings while exporting bundle project. Click Details to see more...", null);
+			MultiStatus multiStatus = new MultiStatus(ServerExportPlugin.PLUGIN_ID, !status.isOK()
+					? status.getCode()
+					: Status.WARNING, children.toArray(new Status[0]), !status.isOK()
+					? status.getMessage()
+					: "There were warnings while exporting bundle project. Click Details to see more...", null);
 			ErrorDialog.openError(shell, "Export Warning", null, multiStatus);
 			return !(status.matches(IStatus.ERROR));
 		}
@@ -234,8 +235,8 @@ public class BundleExportUtils {
 		dataModel.setBooleanProperty(IJ2EEComponentExportDataModelProperties.OPTIMIZE_FOR_SPECIFIC_RUNTIME, false);
 		dataModel.setBooleanProperty(IJ2EEComponentExportDataModelProperties.EXPORT_SOURCE_FILES, false);
 		dataModel.setBooleanProperty(IJ2EEComponentExportDataModelProperties.OVERWRITE_EXISTING, true);
-		dataModel.setProperty(IJ2EEComponentExportDataModelProperties.ARCHIVE_DESTINATION, settingsFolder
-				.getRawLocation().append(jarName).toString());
+		dataModel.setProperty(IJ2EEComponentExportDataModelProperties.ARCHIVE_DESTINATION,
+				settingsFolder.getRawLocation().append(jarName).toString());
 		WebComponentExportOperation operation = new WebComponentExportOperation(dataModel);
 
 		try {

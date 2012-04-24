@@ -141,12 +141,10 @@ public class NewBundleProjectWizard extends NewElementWizard implements INewWiza
 
 		try {
 			getContainer().run(true, true, oper);
-		}
-		catch (InvocationTargetException e) {
+		} catch (InvocationTargetException e) {
 			StatusManager.getManager().handle(
 					new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Failure opening project facets.", e));
-		}
-		catch (InterruptedException e) {
+		} catch (InterruptedException e) {
 			StatusManager.getManager().handle(
 					new Status(IStatus.WARNING, ServerIdeUiPlugin.PLUGIN_ID,
 							"Interruption while opening project facets.", e));
@@ -276,8 +274,7 @@ public class NewBundleProjectWizard extends NewElementWizard implements INewWiza
 				IWorkbenchPage page = workbenchWindow.getActivePage();
 				try {
 					page.openEditor(new FileEditorInput(manifestFile), BundleManifestEditor.ID_EDITOR);
-				}
-				catch (PartInitException e) {
+				} catch (PartInitException e) {
 					MessageDialog.openError(workbenchWindow.getShell(), "Error opening editor", e.getMessage());
 				}
 			}
@@ -300,11 +297,9 @@ public class NewBundleProjectWizard extends NewElementWizard implements INewWiza
 
 		try {
 			getContainer().run(true, true, oper);
-		}
-		catch (InvocationTargetException e) {
+		} catch (InvocationTargetException e) {
 			e.printStackTrace();
-		}
-		catch (InterruptedException e) {
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}

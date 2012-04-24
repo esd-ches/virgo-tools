@@ -85,8 +85,7 @@ public class BundleGeneralInfoSection extends AbstractPdeGeneralInfoSection {
 			public void textValueChanged(FormEntry entry) {
 				try {
 					((IPlugin) getPluginBase()).setClassName(entry.getValue());
-				}
-				catch (CoreException e) {
+				} catch (CoreException e) {
 					PDEPlugin.logException(e);
 				}
 			}

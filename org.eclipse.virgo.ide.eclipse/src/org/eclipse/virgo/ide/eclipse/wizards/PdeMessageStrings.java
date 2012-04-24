@@ -11,8 +11,7 @@
 package org.eclipse.virgo.ide.eclipse.wizards;
 
 /**
- * Replacement for strings found in PDEUIMessages and PDECoreMessages, used by
- * ProjectContentPage
+ * Replacement for strings found in PDEUIMessages and PDECoreMessages, used by ProjectContentPage
  */
 public class PdeMessageStrings {
 

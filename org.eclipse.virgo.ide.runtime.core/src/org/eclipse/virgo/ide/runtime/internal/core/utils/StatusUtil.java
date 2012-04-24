@@ -20,13 +20,14 @@ import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 /**
  * 
  * @author mparker
- *
+ * 
  */
 public class StatusUtil {
 	public static void error(String message, Exception e) {
-		StatusManager.getManager().handle(new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, "An IO Exception occurred.", e));
+		StatusManager.getManager().handle(	new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID,
+												"An IO Exception occurred.", e));
 	}
-	
+
 	public static void error(Exception e) {
 		if (e instanceof IOException) {
 			error("An IO Exception occurred.", e);

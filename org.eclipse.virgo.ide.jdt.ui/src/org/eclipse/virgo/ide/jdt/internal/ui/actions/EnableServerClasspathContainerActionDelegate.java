@@ -34,9 +34,9 @@ import org.eclipse.virgo.ide.jdt.core.JdtCorePlugin;
 import org.eclipse.virgo.ide.jdt.internal.core.classpath.ServerClasspathContainer;
 import org.eclipse.virgo.ide.jdt.internal.core.util.ClasspathUtils;
 
-
 /**
  * Menu action to refresh the bundle classpath container.
+ * 
  * @author Christian Dupuis
  * @since 1.1.3
  */
@@ -51,8 +51,7 @@ public class EnableServerClasspathContainerActionDelegate implements IObjectActi
 			IProject project = iter.next();
 			if (FacetUtils.isBundleProject(project)) {
 				projects.add(JavaCore.create(project));
-			}
-			else if (FacetUtils.isParProject(project)) {
+			} else if (FacetUtils.isParProject(project)) {
 				for (IProject bundle : FacetUtils.getBundleProjects(project)) {
 					projects.add(JavaCore.create(bundle));
 				}
@@ -66,17 +65,14 @@ public class EnableServerClasspathContainerActionDelegate implements IObjectActi
 							ServerClasspathContainer.CLASSPATH_CONTAINER_PATH, null,
 							ServerClasspathContainer.CLASSPATH_CONTAINER_ATTRIBUTE, false), new NullProgressMonitor());
 					// Remove any error markers that might hang around
-					javaProject.getProject().deleteMarkers(
-							JdtCorePlugin.DEPENDENCY_PROBLEM_MARKER_ID, true,
+					javaProject.getProject().deleteMarkers(JdtCorePlugin.DEPENDENCY_PROBLEM_MARKER_ID, true,
 							IResource.DEPTH_INFINITE);
-				}
-				else {
+				} else {
 					addToClasspath(javaProject, JavaCore.newContainerEntry(
 							ServerClasspathContainer.CLASSPATH_CONTAINER_PATH, null,
 							ServerClasspathContainer.CLASSPATH_CONTAINER_ATTRIBUTE, false), new NullProgressMonitor());
 				}
-			}
-			catch (CoreException e) {
+			} catch (CoreException e) {
 				JdtCorePlugin.log(e);
 			}
 		}
@@ -98,12 +94,10 @@ public class EnableServerClasspathContainerActionDelegate implements IObjectActi
 					if (!project.isOpen()) {
 						enabled = false;
 						break;
-					}
-					else {
+					} else {
 						selected.add(project);
 					}
-				}
-				else {
+				} else {
 					enabled = false;
 					break;
 				}
@@ -112,8 +106,8 @@ public class EnableServerClasspathContainerActionDelegate implements IObjectActi
 		}
 	}
 
-	private void addToClasspath(IJavaProject javaProject, IClasspathEntry entry,
-			IProgressMonitor monitor) throws CoreException {
+	private void addToClasspath(IJavaProject javaProject, IClasspathEntry entry, IProgressMonitor monitor)
+			throws CoreException {
 		IClasspathEntry[] current = javaProject.getRawClasspath();
 		IClasspathEntry[] updated = new IClasspathEntry[current.length + 1];
 		System.arraycopy(current, 0, updated, 0, current.length);
@@ -121,8 +115,8 @@ public class EnableServerClasspathContainerActionDelegate implements IObjectActi
 		javaProject.setRawClasspath(updated, monitor);
 	}
 
-	protected void removeFromClasspath(IJavaProject javaProject, IClasspathEntry entry,
-			IProgressMonitor monitor) throws CoreException {
+	protected void removeFromClasspath(IJavaProject javaProject, IClasspathEntry entry, IProgressMonitor monitor)
+			throws CoreException {
 		Set<IClasspathEntry> entries = new LinkedHashSet<IClasspathEntry>();
 		for (IClasspathEntry existingEntry : javaProject.getRawClasspath()) {
 			if (!existingEntry.equals(entry)) {

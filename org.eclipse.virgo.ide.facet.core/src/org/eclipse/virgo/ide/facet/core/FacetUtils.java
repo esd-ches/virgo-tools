@@ -41,8 +41,7 @@ import org.eclipse.virgo.ide.par.ParPackage;
 import org.eclipse.wst.common.project.facet.core.FacetedProjectFramework;
 
 /**
- * Utility to check if the given {@link IResource} belongs to a project that has
- * the par or bundle facet.
+ * Utility to check if the given {@link IResource} belongs to a project that has the par or bundle facet.
  * 
  * @author Christian Dupuis
  * @since 1.0.0
@@ -56,7 +55,7 @@ public class FacetUtils {
 		boolean b;
 		try {
 			b = resource.getProject().hasNature(JavaCore.NATURE_ID)
-				&& hasProjectFacet(resource, FacetCorePlugin.BUNDLE_FACET_ID);
+					&& hasProjectFacet(resource, FacetCorePlugin.BUNDLE_FACET_ID);
 			return b;
 		} catch (CoreException e) {
 			return false;
@@ -92,8 +91,7 @@ public class FacetUtils {
 	}
 
 	/**
-	 * Returns all bundle project in the current workspace regardless weather
-	 * they are open or closed.
+	 * Returns all bundle project in the current workspace regardless weather they are open or closed.
 	 */
 	public static IProject[] getBundleProjects() {
 		List<IProject> bundles = new ArrayList<IProject>();
@@ -125,7 +123,8 @@ public class FacetUtils {
 			Par par = getParDefinition(parProject);
 			if (par != null && par.getBundle() != null) {
 				for (Bundle bundle : par.getBundle()) {
-					IProject bundleProject = ResourcesPlugin.getWorkspace().getRoot()
+					IProject bundleProject = ResourcesPlugin.getWorkspace()
+							.getRoot()
 							.getProject(bundle.getSymbolicName());
 					if (FacetUtils.isBundleProject(bundleProject)) {
 						bundles.add(bundleProject);
@@ -143,7 +142,7 @@ public class FacetUtils {
 		resourceSet.getPackageRegistry().put(ParPackage.eNS_URI, ParPackage.eINSTANCE);
 
 		File parFile = new File(new File(project.getLocation().toString() + File.separatorChar + ".settings"),
-			"org.eclipse.virgo.ide.runtime.core.par.xml");
+				"org.eclipse.virgo.ide.runtime.core.par.xml");
 		if (parFile.exists()) {
 			URI fileUri = URI.createFileURI(parFile.toString());
 			Resource resource = null;
@@ -157,7 +156,8 @@ public class FacetUtils {
 						StringBuilder sb = new StringBuilder();
 						String next = br.readLine();
 						do {
-							next = next.replaceAll("http:///com/springsource/server/ide/par.ecore", "http://eclipse.org/virgo/par.ecore");
+							next = next.replaceAll("http:///com/springsource/server/ide/par.ecore",
+									"http://eclipse.org/virgo/par.ecore");
 							next = next.replaceAll("com\\.springsource\\.server", "org.eclipse.virgo");
 							sb.append(next + "\n");
 							next = br.readLine();
@@ -182,8 +182,7 @@ public class FacetUtils {
 	}
 
 	public static IFile getParFile(IProject project) {
-		IResource resource = project.findMember(new Path(".settings")
-				.append("org.eclipse.virgo.ide.runtime.core.par.xml"));
+		IResource resource = project.findMember(new Path(".settings").append("org.eclipse.virgo.ide.runtime.core.par.xml"));
 		if (resource instanceof IFile) {
 			return (IFile) resource;
 		}

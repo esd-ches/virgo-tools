@@ -14,6 +14,7 @@ import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 
 /**
  * Default Virgo server behavior.
+ * 
  * @author Terry Hon
  * @author Christian Dupuis
  * @since 1.0.0

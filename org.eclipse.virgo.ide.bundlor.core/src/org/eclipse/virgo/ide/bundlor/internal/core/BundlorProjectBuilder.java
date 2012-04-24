@@ -29,7 +29,6 @@ import java.util.Set;
 import java.util.jar.Manifest;
 
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.core.internal.resources.Resource;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;

@@ -17,7 +17,8 @@ import org.osgi.framework.Constants;
 import org.osgi.framework.Version;
 
 /**
- * Persistable OSGi Version (with major, minor, service/micro and qualifier levels)
+ * Persistable OSGi Version (with major, minor, service/micro and qualifier
+ * levels)
  */
 public class OsgiVersion implements Comparable<OsgiVersion> {
 
@@ -35,6 +36,7 @@ public class OsgiVersion implements Comparable<OsgiVersion> {
 
 	/**
 	 * Create an OsgiVersion from a Bundle by getting the BUNDLE_VERSION header
+	 * 
 	 * @param bundle
 	 * @return an OSGiVersion object representing the version of the bundle
 	 */
@@ -47,7 +49,9 @@ public class OsgiVersion implements Comparable<OsgiVersion> {
 	}
 
 	/**
-	 * Build an OsgiVersion from its String representation. Acceptable forms are: 1 1.0 1.0.1 1.0.0.qualifier etc.
+	 * Build an OsgiVersion from its String representation. Acceptable forms
+	 * are: 1 1.0 1.0.1 1.0.0.qualifier etc.
+	 * 
 	 * @param the string version
 	 * @throws IllegalArgumentException
 	 */
@@ -67,14 +71,14 @@ public class OsgiVersion implements Comparable<OsgiVersion> {
 			this.minor = tokenizer.hasMoreTokens() ? Integer.parseInt(tokenizer.nextToken()) : 0;
 			this.service = tokenizer.hasMoreTokens() ? Integer.parseInt(tokenizer.nextToken()) : 0;
 			this.qualifier = tokenizer.hasMoreTokens() ? tokenizer.nextToken() : "";
-		}
-		catch (NumberFormatException nfEx) {
+		} catch (NumberFormatException nfEx) {
 			throw new IllegalArgumentException("Can't convert '" + s + "' into an OSGi version");
 		}
 	}
 
 	/**
 	 * Create an OsgiVersion explicitly specifying all levels.
+	 * 
 	 * @param major
 	 * @param minor
 	 * @param service
@@ -88,7 +92,9 @@ public class OsgiVersion implements Comparable<OsgiVersion> {
 	}
 
 	/**
-	 * Create a persistable OsgiVersion from OSGi's own (non-persistent) Version type
+	 * Create a persistable OsgiVersion from OSGi's own (non-persistent) Version
+	 * type
+	 * 
 	 * @param v
 	 */
 	public OsgiVersion(Version v) {
@@ -130,7 +136,8 @@ public class OsgiVersion implements Comparable<OsgiVersion> {
 	}
 
 	/**
-	 * Orders as you would expect for major,minor,service, and alphabetically for qualifier.
+	 * Orders as you would expect for major,minor,service, and alphabetically
+	 * for qualifier.
 	 */
 	public int compareTo(OsgiVersion o) {
 		if (o == this) {
@@ -138,23 +145,17 @@ public class OsgiVersion implements Comparable<OsgiVersion> {
 		}
 		if (this.major > o.major) {
 			return 1;
-		}
-		else if (this.major < o.major) {
+		} else if (this.major < o.major) {
 			return -1;
-		}
-		else if (this.minor > o.minor) { // major versions equal
+		} else if (this.minor > o.minor) { // major versions equal
 			return 1;
-		}
-		else if (this.minor < o.minor) {
+		} else if (this.minor < o.minor) {
 			return -1;
-		}
-		else if (this.service > o.service) { // major and minor versions equal
+		} else if (this.service > o.service) { // major and minor versions equal
 			return 1;
-		}
-		else if (this.service < o.service) {
+		} else if (this.service < o.service) {
 			return -1;
-		}
-		else { // major, minor, and service versions equals
+		} else { // major, minor, and service versions equals
 			String myQualifier = this.qualifier;
 			String otherQualifier = o.qualifier;
 			if (myQualifier == null)

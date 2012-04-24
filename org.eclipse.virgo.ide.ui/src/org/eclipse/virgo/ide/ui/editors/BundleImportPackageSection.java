@@ -57,7 +57,6 @@ import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryUtils;
 import org.osgi.framework.Constants;
 import org.osgi.framework.Version;
 
-
 /**
  * @author Christian Dupuis
  */
@@ -163,8 +162,7 @@ public class BundleImportPackageSection extends AbstractImportSection {
 			public void run() {
 				if (addRemote) {
 					setElementsRemote(dialog);
-				}
-				else {
+				} else {
 					setElementsLocal(dialog);
 				}
 
@@ -241,8 +239,7 @@ public class BundleImportPackageSection extends AbstractImportSection {
 		SWTUtil.setDialogSize(dialog, 400, -1);
 		if (selected.length == 1) {
 			dialog.setTitle(((ImportPackageObject) selected[0]).getName());
-		}
-		else {
+		} else {
 			dialog.setTitle(PDEUIMessages.ExportPackageSection_props);
 		}
 		if (dialog.open() == Window.OK && isEditable()) {
@@ -301,8 +298,7 @@ public class BundleImportPackageSection extends AbstractImportSection {
 				IViewPart part = PDEPlugin.getActivePage().showView(JavaUI.ID_PACKAGES);
 				ShowInPackageViewAction action = new ShowInPackageViewAction(part.getSite());
 				action.run(frag);
-			}
-			catch (PartInitException e) {
+			} catch (PartInitException e) {
 			}
 		}
 	}
@@ -409,8 +405,7 @@ public class BundleImportPackageSection extends AbstractImportSection {
 	protected void buttonSelected(int index) {
 		if (index == ADD_REMOTE_BUNDLE_INDEX) {
 			internalHandleAdd(true);
-		}
-		else {
+		} else {
 			super.buttonSelected(index);
 		}
 	}
@@ -420,8 +415,7 @@ public class BundleImportPackageSection extends AbstractImportSection {
 			ImportPackageHeader header = (ImportPackageHeader) getBundle().getManifestHeader(Constants.IMPORT_PACKAGE);
 			if (header == null) {
 				return new Object[0];
-			}
-			else {
+			} else {
 				return header.getPackages();
 			}
 		}

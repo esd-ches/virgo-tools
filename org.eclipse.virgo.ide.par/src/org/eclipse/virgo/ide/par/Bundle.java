@@ -13,30 +13,27 @@ package org.eclipse.virgo.ide.par;
 import org.eclipse.emf.ecore.EObject;
 
 /**
- * <!-- begin-user-doc -->
- * A representation of the model object '<em><b>Bundle</b></em>'.
- * <!-- end-user-doc -->
- *
+ * <!-- begin-user-doc --> A representation of the model object '<em><b>Bundle</b></em>'. <!-- end-user-doc -->
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.virgo.ide.par.Bundle#getSymbolicName <em>Symbolic Name</em>}</li>
+ * <li>{@link org.eclipse.virgo.ide.par.Bundle#getSymbolicName <em>Symbolic Name</em>}</li>
  * </ul>
  * </p>
- *
+ * 
  * @see org.eclipse.virgo.ide.par.ParPackage#getBundle()
  * @model
  * @generated
  */
 public interface Bundle extends EObject {
 	/**
-	 * Returns the value of the '<em><b>Symbolic Name</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+	 * Returns the value of the '<em><b>Symbolic Name</b></em>' attribute. <!-- begin-user-doc -->
 	 * <p>
-	 * If the meaning of the '<em>Symbolic Name</em>' attribute isn't clear,
-	 * there really should be more of a description here...
+	 * If the meaning of the '<em>Symbolic Name</em>' attribute isn't clear, there really should be more of a
+	 * description here...
 	 * </p>
 	 * <!-- end-user-doc -->
+	 * 
 	 * @return the value of the '<em>Symbolic Name</em>' attribute.
 	 * @see #setSymbolicName(String)
 	 * @see org.eclipse.virgo.ide.par.ParPackage#getBundle_SymbolicName()
@@ -46,10 +43,11 @@ public interface Bundle extends EObject {
 	String getSymbolicName();
 
 	/**
-	 * Sets the value of the '{@link org.eclipse.virgo.ide.par.Bundle#getSymbolicName <em>Symbolic Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Symbolic Name</em>' attribute.
+	 * Sets the value of the '{@link org.eclipse.virgo.ide.par.Bundle#getSymbolicName <em>Symbolic Name</em>}'
+	 * attribute. <!-- begin-user-doc --> <!-- end-user-doc -->
+	 * 
+	 * @param value
+	 *            the new value of the '<em>Symbolic Name</em>' attribute.
 	 * @see #getSymbolicName()
 	 * @generated
 	 */

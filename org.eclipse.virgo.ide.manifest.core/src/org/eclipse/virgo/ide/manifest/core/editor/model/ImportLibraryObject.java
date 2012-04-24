@@ -63,14 +63,11 @@ public class ImportLibraryObject extends PDEManifestElement {
 		StringBuffer version = new StringBuffer();
 		if (versionSegments == null) {
 			return null;
-		}
-		else if (versionSegments.length == 0) {
+		} else if (versionSegments.length == 0) {
 			return null;
-		}
-		else if (versionSegments.length == 1) {
+		} else if (versionSegments.length == 1) {
 			version.append(versionSegments[0]);
-		}
-		else if (versionSegments.length == 2) {
+		} else if (versionSegments.length == 2) {
 			version.append(versionSegments[0]);
 			version.append(',');
 			version.append(versionSegments[1]);
@@ -87,8 +84,7 @@ public class ImportLibraryObject extends PDEManifestElement {
 		boolean old = isOptional();
 		if (optional) {
 			setDirective(Constants.RESOLUTION_DIRECTIVE, Constants.RESOLUTION_OPTIONAL);
-		}
-		else {
+		} else {
 			setDirective(Constants.RESOLUTION_DIRECTIVE, null);
 			setAttribute(ICoreConstants.OPTIONAL_ATTRIBUTE, null);
 		}

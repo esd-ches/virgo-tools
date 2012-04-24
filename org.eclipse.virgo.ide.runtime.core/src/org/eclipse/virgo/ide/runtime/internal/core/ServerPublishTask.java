@@ -23,9 +23,10 @@ import org.eclipse.wst.server.core.model.PublishOperation;
 import org.eclipse.wst.server.core.model.PublishTaskDelegate;
 import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
 
-
 /**
- * {@link PublishOperation} extension that deals with deploy, clean and refresh of dm Server modules.
+ * {@link PublishOperation} extension that deals with deploy, clean and refresh
+ * of dm Server modules.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
@@ -51,11 +52,9 @@ public class ServerPublishTask extends PublishTaskDelegate {
 				if (in != ServerBehaviourDelegate.NO_CHANGE || kind == IServer.PUBLISH_CLEAN) {
 					if (module.length == 1) {
 						addModuleToPublish(tasks, modulesToPublish, engineServer, module[0], in, kind);
-					}
-					else if (FacetUtils.isParProject(module[0].getProject()) && kind != IServer.PUBLISH_CLEAN) {
+					} else if (FacetUtils.isParProject(module[0].getProject()) && kind != IServer.PUBLISH_CLEAN) {
 						addModuleToPublish(tasks, modulesToPublish, engineServer, module[0], in, kind);
-					}
-					else if (module.length > 1) {
+					} else if (module.length > 1) {
 						IProject project = module[0].getProject();
 						if (!FacetUtils.isBundleProject(project) && !FacetUtils.isParProject(project)) {
 							addModuleToPublish(tasks, modulesToPublish, engineServer, module[0], in, kind);

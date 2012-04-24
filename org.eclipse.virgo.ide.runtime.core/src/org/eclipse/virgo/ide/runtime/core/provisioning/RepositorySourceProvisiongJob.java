@@ -24,10 +24,10 @@ import org.eclipse.virgo.ide.runtime.internal.core.utils.WebDownloadUtils;
 import org.eclipse.virgo.util.io.FileCopyUtils;
 import org.eclipse.wst.server.core.IRuntime;
 
-
 /**
- * {@link Job} that provisions the missing source jars of the installed bundles in the dm Server's
- * repository.
+ * {@link Job} that provisions the missing source jars of the installed bundles
+ * in the dm Server's repository.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
@@ -43,9 +43,9 @@ public class RepositorySourceProvisiongJob extends RepositoryProvisioningJob {
 	protected void downloadSource(IProgressMonitor monitor, File bundlesFile, Artefact artifact) {
 		if (artifact instanceof LocalBundleArtefact) {
 			LocalBundleArtefact bundle = (LocalBundleArtefact) artifact;
-			String url = new StringBuilder().append(
-					"http://www.springsource.com/repository/app/bundle/version/download?name=").append(
-					bundle.getSymbolicName()).append("&version=").append(bundle.getVersion())
+			String url = new StringBuilder()
+					.append("http://www.springsource.com/repository/app/bundle/version/download?name=")
+					.append(bundle.getSymbolicName()).append("&version=").append(bundle.getVersion())
 					.append("&type=source").toString();
 			File outputFile = WebDownloadUtils.downloadFile(url, bundlesFile, monitor);
 			if (outputFile != null) {
@@ -63,8 +63,7 @@ public class RepositorySourceProvisiongJob extends RepositoryProvisioningJob {
 				try {
 					outputFile.createNewFile();
 					FileCopyUtils.copy(entry.getValue(), outputFile);
-				}
-				catch (IOException e) {
+				} catch (IOException e) {
 				}
 			}
 		}

@@ -22,9 +22,9 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.virgo.ide.ui.editors.text.BundleColorManager;
 import org.osgi.framework.BundleContext;
 
-
 /**
  * The activator class controls the plug-in life cycle
+ * 
  * @author Christian Dupuis
  */
 public class ServerIdeUiPlugin extends AbstractUIPlugin {

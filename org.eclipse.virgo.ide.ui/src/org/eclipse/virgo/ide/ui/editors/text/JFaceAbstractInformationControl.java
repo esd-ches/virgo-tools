@@ -52,22 +52,19 @@ import org.eclipse.swt.widgets.Slider;
 import org.eclipse.swt.widgets.ToolBar;
 
 /**
- * An abstract information control that can show content inside a shell. The
- * information control can be created in two styles:
+ * An abstract information control that can show content inside a shell. The information control can be created in two
+ * styles:
  * <ul>
  * <li>non-resizable tooltip with optional status</li>
  * <li>resizable tooltip with optional tool bar</li>
  * </ul>
- * Additionally it can present either a status line containing a status text or
- * a toolbar containing toolbar buttons.
+ * Additionally it can present either a status line containing a status text or a toolbar containing toolbar buttons.
  * <p>
- * Subclasses must either override
- * {@link IInformationControl#setInformation(String)} or implement
- * {@link IInformationControlExtension2}. They should also extend
- * {@link #computeTrim()} if they create a content area with additional trim
- * (e.g. scrollbars) and override
- * {@link #getInformationPresenterControlCreator()}.
+ * Subclasses must either override {@link IInformationControl#setInformation(String)} or implement
+ * {@link IInformationControlExtension2}. They should also extend {@link #computeTrim()} if they create a content area
+ * with additional trim (e.g. scrollbars) and override {@link #getInformationPresenterControlCreator()}.
  * </p>
+ * 
  * @author Christian Dupuis
  * @since 3.4
  */
@@ -84,8 +81,7 @@ public abstract class JFaceAbstractInformationControl implements IInformationCon
 	private final boolean fResizable;
 
 	/**
-	 * Composite containing the status line content or <code>null</code> if
-	 * none.
+	 * Composite containing the status line content or <code>null</code> if none.
 	 */
 	private Composite fStatusComposite;
 
@@ -108,8 +104,7 @@ public abstract class JFaceAbstractInformationControl implements IInformationCon
 	private final ListenerList fFocusListeners = new ListenerList(ListenerList.IDENTITY);
 
 	/**
-	 * Size constraints, x is the maxWidth and y is the maxHeight, or
-	 * <code>null</code> if not set.
+	 * Size constraints, x is the maxWidth and y is the maxHeight, or <code>null</code> if not set.
 	 */
 	private Point fSizeConstraints;
 
@@ -117,32 +112,32 @@ public abstract class JFaceAbstractInformationControl implements IInformationCon
 	private int fResizeHandleSize;
 
 	/**
-	 * Creates an abstract information control with the given shell as parent.
-	 * The control will not be resizable and optionally show a status line with
-	 * the given status field text.
+	 * Creates an abstract information control with the given shell as parent. The control will not be resizable and
+	 * optionally show a status line with the given status field text.
 	 * <p>
 	 * <em>Important: Subclasses are required to call {@link #create()} at the end of their constructor.</em>
 	 * </p>
 	 * 
-	 * @param parentShell the parent of this control's shell
-	 * @param statusFieldText the text to be used in the status field or
-	 * <code>null</code> to hide the status field
+	 * @param parentShell
+	 *            the parent of this control's shell
+	 * @param statusFieldText
+	 *            the text to be used in the status field or <code>null</code> to hide the status field
 	 */
 	public JFaceAbstractInformationControl(Shell parentShell, String statusFieldText) {
 		this(parentShell, SWT.TOOL | SWT.ON_TOP, statusFieldText, null);
 	}
 
 	/**
-	 * Creates an abstract information control with the given shell as parent.
-	 * The control will be resizable and optionally show a tool bar managed by
-	 * the given tool bar manager.
+	 * Creates an abstract information control with the given shell as parent. The control will be resizable and
+	 * optionally show a tool bar managed by the given tool bar manager.
 	 * <p>
 	 * <em>Important: Subclasses are required to call {@link #create()} at the end of their constructor.</em>
 	 * </p>
 	 * 
-	 * @param parentShell the parent of this control's shell
-	 * @param toolBarManager the manager or <code>null</code> if toolbar is not
-	 * desired
+	 * @param parentShell
+	 *            the parent of this control's shell
+	 * @param toolBarManager
+	 *            the manager or <code>null</code> if toolbar is not desired
 	 */
 	public JFaceAbstractInformationControl(Shell parentShell, ToolBarManager toolBarManager) {
 		this(parentShell, SWT.TOOL | SWT.ON_TOP | SWT.RESIZE, null, toolBarManager);
@@ -154,34 +149,34 @@ public abstract class JFaceAbstractInformationControl implements IInformationCon
 	 * <em>Important: Subclasses are required to call {@link #create()} at the end of their constructor.</em>
 	 * </p>
 	 * 
-	 * @param parentShell the parent of this control's shell
-	 * @param isResizable <code>true</code> if the control should be resizable
+	 * @param parentShell
+	 *            the parent of this control's shell
+	 * @param isResizable
+	 *            <code>true</code> if the control should be resizable
 	 */
 	public JFaceAbstractInformationControl(Shell parentShell, boolean isResizable) {
 		this(parentShell, SWT.TOOL | SWT.ON_TOP | (isResizable ? SWT.RESIZE : 0), null, null);
 	}
 
 	/**
-	 * Creates an abstract information control with the given shell as parent.
-	 * The given shell style is used for the shell (NO_TRIM will be removed to
-	 * make sure there's a border).
+	 * Creates an abstract information control with the given shell as parent. The given shell style is used for the
+	 * shell (NO_TRIM will be removed to make sure there's a border).
 	 * <p>
-	 * The control will optionally show either a status line or a tool bar. At
-	 * most one of <code>toolBarManager</code> or <code>statusFieldText</code>
-	 * can be non-null.
+	 * The control will optionally show either a status line or a tool bar. At most one of <code>toolBarManager</code>
+	 * or <code>statusFieldText</code> can be non-null.
 	 * </p>
 	 * <p>
-	 * <strong>Important:</strong>: Subclasses are required to call
-	 * {@link #create()} at the end of their constructor.
+	 * <strong>Important:</strong>: Subclasses are required to call {@link #create()} at the end of their constructor.
 	 * </p>
 	 * 
-	 * @param parentShell the parent of this control's shell
-	 * @param shellStyle style of this control's shell
-	 * @param statusFieldText the text to be used in the status field or
-	 * <code>null</code> to hide the status field
-	 * @param toolBarManager the manager or <code>null</code> if toolbar is not
-	 * desired
-	 * 
+	 * @param parentShell
+	 *            the parent of this control's shell
+	 * @param shellStyle
+	 *            style of this control's shell
+	 * @param statusFieldText
+	 *            the text to be used in the status field or <code>null</code> to hide the status field
+	 * @param toolBarManager
+	 *            the manager or <code>null</code> if toolbar is not desired
 	 * @deprecated clients should use one of the public constructors
 	 */
 	@Deprecated
@@ -240,8 +235,7 @@ public abstract class JFaceAbstractInformationControl implements IInformationCon
 
 		if (statusFieldText != null) {
 			createStatusLabel(statusFieldText, foreground, background);
-		}
-		else {
+		} else {
 			createToolBar(toolBarManager);
 		}
 	}
@@ -330,8 +324,7 @@ public abstract class JFaceAbstractInformationControl implements IInformationCon
 						}
 					}
 
-				}
-				else {
+				} else {
 					// draw diagonal lines
 					e.gc.setForeground(resizer.getDisplay().getSystemColor(SWT.COLOR_WIDGET_NORMAL_SHADOW));
 					for (int i = 1; i < min; i += 4) {
@@ -394,7 +387,8 @@ public abstract class JFaceAbstractInformationControl implements IInformationCon
 	/**
 	 * Adds support to move the shell by dragging the given control.
 	 * 
-	 * @param control the control that can be used to move the shell
+	 * @param control
+	 *            the control that can be used to move the shell
 	 */
 	private void addMoveSupport(final Control control) {
 		MouseAdapter moveSupport = new MouseAdapter() {
@@ -429,12 +423,14 @@ public abstract class JFaceAbstractInformationControl implements IInformationCon
 	}
 
 	/**
-	 * Utility to set the foreground and the background color of the given
-	 * control
+	 * Utility to set the foreground and the background color of the given control
 	 * 
-	 * @param control the control to modify
-	 * @param foreground the color to use for the foreground
-	 * @param background the color to use for the background
+	 * @param control
+	 *            the control to modify
+	 * @param foreground
+	 *            the color to use for the foreground
+	 * @param background
+	 *            the color to use for the background
 	 */
 	private static void setColor(Control control, Color foreground, Color background) {
 		control.setForeground(foreground);
@@ -451,8 +447,7 @@ public abstract class JFaceAbstractInformationControl implements IInformationCon
 	}
 
 	/**
-	 * The toolbar manager used to manage the toolbar, or <code>null</code> if
-	 * no toolbar is shown.
+	 * The toolbar manager used to manage the toolbar, or <code>null</code> if no toolbar is shown.
 	 * 
 	 * @return the tool bar manager or <code>null</code>
 	 */
@@ -461,8 +456,8 @@ public abstract class JFaceAbstractInformationControl implements IInformationCon
 	}
 
 	/**
-	 * Creates the content of this information control. Subclasses must call
-	 * this method at the end of their constructor(s).
+	 * Creates the content of this information control. Subclasses must call this method at the end of their
+	 * constructor(s).
 	 */
 	protected final void create() {
 		createContent(fContentComposite);
@@ -471,32 +466,31 @@ public abstract class JFaceAbstractInformationControl implements IInformationCon
 	/**
 	 * Creates the content of the popup window.
 	 * <p>
-	 * Implementors will usually take over {@link Composite#getBackground()} and
-	 * {@link Composite#getForeground()} from <code>parent</code>.
+	 * Implementors will usually take over {@link Composite#getBackground()} and {@link Composite#getForeground()} from
+	 * <code>parent</code>.
 	 * </p>
 	 * <p>
-	 * Implementors are expected to consider {@link #isResizable()}: If
-	 * <code>true</code>, they should show scrollbars if their content may
-	 * exceed the size of the information control. If <code>false</code>, they
-	 * should never show scrollbars.
+	 * Implementors are expected to consider {@link #isResizable()}: If <code>true</code>, they should show scrollbars
+	 * if their content may exceed the size of the information control. If <code>false</code>, they should never show
+	 * scrollbars.
 	 * </p>
 	 * <p>
-	 * The given <code>parent</code> comes with a {@link FillLayout}. Subclasses
-	 * may set a different layout.
+	 * The given <code>parent</code> comes with a {@link FillLayout}. Subclasses may set a different layout.
 	 * </p>
 	 * 
-	 * @param parent the container of the content
+	 * @param parent
+	 *            the container of the content
 	 */
 	protected abstract void createContent(Composite parent);
 
 	/**
 	 * Sets the information to be presented by this information control.
 	 * <p>
-	 * The default implementation does nothing. Subclasses must either override
-	 * this method or implement {@link IInformationControlExtension2}.
+	 * The default implementation does nothing. Subclasses must either override this method or implement
+	 * {@link IInformationControlExtension2}.
 	 * 
-	 * @param information the information to be presented
-	 * 
+	 * @param information
+	 *            the information to be presented
 	 * @see org.eclipse.jface.text.IInformationControl#setInformation(java.lang.String)
 	 */
 	public void setInformation(String information) {
@@ -506,8 +500,7 @@ public abstract class JFaceAbstractInformationControl implements IInformationCon
 	/**
 	 * Returns whether the information control is resizable.
 	 * 
-	 * @return <code>true</code> if the information control is resizable,
-	 * <code>false</code> if it is not resizable.
+	 * @return <code>true</code> if the information control is resizable, <code>false</code> if it is not resizable.
 	 */
 	public boolean isResizable() {
 		return fResizable;
@@ -579,9 +572,8 @@ public abstract class JFaceAbstractInformationControl implements IInformationCon
 	}
 
 	/**
-	 * Computes the trim (status text and tool bar are considered as trim).
-	 * Subclasses can extend this method to add additional trim (e.g. scroll
-	 * bars for resizable information controls).
+	 * Computes the trim (status text and tool bar are considered as trim). Subclasses can extend this method to add
+	 * additional trim (e.g. scroll bars for resizable information controls).
 	 * 
 	 * @see org.eclipse.jface.text.IInformationControlExtension3#computeTrim()
 	 */
@@ -607,6 +599,7 @@ public abstract class JFaceAbstractInformationControl implements IInformationCon
 	 * <p>
 	 * The default implementation always returns <code>false</code>.
 	 * </p>
+	 * 
 	 * @see org.eclipse.jface.text.IInformationControlExtension3#restoresLocation()
 	 */
 	public boolean restoresLocation() {
@@ -618,6 +611,7 @@ public abstract class JFaceAbstractInformationControl implements IInformationCon
 	 * <p>
 	 * The default implementation always returns <code>false</code>.
 	 * </p>
+	 * 
 	 * @see org.eclipse.jface.text.IInformationControlExtension3#restoresSize()
 	 */
 	public boolean restoresSize() {
@@ -660,8 +654,7 @@ public abstract class JFaceAbstractInformationControl implements IInformationCon
 	}
 
 	/**
-	 * This default implementation sets the focus on the popup shell. Subclasses
-	 * can override or extend.
+	 * This default implementation sets the focus on the popup shell. Subclasses can override or extend.
 	 * 
 	 * @see IInformationControl#setFocus()
 	 */
@@ -685,8 +678,7 @@ public abstract class JFaceAbstractInformationControl implements IInformationCon
 						FocusListener focusListener = (FocusListener) element;
 						if (event.type == SWT.Activate) {
 							focusListener.focusGained(new FocusEvent(event));
-						}
-						else {
+						} else {
 							focusListener.focusLost(new FocusEvent(event));
 						}
 					}
@@ -713,23 +705,21 @@ public abstract class JFaceAbstractInformationControl implements IInformationCon
 	/**
 	 * Sets the text of the status field.
 	 * <p>
-	 * The default implementation currently only updates the status field when
-	 * the popup shell is not visible. The status field can currently only be
-	 * shown if the information control has been created with a non-null status
-	 * field text.
+	 * The default implementation currently only updates the status field when the popup shell is not visible. The
+	 * status field can currently only be shown if the information control has been created with a non-null status field
+	 * text.
 	 * </p>
 	 * 
-	 * @param statusFieldText the text to be used in the optional status field
-	 * or <code>null</code> if the status field should be hidden
-	 * 
+	 * @param statusFieldText
+	 *            the text to be used in the optional status field or <code>null</code> if the status field should be
+	 *            hidden
 	 * @see org.eclipse.jface.text.IInformationControlExtension4#setStatusText(java.lang.String)
 	 */
 	public void setStatusText(String statusFieldText) {
 		if (fStatusLabel != null && !getShell().isVisible()) {
 			if (statusFieldText == null) {
 				fStatusComposite.setVisible(false);
-			}
-			else {
+			} else {
 				fStatusLabel.setText(statusFieldText);
 				fStatusComposite.setVisible(true);
 			}
@@ -762,20 +752,17 @@ public abstract class JFaceAbstractInformationControl implements IInformationCon
 	}
 
 	/**
-	 * {@inheritDoc} This default implementation returns <code>null</code>.
-	 * Subclasses may override.
+	 * {@inheritDoc} This default implementation returns <code>null</code>. Subclasses may override.
 	 */
 	public IInformationControlCreator getInformationPresenterControlCreator() {
 		return null;
 	}
 
 	/**
-	 * Computes the size constraints based on the
-	 * {@link JFaceResources#getDialogFont() dialog font}. Subclasses can
+	 * Computes the size constraints based on the {@link JFaceResources#getDialogFont() dialog font}. Subclasses can
 	 * override or extend.
 	 * 
-	 * @see org.eclipse.jface.text.IInformationControlExtension5#computeSizeConstraints(int,
-	 * int)
+	 * @see org.eclipse.jface.text.IInformationControlExtension5#computeSizeConstraints(int, int)
 	 */
 	public Point computeSizeConstraints(int widthInChars, int heightInChars) {
 		GC gc = new GC(fContentComposite);

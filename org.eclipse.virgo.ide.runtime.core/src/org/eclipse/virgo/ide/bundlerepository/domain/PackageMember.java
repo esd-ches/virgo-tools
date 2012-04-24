@@ -30,6 +30,7 @@ public class PackageMember {
 
 	/**
 	 * Construct a new package member
+	 * 
 	 * @param name the fully-qualified member name
 	 * @param memberType the member type (class or resource)
 	 * @param pkg the exporting package
@@ -56,6 +57,7 @@ public class PackageMember {
 
 	/**
 	 * The package exporting this member
+	 * 
 	 * @return
 	 */
 	public PackageExport getExportingPackage() {

@@ -22,7 +22,9 @@ import org.eclipse.wst.server.core.util.HttpLaunchable;
 import org.eclipse.wst.server.core.util.WebResource;
 
 /**
- * {@link LaunchableAdapterDelegate} to allow "Run as..." actions for web resources.
+ * {@link LaunchableAdapterDelegate} to allow "Run as..." actions for web
+ * resources.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
@@ -41,8 +43,8 @@ public class ServerLaunchableAdapterDelegate extends LaunchableAdapterDelegate {
 		}
 
 		try {
-			URL url = ((IURLProvider) server.loadAdapter(IURLProvider.class, null))
-					.getModuleRootURL(moduleObject.getModule());
+			URL url = ((IURLProvider) server.loadAdapter(IURLProvider.class, null)).getModuleRootURL(moduleObject
+					.getModule());
 
 			if (moduleObject instanceof Servlet) {
 				Servlet servlet = (Servlet) moduleObject;
@@ -51,11 +53,9 @@ public class ServerLaunchableAdapterDelegate extends LaunchableAdapterDelegate {
 					if (path.startsWith("/"))
 						path = path.substring(1);
 					url = new URL(url, path);
-				}
-				else
+				} else
 					url = new URL(url, "servlet/" + servlet.getServletClassName());
-			}
-			else if (moduleObject instanceof WebResource) {
+			} else if (moduleObject instanceof WebResource) {
 				WebResource resource = (WebResource) moduleObject;
 				String path = resource.getPath().toString();
 				if (path != null && path.startsWith("/") && path.length() > 0)
@@ -64,8 +64,7 @@ public class ServerLaunchableAdapterDelegate extends LaunchableAdapterDelegate {
 					url = new URL(url, path);
 			}
 			return new HttpLaunchable(url);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			return null;
 		}
 	}

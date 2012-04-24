@@ -25,9 +25,9 @@ import org.eclipse.virgo.ide.jdt.internal.core.util.ClasspathUtils;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestUtils;
 import org.eclipse.virgo.ide.manifest.internal.core.BundleManifestManager;
 
-
 /**
  * {@link ClasspathContainerInitializer} that creates and restores {@link ServerClasspathContainer}.
+ * 
  * @author Christian Dupuis
  * @since 1.0.0
  */
@@ -58,22 +58,18 @@ public class ServerClasspathContainerInitializer extends ClasspathContainerIniti
 
 				if (oldEntries != null) {
 					newContainer = new ServerClasspathContainer(javaProject, oldEntries);
-				}
-				else {
+				} else {
 					newContainer = new ServerClasspathContainer(javaProject);
 				}
-			}
-			else {
-				newContainer = new ServerClasspathContainer(javaProject, oldContainer
-						.getClasspathEntries());
+			} else {
+				newContainer = new ServerClasspathContainer(javaProject, oldContainer.getClasspathEntries());
 			}
 
 			// Install the class path container with the project
 			JavaCore.setClasspathContainer(containerPath, new IJavaProject[] { javaProject },
 					new IClasspathContainer[] { newContainer }, new NullProgressMonitor());
 
-			if (oldEntries == null || hasManifestChanged(javaProject, false)
-					|| hasManifestChanged(javaProject, true)) {
+			if (oldEntries == null || hasManifestChanged(javaProject, false) || hasManifestChanged(javaProject, true)) {
 				// Schedule refresh of class path container
 				ServerClasspathContainerUpdateJob.scheduleClasspathContainerUpdateJob(javaProject,
 						BundleManifestManager.IMPORTS_CHANGED);
@@ -85,12 +81,10 @@ public class ServerClasspathContainerInitializer extends ClasspathContainerIniti
 		IFile file = BundleManifestUtils.locateManifest(javaProject, testManifest);
 		if (file != null && file.exists()) {
 			try {
-				String lastmodified = file.getPersistentProperty(new QualifiedName(
-						JdtCorePlugin.PLUGIN_ID, ServerClasspathContainer.MANIFEST_TIMESTAMP));
-				return lastmodified == null
-						|| file.getLocalTimeStamp() != Long.valueOf(lastmodified).longValue();
-			}
-			catch (CoreException e) {
+				String lastmodified = file.getPersistentProperty(new QualifiedName(JdtCorePlugin.PLUGIN_ID,
+						ServerClasspathContainer.MANIFEST_TIMESTAMP));
+				return lastmodified == null || file.getLocalTimeStamp() != Long.valueOf(lastmodified).longValue();
+			} catch (CoreException e) {
 				JdtCorePlugin.log(e);
 			}
 		}

@@ -42,7 +42,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.virgo.ide.ui.editors.BundleQuickAssistAssistant;
 import org.osgi.framework.Constants;
 
-
 /**
  * @author Christian Dupuis
  */

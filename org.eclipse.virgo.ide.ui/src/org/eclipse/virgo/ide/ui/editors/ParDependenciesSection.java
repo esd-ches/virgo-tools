@@ -32,7 +32,6 @@ import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.par.Bundle;
 import org.eclipse.virgo.ide.par.Par;
 
-
 /**
  * @author Christian Dupuis
  * @author Leo Dos Santos
@@ -91,8 +90,8 @@ public class ParDependenciesSection extends DependenciesSection {
 			for (IProject workspaceProject : workspaceProjects) {
 				Collection<?> newChildDescriptors = page.getModel().getNewChildDescriptors(par, null);
 				Object descriptor = newChildDescriptors.iterator().next();
-				Command command = CreateChildCommand.create(page.getModel(), par, descriptor, Collections
-						.singleton(par));
+				Command command = CreateChildCommand.create(page.getModel(), par, descriptor,
+						Collections.singleton(par));
 				page.getModel().getCommandStack().execute(command);
 				if (command.getResult() != null && !command.getResult().isEmpty()) {
 					Bundle project = (Bundle) command.getResult().iterator().next();
