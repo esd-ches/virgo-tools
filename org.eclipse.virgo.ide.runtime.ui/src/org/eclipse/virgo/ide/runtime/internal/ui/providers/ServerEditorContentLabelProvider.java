@@ -8,7 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.virgo.ide.runtime.internal.ui.editor;
+package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -21,12 +21,12 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.pde.internal.ui.PDEPlugin;
 import org.eclipse.pde.internal.ui.PDEPluginImages;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.virgo.ide.bundlerepository.domain.Artefact;
-import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactSet;
-import org.eclipse.virgo.ide.bundlerepository.domain.IArtefact;
-import org.eclipse.virgo.ide.runtime.internal.ui.ArtefactLabelProvider;
+import org.eclipse.virgo.ide.runtime.core.artefacts.Artefact;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet;
+import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiImages;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
+import org.eclipse.virgo.ide.runtime.internal.ui.editor.Messages;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerType;
@@ -42,7 +42,7 @@ import org.eclipse.wst.server.ui.internal.editor.ServerEditorPartFactory;
  * 
  */
 @SuppressWarnings("restriction")
-public class ServerEditorContentLabelProvider implements ITreeContentProvider, ILabelProvider {
+public class ServerEditorContentLabelProvider implements ITreeContentProvider {
 
 	private IServer server;
 
@@ -55,7 +55,7 @@ public class ServerEditorContentLabelProvider implements ITreeContentProvider, I
 	RepositoryContentProvider repositoryContentProvider;
 	ArtefactLabelProvider repositoryLabelProvider;
 
-	ServerEditorContentLabelProvider(IServer server) {
+	public ServerEditorContentLabelProvider(IServer server) {
 		this.server = server;
 		IServerType serverType = server.getServerType();
 		IServerWorkingCopy serverWorking = server.createWorkingCopy();
@@ -74,7 +74,7 @@ public class ServerEditorContentLabelProvider implements ITreeContentProvider, I
 			i++;
 		}
 		repositoryContentProvider = new RepositoryContentProvider();
-		repositoryLabelProvider = new ArtefactLabelProvider(server.getRuntime());
+		repositoryLabelProvider = new ArtefactLabelProvider();
 		pageFactories = pageTexts.toArray(new IServerEditorPartFactory[] {});
 	}
 
@@ -120,7 +120,7 @@ public class ServerEditorContentLabelProvider implements ITreeContentProvider, I
 			}
 		}
 		if (inputElement == Messages.RepositoryBrowserEditorPage_InstalledBundlesAndLibraries) {
-			return repositoryContentProvider.getElements(server.getRuntime());
+			return repositoryContentProvider.getElements(server);
 		}
 		return new Object[] {};
 	}
@@ -142,30 +142,7 @@ public class ServerEditorContentLabelProvider implements ITreeContentProvider, I
 	public void addListener(ILabelProviderListener listener) {
 	}
 
-	public String getText(Object element) {
-		if (element instanceof IServerEditorPartFactory) {
-			return ((IServerEditorPartFactory) element).getName();
-		}
-		if (element instanceof IArtefact || element instanceof ArtefactSet) {
-			return repositoryLabelProvider.getText(element);
-		}
-		return element.toString();
-	}
-
-	public Image getImage(Object element) {
-		if (element instanceof IServerEditorPartFactory) {
-			return PDEPlugin.getDefault().getLabelProvider().get(PDEPluginImages.DESC_PAGE_OBJ);
-		}
-		if (element instanceof IArtefact || element instanceof ArtefactSet) {
-			return repositoryLabelProvider.getImage(element);
-		}
-		if (element == Messages.RepositoryBrowserEditorPage_InstalledBundlesAndLibraries) {
-			return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_LIB);
-		}
-		return null;
-	}
-
-	int getPageNumber(Object object) {
+	public int getPageNumber(Object object) {
 		if (object instanceof IServerEditorPartFactory) {
 			for (int i = 0; i < pageFactories.length; i++) {
 				if (pageFactories[i] == object) {

@@ -12,6 +12,7 @@ package org.eclipse.virgo.ide.runtime.core;
 
 import java.util.List;
 
+
 /**
  * dm Server specific interface to be implemented by a server
  * @author Christian Dupuis

@@ -31,14 +31,14 @@ import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.virgo.ide.bundlerepository.domain.Artefact;
-import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactRepository;
-import org.eclipse.virgo.ide.bundlerepository.domain.IArtefact;
-import org.eclipse.virgo.ide.bundlerepository.domain.LibraryArtefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 import org.eclipse.virgo.ide.manifest.core.IHeaderConstants;
 import org.eclipse.virgo.ide.manifest.core.editor.model.ImportLibraryHeader;
 import org.eclipse.virgo.ide.manifest.core.editor.model.ImportLibraryObject;
+import org.eclipse.virgo.ide.runtime.core.artefacts.Artefact;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepository;
+import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact;
+import org.eclipse.virgo.ide.runtime.core.artefacts.LibraryArtefact;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryUtils;
 
 

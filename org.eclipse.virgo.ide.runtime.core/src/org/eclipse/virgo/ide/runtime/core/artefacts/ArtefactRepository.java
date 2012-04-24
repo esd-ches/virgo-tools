@@ -8,8 +8,9 @@
  * Contributors:
  *     SpringSource - initial API and implementation
  *******************************************************************************/
-package org.eclipse.virgo.ide.bundlerepository.domain;
+package org.eclipse.virgo.ide.runtime.core.artefacts;
 
+import org.eclipse.wst.server.core.IServer;
 
 /**
  * @author Christian Dupuis
@@ -21,7 +22,9 @@ public class ArtefactRepository {
 	ArtefactSet bundles;
 	ArtefactSet libraries;
 	ArtefactSet allArtefacts;
-	
+
+	IServer server;
+
 	public ArtefactRepository() {
 		bundles = createArtefactSet(ArtefactType.BUNDLE);
 		libraries = createArtefactSet(ArtefactType.LIBRARY);
@@ -36,7 +39,7 @@ public class ArtefactRepository {
 			}
 		};
 	}
-	
+
 	public Iterable<IArtefact> getBundles() {
 		return bundles.getArtefacts();
 	}
@@ -51,13 +54,13 @@ public class ArtefactRepository {
 	}
 
 	/**
-	 * Returns the appropriate set for the artefact.
-	 * This set may or may not actually contain the supplied artefact.
+	 * Returns the appropriate set for the artefact. This set may or may not
+	 * actually contain the supplied artefact.
 	 */
 	public ArtefactSet getMatchingArtefactSet(IArtefactTyped artefact) {
 		return getArtefactSet(artefact.getArtefactType());
 	}
-	
+
 	/**
 	 * Adds the artefact to the appropriate and common set.
 	 */
@@ -75,13 +78,13 @@ public class ArtefactRepository {
 	}
 
 	public void addBundle(BundleArtefact bundle) {
-		//Add to all handled through set
+		// Add to all handled through set
 		this.bundles.add(bundle);
 		bundle.setRepository(this);
 	}
 
 	public Iterable<IArtefact> getLibraries() {
-		//Add to all handled through set
+		// Add to all handled through set
 		return libraries.getArtefacts();
 	}
 
@@ -89,7 +92,7 @@ public class ArtefactRepository {
 		this.libraries.add(library);
 		library.setRepository(this);
 	}
-	
+
 	public ArtefactSet getAllArtefacts() {
 		return allArtefacts;
 	}
@@ -101,5 +104,13 @@ public class ArtefactRepository {
 			}
 		}
 		return false;
+	}
+
+	public void setServer(IServer server) {
+		this.server = server;
+	}
+
+	public IServer getServer() {
+		return server;
 	}
 }

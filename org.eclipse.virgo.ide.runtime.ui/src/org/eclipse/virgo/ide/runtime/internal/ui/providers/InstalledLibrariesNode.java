@@ -9,16 +9,15 @@
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.virgo.ide.bundlerepository.domain;
+package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 
-import java.io.File;
+import org.eclipse.wst.server.core.IServer;
 
-/**
- * Any entity that has a corresponding file system entity.
- * @author Miles Parker
- *
- */
-public interface ILocalEntity {
+public class InstalledLibrariesNode {
+	IServer server;
 
-	File getFile();
+	public InstalledLibrariesNode(IServer server) {
+		super();
+		this.server = server;
+	}
 }

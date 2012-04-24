@@ -17,7 +17,7 @@ import java.util.concurrent.Executors;
 
 import org.eclipse.core.runtime.FileLocator;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.eclipse.virgo.ide.runtime.core.provisioning.ArtefactRepositoryManager;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepositoryManager;
 import org.osgi.framework.BundleContext;
 
 

@@ -18,7 +18,8 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.virgo.ide.bundlerepository.domain.Artefact;
+import org.eclipse.virgo.ide.runtime.core.artefacts.Artefact;
+import org.eclipse.virgo.ide.runtime.core.artefacts.LocalBundleArtefact;
 import org.eclipse.virgo.ide.runtime.internal.core.utils.WebDownloadUtils;
 import org.eclipse.virgo.util.io.FileCopyUtils;
 import org.eclipse.wst.server.core.IRuntime;

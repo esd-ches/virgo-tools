@@ -8,10 +8,14 @@
  * Contributors:
  *     SpringSource - initial API and implementation
  *******************************************************************************/
-package org.eclipse.virgo.ide.bundlerepository.domain;
+package org.eclipse.virgo.ide.runtime.core.artefacts;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
+import org.eclipse.virgo.ide.bundlerepository.domain.PackageExport;
+import org.eclipse.virgo.ide.bundlerepository.domain.PackageImport;
 
 /**
  * Central element in the domain model - captures everything we know about a bundle. This includes meta-data directly
@@ -132,7 +136,7 @@ public class BundleArtefact extends Artefact {
 
 	/**
 	 * Returns BUNDLE;
-	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#getType()
+	 * @see org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact#getType()
 	 */
 	public ArtefactType getArtefactType() {
 		return ArtefactType.BUNDLE;

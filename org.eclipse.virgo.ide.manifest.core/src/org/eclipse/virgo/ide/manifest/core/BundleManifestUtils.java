@@ -356,7 +356,7 @@ public class BundleManifestUtils {
 	}
 
 	private static IFile createNewManifestInFolder(IResource resource, boolean isTestManifest) throws CoreException {
-		String manifestFilePath = "META-INF/" + (isTestManifest ? "TEST.MF" : "MANIFEST.MF");
+		String manifestFilePath = "META-INF/" + (isTestManifest ? BundleManifestCorePlugin.TEST_MANIFEST_FILE_NAME : BundleManifestCorePlugin.MANIFEST_FILE_NAME);
 		IFile manifestFile = null;
 		if (resource instanceof IFolder) {
 			manifestFile = ((IFolder) resource).getFile(manifestFilePath);

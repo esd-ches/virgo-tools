@@ -68,6 +68,7 @@ import org.eclipse.virgo.ide.par.Par;
 import org.eclipse.virgo.ide.par.provider.ParItemProviderAdapterFactory;
 import org.eclipse.virgo.ide.ui.ServerIdeUiPlugin;
 import org.eclipse.virgo.ide.ui.StatusHandler;
+import org.eclipse.virgo.ide.ui.editors.model.BundleModelUtility;
 
 
 /**
@@ -126,7 +127,7 @@ public class ParManifestEditor extends BundleManifestEditor {
 		IFile parFile = null;
 
 		String name = file.getName().toLowerCase(Locale.ENGLISH);
-		if (name.equals("manifest.mf")) { //$NON-NLS-1$
+		if (name.equals(BundleModelUtility.F_MANIFEST)) { //$NON-NLS-1$
 			if (container instanceof IFolder) {
 				container = container.getParent();
 			}
@@ -166,7 +167,7 @@ public class ParManifestEditor extends BundleManifestEditor {
 		File manifestFile = null;
 		File parFile = null;
 		String name = file.getName().toLowerCase(Locale.ENGLISH);
-		if (name.equals("manifest.mf")) { //$NON-NLS-1$
+		if (name.equals(BundleModelUtility.F_MANIFEST)) { //$NON-NLS-1$
 			manifestFile = file;
 			File dir = file.getParentFile().getParentFile();
 			parFile = new File(dir, "org.eclipse.virgo.ide.runtime.core.par.xml");

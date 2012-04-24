@@ -8,12 +8,12 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.virgo.ide.runtime.internal.ui;
+package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactRepository;
-import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactSet;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepository;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet;
 
 
 /**
@@ -35,11 +35,8 @@ public class RepositorySearchResultContentProvider implements ITreeContentProvid
 
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof ArtefactRepository) {
-			Object[] children = new Object[2];
 			ArtefactRepository artefactRepository = (ArtefactRepository) inputElement;
-			children[0] = artefactRepository.getBundleSet();
-			children[1] = artefactRepository.getLibrarySet();
-			return children;
+			return new Object[]{artefactRepository.getBundleSet(), artefactRepository.getLibrarySet()};
 		}
 		return new Object[0];
 	}

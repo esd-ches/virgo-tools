@@ -8,18 +8,20 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.virgo.ide.runtime.internal.ui;
+package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactSet;
-import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactType;
-import org.eclipse.virgo.ide.bundlerepository.domain.IArtefact;
-import org.eclipse.virgo.ide.bundlerepository.domain.IArtefactTyped;
-import org.eclipse.virgo.ide.bundlerepository.domain.ILocalEntity;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
-import org.eclipse.virgo.ide.runtime.core.provisioning.LocalBundleArtefact;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactType;
+import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact;
+import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefactTyped;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ILocalEntity;
+import org.eclipse.virgo.ide.runtime.core.artefacts.LocalBundleArtefact;
+import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiImages;
 import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.IServer;
 
 /**
  * @author Christian Dupuis
@@ -27,12 +29,9 @@ import org.eclipse.wst.server.core.IRuntime;
  */
 public class ArtefactLabelProvider extends LabelProvider {
 
-	private final IRuntime runtime;
-
-	public ArtefactLabelProvider(IRuntime runtime) {
-		this.runtime = runtime;
+	public ArtefactLabelProvider() {
 	}
-	
+
 	public Image getImage(Object parentElement) {
 		if (parentElement instanceof IArtefactTyped) {
 			ArtefactType artefactType = ((IArtefactTyped) parentElement).getArtefactType();
@@ -51,12 +50,18 @@ public class ArtefactLabelProvider extends LabelProvider {
 
 	public String getText(Object element) {
 		if (element instanceof ArtefactSet) {
-			String label = ((ArtefactSet) element).getArtefactType().getPluralLabel();
+			ArtefactSet set = (ArtefactSet) element;
+			String label = set.getArtefactType().getPluralLabel();
 			if (element instanceof ILocalEntity) {
-				String home = ServerUtils.getServerHome(runtime);
 				String fileName = ((ILocalEntity) element).getFile().toString();
-				if (fileName.startsWith(home)) {
-					fileName = fileName.substring(home.length() + 1);
+				if (set.getRepository() != null) {
+					IServer server = set.getRepository().getServer();
+					if (server != null && server.getRuntime() != null) {
+						String home = ServerUtils.getServerHome(server.getRuntime());
+						if (fileName.startsWith(home)) {
+							fileName = fileName.substring(home.length() + 1);
+						}
+					}
 				}
 				label = fileName + " [" + label + "]";
 			}

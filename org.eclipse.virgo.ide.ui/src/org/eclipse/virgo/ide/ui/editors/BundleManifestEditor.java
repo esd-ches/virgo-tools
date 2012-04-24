@@ -76,6 +76,7 @@ import org.eclipse.virgo.ide.manifest.core.IHeaderConstants;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryUtils;
 import org.eclipse.virgo.ide.ui.ServerIdeUiPlugin;
 import org.eclipse.virgo.ide.ui.StatusHandler;
+import org.eclipse.virgo.ide.ui.editors.model.BundleModelUtility;
 import org.eclipse.virgo.kernel.repository.BundleDefinition;
 import org.osgi.service.prefs.BackingStoreException;
 
@@ -187,7 +188,7 @@ public class BundleManifestEditor extends ManifestEditor {
 			return;
 		}
 		String name = file.getName();
-		if (name.equalsIgnoreCase("MANIFEST.MF")) { //$NON-NLS-1$
+		if (name.equalsIgnoreCase(BundleModelUtility.F_MANIFEST)) { //$NON-NLS-1$
 			if (!fInputContextManager.hasContext(BundleInputContext.CONTEXT_ID)) {
 				IEditorInput in = new FileEditorInput(file);
 				fInputContextManager.putContext(in, new SpringBundleInputContext(this, in, false));
@@ -252,7 +253,7 @@ public class BundleManifestEditor extends ManifestEditor {
 		}
 		File manifestFile = null;
 		String name = file.getName().toLowerCase(Locale.ENGLISH);
-		if (name.equals("manifest.mf")) { //$NON-NLS-1$
+		if (name.equals(BundleModelUtility.F_MANIFEST)) { //$NON-NLS-1$
 			manifestFile = file;
 		}
 		try {
@@ -279,7 +280,7 @@ public class BundleManifestEditor extends ManifestEditor {
 		}
 
 		String name = input.getName().toLowerCase(Locale.ENGLISH);
-		if (name.startsWith("manifest.mf")) { //$NON-NLS-1$
+		if (name.startsWith(BundleModelUtility.F_MANIFEST)) { //$NON-NLS-1$
 			manager.putContext(input, new SpringBundleInputContext(this, input, true));
 		}
 	}
@@ -296,7 +297,7 @@ public class BundleManifestEditor extends ManifestEditor {
 			if (zip.getEntry("META-INF/MANIFEST.MF") != null) { //$NON-NLS-1$
 				input = new JarEntryEditorInput(new JarEntryFile(zip, "META-INF/MANIFEST.MF")); //$NON-NLS-1$
 				manager.putContext(input,
-						new SpringBundleInputContext(this, input, storage.getName().equals("MANIFEST.MF"))); //$NON-NLS-1$
+						new SpringBundleInputContext(this, input, storage.getName().equals(BundleModelUtility.F_MANIFEST))); //$NON-NLS-1$
 			}
 		}
 		finally {

@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.bundlerepository.domain;
 
-import org.eclipse.virgo.ide.runtime.core.provisioning.ArtefactRepositoryManager;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepositoryManager;
 
 /**
  * Represent an import-package declaration for an OSGi bundle. Ignores matching attributes and only worries about

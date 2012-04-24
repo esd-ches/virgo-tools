@@ -13,7 +13,8 @@ package org.eclipse.virgo.ide.bundlerepository.domain;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.eclipse.virgo.ide.runtime.core.provisioning.ArtefactRepositoryManager;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepositoryManager;
+import org.eclipse.virgo.ide.runtime.core.artefacts.BundleArtefact;
 
 
 /**

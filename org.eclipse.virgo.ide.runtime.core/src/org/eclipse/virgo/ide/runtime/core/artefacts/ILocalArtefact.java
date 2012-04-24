@@ -9,32 +9,14 @@
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.virgo.ide.bundlerepository.domain;
+package org.eclipse.virgo.ide.runtime.core.artefacts;
 
-import java.io.File;
 
 /**
- * 
+ * An artefact that has a corresponding file system entity.
  * @author Miles Parker
  *
  */
-public class LocalArtefactSet extends ArtefactSet implements ILocalEntity {
+public interface ILocalArtefact extends IArtefact, ILocalEntity {
 
-	final File location;
-
-	public LocalArtefactSet(ArtefactRepository artefactRepository, ArtefactType artefactType, File location) {
-		super(artefactRepository, artefactType);
-		this.location = location;
-	}
-
-	public File getFile() {
-		return location;
-	}
-	
-	/**
-	 * @see org.eclipse.virgo.ide.bundlerepository.domain.ArtefactSet#toString()
-	 */
-	public String toString() {
-		return location + " [" + super.toString() + "]";
-	}
 }

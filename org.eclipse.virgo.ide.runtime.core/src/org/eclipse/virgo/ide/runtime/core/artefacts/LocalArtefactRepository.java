@@ -9,7 +9,7 @@
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.virgo.ide.bundlerepository.domain;
+package org.eclipse.virgo.ide.runtime.core.artefacts;
 
 import java.io.File;
 
@@ -41,7 +41,7 @@ public class LocalArtefactRepository extends ArtefactRepository implements ILoca
 	}
 
 	/**
-	 * @see org.eclipse.virgo.ide.bundlerepository.domain.ILocalEntity#getFile()
+	 * @see org.eclipse.virgo.ide.runtime.core.artefacts.ILocalEntity#getFile()
 	 */
 	public File getFile() {
 		return file;

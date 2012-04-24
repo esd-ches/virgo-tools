@@ -10,7 +10,9 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.bundlerepository.domain;
 
-import org.eclipse.virgo.ide.runtime.core.provisioning.ArtefactRepositoryManager;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepositoryManager;
+import org.eclipse.virgo.ide.runtime.core.artefacts.BundleArtefact;
+import org.eclipse.virgo.ide.runtime.core.artefacts.LibraryArtefact;
 
 /**
  * Represents an bundle import in a library definition.

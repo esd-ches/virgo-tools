@@ -483,7 +483,7 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 			return resource != null
 					&& resource.isAccessible()
 					&& resource.getType() == IResource.FILE
-					&& resource.getName().equals("MANIFEST.MF")
+					&& resource.getName().equals(BundleManifestCorePlugin.MANIFEST_FILE_NAME)
 					&& resource.getParent() != null
 					&& resource.getParent().getProjectRelativePath().lastSegment().equals(
 							"META-INF");

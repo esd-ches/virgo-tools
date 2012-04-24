@@ -8,10 +8,13 @@
  * Contributors:
  *     SpringSource - initial API and implementation
  *******************************************************************************/
-package org.eclipse.virgo.ide.bundlerepository.domain;
+package org.eclipse.virgo.ide.runtime.core.artefacts;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.eclipse.virgo.ide.bundlerepository.domain.BundleImport;
+import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 
 /**
  * A library stored in BRITS. A library is a collection of bundles grouped under a common name, id, and version.
@@ -114,7 +117,7 @@ public class LibraryArtefact extends Artefact implements Comparable<LibraryArtef
 
 	/**
 	 * Returns LIBRARY;
-	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#getType()
+	 * @see org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact#getType()
 	 */
 	public ArtefactType getArtefactType() {
 		return ArtefactType.LIBRARY;

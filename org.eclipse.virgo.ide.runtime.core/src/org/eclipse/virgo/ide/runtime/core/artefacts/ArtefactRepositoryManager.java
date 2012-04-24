@@ -8,7 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.virgo.ide.runtime.core.provisioning;
+package org.eclipse.virgo.ide.runtime.core.artefacts;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -41,12 +41,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactRepository;
-import org.eclipse.virgo.ide.bundlerepository.domain.BundleArtefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.BundleImport;
-import org.eclipse.virgo.ide.bundlerepository.domain.IArtefact;
-import org.eclipse.virgo.ide.bundlerepository.domain.IArtefactTyped;
-import org.eclipse.virgo.ide.bundlerepository.domain.LibraryArtefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 import org.eclipse.virgo.ide.bundlerepository.domain.PackageExport;
 import org.eclipse.virgo.ide.bundlerepository.domain.PackageImport;
@@ -54,6 +49,7 @@ import org.eclipse.virgo.ide.bundlerepository.domain.SpringSourceApplicationPlat
 import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
+import org.eclipse.virgo.ide.runtime.core.provisioning.IBundleRepositoryChangeListener;
 import org.eclipse.virgo.ide.runtime.internal.core.provisioning.IArtefactRepositoryLoader;
 import org.eclipse.virgo.ide.runtime.internal.core.provisioning.JsonArtefactRepositoryLoader;
 import org.eclipse.virgo.ide.runtime.internal.core.utils.StatusUtil;
@@ -73,7 +69,7 @@ import org.osgi.framework.Version;
 /**
  * Manages instances of {@link ArtefactRepository} to represent the current contents of the SpringSource Enterprise
  * Bundle Repository and {@link BundleRepository}s indexed by {@link IRuntime} representing local bundle and library
- * repositories in a dm Server instance.
+ * repositories in a Virgo Server instance.
  * @author Christian Dupuis
  * @since 1.0.0
  */

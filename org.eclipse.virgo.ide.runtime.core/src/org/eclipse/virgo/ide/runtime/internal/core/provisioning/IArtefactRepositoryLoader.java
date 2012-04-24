@@ -12,7 +12,7 @@ package org.eclipse.virgo.ide.runtime.internal.core.provisioning;
 
 import java.io.File;
 
-import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactRepository;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepository;
 
 
 /**

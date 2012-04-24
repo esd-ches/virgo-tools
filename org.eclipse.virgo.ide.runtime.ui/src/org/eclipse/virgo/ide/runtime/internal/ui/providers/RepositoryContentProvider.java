@@ -8,7 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.virgo.ide.runtime.internal.ui.editor;
+package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -18,14 +18,15 @@ import java.util.Map;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.virgo.ide.bundlerepository.domain.Artefact;
-import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactRepository;
-import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactSet;
-import org.eclipse.virgo.ide.bundlerepository.domain.IArtefact;
-import org.eclipse.virgo.ide.bundlerepository.domain.ILocalArtefact;
-import org.eclipse.virgo.ide.bundlerepository.domain.LocalArtefactRepository;
+import org.eclipse.virgo.ide.runtime.core.artefacts.Artefact;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepository;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet;
+import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ILocalArtefact;
+import org.eclipse.virgo.ide.runtime.core.artefacts.LocalArtefactRepository;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryUtils;
 import org.eclipse.wst.server.core.IRuntime;
+import org.eclipse.wst.server.core.IServer;
 
 /**
  * Common content provider for repository installation nodes.
@@ -38,8 +39,10 @@ public class RepositoryContentProvider implements ITreeContentProvider {
 	private ArtefactRepository repository;
 
 	public Object[] getElements(Object inputElement) {
-		if (inputElement instanceof IRuntime) {
-			repository = RepositoryUtils.getRepositoryContents((IRuntime) inputElement);
+		if (inputElement instanceof IServer) {
+			IServer server = (IServer) inputElement;
+			repository = RepositoryUtils.getRepositoryContents(server.getRuntime());
+			repository.setServer(server);
 			List<Object> children = new ArrayList<Object>();
 			Map<File, ArtefactRepository> setForFile = new HashMap<File, ArtefactRepository>();
 
@@ -54,6 +57,7 @@ public class RepositoryContentProvider implements ITreeContentProvider {
 					}
 					else {
 						ArtefactRepository localRepository = new LocalArtefactRepository(file);
+						localRepository.setServer(server);
 						localRepository.add(bundle);
 						setForFile.put(file, localRepository);
 					}

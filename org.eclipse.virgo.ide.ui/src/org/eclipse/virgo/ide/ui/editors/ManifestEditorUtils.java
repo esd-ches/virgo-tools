@@ -17,7 +17,7 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.virgo.ide.bundlerepository.domain.Artefact;
+import org.eclipse.virgo.ide.runtime.core.artefacts.Artefact;
 
 
 /**

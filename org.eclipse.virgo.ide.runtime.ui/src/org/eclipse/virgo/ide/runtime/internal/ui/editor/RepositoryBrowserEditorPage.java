@@ -14,12 +14,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
@@ -28,6 +25,7 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
@@ -39,17 +37,13 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
-import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeSelection;
 import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
-import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
-import org.eclipse.jface.viewers.TreePath;
-import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.KeyEvent;
@@ -64,6 +58,7 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Link;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Tree;
@@ -80,25 +75,26 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
 import org.eclipse.ui.progress.IProgressConstants;
-import org.eclipse.virgo.ide.bundlerepository.domain.Artefact;
-import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactRepository;
-import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactSet;
-import org.eclipse.virgo.ide.bundlerepository.domain.BundleArtefact;
-import org.eclipse.virgo.ide.bundlerepository.domain.IArtefact;
-import org.eclipse.virgo.ide.bundlerepository.domain.IArtefactTyped;
-import org.eclipse.virgo.ide.bundlerepository.domain.LibraryArtefact;
 import org.eclipse.virgo.ide.runtime.core.IServerWorkingCopy;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
-import org.eclipse.virgo.ide.runtime.core.provisioning.ArtefactRepositoryManager;
-import org.eclipse.virgo.ide.runtime.core.provisioning.LocalBundleArtefact;
+import org.eclipse.virgo.ide.runtime.core.artefacts.Artefact;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepository;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepositoryManager;
+import org.eclipse.virgo.ide.runtime.core.artefacts.BundleArtefact;
+import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact;
+import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefactTyped;
+import org.eclipse.virgo.ide.runtime.core.artefacts.LibraryArtefact;
+import org.eclipse.virgo.ide.runtime.core.artefacts.LocalBundleArtefact;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryProvisioningJob;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositorySourceProvisiongJob;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryUtils;
-import org.eclipse.virgo.ide.runtime.internal.ui.ArtefactLabelProvider;
-import org.eclipse.virgo.ide.runtime.internal.ui.RepositorySearchResultContentProvider;
 import org.eclipse.virgo.ide.runtime.internal.ui.RepositoryViewerSorter;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiImages;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
+import org.eclipse.virgo.ide.runtime.internal.ui.providers.ArtefactLabelProvider;
+import org.eclipse.virgo.ide.runtime.internal.ui.providers.ColoredRespositoryLabelProvider;
+import org.eclipse.virgo.ide.runtime.internal.ui.providers.RepositoryContentProvider;
+import org.eclipse.virgo.ide.runtime.internal.ui.providers.RepositorySearchResultContentProvider;
 import org.eclipse.virgo.ide.ui.editors.BundleManifestEditor;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.ui.editor.ServerEditorPart;
@@ -123,15 +119,17 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 
 	private IJobChangeListener jobListener = new ArtefactOperationJobListener();
 
-	private IServerWorkingCopy dmServer;
+	private IServerWorkingCopy serverWC;
 
 	private Button refreshButton;
 
-	private RepositorySearchResultContentProvider contentProvider = new RepositorySearchResultContentProvider();
+	private PropertyChangeListener propertyListener;
 
-	private PropertyChangeListener listener;
+	private RepositorySearchResultContentProvider searchResultContentProvider = new RepositorySearchResultContentProvider();
 
-	private RepositoryContentProvider repositoryContentProvider;
+	public RepositoryContentProvider repositoryContentProvider = new RepositoryContentProvider();
+
+	private ColoredRespositoryLabelProvider coloredRespositoryLabelProvider  = new ColoredRespositoryLabelProvider(repositoryContentProvider);
 
 	private Tree repositoryTable;
 
@@ -148,8 +146,6 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 	private Text searchText;
 
 	private Shell shell;
-
-	private Color grayColor = new Color(Display.getDefault(), 150, 150, 150);
 
 	private Button licenseButton;
 
@@ -192,17 +188,16 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 	public void dispose() {
 		super.dispose();
 
-		if (dmServer != null)
-			dmServer.removeConfigurationChangeListener(listener);
+		if (serverWC != null)
+			serverWC.removeConfigurationChangeListener(propertyListener);
 		Job.getJobManager().removeJobChangeListener(jobListener);
-		grayColor.dispose();
 	}
 
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
 
 		IServerWorkingCopy ts = (IServerWorkingCopy) server.loadAdapter(IServerWorkingCopy.class, null);
-		dmServer = ts;
+		serverWC = ts;
 		addChangeListener();
 		initialize();
 	}
@@ -263,8 +258,8 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 				.createTree(leftComposite, SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION | SWT.CHECK);
 
 		searchResultTableViewer = new CheckboxTreeViewer(searchResultTable);
-		searchResultTableViewer.setContentProvider(contentProvider);
-		searchResultTableViewer.setLabelProvider(new ColoredRespositoryLabelProvider(server.getRuntime()));
+		searchResultTableViewer.setContentProvider(searchResultContentProvider);
+		searchResultTableViewer.setLabelProvider(coloredRespositoryLabelProvider);
 		searchResultTableViewer.setInput(this); // activate content provider
 		searchResultTableViewer.setSorter(new RepositoryViewerSorter());
 		searchResultTableViewer.addCheckStateListener(new ICheckStateListener() {
@@ -288,6 +283,8 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 				}
 			}
 		});
+		registerContextMenu(searchResultTableViewer);
+
 		data = new GridData(GridData.FILL_BOTH);
 		data.heightHint = 120;
 		searchResultTable.setLayoutData(data);
@@ -321,7 +318,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		selectAllButton.setToolTipText(Messages.RepositoryBrowserEditorPage_SelectAllBundlesAndLibraries);
 		selectAllButton.addSelectionListener(new SelectionAdapter() {
 			public void widgetSelected(SelectionEvent selectionEvent) {
-				searchResultTableViewer.setCheckedElements(contentProvider.getElements(searchResultTableViewer
+				searchResultTableViewer.setCheckedElements(searchResultContentProvider.getElements(searchResultTableViewer
 						.getInput()));
 			}
 		});
@@ -482,6 +479,13 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		return leftSection;
 	}
 
+	protected void registerContextMenu(StructuredViewer viewer) {
+		MenuManager searchResultManager = new MenuManager();
+		Menu searchResultPopup = searchResultManager.createContextMenu(viewer.getControl());
+		viewer.getControl().setMenu(searchResultPopup);
+		getSite().registerContextMenu(searchResultManager, viewer);
+	}
+
 	private void setRepositoryDateString() {
 		Date date = ServerCorePlugin.getArtefactRepositoryManager().getArtefactRepositoryDate();
 		String dateString = dateFormat.format(date);
@@ -535,15 +539,15 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		});
 
 		repositoryTableViewer = new CheckboxTreeViewer(repositoryTable);
-		repositoryContentProvider = new RepositoryContentProvider();
 		repositoryTableViewer.setContentProvider(repositoryContentProvider);
-		repositoryTableViewer.setLabelProvider(new ArtefactLabelProvider(server.getRuntime()));
+		repositoryTableViewer.setLabelProvider(new ArtefactLabelProvider());
 		repositoryTableViewer.setSorter(new RepositoryViewerSorter());
 		repositoryTableViewer.addCheckStateListener(new ICheckStateListener() {
 			public void checkStateChanged(CheckStateChangedEvent event) {
 				handleCheckStateChange(event);
 			}
 		});
+		registerContextMenu(repositoryTableViewer);
 
 		data = new GridData(GridData.FILL_BOTH);
 		data.heightHint = 120;
@@ -680,7 +684,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		// checked state is set lazily on expand, don't set it if container is
 		// collapsed
 
-		Object[] members = contentProvider.getChildren(container);
+		Object[] members = searchResultContentProvider.getChildren(container);
 		for (int i = members.length - 1; i >= 0; i--) {
 			Object element = members[i];
 			boolean elementGrayChecked = searchResultTableViewer.getGrayed(element)
@@ -699,12 +703,12 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 	}
 
 	private void updateParentState(Object child) {
-		if (child == null || contentProvider.getParent(child) == null) {
+		if (child == null || searchResultContentProvider.getParent(child) == null) {
 			return;
 		}
-		Object parent = contentProvider.getParent(child);
+		Object parent = searchResultContentProvider.getParent(child);
 		boolean childChecked = false;
-		Object[] members = contentProvider.getChildren(parent);
+		Object[] members = searchResultContentProvider.getChildren(parent);
 		for (int i = members.length - 1; i >= 0; i--) {
 			if (searchResultTableViewer.getChecked(members[i]) || searchResultTableViewer.getGrayed(members[i])) {
 				childChecked = true;
@@ -716,12 +720,12 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 	}
 
 	protected void addChangeListener() {
-		listener = new PropertyChangeListener() {
+		propertyListener = new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
 			}
 		};
 
-		dmServer.addConfigurationChangeListener(listener);
+		serverWC.addConfigurationChangeListener(propertyListener);
 		Job.getJobManager().addJobChangeListener(jobListener);
 	}
 
@@ -738,7 +742,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		setErrorMessage(null);
 		shell.getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				repositoryTableViewer.setInput(getServer().getRuntime());
+				repositoryTableViewer.setInput(getServer());
 				repositoryTableViewer.expandToLevel(2);
 				searchResultTableViewer.refresh(true);
 				searchResultTableViewer.expandToLevel(2);
@@ -753,7 +757,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 				if (((RepositoryProvisioningJob) event.getJob()).getRuntimes().contains(getServer().getRuntime())) {
 					shell.getDisplay().asyncExec(new Runnable() {
 						public void run() {
-							repositoryTableViewer.setInput(getServer().getRuntime());
+							repositoryTableViewer.setInput(getServer());
 							repositoryTableViewer.expandToLevel(2);
 							searchResultTableViewer.refresh(true);
 							searchResultTableViewer.expandToLevel(2);
@@ -768,26 +772,6 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 				});
 			}
 		}
-	}
-
-	private class ColoredRespositoryLabelProvider extends ArtefactLabelProvider implements IColorProvider {
-
-		ColoredRespositoryLabelProvider(IRuntime runtime) {
-			super(runtime);
-		}
-
-		public Color getBackground(Object element) {
-			return null;
-		}
-
-		public Color getForeground(Object element) {
-			if (repositoryContentProvider.getRepository() != null && element instanceof IArtefact
-				&& repositoryContentProvider.getRepository().contains((IArtefact) element)) {
-				return grayColor;
-			}
-			return null;
-		}
-
 	}
 
 	public Object getAdapter(Class adapter) {

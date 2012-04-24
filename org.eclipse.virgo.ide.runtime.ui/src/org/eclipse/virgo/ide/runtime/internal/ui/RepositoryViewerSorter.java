@@ -12,11 +12,11 @@ package org.eclipse.virgo.ide.runtime.internal.ui;
 
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.virgo.ide.bundlerepository.domain.Artefact;
-import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactSet;
-import org.eclipse.virgo.ide.bundlerepository.domain.IArtefactTyped;
-import org.eclipse.virgo.ide.bundlerepository.domain.ILocalEntity;
-import org.eclipse.virgo.ide.bundlerepository.domain.LocalArtefactSet;
+import org.eclipse.virgo.ide.runtime.core.artefacts.Artefact;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet;
+import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefactTyped;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ILocalEntity;
+import org.eclipse.virgo.ide.runtime.core.artefacts.LocalArtefactSet;
 
 /**
  * @author Christian Dupuis

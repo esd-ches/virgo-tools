@@ -8,9 +8,9 @@
  * Contributors:
  *     SpringSource - initial API and implementation
  *******************************************************************************/
-package org.eclipse.virgo.ide.bundlerepository.domain;
+package org.eclipse.virgo.ide.runtime.core.artefacts;
 
-import org.eclipse.virgo.ide.runtime.core.provisioning.ArtefactRepositoryManager;
+import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 
 /**
  * Represents an artefact in the repository :- bundle or library
@@ -56,61 +56,61 @@ public abstract class Artefact implements IArtefact {
 	}
 
 	/**
-	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#getName()
+	 * @see org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact#getName()
 	 */
 	public String getName() {
 		return (name != null ? new String(name) : null);
 	}
 
 	/**
-	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#getSymbolicName()
+	 * @see org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact#getSymbolicName()
 	 */
 	public String getSymbolicName() {
 		return (symbolicName != null ? new String(symbolicName) : null);
 	}
 
 	/**
-	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#getVersion()
+	 * @see org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact#getVersion()
 	 */
 	public OsgiVersion getVersion() {
 		return version;
 	}
 
 	/**
-	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#getOrganisationName()
+	 * @see org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact#getOrganisationName()
 	 */
 	public String getOrganisationName() {
 		return (organisationName != null ? new String(organisationName) : null);
 	}
 
 	/**
-	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#getModuleName()
+	 * @see org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact#getModuleName()
 	 */
 	public String getModuleName() {
 		return (moduleName != null ? new String(moduleName) : null);
 	}
 
 	/**
-	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#isSourceAvailable()
+	 * @see org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact#isSourceAvailable()
 	 */
 	public boolean isSourceAvailable() {
 		return this.sourceAvailable;
 	}
 
 	/**
-	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#setSourceAvailable(boolean)
+	 * @see org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact#setSourceAvailable(boolean)
 	 */
 	public void setSourceAvailable(boolean sourceAvailable) {
 		this.sourceAvailable = sourceAvailable;
 	}
 	
 	/**
-	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#getRelativeUrlPath()
+	 * @see org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact#getRelativeUrlPath()
 	 */
 	public abstract String getRelativeUrlPath();
 
 	/**
-	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#getRelativeLicenseUrlPath()
+	 * @see org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact#getRelativeLicenseUrlPath()
 	 */
 	public String getRelativeLicenseUrlPath() {
 		return "/" + getOrganisationName() + "/" + getModuleName() + "/" + getVersion() + "/license-" + getVersion()
@@ -122,7 +122,7 @@ public abstract class Artefact implements IArtefact {
 	}
 	
 	/**
-	 * @see org.eclipse.virgo.ide.bundlerepository.domain.IArtefact#isMatch(org.eclipse.virgo.ide.bundlerepository.domain.IArtefact)
+	 * @see org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact#isMatch(org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact)
 	 */
 	public boolean isMatch(IArtefact artefact) {
 		return getSignature().equals(artefact.getSignature());

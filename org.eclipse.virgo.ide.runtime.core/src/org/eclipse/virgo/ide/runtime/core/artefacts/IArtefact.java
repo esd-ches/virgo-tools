@@ -9,7 +9,9 @@
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.virgo.ide.bundlerepository.domain;
+package org.eclipse.virgo.ide.runtime.core.artefacts;
+
+import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 
 /**
  * Represents an artefact in the repository :- bundle or library

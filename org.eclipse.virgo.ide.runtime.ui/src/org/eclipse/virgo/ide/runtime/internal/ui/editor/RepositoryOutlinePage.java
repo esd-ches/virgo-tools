@@ -15,19 +15,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.pde.internal.ui.util.ModelModification;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
+import org.eclipse.virgo.ide.runtime.internal.ui.providers.RepositoryLabelProvider;
+import org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerEditorContentLabelProvider;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditor;
@@ -47,20 +52,6 @@ public class RepositoryOutlinePage extends ContentOutlinePage {
 
 	public RepositoryOutlinePage(ServerEditor editor) {
 		this.editor = editor;
-	}
-
-	private static IFile getPropertiesFile(ModelModification mod) {
-		try {
-			Method getFileMethod = ModelModification.class.getDeclaredMethod("getPropertiesFile", (Class[]) null);
-			getFileMethod.setAccessible(true);
-			Object obj = getFileMethod.invoke(mod, (Object[]) null);
-			if (obj instanceof IFile) {
-				return (IFile) obj;
-			}
-			return null;
-		} catch (Exception e) {
-			return null;
-		}
 	}
 
 	private void setEditorPage(int page) {
@@ -95,7 +86,7 @@ public class RepositoryOutlinePage extends ContentOutlinePage {
 		final IServer server = ServerCore.findServer(editorInput.getServerId());
 		final ServerEditorContentLabelProvider provider = new ServerEditorContentLabelProvider(server);
 		contentOutlineViewer.setContentProvider(provider);
-		contentOutlineViewer.setLabelProvider(provider);
+		contentOutlineViewer.setLabelProvider(new RepositoryLabelProvider());
 		contentOutlineViewer.setInput(server);
 
 		contentOutlineViewer.addSelectionChangedListener(new ISelectionChangedListener() {
@@ -126,5 +117,14 @@ public class RepositoryOutlinePage extends ContentOutlinePage {
 				}
 			}
 		});
+		registerContextMenu(contentOutlineViewer);
+	}
+	
+
+	protected void registerContextMenu(StructuredViewer viewer) {
+		MenuManager searchResultManager = new MenuManager();
+		Menu searchResultPopup = searchResultManager.createContextMenu(viewer.getControl());
+		viewer.getControl().setMenu(searchResultPopup);
+		getSite().registerContextMenu("Something", searchResultManager, viewer);
 	}
 }

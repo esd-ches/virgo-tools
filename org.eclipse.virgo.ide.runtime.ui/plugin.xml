@@ -141,10 +141,11 @@
         </and>
       </visibility>
       <action
-        class="org.eclipse.virgo.ide.runtime.internal.ui.actions.OpenManifestAction"
-        enablesFor="1"
-        id="org.eclipse.virgo.ide.server.ui.openManifestAction"
-        label="Open MANIFEST.MF">
+            class="org.eclipse.virgo.ide.runtime.internal.ui.actions.OpenProjectManifestAction"
+            enablesFor="1"
+            icon="icons/full/obj16/file_obj.gif"
+            id="org.eclipse.virgo.ide.server.ui.openManifestAction"
+            label="Open Project Manifest">
       </action>
       <action
         class="org.eclipse.virgo.ide.runtime.internal.ui.actions.RedeployBundleAction"
@@ -152,6 +153,23 @@
         id="org.eclipse.virgo.ide.server.ui.redeployAction"
         label="Redeploy">
       </action>
+    </objectContribution>
+    <objectContribution
+          adaptable="true"
+          id="org.eclipse.virgo.ide.runtime.ui.localBundleContribution"
+          objectClass="org.eclipse.virgo.ide.runtime.core.artefacts.LocalBundleArtefact">
+       <action
+             class="org.eclipse.virgo.ide.runtime.internal.ui.actions.OpenBundleManifestAction"
+             enablesFor="1"
+             icon="icons/full/obj16/bundle_manifest.gif"
+             id="org.eclipse.virgo.ide.runtime.ui.openBundleManifest"
+             label="Open Bundle Manifest">
+       </action>
+       <visibility>
+             <objectClass
+                   name="org.eclipse.virgo.ide.runtime.core.artefacts.LocalBundleArtefact">
+             </objectClass>
+       </visibility>
     </objectContribution>
   </extension>
   
@@ -204,4 +222,45 @@
          </adapter>
       </factory>
 	</extension>
+<extension
+      point="org.eclipse.ui.navigator.navigatorContent">
+   <navigatorContent
+         activeByDefault="true"
+         contentProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerViewContentProvider"
+         icon="icons/full/obj16/lib_obj.gif"
+         id="org.eclipse.virgo.ide.runtime.ui.repositoryContent"
+         labelProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.RepositoryLabelProvider"
+         name="Repository Content">
+      <triggerPoints>
+         <or>
+            <instanceof
+                  value="org.eclipse.wst.server.core.IServer">
+            </instanceof>
+         </or>
+      </triggerPoints>
+      <possibleChildren>
+         <or>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact">
+            </instanceof>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet">
+            </instanceof>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.internal.ui.providers.InstalledLibrariesNode">
+            </instanceof>
+         </or>
+      </possibleChildren>
+   </navigatorContent>
+</extension>
+<extension
+      point="org.eclipse.ui.navigator.viewer">
+   <viewerContentBinding
+         viewerId="org.eclipse.wst.server.ui.ServersView">
+      <includes>
+         <contentExtension
+               pattern="org.eclipse.virgo.ide.runtime.ui.repositoryContent">
+         </contentExtension></includes>
+   </viewerContentBinding>
+</extension>
 </plugin>

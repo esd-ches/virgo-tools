@@ -10,7 +10,6 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.ui.editors;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -47,13 +46,13 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.forms.widgets.Section;
-import org.eclipse.virgo.ide.bundlerepository.domain.Artefact;
-import org.eclipse.virgo.ide.bundlerepository.domain.ArtefactRepository;
-import org.eclipse.virgo.ide.bundlerepository.domain.BundleArtefact;
-import org.eclipse.virgo.ide.bundlerepository.domain.IArtefact;
-import org.eclipse.virgo.ide.bundlerepository.domain.IArtefactTyped;
 import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 import org.eclipse.virgo.ide.bundlerepository.domain.PackageExport;
+import org.eclipse.virgo.ide.runtime.core.artefacts.Artefact;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepository;
+import org.eclipse.virgo.ide.runtime.core.artefacts.BundleArtefact;
+import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact;
+import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefactTyped;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryUtils;
 import org.osgi.framework.Constants;
 import org.osgi.framework.Version;

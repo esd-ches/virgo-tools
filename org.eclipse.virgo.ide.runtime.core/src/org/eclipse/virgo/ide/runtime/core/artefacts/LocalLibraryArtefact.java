@@ -8,14 +8,11 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.virgo.ide.runtime.core.provisioning;
+package org.eclipse.virgo.ide.runtime.core.artefacts;
 
 import java.io.File;
 import java.net.URI;
 
-import org.eclipse.virgo.ide.bundlerepository.domain.BundleArtefact;
-import org.eclipse.virgo.ide.bundlerepository.domain.ILocalArtefact;
-import org.eclipse.virgo.ide.bundlerepository.domain.LibraryArtefact;
 import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 
 

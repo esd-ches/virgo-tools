@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.bundlerepository.domain;
 
-import org.eclipse.virgo.ide.runtime.core.provisioning.ArtefactRepositoryManager;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepositoryManager;
 
 /**
  * An exported member of an exported package (class or resource)

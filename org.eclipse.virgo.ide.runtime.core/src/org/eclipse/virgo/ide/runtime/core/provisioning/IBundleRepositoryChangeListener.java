@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.runtime.core.provisioning;
 
+import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepositoryManager;
 import org.eclipse.virgo.kernel.repository.BundleRepository;
 import org.eclipse.wst.server.core.IRuntime;
 

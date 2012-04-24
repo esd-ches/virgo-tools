@@ -39,7 +39,7 @@ import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
  * @since 1.0.0
  */
 @SuppressWarnings("restriction")
-public class OpenManifestAction implements IObjectActionDelegate {
+public class OpenProjectManifestAction implements IObjectActionDelegate {
 
 	private IModule selectedModule;
 
