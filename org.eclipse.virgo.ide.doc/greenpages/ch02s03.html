@@ -1,0 +1,48 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Building and Installing GreenPages</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="A Guide to the GreenPages Sample"><link rel="up" href="ch02.html" title="Chapter&nbsp;2.&nbsp;Installing and Running GreenPages"><link rel="prev" href="ch02s02.html" title="Obtaining GreenPages"><link rel="next" href="ch02s04.html" title="Browsing the GreenPages Application"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" title="Building and Installing GreenPages"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="installing.greenpages.building"></a>Building and Installing GreenPages</h2></div></div></div><div class="section" title="Building with Apache Maven"><div class="titlepage"><div><div><h3 class="title"><a name="installing.greenpages.building.mvn"></a>Building with Apache Maven</h3></div></div></div><p>GreenPages uses Apache Maven as its primary build system. Each bundle of the application can be built
+    separately and the entire application can built and assembled into a PAR file from a single location.
+    To build the application and assemble it into a PAR
+    file:
+  </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Make <code class="code">$GREENPAGES_HOME/</code> the current directory.</p></li><li class="listitem"><p>Run the command
+        <code class="code">mvn package</code>. The first time this is run several files will be downloaded
+        from Maven repositories. Subsequent runs will not need to do this.
+        </p></li><li class="listitem"><p>Verify that the 
+        <code class="code">greenpages-2.5.0.RELEASE.par</code> file exists in 
+        <code class="code">$GREENPAGES_HOME/greenpages/target</code>.
+        </p></li></ol></div><p>
+</p></div><div class="section" title="Installing Dependencies into Virgo Tomcat Server"><div class="titlepage"><div><div><h3 class="title"><a name="installing.greenpages.building.par.provided"></a>Installing Dependencies into Virgo Tomcat Server</h3></div></div></div><p>
+      Unlike traditional Java EE applications, GreenPages does not package all of its dependencies inside its
+      deployment unit. Instead, it relies on the mechanisms of OSGi to locate its dependencies at runtime.
+      When running an OSGi application on Virgo Tomcat Server, these dependencies can be loaded into memory as needed, but first they
+      must be made available to Virgo Tomcat Server.
+      </p><p>The Maven build included with GreenPages uses the <code class="code">dependency:copy-dependencies</code> plugin to gather 
+            all the artifacts that GreenPages depends on that are not supplied by the Virgo Tomcat Server runtime. These dependencies 
+            can then be installed into the Virgo Tomcat Server repository. Dependencies are gathered automatically during the
+			<code class="code">package</code> phase. These dependencies can be found in
+			<code class="literal">$GREENPAGES_HOME/greenpages/target/par-provided</code>. To install dependencies
+            simply copy all the <code class="code">*.jar</code> files from this directory into <code class="literal">$SERVER_HOME/repository/usr</code>
+			(where <code class="literal">$SERVER_HOME</code> is the Virgo Tomcat Server installation directory).
+      </p><p>Installing dependencies on Windows:
+</p><pre class="programlisting">prompt&gt; cd %GREENPAGES_HOME%\greenpages 
+prompt&gt; copy target\par-provided\* %SERVER_HOME%\repoorg.apache.commons.fileuploadsitory\usr
+</pre><p>
+</p><p>Installing dependencies on UNIX:
+</p><pre class="programlisting">prompt$ cd $GREENPAGES_HOME/org.apache.commons.fileuploadgreenpages 
+prompt$ cp target/par-provided/* $SERVER_HOME/repository/usr
+</pre><p>
+</p><p>
+  Notice that Virgo Tomcat Server will not necessarily see these dependencies unless its repository indexes are rebuilt.
+  Different repositories behave differently in this respect; some are passive (their indexes are built only once upon startup)
+  and some are active (they can detect new files or files being removed dynamically).
+  The <code class="literal">usr</code> repository is active so there is no
+  need to restart Virgo Tomcat Server when copying these files.
+  The next time Virgo Tomcat Server is started the <code class="literal">-clean</code> option will cause Virgo Tomcat Server to re-scan the repository directories in any case.
+  It is always safe to start Virgo Tomcat Server with the <code class="literal">-clean</code> option.
+</p></div><div class="section" title="Starting and Configuring the Database"><div class="titlepage"><div><div><h3 class="title"><a name="installing.greenpages.building.db"></a>Starting and Configuring the Database</h3></div></div></div><p>GreenPages uses the H2 database to store all its data. Before starting the application, start the database server and populate the database with data.</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Change to the <code class="code">$GREENPAGES_HOME/db</code> current directory.  On Unix:</p><pre class="programlisting">prompt$ cd $GREENPAGES_HOME/db</pre><p>On Windows:</p><pre class="programlisting">prompt&gt; cd %GREENPAGES_HOME%\db</pre></li><li class="listitem"><p>Run the database startup script appropriate to the operating system.  For Unix, this is <code class="literal">run.sh</code>, run in the background:</p><pre class="programlisting">prompt$ sh run.sh &amp;</pre><p>Press Return to continue.</p><p>On Windows, run the <code class="literal">run.bat</code> command:</p><pre class="programlisting">prompt&gt; run</pre><p>For both platforms, the command might invoke a browser window offering a connection to the database; close this window.</p></li><li class="listitem"><p>Run the data population script appropriate to the operating system.  For Unix, this is <code class="literal">data.sh</code>:</p><pre class="programlisting">prompt$ sh data.sh</pre><p>On Windows, run the <code class="literal">data.bat</code> command:</p><pre class="programlisting">prompt&gt; data</pre></li></ol></div><p>
+Run these commands once to start a database server for H2; the server will continue to run in the background. 
+</p></div><div class="section" title="Installing and Starting GreenPages PAR"><div class="titlepage"><div><div><h3 class="title"><a name="installing.greenpages.building.par"></a>Installing and Starting GreenPages PAR</h3></div></div></div><p>To install the GreenPages PAR into Virgo Tomcat Server and start it:
+          </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Copy the GreenPages PAR  to the <code class="code">$SERVER_HOME/pickup</code> directory.  On Unix:</p><pre class="programlisting">prompt$ cd $SERVER_HOME
+prompt$ cp $GREENPAGES_HOME/greenpages/target/greenpages-2.5.0.RELEASE.par pickup/</pre><p>On Windows:</p><pre class="programlisting">prompt&gt; cd %SERVER_HOME%
+prompt&gt; copy %GREENPAGES_HOME%\greenpages\target\greenpages-2.5.0.RELEASE.par pickup\</pre></li><li class="listitem"><p>Start Virgo Tomcat Server with the <code class="literal">-clean</code> option.  On Unix:</p><pre class="programlisting">prompt$ $SERVER_HOME/bin/startup.sh -clean</pre><p>On Windows:</p><pre class="programlisting">prompt&gt; "%SERVER_HOME%"\bin\startup.bat -clean</pre></li><li class="listitem"><p>Verify that GreenPages starts correctly by checking in the Virgo Tomcat Server output for the log message:
+</p><pre class="programlisting">&lt;DE0005I&gt; Started par 'greenpages' version '2.5.0.RELEASE'. </pre><p>
+</p></li></ol></div><p>
+</p></div></div></body></html>

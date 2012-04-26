@@ -1,0 +1,104 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;3.&nbsp;GreenPages Highlights</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="A Guide to the GreenPages Sample"><link rel="up" href="index.html" title="A Guide to the GreenPages Sample"><link rel="prev" href="ch02s05.html" title="Running GreenPages from Eclipse"><link rel="next" href="ch03s02.html" title="Middle Tier Highlights"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" title="Chapter&nbsp;3.&nbsp;GreenPages Highlights"><div class="titlepage"><div><div><h2 class="title"><a name="highlights"></a>Chapter&nbsp;3.&nbsp;GreenPages Highlights</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="ch03.html#highlights.wab">Web Application Bundle Highlights</a></span></dt><dd><dl><dt><span class="section"><a href="ch03.html#N10421">web.xml</a></span></dt><dt><span class="section"><a href="ch03.html#N10451">Controller Class</a></span></dt><dt><span class="section"><a href="ch03.html#N1047C">Component Scanning</a></span></dt><dt><span class="section"><a href="ch03.html#N104A6">Bundle Manifest</a></span></dt><dt><span class="section"><a href="ch03.html#N104C5">Service Injection</a></span></dt></dl></dd><dt><span class="section"><a href="ch03s02.html">Middle Tier Highlights</a></span></dt><dd><dl><dt><span class="section"><a href="ch03s02.html#N104EE">DataSource</a></span></dt><dt><span class="section"><a href="ch03s02.html#N10513">EntityManager</a></span></dt><dt><span class="section"><a href="ch03s02.html#N10575">Transaction Management</a></span></dt></dl></dd><dt><span class="section"><a href="ch03s03.html">Testing Highlights</a></span></dt><dd><dl><dt><span class="section"><a href="ch03s03.html#N105B1">Single Bundle Integration Test</a></span></dt><dt><span class="section"><a href="ch03s03.html#N105F5">Multi Bundle Integration Test</a></span></dt></dl></dd><dt><span class="section"><a href="ch03s04.html">Automated Build Highlights</a></span></dt><dd><dl><dt><span class="section"><a href="ch03s04.html#N10642">Building the PAR</a></span></dt><dt><span class="section"><a href="ch03s04.html#N10679">Obtaining Dependencies</a></span></dt><dt><span class="section"><a href="ch03s04.html#N106A0">Automatically Running the Tests</a></span></dt></dl></dd></dl></div><p>
+This chapter picks out some notable features of the GreenPages sample code from the <code class="literal">greenpages.*</code> folders.
+</p><div class="section" title="Web Application Bundle Highlights"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="highlights.wab"></a>Web Application Bundle Highlights</h2></div></div></div><p>
+		The GreenPages Web Application Bundle (WAB) is built using Spring MVC configured with Spring annotations and component
+		scanning. The Bundlor tool is used to generate the bundle manifest of the WAB and a service is injected into the code
+		using Spring DM in combination with Spring autowiring.
+	</p><p>
+		For more information on Spring, Spring MVC, Bundlor and Spring DM, please see <a class="link" href="apa.html#further.resources.projects" title="Projects">Projects</a>.. 
+	</p><div class="section" title="web.xml"><div class="titlepage"><div><div><h3 class="title"><a name="N10421"></a>web.xml</h3></div></div></div><p>
+			The web deployment descriptor file <code class="literal">web.xml</code> is in the <code class="literal">src/main/webapp/WEB_INF</code> folder of the
+			<code class="literal">greenpages.web</code> project.
+			It defines a servlet, a servlet context parameter, and a servlet context listener.
+		</p><p>
+			Spring's dispatcher servlet is used to dispatch web requests to handlers.
+</p><pre class="programlisting">  &lt;servlet&gt;
+  &lt;servlet-name&gt;greenpages&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;org.springframework.web.servlet.DispatcherServlet&lt;/servlet-class&gt;
+  &lt;/servlet&gt;
+</pre><p>
+		</p><p>
+			The <code class="literal">contextClass</code> servlet parameter declares the implementation of <code class="interfacename">WebApplicationContext</code>
+			that Spring instantiates.
+			The application context acts as a root application context and each servlet in the web application, which in the case of GreenPages is
+			just the dispatcher servlet, has its own application context which is a child of the root application context.
+			<code class="classname">ServerOsgiBundleXmlWebApplicationContext</code> is provided by Virgo and will hold beans created by Spring DM, which
+			are then available in child application contexts.
+</p><pre class="programlisting">  &lt;context-param&gt;
+    &lt;param-name&gt;contextClass&lt;/param-name&gt;
+    &lt;param-value&gt;org.eclipse.virgo.web.dm.ServerOsgiBundleXmlWebApplicationContext&lt;/param-value&gt;
+  &lt;/context-param&gt;
+
+</pre><p>
+		</p><p>
+			A servlet context listener is defined which will start up the root application context for the web application when the servlet context
+			is initialised.
+</p><pre class="programlisting">  &lt;listener&gt;
+    &lt;listener-class&gt;org.springframework.web.context.ContextLoaderListener&lt;/listener-class&gt;
+  &lt;/listener&gt;
+
+</pre><p>
+		</p></div><div class="section" title="Controller Class"><div class="titlepage"><div><div><h3 class="title"><a name="N10451"></a>Controller Class</h3></div></div></div><p>
+			In the <code class="literal">src/main/java</code> source folder of the <code class="literal">greenpages.web</code> project 
+			the package <code class="classname">greenpages.web</code>
+			contains the controller class <code class="classname">GreenPagesController</code>.
+		</p><p>
+			Spring annotations are used to add web behaviour to the class.
+			The <code class="classname">@Controller</code> annotation tells Spring that the class serves the role of a controller and that the
+			class should be scanned for <span class="emphasis"><em>request mappings</em></span>.
+			Request mappings are defined using the <code class="classname">@RequestMapping</code> annotation.
+			For instance, the URL <code class="literal">/home.htm</code> is mapped to the handler method <code class="literal">home</code>.
+</p><pre class="programlisting">@Controller
+public class GreenPagesController {
+	&hellip;
+    @RequestMapping("/home.htm")
+    public void home() {
+    }
+    &hellip;
+</pre><p>
+			Note that request mappings can also be specified at the class level.
+		</p></div><div class="section" title="Component Scanning"><div class="titlepage"><div><div><h3 class="title"><a name="N1047C"></a>Component Scanning</h3></div></div></div><p>
+			Spring will detect the <code class="classname">@Controller</code> annotation and create a bean of type controller, 
+			<span class="emphasis"><em>provided that</em></span> it scans the classpath for these.
+			Spring&rsquo;s component scanning is enabled by the presence of a <code class="literal">context</code> tag 
+			in one of the Spring bean definition files.
+		</p><p>
+			The <code class="filename">WEB-INF/greenpages-servlet.xml</code> file in the
+			<code class="literal">src/main/webapp</code> folder contains the following lines:
+</p><pre class="programlisting">&lt;!-- enable classpath scanning --&gt;
+&lt;context:component-scan base-package="greenpages.web" /&gt;
+</pre><p>
+			Notice the convention embodied in the filename <code class="filename">WEB-INF/greenpages-servlet.xml</code>.
+			During dispatcher servlet initialisation, Spring looks for a file named <code class="literal">[servlet-name]-servlet.xml</code>
+			in the <code class="literal">WEB-INF</code> directory of the web application and creates the beans defined there.
+		</p></div><div class="section" title="Bundle Manifest"><div class="titlepage"><div><div><h3 class="title"><a name="N104A6"></a>Bundle Manifest</h3></div></div></div><p>
+				The Virgo Tomcat Server has special support for WABs.
+				To take advantage of this support, the <code class="literal">greenpages.web</code> bundle must be declared to be a WAB and a
+				context path must be defined.
+			</p><p>
+				The Bundlor template (the file <code class="filename">template.mf</code> at the top level under the <code class="literal">greenpages.web</code> project)
+				is input to the Bundlor tool which generates the manifest of the bundle.
+			</p><p>		
+				The Bundlor template defines the context path as follows (and this is what declares the bundle to be a WAB):
+</p><pre class="programlisting">Web-ContextPath: greenpages
+</pre><p>
+			</p><p>
+				The Bundlor template also ensures Spring packages and greenpages packages from other bundles are imported with suitable version ranges:
+</p><pre class="programlisting">Import-Template: 
+ org.springframework.*;version="[3.0, 3.1)",
+ greenpages.*;version="[2.3, 2.4)"
+</pre><p>
+			</p></div><div class="section" title="Service Injection"><div class="titlepage"><div><div><h3 class="title"><a name="N104C5"></a>Service Injection</h3></div></div></div><p>
+				The file <code class="filename">webapp/WEB-INF/applicationContext.xml</code> declares a reference to a
+				<code class="interfacename">greenpages.Directory</code> service in the service registry using Spring DM as follows:
+</p><pre class="programlisting">&lt;osgi:reference id="directory" interface="greenpages.Directory"/&gt;
+</pre><p>
+				The resultant bean resides in the root web application context.
+			</p><p>
+				The <code class="classname">GreenPagesController</code> class uses Spring autowiring to inject the service:
+</p><pre class="programlisting">@Autowired
+private Directory directory;
+</pre><p>
+				The controller's bean resides in the web application context associated with the Spring dispatcher servlet and so has
+				access to the directory service bean in the root web application context.
+			</p></div></div></div></body></html>
