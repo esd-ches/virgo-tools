@@ -199,6 +199,7 @@ public class BundleManifestEditor extends ManifestEditor {
 	 * 
 	 * @see #createSystemFileContexts(InputContextManager, IEditorInput)
 	 */
+	@Override
 	protected void createInputContexts(InputContextManager contextManager) {
 		IEditorInput input = getEditorInput();
 		if (input instanceof IFileEditorInput) {
@@ -247,7 +248,7 @@ public class BundleManifestEditor extends ManifestEditor {
 		}
 		File manifestFile = null;
 		String name = file.getName().toLowerCase(Locale.ENGLISH);
-		if (name.equals(BundleModelUtility.F_MANIFEST)) {
+		if (name.startsWith("manifest.mf")) { //$NON-NLS-1$
 			manifestFile = file;
 		}
 		try {
@@ -273,7 +274,7 @@ public class BundleManifestEditor extends ManifestEditor {
 		}
 
 		String name = input.getName().toLowerCase(Locale.ENGLISH);
-		if (name.startsWith(BundleModelUtility.F_MANIFEST)) {
+		if (name.startsWith("manifest.mf")) { //$NON-NLS-1$
 			manager.putContext(input, new SpringBundleInputContext(this, input, true));
 		}
 	}
@@ -435,6 +436,7 @@ public class BundleManifestEditor extends ManifestEditor {
 		return null;
 	}
 
+	@Override
 	public void contributeToToolbar(IToolBarManager manager) {
 		// ignore
 	}
