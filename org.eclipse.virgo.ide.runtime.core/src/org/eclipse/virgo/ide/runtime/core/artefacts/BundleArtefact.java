@@ -13,6 +13,7 @@ package org.eclipse.virgo.ide.runtime.core.artefacts;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 import org.eclipse.virgo.ide.bundlerepository.domain.PackageExport;
 import org.eclipse.virgo.ide.bundlerepository.domain.PackageImport;
@@ -22,6 +23,9 @@ import org.eclipse.virgo.ide.bundlerepository.domain.PackageImport;
  * bundle. This includes meta-data directly available in the bundle, as well as
  * additional information such as the license and any notes we want to display
  * in the BRITS web application
+ * 
+ * @author Christian Dupuis
+ * @author Miles Parker
  */
 public class BundleArtefact extends Artefact {
 
@@ -59,14 +63,15 @@ public class BundleArtefact extends Artefact {
 	 * Return the list of packages exported by this bundle
 	 */
 	public List<PackageExport> getExports() {
-		return this.exports;
+		return exports;
 	}
 
 	/**
 	 * Add an export to the set of packages exported by this bundle
 	 */
 	public void addExport(PackageExport export) {
-		this.exports.add(export);
+		Assert.isNotNull(export, "Tried to add null export");
+		exports.add(export);
 	}
 
 	/**
@@ -80,14 +85,15 @@ public class BundleArtefact extends Artefact {
 	 * Return the list of imports declared by this bundle
 	 */
 	public List<PackageImport> getImports() {
-		return this.imports;
+		return imports;
 	}
 
 	/**
 	 * Add an import to the set of import declaration for this bundle
 	 */
 	public void addImport(PackageImport imp) {
-		this.imports.add(imp);
+		Assert.isNotNull(imp, "Tried to add null import");
+		imports.add(imp);
 	}
 
 	/**
@@ -119,13 +125,13 @@ public class BundleArtefact extends Artefact {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Bundle-Name: ");
-		builder.append(this.getName());
+		builder.append(getName());
 		builder.append("\n");
 		builder.append("Bundle-SymbolicName: ");
-		builder.append(this.getSymbolicName());
+		builder.append(getSymbolicName());
 		builder.append("\n");
 		builder.append("Bundle-Version: ");
-		builder.append(this.getVersion());
+		builder.append(getVersion());
 		builder.append("\n");
 		// including exports can cause a Hibernate lazy-load exception
 		// builder.append("Export-Package: ");

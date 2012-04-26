@@ -13,10 +13,11 @@ package org.eclipse.virgo.ide.runtime.core.artefacts;
 
 import java.io.File;
 
+import org.eclipse.virgo.ide.runtime.core.ServerUtils;
+import org.eclipse.wst.server.core.IServer;
+
 /**
- * 
  * @author Miles Parker
- * 
  */
 public class LocalArtefactSet extends ArtefactSet implements ILocalEntity {
 
@@ -31,9 +32,26 @@ public class LocalArtefactSet extends ArtefactSet implements ILocalEntity {
 		return location;
 	}
 
+	public String getRelativePath() {
+		String fileName = getFile().toString();
+		IServer server = getRepository().getServer();
+		if (server != null && server.getRuntime() != null) {
+			String home = ServerUtils.getServerHome(server.getRuntime());
+			if (fileName.startsWith(home)) {
+				fileName = fileName.substring(home.length() + 1);
+			}
+		}
+		return fileName;
+	}
+
+	public String getShortLabel() {
+		return getRelativePath() + " [" + getArtefactType().getPluralLabel() + "]";
+	}
+
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet#toString()
 	 */
+	@Override
 	public String toString() {
 		return location + " [" + super.toString() + "]";
 	}

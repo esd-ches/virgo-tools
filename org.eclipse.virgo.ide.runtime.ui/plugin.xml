@@ -253,14 +253,38 @@
       </possibleChildren>
    </navigatorContent>
 </extension>
+
+<extension
+      point="org.eclipse.ui.navigator.navigatorContent">
+   <navigatorContent
+         activeByDefault="true"
+         contentProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.BundleContentProvider"
+         icon="icons/full/obj16/lib_obj.gif"
+         id="org.eclipse.virgo.ide.runtime.ui.bundleContent"
+         labelProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.RepositoryLabelProvider"
+         name="Bundle Content">
+      <triggerPoints>
+         <or>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact"/>
+            <instanceof
+                  value="org.eclipse.wst.server.core.IServer"/>
+         </or>
+      </triggerPoints>
+   </navigatorContent>
+</extension>
+
+
 <extension
       point="org.eclipse.ui.navigator.viewer">
    <viewerContentBinding
          viewerId="org.eclipse.wst.server.ui.ServersView">
       <includes>
          <contentExtension
-               pattern="org.eclipse.virgo.ide.runtime.ui.repositoryContent">
-         </contentExtension></includes>
+               pattern="org.eclipse.virgo.ide.runtime.ui.bundleContent"/>
+         <contentExtension
+               pattern="org.eclipse.jdt.java.ui.javaContent"/>
+         </includes>
    </viewerContentBinding>
 </extension>
 </plugin>

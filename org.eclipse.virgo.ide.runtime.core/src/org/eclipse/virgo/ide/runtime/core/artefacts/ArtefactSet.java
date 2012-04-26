@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.ObjectUtils;
+import org.eclipse.core.runtime.Assert;
 
 /**
  * Safely encapsulates artefact interactions.
@@ -44,6 +45,7 @@ public class ArtefactSet implements IArtefactTyped {
 	}
 
 	public boolean add(IArtefact artefact) {
+		Assert.isNotNull(artefact, "Tried to add null artefact.");
 		if (artefact.getArtefactType() == artefactType || artefactType == ArtefactType.COMBINED) {
 			return artefacts.add(artefact);
 		}
@@ -62,6 +64,7 @@ public class ArtefactSet implements IArtefactTyped {
 	/**
 	 * @see java.lang.Object#toString()
 	 */
+	@Override
 	public String toString() {
 		return artefactType.getPluralLabel();
 	}
@@ -72,6 +75,7 @@ public class ArtefactSet implements IArtefactTyped {
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof ArtefactSet) {
 			ArtefactSet set = (ArtefactSet) obj;

@@ -34,7 +34,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.pde.ui,
  org.eclipse.ui.views,
  org.eclipse.ui.navigator,
- org.eclipse.ui.navigator.resources
+ org.eclipse.ui.navigator.resources,
+ org.eclipse.jdt.ui;bundle-version="3.7.2"
 Import-Package: org.apache.commons.lang,
  org.apache.commons.logging,
  org.eclipse.libra.framework.editor.core;version="[0.1.0,2.0.0)",
@@ -48,4 +49,5 @@ Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Export-Package: org.eclipse.virgo.ide.runtime.internal.ui,
  org.eclipse.virgo.ide.runtime.internal.ui.actions,
- org.eclipse.virgo.ide.runtime.internal.ui.editor
+ org.eclipse.virgo.ide.runtime.internal.ui.editor,
+ org.eclipse.virgo.ide.runtime.internal.ui.projects
