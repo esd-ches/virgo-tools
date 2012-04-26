@@ -3,7 +3,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<title>Committers - Coding</title>
-		<link type="text/css" rel="stylesheet" href="wiki/../../book.css"/>
+		<link type="text/css" rel="stylesheet" href="../../book.css"/>
 	</head>
 	<body>
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
@@ -12,13 +12,13 @@
 			</tr>
 			<tr>
 				<td style="width: 20%" align="left">
-					<a href="wiki/Grokking.html" title="Grokking">
+					<a href="Grokking.html" title="Grokking">
 						<img alt="Previous" border="0" src="../../images/prev.gif"/>
 					</a>
 				</td>
 				<td style="width: 60%" align="center"></td>
 				<td style="width: 20%" align="right">
-					<a href="wiki/Testing.html" title="Testing">
+					<a href="Testing.html" title="Testing">
 						<img alt="Next" border="0" src="../../images/next.gif"/>
 					</a>
 				</td>
@@ -31,32 +31,32 @@
 		</table><hr/>
 		<h1 id="Coding">Coding</h1>
 		<p>Virgo has a strong emphasis on maintainable, or "clean", code. If you need a really good introduction to coding, we recommend "
-			<a href="wiki/http://cc2e.com/" target="doc_external">Code Complete</a>". If you are already a proficient programmer and want to write really clean code, read "
-			<a href="wiki/http://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882" target="doc_external">Clean Code</a>". If you are not an expert in writing Java, read "
-			<a href="wiki/http://java.sun.com/docs/books/effective/" target="doc_external">Effective Java</a>". 
+			<a href="http://cc2e.com/" target="doc_external">Code Complete</a>". If you are already a proficient programmer and want to write really clean code, read "
+			<a href="http://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882" target="doc_external">Clean Code</a>". If you are not an expert in writing Java, read "
+			<a href="http://java.sun.com/docs/books/effective/" target="doc_external">Effective Java</a>". 
 		</p>
 		<p>Virgo code is thread safe unless specifically stated. Achieving thread safety in Java is not easy. We recommend "
-			<a href="wiki/http://www.javaconcurrencyinpractice.com/" target="doc_external">Java Concurrency in Practice</a>" for a good grounding in Java concurrency.
+			<a href="http://www.javaconcurrencyinpractice.com/" target="doc_external">Java Concurrency in Practice</a>" for a good grounding in Java concurrency.
 		</p>
 		<p>Coding guidelines are 
-			<a href="wiki/http://wiki.eclipse.org/Virgo/Committers/Coding" title="Virgo/Committers/Coding" target="doc_external">here</a>.
+			<a href="http://wiki.eclipse.org/Virgo/Committers/Coding" title="Virgo/Committers/Coding" target="doc_external">here</a>.
 		</p>
 		<p>A Contextual Bash History can be very useful, guide 
-			<a href="wiki/http://wiki.eclipse.org/Virgo/Committers/Bash" title="Virgo/Committers/Bash" target="doc_external">here</a>.
+			<a href="http://wiki.eclipse.org/Virgo/Committers/Bash" title="Virgo/Committers/Bash" target="doc_external">here</a>.
 		</p>
 		<h2 id="Eclipse_Setup">Eclipse Setup</h2>
 		<ol>
 			<li>Install the Virgo IDE tooling into Eclipse as 
-				<a href="wiki/http://wiki.eclipse.org/Virgo/Tooling#Installation" target="doc_external">described</a> under the Tooling tab.
+				<a href="http://wiki.eclipse.org/Virgo/Tooling#Installation" target="doc_external">described</a> under the Tooling tab.
 			</li>
 			<li>Install 
-				<a href="wiki/http://www.eclipse.org/ajdt/" target="doc_external">AJDT</a> into Eclipse. This is necessary so that Virgo projects which use AspectJ are correctly woven when rebuilt under Eclipse.
+				<a href="http://www.eclipse.org/ajdt/" target="doc_external">AJDT</a> into Eclipse. This is necessary so that Virgo projects which use AspectJ are correctly woven when rebuilt under Eclipse.
 			</li>
 			<li>Install 
-				<a href="wiki/http://www.eclipse.org/egit/" target="doc_external">egit</a> into Eclipse. This step is recommended but not absolutely essential since it is possible to perform git operations on the command line or using some other git GUI tool.
+				<a href="http://www.eclipse.org/egit/" target="doc_external">egit</a> into Eclipse. This step is recommended but not absolutely essential since it is possible to perform git operations on the command line or using some other git GUI tool.
 			</li>
 			<li>Build the Virgo git repository you want to import into Eclipse as 
-				<a href="wiki/http://wiki.eclipse.org/Virgo/Build#Building_Individual_Repositories" target="doc_external">described</a> under the Build tab. Ensure you see BUILD SUCCESSFUL.
+				<a href="http://wiki.eclipse.org/Virgo/Build#Building_Individual_Repositories" target="doc_external">described</a> under the Build tab. Ensure you see BUILD SUCCESSFUL.
 			</li>
 			<li>Import the projects of the chosen git repository by using File-&gt;Import-&gt;Git-&gt;Projects from Git. Then click Next and add the git repository, select it, and click Next. Select the "Import existing projects" wizard and click Next. Check the projects you want to import (typically org.eclipse.virgo.xxx where xxx corresponds to the repository - other projects such as test bundle projects and any inside the build-xxx and virgo-build directories are unlikely to be of interest) and click Finish.</li>
 			<li>If you see lots of errors, you probably need to define a suitable classpath variable, e.g., KERNEL_IVY_CACHE, to point to the Ivy cache which has been built in the local copy of the git repository (actually to the ivy-cache/repository folder).</li>
@@ -65,17 +65,17 @@
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
 			<tr>
 				<td style="width: 20%" align="left">
-					<a href="wiki/Grokking.html" title="Grokking">
+					<a href="Grokking.html" title="Grokking">
 						<img alt="Previous" border="0" src="../../images/prev.gif"/>
 					</a>
 				</td>
 				<td style="width: 60%" align="center">
-					<a href="wiki/Committers.html" title="Committers">
+					<a href="Committers.html" title="Committers">
 						<img alt="Committers" border="0" src="../../images/home.gif"/>
 					</a>
 				</td>
 				<td style="width: 20%" align="right">
-					<a href="wiki/Testing.html" title="Testing">
+					<a href="Testing.html" title="Testing">
 						<img alt="Next" border="0" src="../../images/next.gif"/>
 					</a>
 				</td>

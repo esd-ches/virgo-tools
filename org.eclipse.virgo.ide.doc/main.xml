@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toc label="Virgo Guides">
+<topic label="User Guide" > 
+   <link toc="user/toc.xml"/>
+   </topic>
+<topic label="Programmer Guide" > 
+   <link toc="programmer/toc.xml"/>
+   </topic>
+<topic label="Tooling Guide" > 
+   <link toc="tooling/toc.xml"/>
+   </topic>
+<topic label="Greenpages Example Guide" > 
+   <link toc="greenpages/toc.xml"/>
+   </topic>
+<topic label="Wiki" > 
+   <link toc="wiki/toc.xml"/>
+   </topic>
+</toc>

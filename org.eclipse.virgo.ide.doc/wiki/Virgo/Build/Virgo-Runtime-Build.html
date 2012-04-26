@@ -3,7 +3,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<title>Build - Virgo Runtime Build</title>
-		<link type="text/css" rel="stylesheet" href="wiki/../../book.css"/>
+		<link type="text/css" rel="stylesheet" href="../../book.css"/>
 	</head>
 	<body>
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
@@ -12,13 +12,13 @@
 			</tr>
 			<tr>
 				<td style="width: 20%" align="left">
-					<a href="wiki/Build.html" title="Build">
+					<a href="Build.html" title="Build">
 						<img alt="Previous" border="0" src="../../images/prev.gif"/>
 					</a>
 				</td>
 				<td style="width: 60%" align="center"></td>
 				<td style="width: 20%" align="right">
-					<a href="wiki/Virgo-Tooling-Builds.html" title="Virgo Tooling Builds">
+					<a href="Virgo-Tooling-Builds.html" title="Virgo Tooling Builds">
 						<img alt="Next" border="0" src="../../images/next.gif"/>
 					</a>
 				</td>
@@ -37,20 +37,20 @@
 			<b>Java 6 or later</b>, and 
 			<b>ant 1.8.2 or later</b> installed. 
 		</p>
-		<p>To use any of the Ruby scripts (e.g. <code>update_dependencies.rb</code> or <code>ripplor.rb</code>) then you must install 
+		<p>To use any of the Ruby scripts (e.g. &lt;code&gt;update_dependencies.rb&lt;/code&gt; or &lt;code&gt;ripplor.rb&lt;/code&gt;) then you must install 
 			<i>Ruby</i>, 
 			<i>RubyGems</i> and 
 			<i>Rubygem choice</i>: 
 		</p>
 		<ol>
 			<li>To install 
-				<i>Ruby</i> use the command <code>sudo port install ruby</code> (on Mac); 
+				<i>Ruby</i> use the command &lt;code&gt;sudo port install ruby&lt;/code&gt; (on Mac); 
 			</li>
 			<li>To install 
-				<i>RubyGems</i> use the command <code>sudo port install rb-rubygems</code> (on Mac); 
+				<i>RubyGems</i> use the command &lt;code&gt;sudo port install rb-rubygems&lt;/code&gt; (on Mac); 
 			</li>
 			<li>To install 
-				<i>Rubygem choice</i> use the command <code>sudo gem install choice</code> (on Mac).
+				<i>Rubygem choice</i> use the command &lt;code&gt;sudo gem install choice&lt;/code&gt; (on Mac).
 			</li>
 		</ol>
 		<h2 id="Building_Virgo_Build">Building Virgo Build</h2>
@@ -149,35 +149,33 @@ git push origin
 		<pre>git submodule update --init
 </pre>
 		<p> 
-			then change directory into the <code>
-			<b>build-xxx</b></code> directory and invoke ant with the appropriate targets, usually: 
+			then change directory into the &lt;code&gt;'
+			<i>build-xxx</i>'&lt;/code&gt; directory and invoke ant with the appropriate targets, usually: 
 		</p>
 		<pre>ant clean clean-integration test
 </pre>
 		<p> 
-			This will do a fresh build and run all the unit and integration tests. It will only report "Build successful" if everything compiles cleanly and all the tests pass. The directory <code>
-			<b>build-xxx/target/test-results</b></code> contains the test results in html and xml formats. You will find the built bundles in the <code>
-			<b>target/artifact</b></code> directory of each individual project. 
+			This will do a fresh build and run all the unit and integration tests. It will only report "Build successful" if everything compiles cleanly and all the tests pass. The directory &lt;code&gt;'
+			<i>build-xxx/target/test-results</i>'&lt;/code&gt; contains the test results in html and xml formats. You will find the built bundles in the &lt;code&gt;'
+			<i>target/artifact</i>'&lt;/code&gt; directory of each individual project. 
 		</p>
 		<h3 id="Running_all_tests">Running all tests</h3>
-		<p>Sometimes it is useful to run all the tests even if some fail. You can do this by specifying the property <code>
-			<i>'-Dci.build=true</i>'</code> on the ant command, for example: 
-		</p>
+		<p>Sometimes it is useful to run all the tests even if some fail. You can do this by specifying the property &lt;code&gt;'''-Dci.build=true'''&lt;/code&gt; on the ant command, for example: </p>
 		<pre>ant -Dci.build=true clean clean-integration test
 </pre>
 		<p> 
 			This will report "Build successful" regardless of test success or failure and you will need to look at the test results to see which tests failed. </p>
 		<h3 id="Common_targets">Common targets</h3>
-		<p><code>
-			<b>ant -p</b></code> displays commonly used targets. Use <code>
-			<b>ant clean-ivy</b></code> to delete the ivy cache (or use <code>
-			<b>git clean -dfx</b></code> to get everything back to a reset state, including ditching any changes you haven't committed). 
+		<p>&lt;code&gt;'
+			<i>ant -p</i>'&lt;/code&gt; displays commonly used targets. Use &lt;code&gt;'
+			<i>ant clean-ivy</i>'&lt;/code&gt; to delete the ivy cache (or use &lt;code&gt;'
+			<i>git clean -dfx</i>'&lt;/code&gt; to get everything back to a reset state, including ditching any changes you haven't committed). 
 		</p>
-		<p>If you simply want to compile the runtime code, you can use <code>
-			<b>ant clean clean-integration jar</b></code> but that will not compile (or run) the tests. 
+		<p>If you simply want to compile the runtime code, you can use &lt;code&gt;'
+			<i>ant clean clean-integration jar</i>'&lt;/code&gt; but that will not compile (or run) the tests. 
 		</p>
-		<p><code>
-			<b>ant precommit</b></code> performs more extensive checks including code coverage and "findbugs". (You will need a licence for 
+		<p>&lt;code&gt;'
+			<i>ant precommit</i>'&lt;/code&gt; performs more extensive checks including code coverage and "findbugs". (You will need a licence for 
 			<i>Clover</i> to perform test coverage analysis.) 
 		</p>
 		<h3 id="Exceptions_to_the_above">Exceptions to the above</h3>
@@ -187,8 +185,8 @@ git push origin
 </pre>
 		<p> </p>
 		<h4 id="Stand-alone_Runtime">Stand-alone Runtime</h4>
-		<p>You can also use the <code>
-			<b>package</b></code> target in the nano and kernel repositories to build a standalone runtime: 
+		<p>You can also use the &lt;code&gt;'
+			<i>package</i>'&lt;/code&gt; target in the nano and kernel repositories to build a standalone runtime: 
 		</p>
 		<pre>ant clean clean-integration test package
 </pre>
@@ -198,21 +196,21 @@ git push origin
 		<pre>ant doc
 </pre>
 		<p>See also 
-			<a href="wiki/Virgo-Tooling-Builds.html#Virgo_Tooling_Builds">Virgo Tooling Builds</a>.
+			<a href="Virgo-Tooling-Builds.html#Virgo_Tooling_Builds">Virgo Tooling Builds</a>.
 		</p>
 		<h4 id="Samples">Samples</h4>
 		<p>Samples just need packaging (some of them, such as Greenpages, produce a package that requires the user to build them using Maven):</p>
 		<pre>ant clean clean-integration package
 </pre>
 		<h3 id="Publishing_Development_Builds">Publishing Development Builds</h3>
-		<p>If you want to publish development build you may use the <code>
-			<b>publish-ivy</b></code> target (except for nano -  see below): 
+		<p>If you want to publish development build you may use the &lt;code&gt;'
+			<i>publish-ivy</i>'&lt;/code&gt; target (except for nano -  see below): 
 		</p>
 		<pre>ant clean clean-integration test package publish-ivy -Declipse.committerId=&amp;lt;committer id&amp;gt;
 </pre>
 		<p> 
 			To use this build you need to 
-			<a href="wiki/Virgo-Runtime-Build.html#Updating_Dependencies">update the dependencies</a> of the referring project(s) with the new version you just published.
+			<a href="Virgo-Runtime-Build.html#Updating_Dependencies">update the dependencies</a> of the referring project(s) with the new version you just published.
 		</p>
 		<p>If you want to publish a development build of nano, use:</p>
 		<pre>ant clean clean-integration test package publish-ivy publish-updatesite-build -Declipse.committerId=&amp;lt;committer id&amp;gt;
@@ -226,15 +224,15 @@ git push origin
 &amp;gt;ant clean clean-integration test
 </pre>
 		<p> 
-			After this has completed successfully, the project <code>
-			<b>org.eclipse.virgo.teststubs.osgi</b></code> contains the built binary and source jars in its <code>
-			<b>target/artifacts</b></code> directory. 
+			After this has completed successfully, the project &lt;code&gt;'
+			<i>org.eclipse.virgo.teststubs.osgi</i>'&lt;/code&gt; contains the built binary and source jars in its &lt;code&gt;'
+			<i>target/artifacts</i>'&lt;/code&gt; directory. 
 		</p>
 		<h2 id="Configuring_p2_Publishing_for_Individual_Repositories">Configuring p2 Publishing for Individual Repositories</h2>
 		<p>Since version 2.15 Virgo Build has the capability to assemble build-tools that other repositories can use. So far these tools include only various p2 Eclipse applications. </p>
 		<p>
 			<b>To understand more about the virgo-build synergy with p2 and how we organized our products and packaging repositories look 
-				<a href="wiki/http://wiki.eclipse.org/Virgo/Committers/Process_Advice#Understanding_virgo-build.27s_synergy_with_p2" target="doc_external">here</a>.
+				<a href="http://wiki.eclipse.org/Virgo/Committers/Process_Advice#Understanding_virgo-build.27s_synergy_with_p2" target="doc_external">here</a>.
 			</b>
 		</p>
 		<p>In order to consume these tools there is a prerequisite. You have to include two references in the project's 
@@ -286,13 +284,13 @@ org.eclipse.equinox.launcher=1.3.0.v20111003-1644
   &amp;lt;param name="source" value="${resources.location}"/&amp;gt;
 &amp;lt;/antcall&amp;gt;
 </pre>
-		<p> <pre>@Since 2.15
+		<p> &lt;pre&gt;@Since 2.15
 &lt;			antcall target="p2.publish-binary-chmod"&gt;</p>
 		<pre> &amp;lt;param name="repository" value="${repository.dir}"/&amp;gt;
  &amp;lt;param name="source" value="${resources.location}"/&amp;gt;
  &amp;lt;param name="chmod.args" value="exampleFile.sh@/exampleLocation#755"/&amp;gt;
 </pre>
-		<p>&lt;/antcall&gt;</pre> 
+		<p>&lt;/antcall&gt;&lt;/pre&gt; 
 
 			<i>chmod.args</i> accepts values with 
 			<i>file@location#permission</i> syntax. Where 
@@ -307,66 +305,66 @@ org.eclipse.equinox.launcher=1.3.0.v20111003-1644
   &amp;lt;param name="source" value="${target.dir}/assembly"/&amp;gt;
 &amp;lt;/antcall&amp;gt;
 </pre>
-		<p> <pre>@Since 2.16
+		<p> &lt;pre&gt;@Since 2.16
 &lt;			antcall target="p2.publish-bundles-features-alt"&gt;</p>
 		<pre> &amp;lt;param name="repository" value="${repository.dir}"/&amp;gt;
  &amp;lt;param name="bundles" value="${bundles.dir}"/&amp;gt;
  &amp;lt;param name="features" value="${features.dir}"/&amp;gt;
 </pre>
-		<p>&lt;/antcall&gt;</pre> <pre>@Since 2.15
+		<p>&lt;/antcall&gt;&lt;/pre&gt; &lt;pre&gt;@Since 2.15
 &lt;			antcall target="p2.publish-product"&gt;</p>
 		<pre> &amp;lt;param name="repository" value="${repository.dir}"/&amp;gt;
  &amp;lt;param name="product.file.location" value="${p2.products.location}/example.product"/&amp;gt;
 </pre>
-		<p>&lt;/antcall&gt;</pre> <pre>@Since 2.15
+		<p>&lt;/antcall&gt;&lt;/pre&gt; &lt;pre&gt;@Since 2.15
 &lt;			antcall target="p2.publish-category"&gt;</p>
 		<pre> &amp;lt;param name="repository" value="${repository.dir}"/&amp;gt;
  &amp;lt;param name="category.file.location" value="${p2.category.dir}/category.xml"/&amp;gt;
 </pre>
-		<p>&lt;/antcall&gt;</pre> <pre>@Since 2.15
+		<p>&lt;/antcall&gt;&lt;/pre&gt; &lt;pre&gt;@Since 2.15
 &lt;			antcall target="p2.install-virgo-product"&gt;</p>
 		<pre> &amp;lt;param name="repository" value="${repository.dir}"/&amp;gt;
  &amp;lt;param name="destination" value="${package.output.dir}"/&amp;gt;
  &amp;lt;param name="product.iu" value="example.product"/&amp;gt;
 </pre>
-		<p>&lt;/antcall&gt;</pre> <pre>@Since 2.15
+		<p>&lt;/antcall&gt;&lt;/pre&gt; &lt;pre&gt;@Since 2.15
 &lt;			antcall target="p2.uninstall-iu"&gt;</p>
 		<pre> &amp;lt;param name="repository" value="${repository.dir}"/&amp;gt;
  &amp;lt;param name="destination" value="${destination.dir}"/&amp;gt;
  &amp;lt;param name="iu" value="exampleIU"/&amp;gt;
 </pre>
-		<p>&lt;/antcall&gt;</pre> <pre>@Since 2.15
+		<p>&lt;/antcall&gt;&lt;/pre&gt; &lt;pre&gt;@Since 2.15
 &lt;			antcall target="p2.install-iu"&gt;</p>
 		<pre> &amp;lt;param name="repository" value="${repository.dir}"/&amp;gt;
  &amp;lt;param name="destination" value="${destination.dir}"/&amp;gt;
  &amp;lt;param name="iu" value="exampleIU"/&amp;gt;
 </pre>
-		<p>&lt;/antcall&gt;</pre> 
+		<p>&lt;/antcall&gt;&lt;/pre&gt; 
 			A real-world example is the 
 			<i>build.xml</i> of the Nano repository found 
-			<a href="wiki/http://git.eclipse.org/c/virgo/org.eclipse.virgo.nano.git/tree/build-nano/build.xml#n15" target="doc_external">here</a>.
+			<a href="http://git.eclipse.org/c/virgo/org.eclipse.virgo.nano.git/tree/build-nano/build.xml#n15" target="doc_external">here</a>.
 		</p>
 		<h2 id="Updating_Dependencies">Updating Dependencies</h2>
-		<p>In general, dependencies are declared in files named <code>
-			<b>ivy.xml</b></code>. 
+		<p>In general, dependencies are declared in files named &lt;code&gt;'
+			<i>ivy.xml</i>'&lt;/code&gt;. 
 		</p>
-		<p>Dependencies between Virgo components are a special case of this. The properties file <code lang="text">
-			<b>build.versions</b></code> in the root directory of each git repository defines the versions of the Virgo components that the build will download. Updating any of the versions in <code lang="text">
-			<b>build.versions</b></code> is error-prone as the same values occur in certain other files (which cannot use property substitution). To update a version in <code lang="text">
-			<b>build.versions</b></code>, run the "update dependency" ruby script in the root folder of the git repository, for example: 
+		<p>Dependencies between Virgo components are a special case of this. The properties file &lt;code lang="text"&gt;'
+			<i>build.versions</i>'&lt;/code&gt; in the root directory of each git repository defines the versions of the Virgo components that the build will download. Updating any of the versions in &lt;code lang="text"&gt;'
+			<i>build.versions</i>'&lt;/code&gt; is error-prone as the same values occur in certain other files (which cannot use property substitution). To update a version in &lt;code lang="text"&gt;'
+			<i>build.versions</i>'&lt;/code&gt;, run the "update dependency" ruby script in the root folder of the git repository, for example: 
 		</p>
 		<pre>~/virgo/web-server/scripts/update-dependency.rb -v &amp;lt;variable&amp;gt; -n &amp;lt;new version&amp;gt;&amp;nbsp;
 </pre>
 		<p> 
-			where <code>
-			<b>&lt;variable&gt;</b></code> is the relevant property name in build.versions and <code>
-			<b>&lt;new version&gt;</b></code> is the replacement version. The script will report the changes it makes and may issue warnings, so pay attention to its output. 
+			where &lt;code&gt;'
+			<i>&lt;variable&gt;</i>'&lt;/code&gt; is the relevant property name in build.versions and &lt;code&gt;'
+			<i>&lt;new version&gt;</i>'&lt;/code&gt; is the replacement version. The script will report the changes it makes and may issue warnings, so pay attention to its output. 
 		</p>
-		<p>Please ensure you are running the latest version of <code>update-dependency</code> script by updating <code>web-server</code> git repository. </p>
+		<p>Please ensure you are running the latest version of &lt;code&gt;update-dependency&lt;/code&gt; script by updating &lt;code&gt;web-server&lt;/code&gt; git repository. </p>
 		<h2 id="Rippling">Rippling</h2>
 		<p>Since the Virgo components form a directed, acyclic graph, changing the graph to use a new version of a specific component involves not only updating that version throughout the graph, but also updating the versions of the components which have been changed. This is the tedious process known as 
-			<i>rippling</i> and so the <code>
-			<b>ripplor</b></code> ruby script was written to automate it. Essentially, Ripplor handles the most commonly updated components and flattens the dependency graph into a linear sequence. The sequence is (at the time of writing): 
+			<i>rippling</i> and so the &lt;code&gt;'
+			<i>ripplor</i>'&lt;/code&gt; ruby script was written to automate it. Essentially, Ripplor handles the most commonly updated components and flattens the dependency graph into a linear sequence. The sequence is (at the time of writing): 
 		</p>
 		<pre>osgi-test-stubs
 osgi-extensions
@@ -391,11 +389,11 @@ jetty-server
 			This would build and publish a new version of the kernel, update the dependency of the web layer on the newly built kernel, build and publish a new version of the web layer, update the dependency of the Virgo-supplied applications on the newly built web layer and kernel, and so on until it builds and publishes a new version of the packaged web-server. This is called 
 			<i>a ripple from kernel</i>. 
 		</p>
-		<p>Ripplor (after 13May2010) allows a ripple to be executed across a list of repositories some in <code>git.eclipse.org</code> and some in <code>git.springsource.org</code>, though all of them are in <code>git.eclipse.org</code> at the time of writing. </p>
-		<p>The definitive list of repositories and the order of a ripple is stored in the <code>ripplor.rb</code> ruby script 
-			<a href="wiki/http://wiki.eclipse.org/Ripplor_Repository_List" title="Ripplor Repository List" target="doc_external">source</a>. 
+		<p>Ripplor (after 13May2010) allows a ripple to be executed across a list of repositories some in &lt;code&gt;git.eclipse.org&lt;/code&gt; and some in &lt;code&gt;git.springsource.org&lt;/code&gt;, though all of them are in &lt;code&gt;git.eclipse.org&lt;/code&gt; at the time of writing. </p>
+		<p>The definitive list of repositories and the order of a ripple is stored in the &lt;code&gt;ripplor.rb&lt;/code&gt; ruby script 
+			<a href="http://wiki.eclipse.org/Ripplor_Repository_List" title="Ripplor Repository List" target="doc_external">source</a>. 
 		</p>
-		<p>Please ensure you are running the latest version of <code>ripplor</code> script by updating <code>web-server</code> git repository. </p>
+		<p>Please ensure you are running the latest version of &lt;code&gt;ripplor&lt;/code&gt; script by updating &lt;code&gt;web-server&lt;/code&gt; git repository. </p>
 		<h3 id="When_should_Ripplor_be_used.3F">When should Ripplor be used?</h3>
 		<p>In general, Ripplor is used any time a change needs to be propagated up the graph of dependent repositories. There are two main cases that cause this to happen. </p>
 		<ol>
@@ -457,14 +455,14 @@ Optional arguments:
 			&lt;/source&gt; 
 			<b>
 				<i>Tip:</i>
-			</b> In the repository map file, <code>~</code> will be expanded to the current user’s home directory. 
+			</b> In the repository map file, &lt;code&gt;~&lt;/code&gt; will be expanded to the current user’s home directory. 
 		</p>
 		<h3 id="Broken_Build">Broken Build</h3>
 		<p>Ripplor 
 			<i>was</i> smart enough to restart a failed ripple. 
 		</p>
 		<p>
-			<a href="wiki/If">a ripple fails (due to test or compile failure), simply fix any problems in the working copy that Ripplor is using and restart the ripple at the same location you originally used. Ripplor will bring in any new commits since you last started the ripple and continue up the stack as done previously. This behaviour is very useful if you are rippling a breaking API change and need to fix code as the ripple moves upwards.</a> 
+			<a href="If">a ripple fails (due to test or compile failure), simply fix any problems in the working copy that Ripplor is using and restart the ripple at the same location you originally used. Ripplor will bring in any new commits since you last started the ripple and continue up the stack as done previously. This behaviour is very useful if you are rippling a breaking API change and need to fix code as the ripple moves upwards.</a> 
 		</p>
 		<p>Unfortunately this behaviour is broken, since the version updates (accumulated during the ripple and propagated up) are not correctly restored. Also, when committing the changes (to all the repositories) at the end, after a failure in the middle, not all of the rippled repositories will be committed at the end. </p>
 		<h3 id="Re-Building">Re-Building</h3>
@@ -529,9 +527,9 @@ Optional arguments:
    git push origin
    git push --tags
 </pre>
-		<p><span style="color:#ff0000">Once this is done the usual steps to 
-			<b>make the release available on download servers</b> and to make announcements should be followed. For Eclipse, a committer with a full shell should sftp in to download1.eclipse.org and beam the file up.</span> More information available 
-			<a href="wiki/http://wiki.eclipse.org/IT_Infrastructure_Doc#Put_files_on_the_download_server.3F" target="doc_external">here</a>. 
+		<p>&lt;span style="color:#ff0000"&gt;Once this is done the usual steps to 
+			<b>make the release available on download servers</b> and to make announcements should be followed. For Eclipse, a committer with a full shell should sftp in to download1.eclipse.org and beam the file up.&lt;/span&gt; More information available 
+			<a href="http://wiki.eclipse.org/IT_Infrastructure_Doc#Put_files_on_the_download_server.3F" target="doc_external">here</a>. 
 		</p>
 		<h2 id="Releasing_a_Multi_Repository_Project">Releasing a Multi Repository Project</h2>
 		<p>This is for any release of the full Virgo Server. It makes use of the Releasolor ruby script. This is very similar to Ripplor but it also performs the steps above for a single repository to all the repositories it visits. Only committers can produce releases. </p>
@@ -596,23 +594,23 @@ Required arguments:
 		<p>In addition, the abstract integration test in the web.test project and AdminConsoleAppTests in the system-verification-tests repository (still to be contributed at the time of writing) also need to be updated to use the new version for the tests to pass. Ideally the script that does version updating should cover this but in doing so it would no longer be generic. Ideas welcome.
 			}}|image=Note.png|bgcolor=#def3fe|bdcolor=#c5d7e0}} </p>
 		<p>
-			<a href="wiki/http://wiki.eclipse.org/Category:Virgo" title="Category:Virgo" target="doc_external">Category:Virgo</a> 
-			<a href="wiki/http://wiki.eclipse.org/Category:EclipseRT" title="Category:EclipseRT" target="doc_external">Category:EclipseRT</a>
+			<a href="http://wiki.eclipse.org/Category:Virgo" title="Category:Virgo" target="doc_external">Category:Virgo</a> 
+			<a href="http://wiki.eclipse.org/Category:EclipseRT" title="Category:EclipseRT" target="doc_external">Category:EclipseRT</a>
 		</p><hr/>
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
 			<tr>
 				<td style="width: 20%" align="left">
-					<a href="wiki/Build.html" title="Build">
+					<a href="Build.html" title="Build">
 						<img alt="Previous" border="0" src="../../images/prev.gif"/>
 					</a>
 				</td>
 				<td style="width: 60%" align="center">
-					<a href="wiki/Build.html" title="Build">
+					<a href="Build.html" title="Build">
 						<img alt="Build" border="0" src="../../images/home.gif"/>
 					</a>
 				</td>
 				<td style="width: 20%" align="right">
-					<a href="wiki/Virgo-Tooling-Builds.html" title="Virgo Tooling Builds">
+					<a href="Virgo-Tooling-Builds.html" title="Virgo Tooling Builds">
 						<img alt="Next" border="0" src="../../images/next.gif"/>
 					</a>
 				</td>

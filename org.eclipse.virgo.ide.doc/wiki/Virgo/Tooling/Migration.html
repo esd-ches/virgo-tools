@@ -3,7 +3,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<title>Tooling - Migration</title>
-		<link type="text/css" rel="stylesheet" href="wiki/../../book.css"/>
+		<link type="text/css" rel="stylesheet" href="../../book.css"/>
 	</head>
 	<body>
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
@@ -12,13 +12,13 @@
 			</tr>
 			<tr>
 				<td style="width: 20%" align="left">
-					<a href="wiki/Notes.html" title="Notes">
+					<a href="Notes.html" title="Notes">
 						<img alt="Previous" border="0" src="../../images/prev.gif"/>
 					</a>
 				</td>
 				<td style="width: 60%" align="center"></td>
 				<td style="width: 20%" align="right">
-					<a href="wiki/Maven-plugin.html" title="Maven plugin">
+					<a href="Maven-plugin.html" title="Maven plugin">
 						<img alt="Next" border="0" src="../../images/next.gif"/>
 					</a>
 				</td>
@@ -30,10 +30,10 @@
 			</tr>
 		</table><hr/>
 		<h1 id="Migration">Migration</h1>
-		<h2 id="Fron_Pre_M2_to_M3">Fron Pre M2 to M3</h2>
+		<h2 id="From_Pre_M2_to_M3">From Pre M2 to M3</h2>
 		<h3 id="Server_Versions">Server Versions</h3>
 		<p>The good news: We have done away with the need for managing multiple server versions. This also means that we won't have to support multiple WebTools Server Runtimes and Servers which will make adding new servers and variants much easier. See 
-			<a href="wiki/https://bugs.eclipse.org/bugs/show_bug.cgi?id=373453" target="doc_external">https://bugs.eclipse.org/bugs/show_bug.cgi?id=373453</a> for more details.
+			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=373453" target="doc_external">https://bugs.eclipse.org/bugs/show_bug.cgi?id=373453</a> for more details.
 		</p>
 		<p>The bad news: Any Server Runtimes that you already created for Virgo Server 3.5 will not work. But since Virgo Tooling didn't work with Virgo Server 3.5 *anyway*, this is sort of a moot issue.</p>
 		<p>What to do: If you have an existing (i.e., created using Virgo IDE installed before 10 March 2012) Virgo Server 3.5 Runtime defined, just delete it and replace it with a new Virgo Runtime in 
@@ -71,10 +71,10 @@
 		<p>
 			<b>Snapshot build change:</b> We've made a change in our tooling that will require modifying the org.eclipse.virgo.ide.runtime.core.par.xml file so that it points to the correct par.ecore URI. Rename 
 			<i>xmlns:com.springsource.server.ide.par="
-				<a href="wiki/http:///com/springsource/server/ide/par.ecore" target="doc_external">http:///com/springsource/server/ide/par.ecore</a>"
+				<a href="http:///com/springsource/server/ide/par.ecore" target="doc_external">http:///com/springsource/server/ide/par.ecore</a>"
 			</i> to 
 			<i>"xmlns:org.eclipse.virgo.ide.par="
-				<a href="wiki/http://eclipse.org/virgo/par.ecore" target="doc_external">http://eclipse.org/virgo/par.ecore</a>"
+				<a href="http://eclipse.org/virgo/par.ecore" target="doc_external">http://eclipse.org/virgo/par.ecore</a>"
 			</i>
 		</p>
 		<p>Inside the WST settings file (
@@ -143,17 +143,17 @@ f="$1/.settings/org.eclipse.wst.common.project.facet.core.xml"
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
 			<tr>
 				<td style="width: 20%" align="left">
-					<a href="wiki/Notes.html" title="Notes">
+					<a href="Notes.html" title="Notes">
 						<img alt="Previous" border="0" src="../../images/prev.gif"/>
 					</a>
 				</td>
 				<td style="width: 60%" align="center">
-					<a href="wiki/Tooling.html" title="Tooling">
+					<a href="Tooling.html" title="Tooling">
 						<img alt="Tooling" border="0" src="../../images/home.gif"/>
 					</a>
 				</td>
 				<td style="width: 20%" align="right">
-					<a href="wiki/Maven-plugin.html" title="Maven plugin">
+					<a href="Maven-plugin.html" title="Maven plugin">
 						<img alt="Next" border="0" src="../../images/next.gif"/>
 					</a>
 				</td>

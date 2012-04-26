@@ -1,21 +1,62 @@
 <plugin>
 <extension point="org.eclipse.help.toc">
       <toc
-            file="wiki/toc.xml"
+            category="virgo"
+            file="main.xml"
             primary="true">
       </toc>
 <toc
       category="virgo"
-      file="tooling/toc.xml"
-      primary="true"></toc>
-<toc
-      category="virgo"
       file="user/toc.xml"
-      primary="true"></toc>
+      primary="false"></toc>
       <toc
       category="virgo"
       file="programmer/toc.xml"
-      primary="true"></toc>
+      primary="false"></toc>
+      <toc
+      category="virgo"
+      file="tooling/toc.xml"
+      primary="false"></toc>
+      <toc
+      category="virgo"
+      file="greenpages/toc.xml"
+      primary="false"></toc>
+      <toc
+      category="virgo"
+      file="wiki/Virgo-Build-toc.xml"
+      primary="false"></toc>
+      <toc
+      category="virgo"
+      file="wiki/Virgo-Committers-toc.xml"
+      primary="false"></toc>
+      <toc
+      category="virgo"
+      file="wiki/Virgo-Community-toc.xml"
+      primary="false"></toc>
+      <toc
+      category="virgo"
+      file="wiki/Virgo-Concepts-toc.xml"
+      primary="false"></toc>
+      <toc
+      category="virgo"
+      file="wiki/Virgo-FAQ-toc.xml"
+      primary="false"></toc>
+      <toc
+      category="virgo"
+      file="wiki/Virgo-Future-toc.xml"
+      primary="false"></toc>
+      <toc
+      category="virgo"
+      file="wiki/Virgo-Source-toc.xml"
+      primary="false"></toc>
+      <toc
+      category="virgo"
+      file="wiki/Virgo-Test-toc.xml"
+      primary="false"></toc>
+      <toc
+      category="virgo"
+      file="wiki/toc.xml"
+      primary="false"></toc>
 </extension>
 <extension point="org.eclipse.help.index">
 <index file="tooling/index.xml"></index>

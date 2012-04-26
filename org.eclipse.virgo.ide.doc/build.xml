@@ -9,10 +9,11 @@
 
 
 <project name="build-eclipse-documentation" default="build-all-books" basedir=".">
-	
+
 	<property name="bundle.version" value="1.0.0" />
 	<!--Assumes that documentation git repos is parallel to virgo.ide location. This will break on Hudson! We should replace with ant git.-->
 	<property name="virgo.docs.dir" value="../../org.eclipse.virgo.documentation" />
+	<property name="greenpages.docs.dir" value="../../org.eclipse.virgo.sample-greenpages/guide" />
 	<property name="wiki.docs.dir" value="${virgo.docs.dir}/wiki-guide" />
 
 	<property name="book" value="tooling" />
@@ -37,12 +38,7 @@
 
 	<property name="download.dir" value="${java.io.tmpdir}${file.separator}downloads" />
 	<echo>Files downloaded to: ${java.io.tmpdir}${file.separator}downloads</echo>
-
-	<filterset id="docbook.filters">
-		<filtersfile file="${basedir}/plugin.properties" />
-		<filtersfile file="${virgo.docs.dir}/programmer-guide/filters.properties" />
-	</filterset>
-
+	
 	<!--
 		DocBook Toolchain
 	-->
@@ -65,7 +61,7 @@
 			</exec>
 		</sequential>
 	</macrodef>
-	
+
 	<target name="init">
 		<mkdir dir="${download.dir}" />
 	</target>
@@ -111,13 +107,11 @@
 
 	<target name="clean-temp">
 		<echo>Deleting: ${temp.dir}</echo>
-		<delete dir="${temp.dir}" />
 		<mkdir dir="${temp.dir}" />
 	</target>
 
 	<target name="clean-book">
 		<echo>Deleting: ${basedir}/${book}</echo>
-		<delete dir="${basedir}/${book}" />
 		<mkdir dir="${basedir}/${book}" />
 	</target>
 
@@ -129,7 +123,8 @@
 				<include name="**/*.xml" />
 			</fileset>
 			<filterset>
-				<filterset refid="docbook.filters" />
+				<filtersfile file="${basedir}/plugin.properties" />
+				<filtersfile file="${virgo.docs.dir}/${book}-guide/filters.properties" />
 			</filterset>
 		</copy>
 		<echo>Copying images from: ${virgo.docs.dir}/${book}-guide to "${basedir}/${book}/images</echo>
@@ -163,30 +158,57 @@
 		<replace file="${basedir}/${book}/toc.xml" token="href=&quot;" value="href=&quot;${book}/" />
 		<replace file="${basedir}/${book}/toc.xml" token="topic=&quot;" value="topic=&quot;${book}/" />
 	</target>
-	
-	<fileset id="virgo.files" dir="${wiki.docs.dir}" erroronmissingdir="true">
+
+	<fileset id="virgo.wiki.files" dir="${wiki.docs.dir}" erroronmissingdir="true">
+		<include name="images/*.gif" />
 		<include name="*toc.xml" />
 		<include name="Virgo/**/**" />
 	</fileset>
-	
+
 	<fileset id="virgo.target.files" dir="${basedir}/wiki" erroronmissingdir="true">
 		<include name="*toc.xml" />
 		<include name="Virgo/**/**" />
 	</fileset>
 
-	<target name="build-all-books" depends="clean-temp">
-		<copy todir="wiki">
-			<fileset refid="virgo.files"/>
+	<target name="build-greenpages" depends="clean-temp">
+		<copy todir="${virgo.docs.dir}/greenpages-guide">
+			<fileset dir="${greenpages.docs.dir}" erroronmissingdir="true">
+				<include name="**" />
+			</fileset>
 		</copy>
-		<replace token="href=&quot;" value="href=&quot;wiki/">
-			<fileset refid="virgo.target.files"/>
+		<move file="${virgo.docs.dir}/greenpages-guide/src/greenpages-guide.xml" tofile="${virgo.docs.dir}/greenpages-guide/src/virgo-greenpages-guide.xml" />
+		<antcall target="build-book">
+			<param name="book" value="greenpages" />
+		</antcall>
+		<replace token="A Guide to the GreenPages Sample" value="Virgo Greenpages Guide">
+			<fileset refid="virgo.target.files" />
 		</replace>
-		<replace token="toc=&quot;" value="toc=&quot;wiki/">
-			<fileset refid="virgo.target.files"/>
-		</replace>
-		<replace token="topic=&quot;" value="topic=&quot;wiki/">
-			<fileset refid="virgo.target.files"/>
-		</replace>
+		<delete dir="${virgo.docs.dir}/greenpages-guide" />
+	</target>
+
+	<target name="build-tooling-docs" depends="clean-temp">
+		<antcall target="build-book">
+			<param name="book" value="tooling" />
+		</antcall>
+	</target>
+
+	<target name="build-runtime-docs" depends="clean-temp">
+		<antcall target="build-book">
+			<param name="book" value="user" />
+		</antcall>
+		<antcall target="build-book">
+			<param name="book" value="programmer" />
+		</antcall>
+	</target>
+
+	<target name="build-wiki" depends="clean-temp">
+		<delete dir="wiki/Virgo" />
+		<copy todir="wiki">
+			<fileset refid="virgo.wiki.files" />
+		</copy>
+	</target>
+
+	<target name="build-all-books" depends="build-tooling-docs, build-runtime-docs, build-greenpages, build-wiki">
 		<delete dir="${temp.dir}" />
 	</target>
 </project>

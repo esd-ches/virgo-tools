@@ -3,7 +3,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<title>Build - Virgo Tooling Builds</title>
-		<link type="text/css" rel="stylesheet" href="wiki/../../book.css"/>
+		<link type="text/css" rel="stylesheet" href="../../book.css"/>
 	</head>
 	<body>
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
@@ -12,13 +12,13 @@
 			</tr>
 			<tr>
 				<td style="width: 20%" align="left">
-					<a href="wiki/Virgo-Runtime-Build.html" title="Virgo Runtime Build">
+					<a href="Virgo-Runtime-Build.html" title="Virgo Runtime Build">
 						<img alt="Previous" border="0" src="../../images/prev.gif"/>
 					</a>
 				</td>
 				<td style="width: 60%" align="center"></td>
 				<td style="width: 20%" align="right">
-					<a href="wiki/Updating-This-Document.html" title="Updating This Document">
+					<a href="Updating-This-Document.html" title="Updating This Document">
 						<img alt="Next" border="0" src="../../images/next.gif"/>
 					</a>
 				</td>
@@ -32,18 +32,18 @@
 		<h1 id="Virgo_Tooling_Builds">Virgo Tooling Builds</h1>
 		<h2 id="Hudson_Builds_2">Hudson Builds</h2>
 		<p>Virgo Tooling for the Eclipse IDE is built using the same toolchain as the rest of the Virgo project. The job can be found here: 
-			<a href="wiki/https://hudson.eclipse.org/hudson/job/virgo.ide.snapshot/" target="doc_external">https://hudson.eclipse.org/hudson/job/virgo.ide.snapshot/</a>.
+			<a href="https://hudson.eclipse.org/hudson/job/virgo.ide.snapshot/" target="doc_external">https://hudson.eclipse.org/hudson/job/virgo.ide.snapshot/</a>.
 		</p>
 		<h2 id="Building_in_Eclipse">Building in Eclipse</h2>
 		<p>If you want to explore, modify or contribute to the Virgo Tools, follow these steps to setup your workspace:</p>
 		<ol>
 			<li>In most (but not all) cases, you'll want to have JEE and WTP features installed.</li>
 			<li>Clone the git repos at 
-				<a href="wiki/http://git.eclipse.org/c/virgo/org.eclipse.virgo.ide.git/" target="doc_external">http://git.eclipse.org/c/virgo/org.eclipse.virgo.ide.git/</a> 
+				<a href="http://git.eclipse.org/c/virgo/org.eclipse.virgo.ide.git/" target="doc_external">http://git.eclipse.org/c/virgo/org.eclipse.virgo.ide.git/</a> 
 			</li>
 			<li>Import all of the projects within the repos.</li>
 			<li>Add Virgo IDE dependencies to your target platform. The best way to do that is to add the composite update site at 
-				<a href="wiki/http://download.eclipse.org/virgo/snapshot/tooling" target="doc_external">http://download.eclipse.org/virgo/snapshot/tooling</a> to your target platform and select the following items 
+				<a href="http://download.eclipse.org/virgo/snapshot/tooling" target="doc_external">http://download.eclipse.org/virgo/snapshot/tooling</a> to your target platform and select the following items 
 				<i>only</i>. You'll need to uncheck "Group Items by Category" to see all of these.
 				<ol>
 					<li>All Libra Features</li>
@@ -62,13 +62,13 @@
 		</ol>
 		<h2 id="Building_Documentation">Building Documentation</h2>
 		<p>The Eclipse documentation builds from the same documentation source as the rest of the Virgo build, all of which is maintained in the documentation repos. Currently, Eclipse doc builds are invoked manually. See 
-			<a href="wiki/https://bugs.eclipse.org/bugs/show_bug.cgi?id=376447#c6" target="doc_external">this bug</a> for more information.
+			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=376447#c6" target="doc_external">this bug</a> for more information.
 		</p>
 		<ol>
 			<li>If you do not already have it, clone the documentation repos at: 
-				<a href="wiki/http://git.eclipse.org/c/virgo/org.eclipse.virgo.documentation.git/" target="doc_external">http://git.eclipse.org/c/virgo/org.eclipse.virgo.documentation.git/</a>.
+				<a href="http://git.eclipse.org/c/virgo/org.eclipse.virgo.documentation.git/" target="doc_external">http://git.eclipse.org/c/virgo/org.eclipse.virgo.documentation.git/</a>.
 			</li>
-			<li>The build should be in a parallel directory to your tooling repos. Alternatively, you can set the <code>virgo.docs.dir</code> property to the location of the documentation repos.</li>
+			<li>The build should be in a parallel directory to your tooling repos. Alternatively, you can set the &lt;code&gt;virgo.docs.dir&lt;/code&gt; property to the location of the documentation repos.</li>
 			<li>Optional: Update the Wiki Docs, see below.</li>
 			<li>From org.eclipse.virgo.ide.doc, execute "Build Virgo Docs" in External Tools. (This launches the build.xml using the workspace JRE.)</li>
 		</ol>
@@ -90,23 +90,23 @@
 </pre>
 		<ul>
 			<li>Each wikitext document is a chapter.</li>
-			<li>To add a new chapter to the tooling docs, edit <code>src/virgo-tooling-guide</code> and add the chapter to the <code>xi:include</code> entries with the path <code>../wikixml/your_chapter.xml</code>.</li>
+			<li>To add a new chapter to the tooling docs, edit &lt;code&gt;src/virgo-tooling-guide&lt;/code&gt; and add the chapter to the &lt;code&gt;xi:include&lt;/code&gt; entries with the path &lt;code&gt;../wikixml/your_chapter.xml&lt;/code&gt;.</li>
 		</ul>
 		<p>(This is not a build time task, it's simply an aid for creating the entire documentation set.)</p><hr/>
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
 			<tr>
 				<td style="width: 20%" align="left">
-					<a href="wiki/Virgo-Runtime-Build.html" title="Virgo Runtime Build">
+					<a href="Virgo-Runtime-Build.html" title="Virgo Runtime Build">
 						<img alt="Previous" border="0" src="../../images/prev.gif"/>
 					</a>
 				</td>
 				<td style="width: 60%" align="center">
-					<a href="wiki/Build.html" title="Build">
+					<a href="Build.html" title="Build">
 						<img alt="Build" border="0" src="../../images/home.gif"/>
 					</a>
 				</td>
 				<td style="width: 20%" align="right">
-					<a href="wiki/Updating-This-Document.html" title="Updating This Document">
+					<a href="Updating-This-Document.html" title="Updating This Document">
 						<img alt="Next" border="0" src="../../images/next.gif"/>
 					</a>
 				</td>

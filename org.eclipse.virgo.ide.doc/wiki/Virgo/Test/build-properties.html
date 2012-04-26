@@ -3,7 +3,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<title>Test - build.properties</title>
-		<link type="text/css" rel="stylesheet" href="wiki/../../book.css"/>
+		<link type="text/css" rel="stylesheet" href="../../book.css"/>
 	</head>
 	<body>
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
@@ -12,13 +12,13 @@
 			</tr>
 			<tr>
 				<td style="width: 20%" align="left">
-					<a href="wiki/Virgo-Test-Framework.html" title="Virgo Test Framework">
+					<a href="Virgo-Test-Framework.html" title="Virgo Test Framework">
 						<img alt="Previous" border="0" src="../../images/prev.gif"/>
 					</a>
 				</td>
 				<td style="width: 60%" align="center"></td>
 				<td style="width: 20%" align="right">
-					<a href="wiki/Updating-This-Document.html" title="Updating This Document">
+					<a href="Updating-This-Document.html" title="Updating This Document">
 						<img alt="Next" border="0" src="../../images/next.gif"/>
 					</a>
 				</td>
@@ -31,7 +31,7 @@
 		</table><hr/>
 		<h1 id="build.properties">build.properties</h1>
 		<p>Certain test properties may be set for all the projects of a given git repository in its build.properties file. For an example, see the kernel's 
-			<a href="wiki/http://git.eclipse.org/c/virgo/org.eclipse.virgo.kernel.git/tree/build.properties" target="doc_external">build.properties</a>.
+			<a href="http://git.eclipse.org/c/virgo/org.eclipse.virgo.kernel.git/tree/build.properties" target="doc_external">build.properties</a>.
 		</p>
 		<p>
 			<br/> 
@@ -54,7 +54,7 @@
 			<tr>
 				<td>test.forkmode </td>
 				<td>"perTest" if a new JVM is to be launched for each test class. "perBatch" if a new JVM is to be launched for each project. See "forkMode" in the 
-					<a href="wiki/http://ant.apache.org/manual/Tasks/junit.html" target="doc_external">Ant JUnit task</a>.
+					<a href="http://ant.apache.org/manual/Tasks/junit.html" target="doc_external">Ant JUnit task</a>.
 				</td>
 				<td>perBatch</td>
 			</tr>
@@ -81,38 +81,38 @@
 			<tr>
 				<td>test.vm.args</td>
 				<td>JVM parameters for running the test classes. See the "jvmarg" nested element of the 
-					<a href="wiki/http://ant.apache.org/manual/Tasks/junit.html" target="doc_external">Ant JUnit task</a>.
+					<a href="http://ant.apache.org/manual/Tasks/junit.html" target="doc_external">Ant JUnit task</a>.
 				</td>
 				<td>&lt;the empty string&gt;</td>
 			</tr>
 			<tr>
 				<td>ci.build</td>
 				<td>Set to "true" if the build should continue after errors are encountered. When needed, this property is passed on the Ant invocation by specifying "-Dci.build=true" and is otherwise left to default. This property is used to specify the "haltOnError" and "haltOnFailure" parameters to the 
-					<a href="wiki/http://ant.apache.org/manual/Tasks/junit.html" target="doc_external">Ant JUnit task</a>.
+					<a href="http://ant.apache.org/manual/Tasks/junit.html" target="doc_external">Ant JUnit task</a>.
 				</td>
 				<td>false</td>
 			</tr>
 		</table>
 		<p>Virgo build drives JUnit for unit and integration tests in the "test-run" macro in 
-			<a href="wiki/http://git.eclipse.org/c/virgo/org.eclipse.virgo.virgo-build.git/tree/common/quality.xml" target="doc_external">common/quality.xml</a>. The above properties parameterise the macro.
+			<a href="http://git.eclipse.org/c/virgo/org.eclipse.virgo.virgo-build.git/tree/common/quality.xml" target="doc_external">common/quality.xml</a>. The above properties parameterise the macro.
 		</p>
 		<p>The properties are defaulted in 
-			<a href="wiki/http://git.eclipse.org/c/virgo/org.eclipse.virgo.virgo-build.git/tree/common/common.properties" target="doc_external">common/common.properties</a> and are typically overridden for all the projects of a given git repository in the build.properties file.
+			<a href="http://git.eclipse.org/c/virgo/org.eclipse.virgo.virgo-build.git/tree/common/common.properties" target="doc_external">common/common.properties</a> and are typically overridden for all the projects of a given git repository in the build.properties file.
 		</p><hr/>
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
 			<tr>
 				<td style="width: 20%" align="left">
-					<a href="wiki/Virgo-Test-Framework.html" title="Virgo Test Framework">
+					<a href="Virgo-Test-Framework.html" title="Virgo Test Framework">
 						<img alt="Previous" border="0" src="../../images/prev.gif"/>
 					</a>
 				</td>
 				<td style="width: 60%" align="center">
-					<a href="wiki/Test.html" title="Test">
+					<a href="Test.html" title="Test">
 						<img alt="Test" border="0" src="../../images/home.gif"/>
 					</a>
 				</td>
 				<td style="width: 20%" align="right">
-					<a href="wiki/Updating-This-Document.html" title="Updating This Document">
+					<a href="Updating-This-Document.html" title="Updating This Document">
 						<img alt="Next" border="0" src="../../images/next.gif"/>
 					</a>
 				</td>

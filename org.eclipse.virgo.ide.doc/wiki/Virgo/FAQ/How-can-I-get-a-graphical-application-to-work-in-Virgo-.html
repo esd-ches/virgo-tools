@@ -3,7 +3,7 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 		<title>FAQ - How can I get a graphical application to work in Virgo?</title>
-		<link type="text/css" rel="stylesheet" href="wiki/../../book.css"/>
+		<link type="text/css" rel="stylesheet" href="../../book.css"/>
 	</head>
 	<body>
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
@@ -12,13 +12,13 @@
 			</tr>
 			<tr>
 				<td style="width: 20%" align="left">
-					<a href="wiki/Are-Virgo-bundles-published-to-a-Maven-Repo-anywhere-.html" title="Are Virgo bundles published to a Maven Repo anywhere.">
+					<a href="Are-Virgo-bundles-published-to-a-Maven-Repo-anywhere-.html" title="Are Virgo bundles published to a Maven Repo anywhere.">
 						<img alt="Previous" border="0" src="../../images/prev.gif"/>
 					</a>
 				</td>
 				<td style="width: 60%" align="center"></td>
 				<td style="width: 20%" align="right">
-					<a href="wiki/How-can-I-change-the-version-of-Spring-framework-in-the-user-region-.html" title="How can I change the version of Spring framework in the user region?">
+					<a href="How-can-I-change-the-version-of-Spring-framework-in-the-user-region-.html" title="How can I change the version of Spring framework in the user region?">
 						<img alt="Next" border="0" src="../../images/next.gif"/>
 					</a>
 				</td>
@@ -30,7 +30,7 @@
 			</tr>
 		</table><hr/>
 		<h1 id="How_can_I_get_a_graphical_application_to_work_in_Virgo.3F">How can I get a graphical application to work in Virgo?</h1>
-		<p>To get GUI apps to work in Virgo, you have to edit <tt>lib/java6-server.profile</tt> in order to add some packages to the <tt>org.osgi.framework.bootdelegation</tt> property.</p>
+		<p>To get GUI apps to work in Virgo, you have to edit &lt;tt&gt;lib/java6-server.profile&lt;/tt&gt; in order to add some packages to the &lt;tt&gt;org.osgi.framework.bootdelegation&lt;/tt&gt; property.</p>
 		<p>On Mac, you need to add some Apple packages:</p>
 		<pre>org.osgi.framework.bootdelegation = \
  org.eclipse.virgo.osgi.extensions.*,\
@@ -45,7 +45,7 @@
  apple.*,\
  com.apple.*&lt;/span&gt;
 </pre>
-		<p>On Windows, you just need to add <tt>com.sun.*</tt> as <tt>sun.*</tt> is already in the list.</p>
+		<p>On Windows, you just need to add &lt;tt&gt;com.sun.*&lt;/tt&gt; as &lt;tt&gt;sun.*&lt;/tt&gt; is already in the list.</p>
 		<pre>org.osgi.framework.bootdelegation = \
  org.eclipse.virgo.osgi.extensions.*,\
  org.eclipse.virgo.osgi.launcher.*,\
@@ -61,17 +61,17 @@
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
 			<tr>
 				<td style="width: 20%" align="left">
-					<a href="wiki/Are-Virgo-bundles-published-to-a-Maven-Repo-anywhere-.html" title="Are Virgo bundles published to a Maven Repo anywhere.">
+					<a href="Are-Virgo-bundles-published-to-a-Maven-Repo-anywhere-.html" title="Are Virgo bundles published to a Maven Repo anywhere.">
 						<img alt="Previous" border="0" src="../../images/prev.gif"/>
 					</a>
 				</td>
 				<td style="width: 60%" align="center">
-					<a href="wiki/FAQ.html" title="FAQ">
+					<a href="FAQ.html" title="FAQ">
 						<img alt="FAQ" border="0" src="../../images/home.gif"/>
 					</a>
 				</td>
 				<td style="width: 20%" align="right">
-					<a href="wiki/How-can-I-change-the-version-of-Spring-framework-in-the-user-region-.html" title="How can I change the version of Spring framework in the user region?">
+					<a href="How-can-I-change-the-version-of-Spring-framework-in-the-user-region-.html" title="How can I change the version of Spring framework in the user region?">
 						<img alt="Next" border="0" src="../../images/next.gif"/>
 					</a>
 				</td>
