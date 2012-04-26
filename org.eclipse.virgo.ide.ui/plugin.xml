@@ -12,16 +12,16 @@
  *******************************************************************************/
 -->
 <plugin>
-   
    <extension
          point="org.eclipse.ui.newWizards">
       <category
       		id="org.eclipse.virgo.ide.ui.category"
-      		name="EclipseRT">
+      		name="Virgo">
       </category>
       <wizard
-            category="/org.eclipse.virgo.ide.ui.category"
+            category="org.eclipse.virgo.ide.ui.category"
             class="org.eclipse.virgo.ide.ui.wizards.NewParProjectWizard"
+            finalPerspective="org.eclipse.virgo.ide.runtime.ui.perspective"
             hasPages="true"
             icon="icons/full/obj16/par_project_obj.gif"
             id="org.eclipse.virgo.ide.ui.wizards.parProject"
@@ -32,8 +32,9 @@
          </description>
       </wizard>  
       <wizard
-            category="/org.eclipse.virgo.ide.ui.category"
+            category="org.eclipse.virgo.ide.ui.category"
             class="org.eclipse.virgo.ide.ui.wizards.NewBundleProjectWizard"
+            finalPerspective="org.eclipse.virgo.ide.runtime.ui.perspective"
             hasPages="true"
             icon="icons/full/obj16/osgi_project_obj.gif"
             id="org.eclipse.virgo.ide.ui.wizards.osgiProject"
@@ -164,7 +165,7 @@
             objectClass="org.eclipse.core.resources.IProject">
          <menu
                id="org.eclipse.virgo.ide.menu"
-               label="Virgo Tools">
+               label="Virgo">
             <separator
                   name="group0">
             </separator>
@@ -272,5 +273,174 @@
        </contentType>
     </proposalComputer>
  </extension>
-   
+   <extension
+      point="org.eclipse.ui.perspectives">
+   <perspective
+         class="org.eclipse.virgo.ide.internal.ui.VirgoPerspective"
+         icon="icons/full/obj16/virgo_obj.png"
+         id="org.eclipse.virgo.ide.runtime.ui.perspective"
+         name="Virgo">
+      <description>
+         The Virgo perspective provides a convenitent environment for developing and working with running Virgo-based OSGi applications.
+      </description>
+   </perspective>
+</extension>
+<extension
+      point="org.eclipse.ui.perspectiveExtensions">
+   <perspectiveExtension
+         targetID="org.eclipse.virgo.ide.runtime.ui.perspective">
+        	
+        	<actionSet id="org.eclipse.debug.ui.launchActionSet"/>
+        	<actionSet id="org.eclipse.debug.ui.breakpointActionSet"/>
+         <actionSet
+               id="org.eclipse.jdt.ui.JavaActionSet">
+         </actionSet>
+   <actionSet
+         id="org.eclipse.wst.server.ui.new.actionSet">
+   </actionSet>
+                            <newWizardShortcut
+             id="org.eclipse.virgo.ide.ui.wizards.osgiProject">
+       </newWizardShortcut>
+       <newWizardShortcut
+             id="org.eclipse.virgo.ide.ui.wizards.parProject">
+       </newWizardShortcut>
+       <newWizardShortcut
+             id="org.eclipse.wst.server.ui.new.server">
+       </newWizardShortcut>
+            <newWizardShortcut id="org.eclipse.ui.wizards.new.folder"/>
+            <newWizardShortcut id="org.eclipse.ui.wizards.new.file"/>
+
+       
+            <viewShortcut id="org.eclipse.ui.navigator.ProjectExplorer"/> 
+            <viewShortcut id="org.eclipse.ui.views.ContentOutline"/> 
+            <viewShortcut id="org.eclipse.ui.views.PropertySheet"/> 
+            <viewShortcut id="org.eclipse.ui.views.ProblemView"/> 
+            <viewShortcut id="org.eclipse.wst.server.ui.ServersView"/>
+
+            <perspectiveShortcut id="org.eclipse.jdt.ui.JavaPerspective"/>
+            <view
+                  id="org.eclipse.ui.navigator.ProjectExplorer"
+                  minimized="false"
+                  ratio=".2"
+                  relationship="left"
+                  relative="org.eclipse.ui.editorss">
+            </view>
+                        <view
+                  id="org.eclipse.wst.server.ui.ServersView"
+                  minimized="false"
+                  ratio=".2"
+                  relationship="left"
+                  relative="org.eclipse.ui.editorss">
+            </view>
+   <view
+         id="org.eclipse.pde.runtime.LogView"
+         minimized="false"
+         ratio=".75"
+         relationship="bottom"
+         relative="org.eclipse.ui.editorss">
+   </view>
+   <view
+         id="org.eclipse.ui.views.ProblemView"
+         minimized="false"
+         relationship="stack"
+         relative="org.eclipse.pde.runtime.LogView">
+   </view>
+   <view
+         id="org.eclipse.ui.views.PropertySheet"
+         minimized="false"
+         relationship="stack"
+         relative="org.eclipse.pde.runtime.LogView">
+   </view>
+   <view
+         id="org.eclipse.search.ui.views.SearchView"
+         minimized="false"
+         relationship="stack"
+         relative="org.eclipse.pde.runtime.LogView">
+   </view>
+                        <view
+                              id="org.eclipse.ui.views.ContentOutline"
+                              minimized="false"
+                              ratio=".2"
+                              relationship="left"
+                              relative="org.eclipse.ui.editorss">
+                        </view>
+			<view
+                  id="org.eclipse.ui.console.ConsoleView"
+                  minimized="false"
+                  ratio=".75"
+                  relationship="bottom"
+                  relative="org.eclipse.ui.editorss">
+            </view>
+   <perspectiveShortcut
+         id="org.eclipse.jst.j2ee.J2EEPerspective">
+   </perspectiveShortcut>
+   <perspectiveShortcut
+         id="org.eclipse.debug.ui.DebugPerspective">
+   </perspectiveShortcut>
+   <newWizardShortcut
+         id="org.eclipse.wst.server.ui.new.server">
+   </newWizardShortcut>
+       </perspectiveExtension>
+   <perspectiveExtension
+         targetID="org.eclipse.jdt.ui.JavaPerspective">
+      <perspectiveShortcut
+            id="org.eclipse.virgo.ide.runtime.ui.perspective">
+      </perspectiveShortcut>
+   </perspectiveExtension>
+      <perspectiveExtension
+         targetID="org.eclipse.jst.j2ee.J2EEPerspective">
+      <perspectiveShortcut
+            id="org.eclipse.virgo.ide.runtime.ui.perspective">
+      </perspectiveShortcut>
+   </perspectiveExtension>
+      <perspectiveExtension
+         targetID="org.eclipse.wst.web.ui.webDevPerspective">
+      <perspectiveShortcut
+            id="org.eclipse.virgo.ide.runtime.ui.perspective">
+      </perspectiveShortcut>
+   </perspectiveExtension>
+</extension>
+<extension
+      point="org.eclipse.ui.navigator.navigatorContent">
+   <commonWizard
+         type="new"
+         wizardId="org.eclipse.virgo.ide.ui.wizards.parProject">
+      <enablement>
+      <or>
+      <with 
+            variable="selection"> 
+         <count 
+               value="0"> 
+         </count> 
+      </with>
+      <instanceof
+            value="org.eclipse.core.resources.IProject">
+      </instanceof>
+      <instanceof
+            value="org.eclipse.core.resources.IWorkspaceRoot">
+      </instanceof> 
+</or>      
+            </enablement>
+   </commonWizard>
+      <commonWizard
+         type="new"
+         wizardId="org.eclipse.virgo.ide.ui.wizards.osgiProject">
+      <enablement>
+      <or>
+      <with 
+            variable="selection"> 
+         <count 
+               value="0"> 
+         </count> 
+      </with>
+      <instanceof
+            value="org.eclipse.core.resources.IProject">
+      </instanceof>
+      <instanceof
+            value="org.eclipse.core.resources.IWorkspaceRoot">
+      </instanceof> 
+</or>      
+            </enablement>
+   </commonWizard>
+</extension>
 </plugin>
