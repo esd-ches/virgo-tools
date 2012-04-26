@@ -131,6 +131,7 @@
 		<copy todir="${basedir}/${book}/images">
 			<fileset dir="${virgo.docs.dir}/${book}-guide/images" erroronmissingdir="true">
 				<include name="*.png" />
+				<include name="**/*.png" />
 			</fileset>
 		</copy>
 	</target>
@@ -174,6 +175,7 @@
 		<copy todir="${virgo.docs.dir}/greenpages-guide">
 			<fileset dir="${greenpages.docs.dir}" erroronmissingdir="true">
 				<include name="**" />
+				<include name="images/**/**" />
 			</fileset>
 		</copy>
 		<move file="${virgo.docs.dir}/greenpages-guide/src/greenpages-guide.xml" tofile="${virgo.docs.dir}/greenpages-guide/src/virgo-greenpages-guide.xml" />
