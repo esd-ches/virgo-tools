@@ -35,7 +35,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.views,
  org.eclipse.ui.navigator,
  org.eclipse.ui.navigator.resources,
- org.eclipse.jdt.ui;bundle-version="3.7.2"
+ org.eclipse.jdt.ui
 Import-Package: org.apache.commons.lang,
  org.apache.commons.logging,
  org.eclipse.libra.framework.editor.core;version="[0.1.0,2.0.0)",
