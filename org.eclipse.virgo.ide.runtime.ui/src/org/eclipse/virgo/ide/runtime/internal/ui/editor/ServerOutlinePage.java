@@ -24,6 +24,7 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
@@ -90,7 +91,8 @@ public class ServerOutlinePage extends ContentOutlinePage {
 	public void createControl(Composite parent) {
 		super.createControl(parent);
 
-		contentOutlineViewer = new CommonViewer("org.eclipse.virgo.ide.runtime.ui.OutlineView", parent, getTreeStyle());
+		contentOutlineViewer = new CommonViewer("org.eclipse.virgo.ide.runtime.ui.OutlineView", parent, SWT.MULTI
+				| SWT.H_SCROLL | SWT.V_SCROLL);
 		//contentOutlineViewer.addSelectionChangedListener(this);
 		contentOutlineViewer.setInput(editor);
 
