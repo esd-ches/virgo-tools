@@ -30,8 +30,8 @@ import org.eclipse.wst.server.core.IServer;
 /**
  * Common content provider for repository installation nodes.
  * 
- * @author Christian Dupuis
  * @author Miles Parker
+ * @author Christian Dupuis
  */
 public class RepositoryContentProvider implements ITreeContentProvider {
 

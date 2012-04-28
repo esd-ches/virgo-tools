@@ -17,6 +17,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProjectManager;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -54,6 +55,7 @@ public class ServerUiPlugin extends AbstractUIPlugin {
 	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
@@ -62,8 +64,9 @@ public class ServerUiPlugin extends AbstractUIPlugin {
 		} catch (MissingResourceException e) {
 			resourceBundle = null;
 		}
-
 		plugin.getPreferenceStore().setDefault(PREF_DOWNLOAD_MESSAGE_KEY, false);
+
+		ServerProjectManager.getInstance().initialize();
 	}
 
 	/*
@@ -71,6 +74,7 @@ public class ServerUiPlugin extends AbstractUIPlugin {
 	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);

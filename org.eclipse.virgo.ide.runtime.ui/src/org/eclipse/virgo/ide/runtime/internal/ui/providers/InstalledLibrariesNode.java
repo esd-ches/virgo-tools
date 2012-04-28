@@ -14,10 +14,14 @@ package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 import org.eclipse.wst.server.core.IServer;
 
 public class InstalledLibrariesNode {
-	IServer server;
+	private final IServer server;
 
 	public InstalledLibrariesNode(IServer server) {
 		super();
 		this.server = server;
+	}
+
+	public IServer getServer() {
+		return server;
 	}
 }

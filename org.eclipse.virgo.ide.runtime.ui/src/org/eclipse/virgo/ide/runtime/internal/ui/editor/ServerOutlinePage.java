@@ -25,39 +25,35 @@ import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
-import org.eclipse.virgo.ide.runtime.internal.ui.providers.RepositoryLabelProvider;
-import org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerEditorContentLabelProvider;
-import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.ServerCore;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditor;
-import org.eclipse.wst.server.ui.internal.editor.ServerEditorInput;
 
 /**
  * @author Miles Parker
  */
 @SuppressWarnings("restriction")
-public class RepositoryOutlinePage extends ContentOutlinePage {
+public class ServerOutlinePage extends ContentOutlinePage {
 
-	private TreeViewer contentOutlineViewer;
+	private CommonViewer contentOutlineViewer;
 
 	protected Object input;
 
 	final ServerEditor editor;
 
-	public RepositoryOutlinePage(ServerEditor editor) {
+	public ServerOutlinePage(ServerEditor editor) {
 		this.editor = editor;
 	}
 
 	private void setEditorPage(int page) {
 		try {
-			Method setPageMethod = MultiPageEditorPart.class.getDeclaredMethod("setActivePage",
-					new Class[] { Integer.TYPE });
-			setPageMethod.setAccessible(true);
-			setPageMethod.invoke(editor, page);
+			Method method = MultiPageEditorPart.class.getDeclaredMethod("setActivePage", new Class[] { Integer.TYPE });
+			method.setAccessible(true);
+			method.invoke(editor, page);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -65,56 +61,72 @@ public class RepositoryOutlinePage extends ContentOutlinePage {
 
 	private IEditorPart getActiveEditor() {
 		try {
-			Method setPageMethod = MultiPageEditorPart.class.getDeclaredMethod("getActiveEditor", new Class[] {});
-			setPageMethod.setAccessible(true);
-			Object result = setPageMethod.invoke(editor, new Object[] {});
+			Method method = MultiPageEditorPart.class.getDeclaredMethod("getActiveEditor", new Class[] {});
+			method.setAccessible(true);
+			Object result = method.invoke(editor, new Object[] {});
 			return (IEditorPart) result;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
+	/**
+	 * @see org.eclipse.ui.views.contentoutline.ContentOutlinePage#getControl()
+	 */
+	@Override
+	public Control getControl() {
+		return contentOutlineViewer.getControl();
+	}
+
+	/**
+	 * @see org.eclipse.ui.views.contentoutline.ContentOutlinePage#getTreeViewer()
+	 */
+	@Override
+	protected TreeViewer getTreeViewer() {
+		return contentOutlineViewer;
+	}
+
+	@Override
 	public void createControl(Composite parent) {
 		super.createControl(parent);
 
-		contentOutlineViewer = getTreeViewer();
-		contentOutlineViewer.addSelectionChangedListener(this);
-
-		ServerEditorInput editorInput = (ServerEditorInput) editor.getEditorInput();
-		final IServer server = ServerCore.findServer(editorInput.getServerId());
-		final ServerEditorContentLabelProvider provider = new ServerEditorContentLabelProvider(server);
-		contentOutlineViewer.setContentProvider(provider);
-		contentOutlineViewer.setLabelProvider(new RepositoryLabelProvider());
-		contentOutlineViewer.setInput(server);
+		contentOutlineViewer = new CommonViewer("org.eclipse.virgo.ide.runtime.ui.OutlineView", parent, getTreeStyle());
+		//contentOutlineViewer.addSelectionChangedListener(this);
+		contentOutlineViewer.setInput(editor);
 
 		contentOutlineViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
 			public void selectionChanged(SelectionChangedEvent event) {
 				IStructuredSelection sel = (IStructuredSelection) event.getSelection();
-				Object firstElement = sel.getFirstElement();
-				int pageNumber = provider.getPageNumber(firstElement);
-				if (pageNumber >= 0) {
-					setEditorPage(pageNumber);
-					IEditorPart activeEditor = getActiveEditor();
-					ISelectionChangedListener pageListener = (ISelectionChangedListener) activeEditor.getAdapter(ISelectionChangedListener.class);
-					if (pageListener != null) {
-						ISelection selection = getTreeViewer().getSelection();
-						if (selection instanceof TreeSelection) {
-							TreeSelection treeSel = (TreeSelection) selection;
+				ISelection selection = getTreeViewer().getSelection();
+				if (selection instanceof TreeSelection) {
+					TreeSelection treeSel = (TreeSelection) selection;
+					if (treeSel.getPaths().length > 0) {
+						TreePath firstPath = treeSel.getPaths()[0];
+						if (firstPath.getFirstSegment() instanceof IEditorPart) {
+							IEditorPart newPart = (IEditorPart) firstPath.getFirstSegment();
+							if (getActiveEditor() != newPart) {
+								editor.setActiveEditor(newPart);
+							}
 							List<Object> leafList = new ArrayList<Object>();
 							for (TreePath path : treeSel.getPaths()) {
 								leafList.add(path.getLastSegment());
 							}
 							if (leafList.size() > 0) {
-								pageListener.selectionChanged(new SelectionChangedEvent(event.getSelectionProvider(),
-										new StructuredSelection(leafList)));
+								ISelectionChangedListener pageListener = (ISelectionChangedListener) newPart.getAdapter(ISelectionChangedListener.class);
+								if (pageListener != null) {
+									pageListener.selectionChanged(new SelectionChangedEvent(
+											event.getSelectionProvider(), new StructuredSelection(leafList)));
+								}
 							}
 						}
+					} else if (sel.getFirstElement() instanceof IEditorPart) {
+						editor.setActiveEditor((IEditorPart) sel.getFirstElement());
 					}
 				}
 			}
 		});
-		registerContextMenu(contentOutlineViewer);
+		//registerContextMenu(contentOutlineViewer);
 	}
 
 	protected void registerContextMenu(StructuredViewer viewer) {

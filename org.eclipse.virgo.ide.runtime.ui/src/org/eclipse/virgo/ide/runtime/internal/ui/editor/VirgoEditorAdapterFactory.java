@@ -34,7 +34,7 @@ public class VirgoEditorAdapterFactory implements IAdapterFactory {
 			IEditorPart[] findEditors = serverEditor.findEditors(editorInput);
 			IServerType serverType = server.getServerType();
 			if (serverType.getId().equals(ServerUiPlugin.VIRGO_SERVER_ID)) {
-				return new RepositoryOutlinePage(serverEditor);
+				return new ServerOutlinePage(serverEditor);
 			}
 		}
 		return null;

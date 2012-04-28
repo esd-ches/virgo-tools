@@ -14,6 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerLifecycleListener;
+import org.eclipse.wst.server.core.ServerCore;
 
 /**
  * The server project manager is responsible for tracking existing server projects and creating and destorying them as
@@ -21,7 +23,7 @@ import org.eclipse.wst.server.core.IServer;
  * 
  * @author Miles Parker
  */
-public class ServerProjectManager {
+public class ServerProjectManager implements IServerLifecycleListener {
 
 	private static ServerProjectManager INSTANCE;
 
@@ -34,15 +36,45 @@ public class ServerProjectManager {
 		return INSTANCE;
 	}
 
-	public ServerProject getProject(IServer server) {
+	public synchronized ServerProject getProject(IServer server) {
 		if (projectForServer == null) {
 			projectForServer = new HashMap<IServer, ServerProject>();
 		}
 		ServerProject serverProject = projectForServer.get(server);
 		if (serverProject == null) {
 			serverProject = new ServerProject(server);
+			serverProject.refresh();
 			projectForServer.put(server, serverProject);
 		}
 		return serverProject;
+	}
+
+	public void initialize() {
+		for (IServer server : ServerCore.getServers()) {
+			getProject(server);
+		}
+		ServerCore.addServerLifecycleListener(this);
+	}
+
+	/**
+	 * @see org.eclipse.wst.server.core.IServerLifecycleListener#serverAdded(org.eclipse.wst.server.core.IServer)
+	 */
+	public void serverAdded(IServer server) {
+		getProject(server).refresh();
+	}
+
+	/**
+	 * @see org.eclipse.wst.server.core.IServerLifecycleListener#serverChanged(org.eclipse.wst.server.core.IServer)
+	 */
+	public void serverChanged(IServer server) {
+		getProject(server).refresh();
+	}
+
+	/**
+	 * @see org.eclipse.wst.server.core.IServerLifecycleListener#serverRemoved(org.eclipse.wst.server.core.IServer)
+	 */
+	public void serverRemoved(IServer server) {
+		ServerProject project = getProject(server);
+		project.deleteProject();
 	}
 }

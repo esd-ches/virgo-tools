@@ -222,53 +222,82 @@
          </adapter>
       </factory>
 	</extension>
-<extension
-      point="org.eclipse.ui.navigator.navigatorContent">
-   <navigatorContent
-         activeByDefault="true"
-         contentProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerViewContentProvider"
-         icon="icons/full/obj16/lib_obj.gif"
-         id="org.eclipse.virgo.ide.runtime.ui.repositoryContent"
-         labelProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.RepositoryLabelProvider"
-         name="Repository Content">
-      <triggerPoints>
-         <or>
-            <instanceof
-                  value="org.eclipse.wst.server.core.IServer">
-            </instanceof>
-         </or>
-      </triggerPoints>
-      <possibleChildren>
-         <or>
-            <instanceof
-                  value="org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact">
-            </instanceof>
-            <instanceof
-                  value="org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet">
-            </instanceof>
-            <instanceof
-                  value="org.eclipse.virgo.ide.runtime.internal.ui.providers.InstalledLibrariesNode">
-            </instanceof>
-         </or>
-      </possibleChildren>
-   </navigatorContent>
-</extension>
 
 <extension
       point="org.eclipse.ui.navigator.navigatorContent">
    <navigatorContent
+         contentProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerEditorPageContentProvider"
+         icon="icons/full/obj16/file_obj.gif"
+         id="org.eclipse.virgo.ide.pageContent"
+         labelProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerOutlineLabelProvider"
+         name="Editor Pages">
+      <triggerPoints>
+         <or>
+            <instanceof
+                  value="org.eclipse.wst.server.ui.internal.editor.ServerEditor">
+            </instanceof>
+         </or>
+      </triggerPoints>
+   </navigatorContent>
+   <navigatorContent
          activeByDefault="true"
-         contentProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.BundleContentProvider"
+         contentProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerBundleContainersContentProvider"
          icon="icons/full/obj16/lib_obj.gif"
          id="org.eclipse.virgo.ide.runtime.ui.bundleContent"
-         labelProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.RepositoryLabelProvider"
-         name="Bundle Content">
+         labelProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerOutlineLabelProvider"
+         name="Bundles">
       <triggerPoints>
          <or>
             <instanceof
                   value="org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact"/>
             <instanceof
                   value="org.eclipse.wst.server.core.IServer"/>
+         </or>
+      </triggerPoints>
+   </navigatorContent>
+   <navigatorContent
+         activeByDefault="true"
+         contentProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.InstalledBundlesContentProvider"
+         icon="icons/full/obj16/lib_obj.gif"
+         id="org.eclipse.virgo.ide.runtime.ui.installedBundleContent"
+         labelProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerOutlineLabelProvider"
+         name="Installed Bundles">
+      <triggerPoints>
+         <or>
+            <instanceof
+                  value="org.eclipse.wst.server.core.IServer">
+            </instanceof>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.internal.ui.editor.RepositoryBrowserEditorPage">
+            </instanceof>
+         </or>
+      </triggerPoints>
+   </navigatorContent>
+   <navigatorContent
+         activeByDefault="true"
+         contentProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.InstalledBundlesContentProvider"
+         icon="icons/full/obj16/lib_obj.gif"
+         id="org.eclipse.virgo.ide.runtime.ui.repositoryPage"
+         labelProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerOutlineLabelProvider"
+         name="Repository Page">
+      <triggerPoints>
+         <instanceof
+               value="org.eclipse.virgo.ide.runtime.internal.ui.editor.RepositoryBrowserEditorPage">
+         </instanceof>
+      </triggerPoints>
+   </navigatorContent>
+   <navigatorContent
+         activeByDefault="true"
+         contentProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.BundleOnlyContentProvider"
+         icon="icons/full/obj16/lib_obj.gif"
+         id="org.eclipse.virgo.ide.runtime.ui.bundlesOnlyContent"
+         labelProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerOutlineLabelProvider"
+         name="Bundles Only">
+      <triggerPoints>
+         <or>
+            <instanceof
+                  value="org.eclipse.jdt.internal.ui.packageview.PackageFragmentRootContainer">
+            </instanceof>
          </or>
       </triggerPoints>
    </navigatorContent>
@@ -281,10 +310,43 @@
          viewerId="org.eclipse.wst.server.ui.ServersView">
       <includes>
          <contentExtension
-               pattern="org.eclipse.virgo.ide.runtime.ui.bundleContent"/>
+               pattern="org.eclipse.virgo.ide.runtime.ui.installedBundleContent"/>
          <contentExtension
                pattern="org.eclipse.jdt.java.ui.javaContent"/>
          </includes>
+   </viewerContentBinding>
+   <viewer
+         viewerId="org.eclipse.virgo.ide.runtime.ui.ServerView">
+   </viewer>
+   <viewerContentBinding
+         viewerId="org.eclipse.virgo.ide.runtime.ui.ServerView">
+      <includes>
+         <contentExtension
+               isRoot="true"
+               pattern="org.eclipse.virgo.ide.runtime.ui.bundleContent">
+         </contentExtension>
+         <contentExtension
+               pattern="org.eclipse.jdt.java.ui.javaContent">
+         </contentExtension>
+      </includes>
+   </viewerContentBinding>
+   <viewer
+         viewerId="org.eclipse.virgo.ide.runtime.ui.OutlineView">
+   </viewer>
+   <viewerContentBinding
+         viewerId="org.eclipse.virgo.ide.runtime.ui.OutlineView">
+      <includes>
+         <contentExtension
+               isRoot="true"
+               pattern="org.eclipse.virgo.ide.pageContent">
+         </contentExtension>
+         <contentExtension
+               pattern="org.eclipse.virgo.ide.runtime.ui.repositoryPage">
+         </contentExtension>
+         <contentExtension
+               pattern="org.eclipse.virgo.ide.runtime.ui.bundlesOnlyContent">
+         </contentExtension>
+      </includes>
    </viewerContentBinding>
 </extension>
 </plugin>

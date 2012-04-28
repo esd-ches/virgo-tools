@@ -16,6 +16,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -25,8 +26,8 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jface.action.MenuManager;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
@@ -37,6 +38,7 @@ import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
+import org.eclipse.jface.viewers.IColorProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
@@ -44,17 +46,20 @@ import org.eclipse.jface.viewers.ITreeViewerListener;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreeExpansionEvent;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Link;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.Shell;
@@ -72,6 +77,7 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.ui.forms.widgets.TableWrapData;
 import org.eclipse.ui.forms.widgets.TableWrapLayout;
+import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.progress.IProgressConstants;
 import org.eclipse.virgo.ide.runtime.core.IServerWorkingCopy;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
@@ -89,10 +95,8 @@ import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryUtils;
 import org.eclipse.virgo.ide.runtime.internal.ui.RepositoryViewerSorter;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiImages;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
-import org.eclipse.virgo.ide.runtime.internal.ui.providers.ArtefactLabelProvider;
-import org.eclipse.virgo.ide.runtime.internal.ui.providers.ColoredRespositoryLabelProvider;
-import org.eclipse.virgo.ide.runtime.internal.ui.providers.RepositoryContentProvider;
 import org.eclipse.virgo.ide.runtime.internal.ui.providers.RepositorySearchResultContentProvider;
+import org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerOutlineLabelProvider;
 import org.eclipse.virgo.ide.ui.editors.BundleManifestEditor;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.ui.editor.ServerEditorPart;
@@ -114,7 +118,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 
 	private Button downloadSourcesCheckbox;
 
-	private IJobChangeListener jobListener = new ArtefactOperationJobListener();
+	private final IJobChangeListener jobListener = new ArtefactOperationJobListener();
 
 	private IServerWorkingCopy serverWC;
 
@@ -122,16 +126,13 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 
 	private PropertyChangeListener propertyListener;
 
-	private RepositorySearchResultContentProvider searchResultContentProvider = new RepositorySearchResultContentProvider();
+	private final RepositorySearchResultContentProvider searchResultContentProvider = new RepositorySearchResultContentProvider();
 
-	public RepositoryContentProvider repositoryContentProvider = new RepositoryContentProvider();
+	private final ColoredRespositoryLabelProvider coloredRespositoryLabelProvider = new ColoredRespositoryLabelProvider();
 
-	private ColoredRespositoryLabelProvider coloredRespositoryLabelProvider = new ColoredRespositoryLabelProvider(
-			repositoryContentProvider);
+//	private Tree repositoryTable;
 
-	private Tree repositoryTable;
-
-	private CheckboxTreeViewer repositoryTableViewer;
+	private CommonViewer repositoryTableViewer;
 
 	private Button searchButton;
 
@@ -153,6 +154,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 
 	private static String PROXY_PREF_PAGE_ID = Messages.RepositoryBrowserEditorPage_0;
 
+	@Override
 	public void createPartControl(Composite parent) {
 
 		shell = parent.getShell();
@@ -183,6 +185,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_SPRINGSOURCE);
 	}
 
+	@Override
 	public void dispose() {
 		super.dispose();
 
@@ -192,6 +195,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		Job.getJobManager().removeJobChangeListener(jobListener);
 	}
 
+	@Override
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
 
@@ -201,6 +205,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		initialize();
 	}
 
+	@Override
 	public void setFocus() {
 		if (searchResultTable != null) {
 			searchResultTable.setFocus();
@@ -245,6 +250,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		searchButton = toolkit.createButton(searchButtonComposite, Messages.RepositoryBrowserEditorPage_Search,
 				SWT.PUSH);
 		searchButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				handleSearch();
 			}
@@ -287,6 +293,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		data.heightHint = 120;
 		searchResultTable.setLayoutData(data);
 		searchResultTable.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent e) {
 				ISelection selection = searchResultTableViewer.getSelection();
 				if (selection instanceof IStructuredSelection) {
@@ -314,6 +321,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		selectAllButton.setLayoutData(data);
 		selectAllButton.setToolTipText(Messages.RepositoryBrowserEditorPage_SelectAllBundlesAndLibraries);
 		selectAllButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				searchResultTableViewer.setCheckedElements(searchResultContentProvider.getElements(searchResultTableViewer.getInput()));
 			}
@@ -324,6 +332,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		deselectAllButton.setToolTipText(Messages.RepositoryBrowserEditorPage_9);
 		deselectAllButton.setLayoutData(data);
 		deselectAllButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				searchResultTableViewer.setCheckedElements(new Object[0]);
 			}
@@ -337,6 +346,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		anaylseButton.setLayoutData(data);
 		anaylseButton.setToolTipText(Messages.RepositoryBrowserEditorPage_AnalyseSelected);
 		anaylseButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				ISelection selection = searchResultTableViewer.getSelection();
 				if (selection instanceof IStructuredSelection) {
@@ -354,6 +364,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		licenseButton.setLayoutData(data);
 		licenseButton.setToolTipText(Messages.RepositoryBrowserEditorPage_OpenLicense);
 		licenseButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				ISelection selection = searchResultTableViewer.getSelection();
 				if (selection instanceof IStructuredSelection) {
@@ -377,6 +388,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		downloadButton.setLayoutData(data);
 		downloadButton.setToolTipText(Messages.RepositoryBrowserEditorPage_DownloadSelected);
 		downloadButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				Set<Artefact> artifacts = new LinkedHashSet<Artefact>();
 				Object[] selections = searchResultTableViewer.getCheckedElements();
@@ -396,7 +408,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 							Messages.RepositoryBrowserEditorPage_DownloadTriggerMessage,
 							Messages.RepositoryBrowserEditorPage_DontShowDialog, false, ServerUiPlugin.getDefault()
 									.getPreferenceStore(), ServerUiPlugin.PLUGIN_ID + ".download.message"); //$NON-NLS-1$
-					if (dialog.getReturnCode() != Dialog.OK) {
+					if (dialog.getReturnCode() != Window.OK) {
 						return;
 					} else {
 						ServerUiPlugin.getDefault()
@@ -461,6 +473,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		Hyperlink disclaimer = toolkit.createHyperlink(wrappedComposite,
 				Messages.RepositoryBrowserEditorPage_FirewallConfigureMessage, SWT.WRAP);
 		disclaimer.addHyperlinkListener(new HyperlinkAdapter() {
+			@Override
 			public void linkActivated(HyperlinkEvent e) {
 				PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(null, PROXY_PREF_PAGE_ID, null, null);
 				dialog.open();
@@ -514,35 +527,14 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		composite2.setLayoutData(new GridData(GridData.FILL_BOTH));
 		toolkit.paintBordersFor(composite2);
 
-		repositoryTable = toolkit.createTree(composite2, SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION);
-		repositoryTable.addSelectionListener(new SelectionAdapter() {
-			public void widgetSelected(SelectionEvent e) {
-				ISelection selection = repositoryTableViewer.getSelection();
-				if (selection instanceof IStructuredSelection) {
-					Object element = ((IStructuredSelection) selection).getFirstElement();
-					if (element instanceof LocalBundleArtefact) {
-						openManifestButton.setEnabled(true);
-					} else {
-						openManifestButton.setEnabled(false);
-					}
-				}
-			}
-		});
-
-		repositoryTableViewer = new CheckboxTreeViewer(repositoryTable);
-		repositoryTableViewer.setContentProvider(repositoryContentProvider);
-		repositoryTableViewer.setLabelProvider(new ArtefactLabelProvider());
+		repositoryTableViewer = new CommonViewer("org.eclipse.virgo.ide.runtime.ui.ServerView", composite2, SWT.BORDER);
 		repositoryTableViewer.setSorter(new RepositoryViewerSorter());
-		repositoryTableViewer.addCheckStateListener(new ICheckStateListener() {
-			public void checkStateChanged(CheckStateChangedEvent event) {
-				handleCheckStateChange(event);
-			}
-		});
+
 		registerContextMenu(repositoryTableViewer);
 
 		data = new GridData(GridData.FILL_BOTH);
 		data.heightHint = 120;
-		repositoryTable.setLayoutData(data);
+		repositoryTableViewer.getControl().setLayoutData(data);
 
 		Composite buttonComposite = new Composite(composite2, SWT.NONE);
 		buttonComposite.setLayout(new GridLayout(1, true));
@@ -555,6 +547,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		refreshButton.setLayoutData(data);
 		refreshButton.setToolTipText(Messages.RepositoryBrowserEditorPage_RefreshMessage);
 		refreshButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				refreshBundleRepository();
 			}
@@ -565,6 +558,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		downloadSourcesButton.setLayoutData(data);
 		downloadSourcesButton.setToolTipText(Messages.RepositoryBrowserEditorPage_InstallSourcesMessage);
 		downloadSourcesButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				downloadSources();
 			}
@@ -578,19 +572,34 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		openManifestButton.setLayoutData(data);
 		openManifestButton.setToolTipText(Messages.RepositoryBrowserEditorPage_OpenManifestMessage);
 		openManifestButton.addSelectionListener(new SelectionAdapter() {
+			@Override
 			public void widgetSelected(SelectionEvent selectionEvent) {
 				ISelection selection = repositoryTableViewer.getSelection();
 				if (selection instanceof IStructuredSelection) {
 					Object element = ((IStructuredSelection) selection).getFirstElement();
-					if (element instanceof LocalBundleArtefact) {
-						BundleManifestEditor.openExternalPlugin(((LocalBundleArtefact) element).getFile(),
-								"META-INF/MANIFEST.MF"); //$NON-NLS-1$
+					if (element instanceof IPackageFragmentRoot) {
+						IPackageFragmentRoot fragment = (IPackageFragmentRoot) element;
+						BundleManifestEditor.openExternalPlugin(fragment.getPath().toFile(), "META-INF/MANIFEST.MF"); //$NON-NLS-1$
 					}
 				}
 			}
 		});
 
 		openManifestButton.setEnabled(false);
+		repositoryTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
+			public void selectionChanged(SelectionChangedEvent event) {
+				ISelection selection = event.getSelection();
+				if (selection instanceof IStructuredSelection) {
+					Object element = ((IStructuredSelection) selection).getFirstElement();
+					if (element instanceof IPackageFragmentRoot) {
+						openManifestButton.setEnabled(true);
+					} else {
+						openManifestButton.setEnabled(false);
+					}
+				}
+			}
+		});
 
 		TableWrapLayout twLayout = new TableWrapLayout();
 		twLayout.bottomMargin = 0;
@@ -624,14 +633,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 
 				ServerCorePlugin.getArtefactRepositoryManager().refreshBundleRepository(getServer().getRuntime());
 
-				shell.getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						repositoryTableViewer.refresh();
-						repositoryTableViewer.expandToLevel(2);
-						searchResultTableViewer.refresh(true);
-						searchResultTableViewer.expandToLevel(2);
-					}
-				});
+				refreshViewers();
 				monitor.done();
 			}
 		};
@@ -645,8 +647,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 
 	protected void downloadSources() {
 		Set<Artefact> artifacts = new LinkedHashSet<Artefact>();
-		ArtefactRepository repository = repositoryContentProvider.getRepository();
-
+		ArtefactRepository repository = RepositoryUtils.getRepositoryContents(server.getRuntime());
 		for (IArtefactTyped bundle : repository.getBundles()) {
 			if (bundle instanceof LocalBundleArtefact) {
 				if (!((LocalBundleArtefact) bundle).isSourceDownloaded()) {
@@ -732,6 +733,10 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		}
 		searchResultTable.removeAll();
 		setErrorMessage(null);
+		intializeViewers();
+	}
+
+	protected void intializeViewers() {
 		shell.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				repositoryTableViewer.setInput(getServer());
@@ -742,19 +747,24 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		});
 	}
 
+	protected void refreshViewers() {
+		shell.getDisplay().asyncExec(new Runnable() {
+			public void run() {
+				repositoryTableViewer.refresh();
+				repositoryTableViewer.expandToLevel(2);
+				searchResultTableViewer.refresh(true);
+				searchResultTableViewer.expandToLevel(2);
+			}
+		});
+	}
+
 	private final class ArtefactOperationJobListener extends JobChangeAdapter {
 
+		@Override
 		public void done(IJobChangeEvent event) {
 			if (event.getJob() instanceof RepositoryProvisioningJob) {
 				if (((RepositoryProvisioningJob) event.getJob()).getRuntimes().contains(getServer().getRuntime())) {
-					shell.getDisplay().asyncExec(new Runnable() {
-						public void run() {
-							repositoryTableViewer.setInput(getServer());
-							repositoryTableViewer.expandToLevel(2);
-							searchResultTableViewer.refresh(true);
-							searchResultTableViewer.expandToLevel(2);
-						}
-					});
+					intializeViewers();
 				}
 			} else if (event.getJob() instanceof ArtefactRepositoryManager.ArtefactRepositoryUpdateJob) {
 				shell.getDisplay().asyncExec(new Runnable() {
@@ -766,6 +776,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		}
 	}
 
+	@Override
 	public Object getAdapter(Class adapter) {
 		if (adapter == ISelectionChangedListener.class) {
 			return this;
@@ -778,7 +789,28 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 	 */
 	public void selectionChanged(SelectionChangedEvent event) {
 		IStructuredSelection sel = (IStructuredSelection) event.getSelection();
+		Iterator<?> iterator = sel.iterator();
+
+		while (iterator.hasNext()) {
+			Object next = iterator.next();
+		}
 		repositoryTableViewer.collapseAll();
 		repositoryTableViewer.setSelection(sel, true);
 	}
+
+	private class ColoredRespositoryLabelProvider extends ServerOutlineLabelProvider implements IColorProvider {
+
+		public Color getBackground(Object element) {
+			return null;
+		}
+
+		public Color getForeground(Object element) {
+			ArtefactRepository repository = RepositoryUtils.getRepositoryContents(server.getRuntime());
+			if (repository != null && element instanceof Artefact && repository.contains((IArtefact) element)) {
+				return Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY);
+			}
+			return null;
+		}
+	}
+
 }

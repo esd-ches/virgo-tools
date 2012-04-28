@@ -10,7 +10,11 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 
+import org.eclipse.jdt.internal.core.PackageFragmentRoot;
+import org.eclipse.jdt.internal.ui.packageview.PackageFragmentRootContainer;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.pde.internal.ui.PDEPlugin;
+import org.eclipse.pde.internal.ui.PDEPluginImages;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactType;
@@ -30,12 +34,17 @@ public class ArtefactLabelProvider extends LabelProvider {
 	}
 
 	@Override
-	public Image getImage(Object parentElement) {
-		if (parentElement instanceof IArtefactTyped) {
-			ArtefactType artefactType = ((IArtefactTyped) parentElement).getArtefactType();
+	public Image getImage(Object element) {
+		if (element instanceof PackageFragmentRoot) {
+			return PDEPlugin.getDefault().getLabelProvider().get(PDEPluginImages.DESC_JAR_OBJ);
+		}
+		if (element instanceof PackageFragmentRootContainer) {
+			return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_LIB);
+		}
+		if (element instanceof IArtefactTyped) {
+			ArtefactType artefactType = ((IArtefactTyped) element).getArtefactType();
 			if (artefactType == ArtefactType.BUNDLE) {
-				if (parentElement instanceof LocalBundleArtefact
-						&& ((LocalBundleArtefact) parentElement).isSourceDownloaded()) {
+				if (element instanceof LocalBundleArtefact && ((LocalBundleArtefact) element).isSourceDownloaded()) {
 					return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_BUNDLE_SRC);
 				}
 				return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_BUNDLE);
@@ -43,11 +52,17 @@ public class ArtefactLabelProvider extends LabelProvider {
 				return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_LIB);
 			}
 		}
-		return super.getImage(parentElement);
+		return super.getImage(element);
 	}
 
 	@Override
 	public String getText(Object element) {
+		if (element instanceof PackageFragmentRoot) {
+			return ((PackageFragmentRoot) element).getElementName();
+		}
+		if (element instanceof PackageFragmentRootContainer) {
+			return ((PackageFragmentRootContainer) element).getLabel();
+		}
 		if (element instanceof ArtefactSet) {
 			ArtefactSet set = (ArtefactSet) element;
 			String label = set.getArtefactType().getPluralLabel();
