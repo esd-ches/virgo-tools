@@ -33,7 +33,7 @@ public class NewBundleProjectWizardUiTest extends AbstractManifestUiTestCase {
 		bot.menu("File").menu("New").menu("Project...").click();
 		SWTBotShell wizard = bot.shell("New Project");
 		wizard.activate();
-		bot.tree().expandNode("EclipseRT").select("Bundle Project");
+		bot.tree().expandNode("Virgo").select("Bundle Project");
 
 		SWTBotButton next = bot.button("Next >");
 		next.click();
@@ -63,7 +63,7 @@ public class NewBundleProjectWizardUiTest extends AbstractManifestUiTestCase {
 		bot.menu("File").menu("New").menu("Project...").click();
 		SWTBotShell wizard = bot.shell("New Project");
 		wizard.activate();
-		bot.tree().expandNode("EclipseRT").select("Bundle Project");
+		bot.tree().expandNode("Virgo").select("Bundle Project");
 
 		SWTBotButton next = bot.button("Next >");
 		next.click();
