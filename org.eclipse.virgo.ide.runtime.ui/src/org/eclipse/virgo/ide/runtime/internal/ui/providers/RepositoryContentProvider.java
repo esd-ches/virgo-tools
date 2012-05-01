@@ -28,7 +28,8 @@ import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryUtils;
 import org.eclipse.wst.server.core.IServer;
 
 /**
- * Common content provider for repository installation nodes.
+ * Common content provider for repository installation nodes. (Not currently used, but could be used in cases where we
+ * don't want to create server side projects.)
  * 
  * @author Miles Parker
  * @author Christian Dupuis

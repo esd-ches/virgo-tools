@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 
-import org.eclipse.virgo.ide.runtime.internal.ui.editor.RepositoryBrowserEditorPage;
+import org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer;
 import org.eclipse.wst.server.core.IServer;
 
 /**
@@ -18,28 +18,27 @@ import org.eclipse.wst.server.core.IServer;
  * 
  * @author Miles Parker
  */
-public class InstalledBundlesContentProvider extends ServerBundleContainersContentProvider {
+public class InstalledBundlesAndLibrariesContentProvider extends RuntimeContainersContentProvider {
 
 	@Override
 	public Object[] getElements(Object inputElement) {
-		if (inputElement instanceof RepositoryBrowserEditorPage) {
-			return getElements(((RepositoryBrowserEditorPage) inputElement).getServer().getOriginal());
-		}
 		if (inputElement instanceof IServer) {
-			return new Object[] { new InstalledLibrariesNode((IServer) inputElement) };
+			return new Object[] { new LibrariesNode((IServer) inputElement) };
 		}
-		if (inputElement instanceof InstalledLibrariesNode) {
-			return super.getElements(((InstalledLibrariesNode) inputElement).getServer());
+		if (inputElement instanceof LibrariesNode) {
+			return super.getElements(((LibrariesNode) inputElement).getServer());
 		}
 		return super.getElements(inputElement);
 	}
 
 	@Override
 	public Object getParent(Object element) {
-//		if (element instanceof InstalledLibrariesNode) {
-//			return ((InstalledLibrariesNode) element).getServer();
-//		}
-//		return super.getParent(element);
-		return null;
+		if (element instanceof LibrariesNode) {
+			return ((LibrariesNode) element).getServer();
+		}
+		if (element instanceof IServerProjectContainer) {
+			return new LibrariesNode(((IServerProjectContainer) element).getServer());
+		}
+		return super.getParent(element);
 	}
 }

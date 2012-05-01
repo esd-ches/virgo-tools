@@ -42,6 +42,17 @@ public class ServerUiPlugin extends AbstractUIPlugin {
 	/** Resource bundle */
 	private ResourceBundle resourceBundle;
 
+	//Naturally, this isn't public in WST..sigh.
+	public static final String WST_SERVER_VIEW_ID = "org.eclipse.wst.server.ui.ServersView";
+
+	public static final String WST_EDITOR_ID = "org.eclipse.wst.server.ui.internal.editor.ServerEditor";
+
+	public static final String ARTEFACTS_BROWSER_VIEW_ID = "org.eclipse.virgo.ide.runtime.ui.ArtefactsBrowserView";
+
+	public static final String ARTEFACTS_DETAIL_VIEW_ID = "org.eclipse.virgo.ide.runtime.ui.ArtefactsDetailView";
+
+	public static final String RUNTIME_OUTLINE_VIEW_ID = "org.eclipse.virgo.ide.runtime.ui.OutlineView";
+
 	public static final String VIRGO_SERVER_ID = "org.eclipse.virgo.server.virgo";
 
 	/**

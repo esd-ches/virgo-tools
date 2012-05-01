@@ -11,17 +11,18 @@
 
 package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 
-import org.eclipse.wst.server.core.IServer;
+import org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectArtefact;
 
-public class InstalledLibrariesNode {
-	private final IServer server;
+/**
+ * @author Miles Parker
+ */
+public class SimpleBundleLabelProvider extends RuntimeLabelProvider {
 
-	public InstalledLibrariesNode(IServer server) {
-		super();
-		this.server = server;
-	}
-
-	public IServer getServer() {
-		return server;
+	@Override
+	public String getText(Object element) {
+		if (element instanceof IServerProjectArtefact) {
+			return ((IServerProjectArtefact) element).getArtefact().getSignature();
+		}
+		return super.getText(element);
 	}
 }

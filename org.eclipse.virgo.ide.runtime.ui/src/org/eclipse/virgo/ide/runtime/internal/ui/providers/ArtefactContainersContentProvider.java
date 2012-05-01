@@ -11,23 +11,32 @@
 
 package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 
-import org.eclipse.jdt.internal.ui.packageview.PackageFragmentRootContainer;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectArtefact;
+import org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer;
+import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProject;
+import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProjectManager;
+import org.eclipse.wst.server.core.IServer;
 
 /**
  * 
  * @author Miles Parker
  * 
  */
-public class BundleOnlyContentProvider implements ITreeContentProvider {
+public class ArtefactContainersContentProvider implements ITreeContentProvider {
 
 	/**
 	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getElements(java.lang.Object)
 	 */
 	public Object[] getElements(Object inputElement) {
-		if (inputElement instanceof PackageFragmentRootContainer) {
-			return ((PackageFragmentRootContainer) inputElement).getChildren();
+		if (inputElement instanceof IServer) {
+			ServerProject project = ServerProjectManager.getInstance().getProject((IServer) inputElement);
+			Object[] containers = project.getContainers().toArray(new Object[0]);
+			return containers;
+		}
+		if (inputElement instanceof IServerProjectContainer) {
+			return ((IServerProjectContainer) inputElement).getMembers();
 		}
 		return new Object[0];
 	}
@@ -43,6 +52,12 @@ public class BundleOnlyContentProvider implements ITreeContentProvider {
 	 * @see org.eclipse.jface.viewers.ITreeContentProvider#getParent(java.lang.Object)
 	 */
 	public Object getParent(Object element) {
+		if (element instanceof IServerProjectArtefact) {
+			return ((IServerProjectArtefact) element).getContainer();
+		}
+		if (element instanceof IServerProjectContainer) {
+			return ((IServerProjectContainer) element).getServer();
+		}
 		return null;
 	}
 

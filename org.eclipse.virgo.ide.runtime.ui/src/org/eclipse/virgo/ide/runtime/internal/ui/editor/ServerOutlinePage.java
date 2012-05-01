@@ -14,6 +14,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
@@ -24,14 +25,21 @@ import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TreePath;
 import org.eclipse.jface.viewers.TreeSelection;
 import org.eclipse.jface.viewers.TreeViewer;
+import org.eclipse.pde.internal.ui.IHelpContextIds;
+import org.eclipse.pde.internal.ui.PDEPlugin;
+import org.eclipse.pde.internal.ui.PDEPluginImages;
+import org.eclipse.pde.internal.ui.PDEUIMessages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.views.contentoutline.ContentOutlinePage;
+import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
+import org.eclipse.virgo.ide.runtime.internal.ui.sorters.ArtefactSignatureSorter;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditor;
 
 /**
@@ -48,16 +56,6 @@ public class ServerOutlinePage extends ContentOutlinePage {
 
 	public ServerOutlinePage(ServerEditor editor) {
 		this.editor = editor;
-	}
-
-	private void setEditorPage(int page) {
-		try {
-			Method method = MultiPageEditorPart.class.getDeclaredMethod("setActivePage", new Class[] { Integer.TYPE });
-			method.setAccessible(true);
-			method.invoke(editor, page);
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	private IEditorPart getActiveEditor() {
@@ -91,7 +89,7 @@ public class ServerOutlinePage extends ContentOutlinePage {
 	public void createControl(Composite parent) {
 		super.createControl(parent);
 
-		contentOutlineViewer = new CommonViewer("org.eclipse.virgo.ide.runtime.ui.OutlineView", parent, SWT.MULTI
+		contentOutlineViewer = new CommonViewer(ServerUiPlugin.RUNTIME_OUTLINE_VIEW_ID, parent, SWT.MULTI
 				| SWT.H_SCROLL | SWT.V_SCROLL);
 		//contentOutlineViewer.addSelectionChangedListener(this);
 		contentOutlineViewer.setInput(editor);
@@ -116,9 +114,9 @@ public class ServerOutlinePage extends ContentOutlinePage {
 							}
 							if (leafList.size() > 0) {
 								ISelectionChangedListener pageListener = (ISelectionChangedListener) newPart.getAdapter(ISelectionChangedListener.class);
-								if (pageListener != null) {
-									pageListener.selectionChanged(new SelectionChangedEvent(
-											event.getSelectionProvider(), new StructuredSelection(leafList)));
+								if (pageListener instanceof ISelectionChangedListener) {
+									pageListener.selectionChanged(new SelectionChangedEvent(getTreeViewer(),
+											new StructuredSelection(leafList)));
 								}
 							}
 						}
@@ -128,7 +126,8 @@ public class ServerOutlinePage extends ContentOutlinePage {
 				}
 			}
 		});
-		//registerContextMenu(contentOutlineViewer);
+		contentOutlineViewer.setSorter(new ArtefactSignatureSorter());
+		registerContextMenu(contentOutlineViewer);
 	}
 
 	protected void registerContextMenu(StructuredViewer viewer) {
@@ -136,5 +135,35 @@ public class ServerOutlinePage extends ContentOutlinePage {
 		Menu searchResultPopup = searchResultManager.createContextMenu(viewer.getControl());
 		viewer.getControl().setMenu(searchResultPopup);
 		getSite().registerContextMenu("Something", searchResultManager, viewer);
+	}
+
+	class SortingAction extends Action {
+
+		private boolean sortingOn;
+
+		public SortingAction() {
+			super();
+			PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IHelpContextIds.OUTLINE_SORT_ACTION);
+			setText(PDEUIMessages.PDEMultiPageContentOutline_SortingAction_label);
+			setImageDescriptor(PDEPluginImages.DESC_ALPHAB_SORT_CO);
+			setDisabledImageDescriptor(PDEPluginImages.DESC_ALPHAB_SORT_CO_DISABLED);
+			setToolTipText(PDEUIMessages.PDEMultiPageContentOutline_SortingAction_tooltip);
+			setDescription(PDEUIMessages.PDEMultiPageContentOutline_SortingAction_description);
+			setChecked(sortingOn);
+		}
+
+		@Override
+		public void run() {
+			setChecked(isChecked());
+			valueChanged(isChecked());
+		}
+
+		private void valueChanged(final boolean on) {
+			sortingOn = on;
+			PDEPlugin.getDefault()
+					.getPreferenceStore()
+					.setValue("PDEMultiPageContentOutline.SortingAction.isChecked", on); //$NON-NLS-1$
+		}
+
 	}
 }

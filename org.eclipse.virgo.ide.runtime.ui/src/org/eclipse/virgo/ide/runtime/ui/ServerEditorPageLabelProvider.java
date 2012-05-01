@@ -9,47 +9,56 @@
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.virgo.ide.runtime.internal.ui.providers;
+package org.eclipse.virgo.ide.runtime.ui;
 
+import org.eclipse.jface.viewers.ILabelProvider;
+import org.eclipse.jface.viewers.ILabelProviderListener;
 import org.eclipse.pde.internal.ui.PDEPlugin;
 import org.eclipse.pde.internal.ui.PDEPluginImages;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorPart;
-import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet;
-import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact;
-import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiImages;
-import org.eclipse.virgo.ide.runtime.internal.ui.editor.Messages;
 
 /**
  * @author Miles Parker
  */
-public class ServerOutlineLabelProvider extends ArtefactLabelProvider {
+public class ServerEditorPageLabelProvider implements ILabelProvider {
 
-	@Override
 	public String getText(Object element) {
 		if (element instanceof IEditorPart) {
 			return ((IEditorPart) element).getTitle();
 		}
-		if (element instanceof InstalledLibrariesNode) {
-			return Messages.RepositoryBrowserEditorPage_InstalledBundlesAndLibraries;
-		}
-		if (element instanceof IArtefact || element instanceof ArtefactSet) {
-			return super.getText(element);
-		}
-		return super.getText(element);
+		return null;
 	}
 
-	@Override
 	public Image getImage(Object element) {
 		if (element instanceof IEditorPart) {
 			return PDEPlugin.getDefault().getLabelProvider().get(PDEPluginImages.DESC_PAGE_OBJ);
 		}
-		if (element instanceof InstalledLibrariesNode) {
-			return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_LIB);
-		}
-		if (element instanceof IArtefact || element instanceof ArtefactSet) {
-			return super.getImage(element);
-		}
-		return super.getImage(element);
+		return null;
+	}
+
+	/**
+	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
+	 */
+	public void addListener(ILabelProviderListener listener) {
+	}
+
+	/**
+	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
+	 */
+	public void dispose() {
+	}
+
+	/**
+	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
+	 */
+	public boolean isLabelProperty(Object element, String property) {
+		return false;
+	}
+
+	/**
+	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
+	 */
+	public void removeListener(ILabelProviderListener listener) {
 	}
 }

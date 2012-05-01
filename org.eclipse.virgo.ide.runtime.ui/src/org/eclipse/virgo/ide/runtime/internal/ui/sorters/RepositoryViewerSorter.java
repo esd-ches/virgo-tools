@@ -8,11 +8,9 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.virgo.ide.runtime.internal.ui;
+package org.eclipse.virgo.ide.runtime.internal.ui.sorters;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.virgo.ide.runtime.core.artefacts.Artefact;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet;
 import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefactTyped;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ILocalEntity;
@@ -20,8 +18,9 @@ import org.eclipse.virgo.ide.runtime.core.artefacts.LocalArtefactSet;
 
 /**
  * @author Christian Dupuis
+ * @author Miles Parker
  */
-public class RepositoryViewerSorter extends ViewerSorter {
+public class RepositoryViewerSorter extends ArtefactSignatureSorter {
 
 	@Override
 	public int category(Object element) {
@@ -43,10 +42,6 @@ public class RepositoryViewerSorter extends ViewerSorter {
 	public int compare(Viewer viewer, Object e1, Object e2) {
 		if (e1 instanceof LocalArtefactSet && e2 instanceof LocalArtefactSet) {
 			return ((ILocalEntity) e1).getFile().compareTo(((ILocalEntity) e2).getFile());
-		} else if (e1 instanceof Artefact && e2 instanceof Artefact) {
-			String st1 = ((Artefact) e1).getSymbolicName() + ";" + ((Artefact) e1).getVersion();
-			String st2 = ((Artefact) e2).getSymbolicName() + ";" + ((Artefact) e2).getVersion();
-			return super.compare(viewer, st1, st2);
 		}
 		return super.compare(viewer, e1, e2);
 	}

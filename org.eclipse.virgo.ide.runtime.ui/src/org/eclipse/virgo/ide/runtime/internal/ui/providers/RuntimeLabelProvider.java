@@ -10,12 +10,15 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 
-import org.eclipse.jdt.internal.core.PackageFragmentRoot;
-import org.eclipse.jdt.internal.ui.packageview.PackageFragmentRootContainer;
+import org.eclipse.core.resources.IFile;
+import org.eclipse.jdt.internal.ui.JavaPlugin;
+import org.eclipse.jdt.internal.ui.JavaPluginImages;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.pde.internal.ui.PDEPlugin;
 import org.eclipse.pde.internal.ui.PDEPluginImages;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.ui.ISharedImages;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactType;
 import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact;
@@ -23,45 +26,65 @@ import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefactTyped;
 import org.eclipse.virgo.ide.runtime.core.artefacts.LocalArtefactSet;
 import org.eclipse.virgo.ide.runtime.core.artefacts.LocalBundleArtefact;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiImages;
+import org.eclipse.virgo.ide.runtime.internal.ui.editor.Messages;
+import org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectArtefact;
+import org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer;
 
 /**
- * @author Christian Dupuis
  * @author Miles Parker
+ * @author Christian Dupuis
  */
-public class ArtefactLabelProvider extends LabelProvider {
-
-	public ArtefactLabelProvider() {
-	}
+public class RuntimeLabelProvider extends LabelProvider {
 
 	@Override
 	public Image getImage(Object element) {
-		if (element instanceof PackageFragmentRoot) {
-			return PDEPlugin.getDefault().getLabelProvider().get(PDEPluginImages.DESC_JAR_OBJ);
+		if (element instanceof IServerProjectArtefact) {
+			return getImage(((IServerProjectArtefact) element).getArtefact());
 		}
-		if (element instanceof PackageFragmentRootContainer) {
-			return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_LIB);
+		if (element instanceof IServerProjectContainer) {
+			return getImage(((IServerProjectContainer) element).getArtefactSet());
+		}
+		if (element instanceof ArtefactSet) {
+			ArtefactType artefactType = ((IArtefactTyped) element).getArtefactType();
+			if (artefactType == ArtefactType.BUNDLE) {
+				return PDEPlugin.getDefault().getLabelProvider().get(PDEPluginImages.DESC_JAR_LIB_OBJ);
+			} else if (artefactType == ArtefactType.LIBRARY) {
+				return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_LIB);
+			}
+		}
+		if (element instanceof IFile) {
+			return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
 		}
 		if (element instanceof IArtefactTyped) {
 			ArtefactType artefactType = ((IArtefactTyped) element).getArtefactType();
 			if (artefactType == ArtefactType.BUNDLE) {
 				if (element instanceof LocalBundleArtefact && ((LocalBundleArtefact) element).isSourceDownloaded()) {
-					return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_BUNDLE_SRC);
+					return JavaPlugin.getImageDescriptorRegistry().get(JavaPluginImages.DESC_OBJS_EXTJAR_WSRC);
 				}
-				return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_BUNDLE);
+				return JavaPlugin.getImageDescriptorRegistry().get(JavaPluginImages.DESC_OBJS_EXTJAR);
 			} else if (artefactType == ArtefactType.LIBRARY) {
 				return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_LIB);
 			}
+		}
+		if (element instanceof LibrariesNode) {
+			return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_LIB);
 		}
 		return super.getImage(element);
 	}
 
 	@Override
 	public String getText(Object element) {
-		if (element instanceof PackageFragmentRoot) {
-			return ((PackageFragmentRoot) element).getElementName();
+		if (element instanceof IServerProjectArtefact) {
+			return getText(((IServerProjectArtefact) element).getArtefact());
 		}
-		if (element instanceof PackageFragmentRootContainer) {
-			return ((PackageFragmentRootContainer) element).getLabel();
+		if (element instanceof IServerProjectContainer) {
+			return getText(((IServerProjectContainer) element).getArtefactSet());
+		}
+		if (element instanceof LibrariesNode) {
+			return Messages.RepositoryBrowserEditorPage_InstalledBundlesAndLibraries;
+		}
+		if (element instanceof IFile) {
+			return ((IFile) element).getName();
 		}
 		if (element instanceof ArtefactSet) {
 			ArtefactSet set = (ArtefactSet) element;

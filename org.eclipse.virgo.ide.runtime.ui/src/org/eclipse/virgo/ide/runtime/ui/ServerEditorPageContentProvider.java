@@ -8,7 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.virgo.ide.runtime.internal.ui.providers;
+package org.eclipse.virgo.ide.runtime.ui;
 
 import java.lang.reflect.Method;
 
@@ -17,12 +17,10 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.MultiPageEditorPart;
-import org.eclipse.virgo.ide.runtime.core.artefacts.Artefact;
-import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditor;
 
 /**
- * As we can't use common navigator for outline view, here we just provide the top-most level of detail.
+ * Generic support for server pages. Should work with all WTP servers.
  * 
  * @author Miles Parker
  */
@@ -30,12 +28,6 @@ import org.eclipse.wst.server.ui.internal.editor.ServerEditor;
 public class ServerEditorPageContentProvider implements ITreeContentProvider {
 
 	private IEditorPart[] pageParts;
-
-	private int repositoryPage;
-
-	ITreeContentProvider repositoryContentProvider;
-
-	ArtefactLabelProvider repositoryLabelProvider;
 
 	private ServerEditor editor;
 
@@ -112,23 +104,5 @@ public class ServerEditorPageContentProvider implements ITreeContentProvider {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	public int getPageNumber(Object object) {
-//		if (object instanceof IServerEditorPartFactory) {
-//			for (int i = 0; i < pageFactories.length; i++) {
-//				if (pageFactories[i] == object) {
-//					return i;
-//				}
-//			}
-//		}
-		if (object instanceof Artefact || object instanceof ArtefactSet) {
-			return repositoryPage;
-		}
-		Object parent = getParent(object);
-		if (parent != null) {
-			return getPageNumber(parent);
-		}
-		return -1;
 	}
 }

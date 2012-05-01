@@ -16,7 +16,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -35,6 +34,7 @@ import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.operation.IRunnableContext;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.PreferenceDialog;
+import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
 import org.eclipse.jface.viewers.CheckboxTreeViewer;
 import org.eclipse.jface.viewers.ICheckStateListener;
@@ -92,11 +92,11 @@ import org.eclipse.virgo.ide.runtime.core.artefacts.LocalBundleArtefact;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryProvisioningJob;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositorySourceProvisiongJob;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryUtils;
-import org.eclipse.virgo.ide.runtime.internal.ui.RepositoryViewerSorter;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiImages;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
 import org.eclipse.virgo.ide.runtime.internal.ui.providers.RepositorySearchResultContentProvider;
-import org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerOutlineLabelProvider;
+import org.eclipse.virgo.ide.runtime.internal.ui.sorters.RepositoryViewerSorter;
+import org.eclipse.virgo.ide.runtime.ui.ServerEditorPageLabelProvider;
 import org.eclipse.virgo.ide.ui.editors.BundleManifestEditor;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.ui.editor.ServerEditorPart;
@@ -527,7 +527,8 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		composite2.setLayoutData(new GridData(GridData.FILL_BOTH));
 		toolkit.paintBordersFor(composite2);
 
-		repositoryTableViewer = new CommonViewer("org.eclipse.virgo.ide.runtime.ui.ServerView", composite2, SWT.BORDER);
+		repositoryTableViewer = new CommonViewer(ServerUiPlugin.ARTEFACTS_BROWSER_VIEW_ID, composite2, SWT.BORDER
+				| SWT.SINGLE);
 		repositoryTableViewer.setSorter(new RepositoryViewerSorter());
 
 		registerContextMenu(repositoryTableViewer);
@@ -751,9 +752,9 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		shell.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				repositoryTableViewer.refresh();
-				repositoryTableViewer.expandToLevel(2);
+				repositoryTableViewer.collapseAll();
 				searchResultTableViewer.refresh(true);
-				searchResultTableViewer.expandToLevel(2);
+				searchResultTableViewer.collapseAll();
 			}
 		});
 	}
@@ -789,16 +790,11 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 	 */
 	public void selectionChanged(SelectionChangedEvent event) {
 		IStructuredSelection sel = (IStructuredSelection) event.getSelection();
-		Iterator<?> iterator = sel.iterator();
-
-		while (iterator.hasNext()) {
-			Object next = iterator.next();
-		}
-		repositoryTableViewer.collapseAll();
 		repositoryTableViewer.setSelection(sel, true);
+		repositoryTableViewer.expandToLevel(sel.getFirstElement(), AbstractTreeViewer.ALL_LEVELS);
 	}
 
-	private class ColoredRespositoryLabelProvider extends ServerOutlineLabelProvider implements IColorProvider {
+	private class ColoredRespositoryLabelProvider extends ServerEditorPageLabelProvider implements IColorProvider {
 
 		public Color getBackground(Object element) {
 			return null;

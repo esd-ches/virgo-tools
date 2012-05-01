@@ -13,17 +13,20 @@ package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.virgo.ide.runtime.internal.ui.projects.ArtefactSetContainer;
+import org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProject;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProjectManager;
 import org.eclipse.wst.server.core.IServer;
 
-public class ServerBundleContainersContentProvider implements ITreeContentProvider {
+public class RuntimeContainersContentProvider implements ITreeContentProvider {
 
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof IServer) {
 			ServerProject project = ServerProjectManager.getInstance().getProject((IServer) inputElement);
 			return project.getContainers().toArray(new Object[0]);
+		}
+		if (inputElement instanceof IServerProjectContainer) {
+			return ((IServerProjectContainer) inputElement).getMembers();
 		}
 		return new Object[0];
 	}
@@ -33,8 +36,8 @@ public class ServerBundleContainersContentProvider implements ITreeContentProvid
 	}
 
 	public Object getParent(Object element) {
-		if (element instanceof ArtefactSetContainer) {
-			return ((ArtefactSetContainer) element).getServer();
+		if (element instanceof IServerProjectContainer) {
+			return ((IServerProjectContainer) element).getServer();
 		}
 		return null;
 	}

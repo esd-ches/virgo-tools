@@ -22,14 +22,13 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.core.JarPackageFragmentRoot;
 import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepository;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactType;
 import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ILocalArtefact;
 import org.eclipse.virgo.ide.runtime.core.artefacts.LocalArtefactRepository;
@@ -46,21 +45,13 @@ import org.eclipse.wst.server.core.IServer;
  */
 public class ServerProject {
 
-	public class BundlePackageFragmentRoot extends JarPackageFragmentRoot {
-
-		public BundlePackageFragmentRoot(IPath externalJarPath, JavaProject project) {
-			super(externalJarPath, project);
-			// ignore
-		}
-	}
-
 	final IServer server;
 
 	JavaProject javaProject;
 
 	private IProject project;
 
-	private List<ArtefactSetContainer> containers;
+	private List<IServerProjectContainer> containers;
 
 	List<IClasspathEntry> libraryEntries;
 
@@ -71,7 +62,7 @@ public class ServerProject {
 
 	public void refresh() {
 		libraryEntries = new ArrayList<IClasspathEntry>();
-		containers = new ArrayList<ArtefactSetContainer>();
+		containers = new ArrayList<IServerProjectContainer>();
 		ArtefactRepository repository = RepositoryUtils.getRepositoryContents(server.getRuntime());
 		repository.setServer(server);
 		List<ArtefactSet> children = new ArrayList<ArtefactSet>();
@@ -105,8 +96,14 @@ public class ServerProject {
 		for (ArtefactSet artefactSet : children) {
 			if (artefactSet instanceof LocalArtefactSet) {
 				LocalArtefactSet localSet = (LocalArtefactSet) artefactSet;
-				ArtefactSetContainer container = new ArtefactSetContainer(this, javaProject, localSet);
-				containers.add(container);
+				if (artefactSet.getArtefactType() == ArtefactType.BUNDLE) {
+					RuntimePackageFragmentRootContainer container = new RuntimePackageFragmentRootContainer(this,
+							localSet);
+					containers.add(container);
+				} else if (artefactSet.getArtefactType() == ArtefactType.LIBRARY) {
+					ArtefactRootContainer container = new ArtefactRootContainer(this, localSet);
+					containers.add(container);
+				}
 			}
 		}
 
@@ -139,12 +136,32 @@ public class ServerProject {
 		}
 	}
 
+	public IProject getProject() {
+		return project;
+	}
+
 	public JavaProject getJavaProject() {
 		return javaProject;
 	}
 
-	public List<ArtefactSetContainer> getContainers() {
+	public List<IServerProjectContainer> getContainers() {
 		return containers;
+	}
+
+	public IServer getServer() {
+		return server;
+	}
+
+	/**
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof ServerProject) {
+			ServerProject other = (ServerProject) obj;
+			return other.project.equals(project);
+		}
+		return false;
 	}
 
 	public void deleteProject() {

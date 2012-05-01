@@ -28,13 +28,21 @@ public class VirgoEditorAdapterFactory implements IAdapterFactory {
 	 */
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		if (adapterType == IContentOutlinePage.class && adaptableObject instanceof ServerEditor) {
-			ServerEditor serverEditor = (ServerEditor) adaptableObject;
+			if (getVirgoServer((IEditorPart) adaptableObject) != null) {
+				return new ServerOutlinePage((ServerEditor) adaptableObject);
+			}
+		}
+		return null;
+	}
+
+	public static IServer getVirgoServer(IEditorPart part) {
+		if (part instanceof ServerEditor) {
+			ServerEditor serverEditor = (ServerEditor) part;
 			ServerEditorInput editorInput = (ServerEditorInput) serverEditor.getEditorInput();
 			IServer server = ServerCore.findServer(editorInput.getServerId());
-			IEditorPart[] findEditors = serverEditor.findEditors(editorInput);
 			IServerType serverType = server.getServerType();
 			if (serverType.getId().equals(ServerUiPlugin.VIRGO_SERVER_ID)) {
-				return new ServerOutlinePage(serverEditor);
+				return server;
 			}
 		}
 		return null;

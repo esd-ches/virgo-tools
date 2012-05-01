@@ -39,9 +39,8 @@ import org.eclipse.wst.server.core.IServer;
  * @author Miles Parker
  */
 @SuppressWarnings("restriction")
-public class ArtefactSetContainer extends PackageFragmentRootContainer implements IClasspathContainer {
-
-	private final ServerProject serverProject;
+public class RuntimePackageFragmentRootContainer extends PackageFragmentRootContainer implements IClasspathContainer,
+		IServerProjectContainer {
 
 	private final LocalArtefactSet artefactSet;
 
@@ -49,9 +48,8 @@ public class ArtefactSetContainer extends PackageFragmentRootContainer implement
 
 	private final List<IPackageFragmentRoot> roots;
 
-	public ArtefactSetContainer(final ServerProject serverProject, IJavaProject project, LocalArtefactSet artefactSet) {
-		super(project);
-		this.serverProject = serverProject;
+	protected RuntimePackageFragmentRootContainer(final ServerProject serverProject, LocalArtefactSet artefactSet) {
+		super(serverProject.getJavaProject());
 		this.artefactSet = artefactSet;
 
 		entries = new ArrayList<IClasspathEntry>();
@@ -62,14 +60,13 @@ public class ArtefactSetContainer extends PackageFragmentRootContainer implement
 				IPath location = new Path(localArtefact.getFile().getAbsolutePath());
 				IClasspathEntry entry = JavaCore.newLibraryEntry(location, null, null);
 				entries.add(entry);
-				IPackageFragmentRoot packageFragmentRoot = this.serverProject.new BundlePackageFragmentRoot(new Path(
-						localArtefact.getFile().getAbsolutePath()), this.serverProject.javaProject);//javaProject.getPackageFragmentRoot(file.getAbsolutePath());
+				IPackageFragmentRoot packageFragmentRoot = new RuntimeBundleFragmentRoot(this, localArtefact);
 				roots.add(packageFragmentRoot);
 			}
 		}
 		try {
 			JavaCore.setClasspathContainer(getPath(), new IJavaProject[] { serverProject.javaProject },
-					new IClasspathContainer[] { ArtefactSetContainer.this }, null);
+					new IClasspathContainer[] { RuntimePackageFragmentRootContainer.this }, null);
 		} catch (JavaModelException e) {
 			throw new RuntimeException(e);
 		}
@@ -78,8 +75,8 @@ public class ArtefactSetContainer extends PackageFragmentRootContainer implement
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof ArtefactSetContainer) {
-			ArtefactSetContainer other = (ArtefactSetContainer) obj;
+		if (obj instanceof RuntimePackageFragmentRootContainer) {
+			RuntimePackageFragmentRootContainer other = (RuntimePackageFragmentRootContainer) obj;
 			return artefactSet.equals(other.artefactSet);
 		}
 		return false;
@@ -143,5 +140,16 @@ public class ArtefactSetContainer extends PackageFragmentRootContainer implement
 
 	public IServer getServer() {
 		return artefactSet.getRepository().getServer();
+	}
+
+	public LocalArtefactSet getArtefactSet() {
+		return artefactSet;
+	}
+
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer#getMembers()
+	 */
+	public Object[] getMembers() {
+		return getPackageFragmentRoots();
 	}
 }
