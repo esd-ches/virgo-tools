@@ -16,7 +16,6 @@ import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
  * Represents an artefact in the repository :- bundle or library
  * 
  * @author adriancolyer
- * 
  */
 public abstract class Artefact implements IArtefact {
 
@@ -46,12 +45,16 @@ public abstract class Artefact implements IArtefact {
 	/**
 	 * Construct a new artefact
 	 * 
-	 * @param name human readable artefact name (e.g. "Spring Framework")
-	 * @param symbolicName uniquely identifying name (e.g.
-	 *        "org.springframework")
-	 * @param version version of the artefact, following OSGi Version semantics
-	 * @param organisationName organisation name as defined in ivy.xml
-	 * @param moduleName module name as defined in ivy.xml
+	 * @param name
+	 *            human readable artefact name (e.g. "Spring Framework")
+	 * @param symbolicName
+	 *            uniquely identifying name (e.g. "org.springframework")
+	 * @param version
+	 *            version of the artefact, following OSGi Version semantics
+	 * @param organisationName
+	 *            organisation name as defined in ivy.xml
+	 * @param moduleName
+	 *            module name as defined in ivy.xml
 	 */
 	public Artefact(String name, String symbolicName, OsgiVersion version, String organisationName, String moduleName) {
 		this.name = ArtefactRepositoryManager.convert(name);
@@ -120,7 +123,7 @@ public abstract class Artefact implements IArtefact {
 	 */
 	public String getRelativeLicenseUrlPath() {
 		return "/" + getOrganisationName() + "/" + getModuleName() + "/" + getVersion() + "/license-" + getVersion()
-			+ ".txt";
+				+ ".txt";
 	}
 
 	public String getSignature() {
@@ -137,6 +140,7 @@ public abstract class Artefact implements IArtefact {
 	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
+	@Override
 	public boolean equals(Object other) {
 		if (other instanceof Artefact) {
 			Artefact artefact = (Artefact) other;
