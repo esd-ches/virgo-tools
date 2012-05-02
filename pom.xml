@@ -120,7 +120,7 @@
     <repository>
       <id>virgo-milestone</id>
       <layout>p2</layout>
-      <url>http://download.eclipse.org/virgo/updatesite/3.5.0.M02</url>
+      <url>http://download.eclipse.org/virgo/updatesite/3.5.0.M04</url>
     </repository>
   </repositories>
 
