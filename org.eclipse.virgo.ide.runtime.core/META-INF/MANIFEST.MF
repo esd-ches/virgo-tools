@@ -47,12 +47,12 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.tptp.platform.integration.pde;resolution:=optional,
  org.eclipse.virgo.util.io,
  org.eclipse.virgo.bundlor,
- org.eclipse.virgo.util.osgi.manifest
+ org.eclipse.virgo.util.osgi.manifest,
+ org.eclipse.libra.framework.editor.core;bundle-version="0.1.0",
+ org.eclipse.libra.framework.editor.ui;bundle-version="0.1.0"
 Import-Package: org.apache.commons.collections.collection,
  org.apache.commons.lang,
- org.apache.commons.logging,
- org.eclipse.libra.framework.editor.core;version="[0.1.0,2.0.0)",
- org.eclipse.libra.framework.editor.core.model;version="[0.1.0,2.0.0)"
+ org.apache.commons.logging
 Export-Package: org.eclipse.virgo.ide.bundlerepository.domain,
  org.eclipse.virgo.ide.management.remote,
  org.eclipse.virgo.ide.preferences,
