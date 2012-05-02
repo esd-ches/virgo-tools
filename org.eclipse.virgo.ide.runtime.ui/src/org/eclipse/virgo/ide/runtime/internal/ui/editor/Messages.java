@@ -32,8 +32,6 @@ public class Messages extends NLS {
 
 	public static String RepositoryBrowserEditorPage_BundleBrowserLabel;
 
-	public static String RepositoryBrowserEditorPage_BundlesLabel;
-
 	public static String RepositoryBrowserEditorPage_ConfirmIndexMessage;
 
 	public static String RepositoryBrowserEditorPage_DeselectAllBundlesAndLibraries;
@@ -59,8 +57,6 @@ public class Messages extends NLS {
 	public static String RepositoryBrowserEditorPage_InstallSources;
 
 	public static String RepositoryBrowserEditorPage_InstallSourcesMessage;
-
-	public static String RepositoryBrowserEditorPage_LibrariesLabel;
 
 	public static String RepositoryBrowserEditorPage_NewBundlesMessage;
 
@@ -97,6 +93,9 @@ public class Messages extends NLS {
 	public static String RepositoryBrowserEditorPage_UpdateURL;
 
 	public static String RepositoryBrowserEditorPage_ViewLicense;
+
+	public static String VirgoServerName;
+
 	static {
 		// initialize resource bundle
 		NLS.initializeMessages(BUNDLE_NAME, Messages.class);
