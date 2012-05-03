@@ -31,6 +31,7 @@ import org.eclipse.swt.graphics.Image;
  * using <code>this.getClass()</code> to ensure they are looked up via this plugin class.
  * 
  * @author Christian Dupuis
+ * @author Miles Parker
  * @see org.eclipse.jface.resource.ImageRegistry
  */
 public class ServerUiImages {
@@ -61,9 +62,11 @@ public class ServerUiImages {
 
 	public static final String IMG_OBJ_PORT = NAME_PREFIX + "port_obj.gif";
 
-	public static final String IMG_OBJ_SPRINGSOURCE = NAME_PREFIX + "springsource_obj.png";
-
 	public static final String IMG_OBJ_VIRGO = NAME_PREFIX + "virgo_obj.png";
+
+	public static final String IMG_OBJ_VIRGO_LIB = NAME_PREFIX + "virgo_obj_lib.png";
+
+	public static final String IMG_OBJ_VIRGO_FILE = NAME_PREFIX + "virgo_obj_file.png";
 
 	public static final String IMG_OBJ_BUNDLE = NAME_PREFIX + "bundle_obj.gif";
 
@@ -84,9 +87,11 @@ public class ServerUiImages {
 
 	public static final ImageDescriptor DESC_WIZB_VIRGO_SERVER = createManaged(WIZBAN, IMG_WIZB_VIRGO_SERVER);
 
-	public static final ImageDescriptor DESC_OBJ_PORT = createManaged(OBJECT, IMG_OBJ_PORT);
+	public static final ImageDescriptor DESC_OBJ_VIRGO_LIB = createManaged(OBJECT, IMG_OBJ_VIRGO_LIB);
 
-	public static final ImageDescriptor DESC_OBJ_SPRINGSOURCE = createManaged(OBJECT, IMG_OBJ_SPRINGSOURCE);
+	public static final ImageDescriptor DESC_OBJ_VIRGO_FILE = createManaged(OBJECT, IMG_OBJ_VIRGO_FILE);
+
+	public static final ImageDescriptor DESC_OBJ_PORT = createManaged(OBJECT, IMG_OBJ_PORT);
 
 	public static final ImageDescriptor DESC_OBJ_VIRGO = createManaged(OBJECT, IMG_OBJ_VIRGO);
 

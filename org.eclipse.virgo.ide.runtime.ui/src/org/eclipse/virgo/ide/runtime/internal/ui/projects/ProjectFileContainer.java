@@ -11,16 +11,13 @@
 
 package org.eclipse.virgo.ide.runtime.internal.ui.projects;
 
-import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.eclipse.core.resources.IContainer;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.Path;
 import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ILocalArtefact;
 import org.eclipse.virgo.ide.runtime.core.artefacts.LocalArtefactSet;
@@ -31,7 +28,7 @@ import org.eclipse.wst.server.core.IServer;
  * @author Miles Parker
  * 
  */
-public class ProjectLibraryContainer implements IServerProjectContainer {
+public class ProjectFileContainer implements IServerProjectContainer {
 
 	private final LocalArtefactSet artefactSet;
 
@@ -39,27 +36,22 @@ public class ProjectLibraryContainer implements IServerProjectContainer {
 
 	private final ServerProject serverProject;
 
-	protected ProjectLibraryContainer(ServerProject serverProject, LocalArtefactSet artefactSet) {
+	private final ProjectFileReference[] fileReferences;
+
+	protected ProjectFileContainer(ServerProject serverProject, LocalArtefactSet artefactSet) {
 		this.serverProject = serverProject;
 		this.artefactSet = artefactSet;
 		IProject project = serverProject.getProject();
-		IWorkspace workspace = project.getWorkspace();
 		folder = project.getFolder(artefactSet.getRelativePath());
+		List<ProjectFileReference> references = new ArrayList<ProjectFileReference>();
 		createFolder(folder);
 		for (IArtefact artefact : artefactSet.getArtefacts()) {
 			if (artefact instanceof ILocalArtefact) {
-				File file = ((ILocalArtefact) artefact).getFile();
-				String artefactRelative = file.getAbsolutePath()
-						.replaceAll(artefactSet.getFile().getAbsolutePath(), "");
-				IFile artefactFile = folder.getFile(artefactRelative);
-				try {
-					file.setReadOnly();
-					artefactFile.createLink(new Path(file.getAbsolutePath()), IResource.REPLACE, null);
-				} catch (CoreException e) {
-					throw new RuntimeException(e);
-				}
+				ProjectFileReference fileReference = new ProjectFileReference(this, (ILocalArtefact) artefact);
+				references.add(fileReference);
 			}
 		}
+		fileReferences = references.toArray(new ProjectFileReference[0]);
 	}
 
 	public static void createFolder(IFolder folder) {
@@ -80,11 +72,7 @@ public class ProjectLibraryContainer implements IServerProjectContainer {
 	 * @see org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer#getMembers()
 	 */
 	public Object[] getMembers() {
-		try {
-			return folder.members();
-		} catch (CoreException e) {
-			throw new RuntimeException(e);
-		}
+		return getFileReferences();
 	}
 
 	/**
@@ -99,6 +87,10 @@ public class ProjectLibraryContainer implements IServerProjectContainer {
 	 */
 	public LocalArtefactSet getArtefactSet() {
 		return artefactSet;
+	}
+
+	public ProjectFileReference[] getFileReferences() {
+		return fileReferences;
 	}
 
 	public IFolder getFolder() {

@@ -11,12 +11,15 @@
 
 package org.eclipse.virgo.ide.runtime.internal.ui.filters;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 import org.eclipse.jdt.internal.ui.JavaPluginImages;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.viewers.ViewerFilter;
-import org.eclipse.ui.IMemento;
-import org.eclipse.ui.internal.navigator.NavigatorFilterService;
+import org.eclipse.ui.navigator.ICommonFilterDescriptor;
+import org.eclipse.ui.navigator.INavigatorFilterService;
+import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiImages;
 import org.eclipse.virgo.ide.runtime.ui.views.ArtefactCommonView;
 
 /**
@@ -28,8 +31,6 @@ public class FilterAction extends Action {
 
 	ArtefactCommonView navigator;
 
-	Class<ViewerFilter> implementation;
-
 	String id;
 
 	/*
@@ -37,45 +38,46 @@ public class FilterAction extends Action {
 	 */
 	@Override
 	public void run() {
-		if (navigator.getMemento() != null) {
-			navigator.getMemento().putBoolean(id, isChecked());
+		INavigatorFilterService activationService = navigator.getNavigatorContentService().getFilterService();
+		ICommonFilterDescriptor[] visibleFilterDescriptors = activationService.getVisibleFilterDescriptors();
+		Collection<String> activeIDs = new HashSet<String>();
+		for (ICommonFilterDescriptor filterDescriptor : visibleFilterDescriptors) {
+			String filterID = filterDescriptor.getId();
+			boolean active = activationService.isActive(filterID);
+			if (active) {
+				activeIDs.add(filterID);
+			}
 		}
-		NavigatorFilterService activationService = (NavigatorFilterService) navigator.getNavigatorContentService()
-				.getFilterService();
-		activationService.setActive(id, !isChecked());
-		activationService.updateViewer();
+		if (isChecked()) {
+			activeIDs.remove(id);
+		} else {
+			activeIDs.add(id);
+		}
+		String[] ids = activeIDs.toArray(new String[activeIDs.size()]);
+		activationService.activateFilterIdsAndUpdateViewer(ids);
 	}
 
-	private FilterAction(ArtefactCommonView viewer, Class implementation, String id, ImageDescriptor image) {
+	private FilterAction(ArtefactCommonView viewer, String id, ImageDescriptor image) {
 		super("", AS_CHECK_BOX); //$NON-NLS-1$
 		this.navigator = viewer;
-		this.implementation = implementation;
 		this.id = id;
-//		INavigatorContentDescriptor contentDescriptor = viewer.getNavigatorContentService()
-//				.getContentDescriptorById(id);
-//		setText("Show " + contentDescriptor.getName());
-//		setDescription("Show " + contentDescriptor.getName());
-//		setToolTipText("Show " + contentDescriptor.getName() + " in the list of artifacts.");
+		ICommonFilterDescriptor[] descriptors = viewer.getNavigatorContentService()
+				.getFilterService()
+				.getVisibleFilterDescriptors();
+		for (ICommonFilterDescriptor descriptor : descriptors) {
+			if (descriptor.getId().equals(id)) {
+				setText("Show " + descriptor.getName());
+				setDescription("Show " + descriptor.getDescription());
+				setToolTipText("Show " + descriptor.getName() + " in the list of artifacts.");
+				break;
+			}
+		}
 		setImageDescriptor(image);
 		setDisabledImageDescriptor(image);
 
-		//Showing by default
-		boolean initialState = true;
-		if (viewer.getMemento() != null) {
-			Boolean value = viewer.getMemento().getBoolean(id);
-			if (value != null) {
-				initialState = value;
-			}
-		}
-		setChecked(initialState);
-		run();
-	}
-
-	/**
-	 * @see org.eclipse.ui.navigator.CommonNavigator#saveState(org.eclipse.ui.IMemento)
-	 */
-	public void saveState(IMemento aMemento) {
-		aMemento.putBoolean(id, isChecked());
+		INavigatorFilterService activationService = navigator.getNavigatorContentService().getFilterService();
+		boolean active = activationService.isActive(id);
+		setChecked(!active);
 	}
 
 	public static FilterAction[] createSet(ArtefactCommonView viewer) {
@@ -83,12 +85,12 @@ public class FilterAction extends Action {
 	}
 
 	public static FilterAction createBundleFilter(ArtefactCommonView viewer) {
-		return new FilterAction(viewer, BundleArtefactFilter.class, "org.eclipse.virgo.ide.runtime.ui.filterBundles",
+		return new FilterAction(viewer, "org.eclipse.virgo.ide.runtime.ui.filterBundles",
 				JavaPluginImages.DESC_OBJS_EXTJAR);
 	}
 
 	public static FilterAction createLibraryFilter(ArtefactCommonView viewer) {
-		return new FilterAction(viewer, LibraryArtefactFilter.class,
-				"org.eclipse.virgo.ide.runtime.ui.filterLibraries", JavaPluginImages.DESC_OBJS_LIBRARY);
+		return new FilterAction(viewer, "org.eclipse.virgo.ide.runtime.ui.filterLibraries",
+				ServerUiImages.DESC_OBJ_VIRGO_LIB);
 	}
 }

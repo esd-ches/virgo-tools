@@ -182,7 +182,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 	}
 
 	protected Image getFormImage() {
-		return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_SPRINGSOURCE);
+		return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_VIRGO);
 	}
 
 	@Override

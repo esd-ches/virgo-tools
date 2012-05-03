@@ -275,7 +275,7 @@
                   value="org.eclipse.virgo.ide.runtime.internal.ui.editor.RepositoryBrowserEditorPage">
             </instanceof>
             <instanceof
-                  value="org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectLibraryContainer">
+                  value="org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectFileContainer">
             </instanceof>
          </or>
       </triggerPoints>
@@ -305,9 +305,14 @@
             class="org.eclipse.virgo.ide.runtime.internal.ui.sorters.ArtefactSignatureSorter"
             id="org.eclipse.virgo.ide.artefactSignatureSorter">
          <parentExpression>
-            <instanceof
-                  value="java.lang.Object">
-            </instanceof>
+            <or>
+               <instanceof
+                     value="org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet">
+               </instanceof>
+               <instanceof
+                     value="org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer">
+               </instanceof>
+            </or>
          </parentExpression>
       </commonSorter>
    </navigatorContent>
@@ -323,10 +328,13 @@
                   value="org.eclipse.virgo.ide.runtime.core.IServer">
             </instanceof>
             <instanceof
-                  value="org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectLibraryContainer">
+                  value="org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer">
             </instanceof>
             <instanceof
                   value="org.eclipse.virgo.ide.runtime.internal.ui.providers.LibrariesNode">
+            </instanceof>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepository">
             </instanceof>
       </triggerPoints>
       <commonSorter
@@ -334,7 +342,7 @@
             id="org.eclipse.virgo.ide.artefactSignatureSorter">
          <parentExpression>
             <instanceof
-                  value="java.lang.Object">
+                  value="org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact">
             </instanceof>
          </parentExpression>
       </commonSorter>
@@ -352,10 +360,13 @@
                   value="org.eclipse.virgo.ide.runtime.core.IServer">
             </instanceof>
             <instanceof
-                  value="org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectLibraryContainer">
+                  value="org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer">
             </instanceof>
             <instanceof
                   value="org.eclipse.virgo.ide.runtime.internal.ui.providers.LibrariesNode">
+            </instanceof>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepository">
             </instanceof>
          </or>
       </triggerPoints>

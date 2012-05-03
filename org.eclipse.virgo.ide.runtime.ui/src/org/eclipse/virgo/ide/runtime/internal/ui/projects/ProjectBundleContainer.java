@@ -70,7 +70,7 @@ public class ProjectBundleContainer extends PackageFragmentRootContainer impleme
 		} catch (JavaModelException e) {
 			throw new RuntimeException(e);
 		}
-		serverProject.libraryEntries.add(JavaCore.newContainerEntry(getPath()));
+		serverProject.getLibraryEntries().add(JavaCore.newContainerEntry(getPath()));
 	}
 
 	@Override

@@ -38,6 +38,7 @@ import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.navigator.INavigatorActivationService;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
 import org.eclipse.virgo.ide.runtime.internal.ui.editor.VirgoEditorAdapterFactory;
 import org.eclipse.virgo.ide.runtime.internal.ui.filters.FilterAction;
@@ -192,7 +193,7 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 					if (next instanceof LibrariesNode) {
 						serverSelection.add(((LibrariesNode) next).getServer());
 					}
-					if (next instanceof IServerProjectContainer) {
+					if (next instanceof IServerProjectContainer || next instanceof ArtefactSet) {
 						//Don't add if we already have a server selected at top level.
 						if (serverSelection.isEmpty()) {
 							serverSelection.add(next);

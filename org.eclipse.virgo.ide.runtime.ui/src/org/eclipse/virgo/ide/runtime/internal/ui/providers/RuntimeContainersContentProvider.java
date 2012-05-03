@@ -13,6 +13,7 @@ package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProject;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProjectManager;
@@ -22,11 +23,23 @@ public class RuntimeContainersContentProvider implements ITreeContentProvider {
 
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof IServer) {
-			ServerProject project = ServerProjectManager.getInstance().getProject((IServer) inputElement);
-			return project.getContainers().toArray(new Object[0]);
+			IServer server = (IServer) inputElement;
+			ServerProject project = ServerProjectManager.getInstance().getProject(server);
+			return project.getArtefactSets().toArray(new Object[0]);
+//			return project.getContainers().toArray(new Object[0]);
 		}
 		if (inputElement instanceof IServerProjectContainer) {
 			return ((IServerProjectContainer) inputElement).getMembers();
+		}
+		if (inputElement instanceof ArtefactSet) {
+			ArtefactSet artefactSet = (ArtefactSet) inputElement;
+			ServerProject project = ServerProjectManager.getInstance().getProject(
+					artefactSet.getRepository().getServer());
+			IServerProjectContainer container = project.getContainer(artefactSet);
+			if (container != null) {
+				return container.getMembers();
+			}
+			return artefactSet.toArray();
 		}
 		return new Object[0];
 	}

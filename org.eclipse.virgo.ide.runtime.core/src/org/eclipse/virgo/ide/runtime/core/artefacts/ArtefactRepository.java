@@ -10,6 +10,9 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.runtime.core.artefacts;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.wst.server.core.IServer;
 
 /**
@@ -20,8 +23,12 @@ import org.eclipse.wst.server.core.IServer;
 public class ArtefactRepository {
 
 	ArtefactSet bundles;
+
 	ArtefactSet libraries;
+
 	ArtefactSet allArtefacts;
+
+	List<ArtefactSet> allSets;
 
 	IServer server;
 
@@ -29,6 +36,9 @@ public class ArtefactRepository {
 		bundles = createArtefactSet(ArtefactType.BUNDLE);
 		libraries = createArtefactSet(ArtefactType.LIBRARY);
 		allArtefacts = new ArtefactSet(this, ArtefactType.COMBINED);
+		allSets = new ArrayList<ArtefactSet>();
+		allSets.add(bundles);
+		allSets.add(libraries);
 	}
 
 	protected ArtefactSet createArtefactSet(ArtefactType type) {
@@ -54,8 +64,7 @@ public class ArtefactRepository {
 	}
 
 	/**
-	 * Returns the appropriate set for the artefact. This set may or may not
-	 * actually contain the supplied artefact.
+	 * Returns the appropriate set for the artefact. This set may or may not actually contain the supplied artefact.
 	 */
 	public ArtefactSet getMatchingArtefactSet(IArtefactTyped artefact) {
 		return getArtefactSet(artefact.getArtefactType());
@@ -95,6 +104,10 @@ public class ArtefactRepository {
 
 	public ArtefactSet getAllArtefacts() {
 		return allArtefacts;
+	}
+
+	public List<ArtefactSet> getAllSets() {
+		return allSets;
 	}
 
 	public boolean contains(IArtefact artefact) {

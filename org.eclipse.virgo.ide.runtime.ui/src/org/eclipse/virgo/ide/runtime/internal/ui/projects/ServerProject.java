@@ -53,7 +53,11 @@ public class ServerProject {
 
 	private List<IServerProjectContainer> containers;
 
-	List<IClasspathEntry> libraryEntries;
+	private List<IClasspathEntry> libraryEntries;
+
+	private List<ArtefactSet> artefactSets;
+
+	private Map<ArtefactSet, IServerProjectContainer> projectContainerForArtefactSet;
 
 	public ServerProject(IServer server) {
 		this.server = server;
@@ -63,9 +67,11 @@ public class ServerProject {
 	public void refresh() {
 		libraryEntries = new ArrayList<IClasspathEntry>();
 		containers = new ArrayList<IServerProjectContainer>();
+		artefactSets = new ArrayList<ArtefactSet>();
+		projectContainerForArtefactSet = new HashMap<ArtefactSet, IServerProjectContainer>();
+
 		ArtefactRepository repository = RepositoryUtils.getRepositoryContents(server.getRuntime());
 		repository.setServer(server);
-		List<ArtefactSet> children = new ArrayList<ArtefactSet>();
 		Map<File, ArtefactRepository> setForFile = new HashMap<File, ArtefactRepository>();
 
 		for (IArtefact bundle : repository.getAllArtefacts().getArtefacts()) {
@@ -86,29 +92,31 @@ public class ServerProject {
 		}
 		for (ArtefactRepository repos : setForFile.values()) {
 			if (repos.getBundleSet().getArtefacts().iterator().hasNext()) {
-				children.add(repos.getBundleSet());
+				artefactSets.add(repos.getBundleSet());
 			}
 			if (repos.getLibrarySet().getArtefacts().iterator().hasNext()) {
-				children.add(repos.getLibrarySet());
+				artefactSets.add(repos.getLibrarySet());
 			}
 		}
 
-		for (ArtefactSet artefactSet : children) {
+		for (ArtefactSet artefactSet : artefactSets) {
 			if (artefactSet instanceof LocalArtefactSet) {
 				LocalArtefactSet localSet = (LocalArtefactSet) artefactSet;
 				if (artefactSet.getArtefactType() == ArtefactType.BUNDLE) {
-					ProjectBundleContainer container = new ProjectBundleContainer(this,
-							localSet);
+					ProjectBundleContainer container = new ProjectBundleContainer(this, localSet);
 					containers.add(container);
+					projectContainerForArtefactSet.put(localSet, container);
 				} else if (artefactSet.getArtefactType() == ArtefactType.LIBRARY) {
-					ProjectLibraryContainer container = new ProjectLibraryContainer(this, localSet);
+					ProjectFileContainer container = new ProjectFileContainer(this, localSet);
 					containers.add(container);
+					projectContainerForArtefactSet.put(localSet, container);
 				}
 			}
 		}
 
 		try {
-			javaProject.setRawClasspath(libraryEntries.toArray(new IClasspathEntry[libraryEntries.size()]), null);
+			javaProject.setRawClasspath(getLibraryEntries().toArray(new IClasspathEntry[getLibraryEntries().size()]),
+					null);
 		} catch (JavaModelException e) {
 			throw new RuntimeException(e);
 		}
@@ -148,8 +156,16 @@ public class ServerProject {
 		return containers;
 	}
 
+	public IServerProjectContainer getContainer(ArtefactSet set) {
+		return projectContainerForArtefactSet.get(set);
+	}
+
 	public IServer getServer() {
 		return server;
+	}
+
+	public List<ArtefactSet> getArtefactSets() {
+		return artefactSets;
 	}
 
 	/**
@@ -176,5 +192,9 @@ public class ServerProject {
 				throw new RuntimeException(e);
 			}
 		}
+	}
+
+	public List<IClasspathEntry> getLibraryEntries() {
+		return libraryEntries;
 	}
 }

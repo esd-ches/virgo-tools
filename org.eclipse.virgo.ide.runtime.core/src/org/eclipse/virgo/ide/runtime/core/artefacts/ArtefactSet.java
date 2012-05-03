@@ -21,7 +21,6 @@ import org.eclipse.core.runtime.Assert;
  * Safely encapsulates artefact interactions.
  * 
  * @author Miles Parker
- * 
  */
 public class ArtefactSet implements IArtefactTyped {
 
@@ -47,9 +46,9 @@ public class ArtefactSet implements IArtefactTyped {
 	public boolean add(IArtefact artefact) {
 		Assert.isNotNull(artefact, "Tried to add null artefact.");
 		if (artefact.getArtefactType() == artefactType || artefactType == ArtefactType.COMBINED) {
+			artefact.setSet(this);
 			return artefacts.add(artefact);
 		}
-		artefact.setSet(this);
 		throw new RuntimeException("Tried to add non-matching artefact to " + artefactType.name() + ": " + artefact);
 	}
 
@@ -70,8 +69,7 @@ public class ArtefactSet implements IArtefactTyped {
 	}
 
 	/**
-	 * Assumes that there is one and only one artefact set of a given type for
-	 * each set.
+	 * Assumes that there is one and only one artefact set of a given type for each set.
 	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
@@ -79,8 +77,8 @@ public class ArtefactSet implements IArtefactTyped {
 	public boolean equals(Object obj) {
 		if (obj instanceof ArtefactSet) {
 			ArtefactSet set = (ArtefactSet) obj;
-			return (getArtefactType() == set.getArtefactType() && ObjectUtils.equals(	getRepository(),
-																						set.getRepository()));
+			return (getArtefactType() == set.getArtefactType() && ObjectUtils.equals(getRepository(),
+					set.getRepository()));
 		}
 		return super.equals(obj);
 	}

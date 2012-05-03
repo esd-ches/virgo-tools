@@ -29,6 +29,7 @@ import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiImages;
 import org.eclipse.virgo.ide.runtime.internal.ui.editor.Messages;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectArtefact;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer;
+import org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectFileReference;
 
 /**
  * @author Miles Parker
@@ -44,12 +45,15 @@ public class RuntimeLabelProvider extends LabelProvider {
 		if (element instanceof IServerProjectContainer) {
 			return getImage(((IServerProjectContainer) element).getArtefactSet());
 		}
+		if (element instanceof ProjectFileReference) {
+			return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_VIRGO);
+		}
 		if (element instanceof ArtefactSet) {
 			ArtefactType artefactType = ((IArtefactTyped) element).getArtefactType();
 			if (artefactType == ArtefactType.BUNDLE) {
 				return PDEPlugin.getDefault().getLabelProvider().get(PDEPluginImages.DESC_JAR_LIB_OBJ);
 			} else if (artefactType == ArtefactType.LIBRARY) {
-				return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_LIB);
+				return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_VIRGO_LIB);
 			}
 		}
 		if (element instanceof IFile) {
@@ -63,7 +67,7 @@ public class RuntimeLabelProvider extends LabelProvider {
 				}
 				return JavaPlugin.getImageDescriptorRegistry().get(JavaPluginImages.DESC_OBJS_EXTJAR);
 			} else if (artefactType == ArtefactType.LIBRARY) {
-				return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_LIB);
+				return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_VIRGO_FILE);
 			}
 		}
 		if (element instanceof LibrariesNode) {
