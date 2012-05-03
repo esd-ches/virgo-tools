@@ -16,14 +16,14 @@ import org.eclipse.jdt.internal.core.JarPackageFragmentRoot;
 import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ILocalArtefact;
 
-public class RuntimeBundleFragmentRoot extends JarPackageFragmentRoot implements IServerProjectArtefact {
+public class ProjectBundleRoot extends JarPackageFragmentRoot implements IServerProjectArtefact {
 
 	private final ILocalArtefact artefact;
 
-	private final RuntimePackageFragmentRootContainer container;
+	private final ProjectBundleContainer container;
 
 	//Override to allow constructor access for jar package
-	public RuntimeBundleFragmentRoot(RuntimePackageFragmentRootContainer container, ILocalArtefact artefact) {
+	public ProjectBundleRoot(ProjectBundleContainer container, ILocalArtefact artefact) {
 		super(new Path(artefact.getFile().getAbsolutePath()), (JavaProject) container.getJavaProject());
 		this.container = container;
 		this.artefact = artefact;

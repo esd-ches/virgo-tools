@@ -9,11 +9,11 @@
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.virgo.ide.runtime.internal.ui.sorters;
+package org.eclipse.virgo.ide.runtime.internal.ui.filters;
 
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.jface.viewers.ViewerSorter;
-import org.eclipse.virgo.ide.runtime.core.artefacts.Artefact;
+import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectBundleContainer;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectBundleRoot;
 
 /**
@@ -21,22 +21,14 @@ import org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectBundleRoot;
  * @author Miles Parker
  * 
  */
-public class ArtefactSignatureSorter extends ViewerSorter {
-	@Override
-	public int category(Object element) {
-		return 0;
-	}
+public class BundleArtefactFilter extends ViewerFilter {
 
+	/**
+	 * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+	 *      java.lang.Object)
+	 */
 	@Override
-	public int compare(Viewer viewer, Object e1, Object e2) {
-		if (e1 instanceof ProjectBundleRoot && e2 instanceof ProjectBundleRoot) {
-			return compare(viewer, ((ProjectBundleRoot) e1).getArtefact(),
-					((ProjectBundleRoot) e2).getArtefact());
-		}
-		if (e1 instanceof Artefact && e2 instanceof Artefact) {
-			return ((Artefact) e1).getSignature().compareTo(((Artefact) e2).getSignature());
-		}
-		return super.compare(viewer, e1, e2);
+	public boolean select(Viewer viewer, Object parentElement, Object element) {
+		return (!(element instanceof ProjectBundleContainer) && !(element instanceof ProjectBundleRoot));
 	}
-
 }

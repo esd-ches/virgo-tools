@@ -9,13 +9,13 @@
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.virgo.ide.runtime.internal.ui.providers;
+package org.eclipse.virgo.ide.runtime.internal.ui.filters;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.virgo.ide.runtime.core.artefacts.LocalLibraryArtefact;
-import org.eclipse.virgo.ide.runtime.internal.ui.projects.ArtefactRootContainer;
+import org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectLibraryContainer;
 
 /**
  * 
@@ -32,7 +32,7 @@ public class LibraryArtefactFilter extends ViewerFilter {
 	 */
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		return (!(element instanceof ArtefactRootContainer) && !(element instanceof LocalLibraryArtefact) && !(element instanceof IFile && ((IFile) element).getFileExtension()
+		return (!(element instanceof ProjectLibraryContainer) && !(element instanceof LocalLibraryArtefact) && !(element instanceof IFile && ((IFile) element).getFileExtension()
 				.equals(VIRGO_LIB_EXT)));
 	}
 

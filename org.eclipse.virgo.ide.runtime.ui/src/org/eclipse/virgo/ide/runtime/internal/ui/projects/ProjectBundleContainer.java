@@ -39,7 +39,7 @@ import org.eclipse.wst.server.core.IServer;
  * @author Miles Parker
  */
 @SuppressWarnings("restriction")
-public class RuntimePackageFragmentRootContainer extends PackageFragmentRootContainer implements IClasspathContainer,
+public class ProjectBundleContainer extends PackageFragmentRootContainer implements IClasspathContainer,
 		IServerProjectContainer {
 
 	private final LocalArtefactSet artefactSet;
@@ -48,7 +48,7 @@ public class RuntimePackageFragmentRootContainer extends PackageFragmentRootCont
 
 	private final List<IPackageFragmentRoot> roots;
 
-	protected RuntimePackageFragmentRootContainer(final ServerProject serverProject, LocalArtefactSet artefactSet) {
+	protected ProjectBundleContainer(final ServerProject serverProject, LocalArtefactSet artefactSet) {
 		super(serverProject.getJavaProject());
 		this.artefactSet = artefactSet;
 
@@ -60,13 +60,13 @@ public class RuntimePackageFragmentRootContainer extends PackageFragmentRootCont
 				IPath location = new Path(localArtefact.getFile().getAbsolutePath());
 				IClasspathEntry entry = JavaCore.newLibraryEntry(location, null, null);
 				entries.add(entry);
-				IPackageFragmentRoot packageFragmentRoot = new RuntimeBundleFragmentRoot(this, localArtefact);
+				IPackageFragmentRoot packageFragmentRoot = new ProjectBundleRoot(this, localArtefact);
 				roots.add(packageFragmentRoot);
 			}
 		}
 		try {
 			JavaCore.setClasspathContainer(getPath(), new IJavaProject[] { serverProject.javaProject },
-					new IClasspathContainer[] { RuntimePackageFragmentRootContainer.this }, null);
+					new IClasspathContainer[] { ProjectBundleContainer.this }, null);
 		} catch (JavaModelException e) {
 			throw new RuntimeException(e);
 		}
@@ -75,8 +75,8 @@ public class RuntimePackageFragmentRootContainer extends PackageFragmentRootCont
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof RuntimePackageFragmentRootContainer) {
-			RuntimePackageFragmentRootContainer other = (RuntimePackageFragmentRootContainer) obj;
+		if (obj instanceof ProjectBundleContainer) {
+			ProjectBundleContainer other = (ProjectBundleContainer) obj;
 			return artefactSet.equals(other.artefactSet);
 		}
 		return false;

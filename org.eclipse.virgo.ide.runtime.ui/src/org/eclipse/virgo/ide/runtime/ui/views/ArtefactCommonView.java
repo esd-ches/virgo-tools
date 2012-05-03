@@ -40,6 +40,7 @@ import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.navigator.INavigatorActivationService;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
 import org.eclipse.virgo.ide.runtime.internal.ui.editor.VirgoEditorAdapterFactory;
+import org.eclipse.virgo.ide.runtime.internal.ui.filters.FilterAction;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer;
 import org.eclipse.virgo.ide.runtime.internal.ui.providers.LibrariesNode;
 import org.eclipse.virgo.ide.runtime.internal.ui.providers.RuntimeFullLabelProvider;
@@ -58,11 +59,9 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 
 	public static final String SHOW_VIEW_LIST = "showViewList";
 
-	public static final String SHOW_LIBRARIES = "showLibraries";
-
-	public static final String SHOW_BUNDLES = "showBundles";
-
 	private static final String TREE_ACTION_GROUP = "tree";
+
+	private static final String FILTER_ACTION_GROUP = "filters";
 
 	private IWorkbenchPart currentPart;
 
@@ -71,6 +70,8 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 	private ShowTreeAction showTreeAction;
 
 	private ShowListAction showListAction;
+
+	private FilterAction[] filterActions;
 
 	private boolean showList;
 
@@ -127,24 +128,30 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 	@Override
 	public void createPartControl(Composite aParent) {
 		showList = false;
-		if (memento != null) {
-			Boolean value = memento.getBoolean(SHOW_VIEW_LIST);
+		if (getMemento() != null) {
+			Boolean value = getMemento().getBoolean(SHOW_VIEW_LIST);
 			if (value != null) {
 				showList = value;
 			}
 		}
+		IActionBars actionBars = getViewSite().getActionBars();
+		IToolBarManager manager = actionBars.getToolBarManager();
 		showTreeAction = new ShowTreeAction();
 		showTreeAction.setChecked(!showList);
 		showListAction = new ShowListAction();
 		showListAction.setChecked(showList);
-		IActionBars actionBars = getViewSite().getActionBars();
-		IToolBarManager manager = actionBars.getToolBarManager();
 		manager.add(new Separator(TREE_ACTION_GROUP));
 		manager.add(new Separator("presentation")); //$NON-NLS-1$
 		manager.appendToGroup("presentation", showTreeAction); //$NON-NLS-1$
 		manager.appendToGroup("presentation", showListAction); //$NON-NLS-1$
 
 		super.createPartControl(aParent);
+
+		manager.add(new Separator(FILTER_ACTION_GROUP));
+		filterActions = FilterAction.createSet(this);
+		for (FilterAction action : filterActions) {
+			manager.appendToGroup(FILTER_ACTION_GROUP, action);
+		}
 
 		updateActivations();
 	}
@@ -233,6 +240,14 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 		super.dispose();
 		getSite().getPage().removePostSelectionListener(this);
 		currentPart = null;
+	}
+
+	/**
+	 * @see org.eclipse.ui.navigator.CommonNavigator#getMemento()
+	 */
+	@Override
+	public IMemento getMemento() {
+		return super.getMemento();
 	}
 
 	/**

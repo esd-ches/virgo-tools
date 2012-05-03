@@ -275,7 +275,7 @@
                   value="org.eclipse.virgo.ide.runtime.internal.ui.editor.RepositoryBrowserEditorPage">
             </instanceof>
             <instanceof
-                  value="org.eclipse.virgo.ide.runtime.internal.ui.projects.ArtefactRootContainer">
+                  value="org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectLibraryContainer">
             </instanceof>
          </or>
       </triggerPoints>
@@ -323,7 +323,7 @@
                   value="org.eclipse.virgo.ide.runtime.core.IServer">
             </instanceof>
             <instanceof
-                  value="org.eclipse.virgo.ide.runtime.internal.ui.projects.ArtefactRootContainer">
+                  value="org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectLibraryContainer">
             </instanceof>
             <instanceof
                   value="org.eclipse.virgo.ide.runtime.internal.ui.providers.LibrariesNode">
@@ -352,7 +352,7 @@
                   value="org.eclipse.virgo.ide.runtime.core.IServer">
             </instanceof>
             <instanceof
-                  value="org.eclipse.virgo.ide.runtime.internal.ui.projects.ArtefactRootContainer">
+                  value="org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectLibraryContainer">
             </instanceof>
             <instanceof
                   value="org.eclipse.virgo.ide.runtime.internal.ui.providers.LibrariesNode">
@@ -371,10 +371,17 @@
    </navigatorContent>
    <commonFilter
          activeByDefault="false"
-         class="org.eclipse.virgo.ide.runtime.internal.ui.providers.LibraryArtefactFilter"
+         class="org.eclipse.virgo.ide.runtime.internal.ui.filters.LibraryArtefactFilter"
          description="Filters libraries from artifacts shown."
          id="org.eclipse.virgo.ide.runtime.ui.filterLibraries"
          name="Libraries">
+   </commonFilter>
+   <commonFilter
+         activeByDefault="false"
+         class="org.eclipse.virgo.ide.runtime.internal.ui.filters.BundleArtefactFilter"
+         description="Filters bundles (jars and other OSGi resources) from artifacts shown."
+         id="org.eclipse.virgo.ide.runtime.ui.filterBundles"
+         name="Bundles">
    </commonFilter>
 </extension>
 
@@ -421,6 +428,9 @@
          </contentExtension>
          <contentExtension
                pattern="org.eclipse.virgo.ide.runtime.ui.filterLibraries">
+         </contentExtension>
+         <contentExtension
+               pattern="org.eclipse.virgo.ide.runtime.ui.filterBundles">
          </contentExtension>
       </includes>
    </viewerContentBinding>

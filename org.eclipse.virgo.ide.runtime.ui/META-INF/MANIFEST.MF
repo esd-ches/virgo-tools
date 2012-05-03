@@ -47,7 +47,10 @@ Bundle-Localization: plugin
 Export-Package: org.eclipse.virgo.ide.runtime.internal.ui,
  org.eclipse.virgo.ide.runtime.internal.ui.actions,
  org.eclipse.virgo.ide.runtime.internal.ui.editor,
+ org.eclipse.virgo.ide.runtime.internal.ui.filters,
  org.eclipse.virgo.ide.runtime.internal.ui.projects,
  org.eclipse.virgo.ide.runtime.internal.ui.properties,
  org.eclipse.virgo.ide.runtime.internal.ui.providers,
- org.eclipse.virgo.ide.runtime.ui
+ org.eclipse.virgo.ide.runtime.internal.ui.sorters,
+ org.eclipse.virgo.ide.runtime.ui,
+ org.eclipse.virgo.ide.runtime.ui.views

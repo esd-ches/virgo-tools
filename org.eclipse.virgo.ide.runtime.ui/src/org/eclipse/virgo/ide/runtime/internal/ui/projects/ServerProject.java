@@ -97,11 +97,11 @@ public class ServerProject {
 			if (artefactSet instanceof LocalArtefactSet) {
 				LocalArtefactSet localSet = (LocalArtefactSet) artefactSet;
 				if (artefactSet.getArtefactType() == ArtefactType.BUNDLE) {
-					RuntimePackageFragmentRootContainer container = new RuntimePackageFragmentRootContainer(this,
+					ProjectBundleContainer container = new ProjectBundleContainer(this,
 							localSet);
 					containers.add(container);
 				} else if (artefactSet.getArtefactType() == ArtefactType.LIBRARY) {
-					ArtefactRootContainer container = new ArtefactRootContainer(this, localSet);
+					ProjectLibraryContainer container = new ProjectLibraryContainer(this, localSet);
 					containers.add(container);
 				}
 			}

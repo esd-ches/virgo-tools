@@ -31,7 +31,7 @@ import org.eclipse.wst.server.core.IServer;
  * @author Miles Parker
  * 
  */
-public class ArtefactRootContainer implements IServerProjectContainer {
+public class ProjectLibraryContainer implements IServerProjectContainer {
 
 	private final LocalArtefactSet artefactSet;
 
@@ -39,7 +39,7 @@ public class ArtefactRootContainer implements IServerProjectContainer {
 
 	private final ServerProject serverProject;
 
-	protected ArtefactRootContainer(ServerProject serverProject, LocalArtefactSet artefactSet) {
+	protected ProjectLibraryContainer(ServerProject serverProject, LocalArtefactSet artefactSet) {
 		this.serverProject = serverProject;
 		this.artefactSet = artefactSet;
 		IProject project = serverProject.getProject();
