@@ -55,6 +55,10 @@ public class ServerUiPlugin extends AbstractUIPlugin {
 
 	public static final String VIRGO_SERVER_ID = "org.eclipse.virgo.server.virgo";
 
+	public static final String RUNTIME_ARTEFACTS_CONTENT_ID = "org.eclipse.virgo.ide.runtime.ui.runtimeArtefacts";
+
+	public static final String RUNTIME_FLATTENED_ARTEFACTS_CONTENT_ID = "org.eclipse.virgo.ide.runtime.ui.flattenedRuntimeArtefacts";
+
 	/**
 	 * The constructor
 	 */

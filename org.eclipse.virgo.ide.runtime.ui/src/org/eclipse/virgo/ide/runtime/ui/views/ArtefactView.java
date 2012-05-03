@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2009, 2012 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) IBM Corporation (code cribbed from pde and navigator.)
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,23 +12,24 @@
 
 package org.eclipse.virgo.ide.runtime.ui.views;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ISelectionProvider;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.navigator.ICommonViewerSite;
 import org.eclipse.ui.part.IPage;
 import org.eclipse.ui.part.IPageBookViewPage;
 import org.eclipse.ui.part.MessagePage;
-import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.part.PageBook;
 import org.eclipse.ui.part.PageBookView;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
@@ -36,16 +38,16 @@ import org.eclipse.virgo.ide.runtime.internal.ui.providers.RuntimeFullLabelProvi
 import org.eclipse.wst.server.ui.internal.editor.ServerEditor;
 
 /**
+ * This view is no longer used. We'll be replacing it after verifying that the other approach works well.
  * 
  * @see org.eclipse.pde.internal.ui.views.dependencies.DependenciesView
  * @author Miles Parker
  * 
  */
-public class ArtefactView extends PageBookView implements ISelectionListener {
+@SuppressWarnings("restriction")
+public class ArtefactView extends PageBookView implements ISelectionListener, ICommonViewerSite {
 
-	private final Map fPagesToParts;
-
-	private final Map fPartsToPages;
+	private final Map<IWorkbenchPart, IPageBookViewPage> pagesForParts;
 
 	private ISelection currentSelection;
 
@@ -54,8 +56,7 @@ public class ArtefactView extends PageBookView implements ISelectionListener {
 	private final ILabelProvider titleLabelProvider = new RuntimeFullLabelProvider();
 
 	public ArtefactView() {
-		fPartsToPages = new HashMap();
-		fPagesToParts = new HashMap();
+		pagesForParts = new HashMap<IWorkbenchPart, IPageBookViewPage>();
 	}
 
 	/**
@@ -64,7 +65,7 @@ public class ArtefactView extends PageBookView implements ISelectionListener {
 	@Override
 	public void createPartControl(Composite parent) {
 		super.createPartControl(parent);
-//		getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(this);
+
 	}
 
 	/*
@@ -74,8 +75,8 @@ public class ArtefactView extends PageBookView implements ISelectionListener {
 	 */
 	@Override
 	protected PageRec doCreatePage(IWorkbenchPart part) {
-		IPageBookViewPage page = (IPageBookViewPage) fPartsToPages.get(part);
-		if (page == null && !fPartsToPages.containsKey(part)) {
+		IPageBookViewPage page = pagesForParts.get(part);
+		if (page == null && !pagesForParts.containsKey(part)) {
 			page = createPage(part);
 		}
 		if (page != null) {
@@ -89,8 +90,7 @@ public class ArtefactView extends PageBookView implements ISelectionListener {
 
 		initPage(page);
 		page.createControl(getPageBook());
-		fPartsToPages.put(part, page);
-		fPagesToParts.put(page, part);
+		pagesForParts.put(part, page);
 		return page;
 	}
 
@@ -107,7 +107,7 @@ public class ArtefactView extends PageBookView implements ISelectionListener {
 		pageRecord.dispose();
 
 		// empty cross-reference cache
-		fPartsToPages.remove(part);
+		pagesForParts.remove(part);
 	}
 
 	/*
@@ -151,17 +151,6 @@ public class ArtefactView extends PageBookView implements ISelectionListener {
 			}
 		}
 		updateContentDescription();
-	}
-
-	private IEditorPart getActiveEditor(IEditorPart part) {
-		try {
-			Method method = MultiPageEditorPart.class.getDeclaredMethod("getActiveEditor", new Class[] {});
-			method.setAccessible(true);
-			Object result = method.invoke(part, new Object[] {});
-			return (IEditorPart) result;
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	/**
@@ -246,6 +235,34 @@ public class ArtefactView extends PageBookView implements ISelectionListener {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * @see org.eclipse.ui.navigator.ICommonViewerSite#getId()
+	 */
+	public String getId() {
+		return ServerUiPlugin.ARTEFACTS_DETAIL_VIEW_ID;
+	}
+
+	/**
+	 * @see org.eclipse.ui.navigator.ICommonViewerSite#getShell()
+	 */
+	public Shell getShell() {
+		return getViewSite().getShell();
+	}
+
+	/**
+	 * @see org.eclipse.ui.part.PageBookView#getSelectionProvider()
+	 */
+	@Override
+	public SelectionProvider getSelectionProvider() {
+		return super.getSelectionProvider();
+	}
+
+	/**
+	 * @see org.eclipse.ui.navigator.ICommonViewerSite#setSelectionProvider(org.eclipse.jface.viewers.ISelectionProvider)
+	 */
+	public void setSelectionProvider(ISelectionProvider provider) {
 	}
 
 }

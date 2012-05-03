@@ -221,13 +221,6 @@
                type="org.eclipse.ui.views.contentoutline.IContentOutlinePage">
          </adapter>
       </factory>
-      <factory
-            adaptableType="org.eclipse.wst.server.ui.internal.editor.ServerEditor"
-            class="org.eclipse.virgo.ide.runtime.internal.ui.editor.VirgoEditorAdapterFactory">
-         <adapter
-               type="org.eclipse.virgo.ide.runtime.ui.views.AdapterViewPage">
-         </adapter>
-      </factory>
 	</extension>
 
 <extension
@@ -318,13 +311,41 @@
          </parentExpression>
       </commonSorter>
    </navigatorContent>
+      <navigatorContent
+         activeByDefault="false"
+         contentProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.FlattenedArtefactsContentProvider"
+         icon="icons/full/obj16/lib_obj.gif"
+         id="org.eclipse.virgo.ide.runtime.ui.flattenedRuntimeArtefacts"
+         labelProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.RuntimeLabelProvider"
+         name="Runtime Artifacts (List)">
+      <triggerPoints>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.core.IServer">
+            </instanceof>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.internal.ui.projects.ArtefactRootContainer">
+            </instanceof>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.internal.ui.providers.LibrariesNode">
+            </instanceof>
+      </triggerPoints>
+      <commonSorter
+            class="org.eclipse.virgo.ide.runtime.internal.ui.sorters.ArtefactSignatureSorter"
+            id="org.eclipse.virgo.ide.artefactSignatureSorter">
+         <parentExpression>
+            <instanceof
+                  value="java.lang.Object">
+            </instanceof>
+         </parentExpression>
+      </commonSorter>
+   </navigatorContent>
    <navigatorContent
          activeByDefault="true"
          contentProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.RuntimeContainersContentProvider"
          icon="icons/full/obj16/lib_obj.gif"
          id="org.eclipse.virgo.ide.runtime.ui.runtimeArtefacts"
          labelProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.RuntimeLabelProvider"
-         name="Runtime Artifacts">
+         name="Runtime Artifacts (Tree)">
       <triggerPoints>
          <or>
             <instanceof
@@ -338,7 +359,23 @@
             </instanceof>
          </or>
       </triggerPoints>
+      <commonSorter
+            class="org.eclipse.virgo.ide.runtime.internal.ui.sorters.ArtefactSignatureSorter"
+            id="org.eclipse.virgo.ide.bundleSorter">
+         <parentExpression>
+            <instanceof
+                  value="java.lang.Object">
+            </instanceof>
+         </parentExpression>
+      </commonSorter>
    </navigatorContent>
+   <commonFilter
+         activeByDefault="false"
+         class="org.eclipse.virgo.ide.runtime.internal.ui.providers.LibraryArtefactFilter"
+         description="Filters libraries from artifacts shown."
+         id="org.eclipse.virgo.ide.runtime.ui.filterLibraries"
+         name="Libraries">
+   </commonFilter>
 </extension>
 
 
@@ -376,7 +413,14 @@
                pattern="org.eclipse.virgo.ide.runtime.ui.runtimeArtefacts">
          </contentExtension>
          <contentExtension
+               isRoot="true"
+               pattern="org.eclipse.virgo.ide.runtime.ui.flattenedRuntimeArtefacts">
+         </contentExtension>
+         <contentExtension
                pattern="org.eclipse.jdt.java.ui.javaContent">
+         </contentExtension>
+         <contentExtension
+               pattern="org.eclipse.virgo.ide.runtime.ui.filterLibraries">
          </contentExtension>
       </includes>
    </viewerContentBinding>
@@ -407,11 +451,14 @@
    <view
          allowMultiple="true"
          category="org.eclipse.virgo.ide.category"
-         class="org.eclipse.virgo.ide.runtime.ui.views.ArtefactView"
+         class="org.eclipse.virgo.ide.runtime.ui.views.ArtefactCommonView"
          icon="icons/full/obj16/virgo_obj.png"
          id="org.eclipse.virgo.ide.runtime.ui.virgoArtefacts"
          name="Artifacts"
          restorable="true">
+      <description>
+         Displays artifacts that exist on runtimes.
+      </description>
    </view>
 </extension>
 </plugin>

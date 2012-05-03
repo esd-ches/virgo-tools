@@ -8,15 +8,16 @@
  */
 package org.eclipse.virgo.ide.runtime.internal.ui.editor;
 
+import java.lang.reflect.Method;
+
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.core.IServerType;
-import org.eclipse.wst.server.core.ServerCore;
+import org.eclipse.wst.server.ui.editor.ServerEditorPart;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditor;
-import org.eclipse.wst.server.ui.internal.editor.ServerEditorInput;
 
 /**
  * @author Miles Parker
@@ -36,13 +37,25 @@ public class VirgoEditorAdapterFactory implements IAdapterFactory {
 	}
 
 	public static IServer getVirgoServer(IEditorPart part) {
+		IServer server = getServer(part);
+		if (server != null && server.getServerType().getId().equals(ServerUiPlugin.VIRGO_SERVER_ID)) {
+			return server;
+		}
+		return null;
+	}
+
+	public static IServer getServer(IEditorPart part) {
 		if (part instanceof ServerEditor) {
-			ServerEditor serverEditor = (ServerEditor) part;
-			ServerEditorInput editorInput = (ServerEditorInput) serverEditor.getEditorInput();
-			IServer server = ServerCore.findServer(editorInput.getServerId());
-			IServerType serverType = server.getServerType();
-			if (serverType.getId().equals(ServerUiPlugin.VIRGO_SERVER_ID)) {
-				return server;
+			try {
+				Method method = MultiPageEditorPart.class.getDeclaredMethod("getActiveEditor", new Class[] {});
+				method.setAccessible(true);
+				Object result = method.invoke(part, new Object[] {});
+				if (result instanceof ServerEditorPart) {
+					IServer server = ((ServerEditorPart) result).getServer().getOriginal();
+					return server;
+				}
+			} catch (Exception e) {
+				throw new RuntimeException(e);
 			}
 		}
 		return null;

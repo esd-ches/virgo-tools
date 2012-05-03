@@ -11,7 +11,6 @@
 package org.eclipse.virgo.ide.runtime.internal.ui.editor;
 
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.virgo.ide.runtime.Messages;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiImages;
 import org.eclipse.wst.server.ui.editor.ServerEditorPart;
 

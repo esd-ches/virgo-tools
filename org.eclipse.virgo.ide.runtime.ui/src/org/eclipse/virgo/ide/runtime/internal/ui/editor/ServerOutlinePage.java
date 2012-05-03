@@ -131,10 +131,10 @@ public class ServerOutlinePage extends ContentOutlinePage {
 	}
 
 	protected void registerContextMenu(StructuredViewer viewer) {
-		MenuManager searchResultManager = new MenuManager();
-		Menu searchResultPopup = searchResultManager.createContextMenu(viewer.getControl());
-		viewer.getControl().setMenu(searchResultPopup);
-		getSite().registerContextMenu("Something", searchResultManager, viewer);
+		MenuManager manager = new MenuManager();
+		Menu menu = manager.createContextMenu(viewer.getControl());
+		viewer.getControl().setMenu(menu);
+		getSite().registerContextMenu("Something", manager, viewer);
 	}
 
 	class SortingAction extends Action {

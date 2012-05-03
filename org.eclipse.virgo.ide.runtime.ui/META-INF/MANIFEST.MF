@@ -35,7 +35,9 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.ui.views,
  org.eclipse.ui.navigator,
  org.eclipse.ui.navigator.resources,
- org.eclipse.jdt.ui
+ org.eclipse.jdt.ui,
+ org.eclipse.libra.framework.editor.core,
+ org.eclipse.libra.framework.editor.ui
 Import-Package: org.apache.commons.lang,
  org.apache.commons.logging
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
