@@ -95,8 +95,8 @@ import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryUtils;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiImages;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
 import org.eclipse.virgo.ide.runtime.internal.ui.providers.RepositorySearchResultContentProvider;
+import org.eclipse.virgo.ide.runtime.internal.ui.providers.RuntimeLabelProvider;
 import org.eclipse.virgo.ide.runtime.internal.ui.sorters.RepositoryViewerSorter;
-import org.eclipse.virgo.ide.runtime.ui.ServerEditorPageLabelProvider;
 import org.eclipse.virgo.ide.ui.editors.BundleManifestEditor;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.ui.editor.ServerEditorPart;
@@ -794,7 +794,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		repositoryTableViewer.expandToLevel(sel.getFirstElement(), AbstractTreeViewer.ALL_LEVELS);
 	}
 
-	private class ColoredRespositoryLabelProvider extends ServerEditorPageLabelProvider implements IColorProvider {
+	private class ColoredRespositoryLabelProvider extends RuntimeLabelProvider implements IColorProvider {
 
 		public Color getBackground(Object element) {
 			return null;
