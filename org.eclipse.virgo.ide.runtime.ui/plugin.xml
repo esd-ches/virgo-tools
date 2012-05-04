@@ -222,6 +222,86 @@
          </adapter>
       </factory>
 	</extension>
+<extension
+      point="org.eclipse.ui.views">
+   <view
+         allowMultiple="true"
+         category="org.eclipse.virgo.ide.category"
+         class="org.eclipse.virgo.ide.runtime.ui.views.ArtefactCommonView"
+         icon="icons/full/obj16/virgo_obj.png"
+         id="org.eclipse.virgo.ide.runtime.ui.virgoArtefacts"
+         name="Artifacts"
+         restorable="true">
+      <description>
+         Displays artifacts that exist on runtimes.
+      </description>
+   </view>
+</extension>
+
+
+<extension
+      point="org.eclipse.ui.navigator.viewer">
+   <viewerContentBinding
+         viewerId="org.eclipse.wst.server.ui.ServersView">
+      <includes>
+         <contentExtension
+               pattern="org.eclipse.virgo.ide.runtime.ui.installedBundleContent"/>
+         <contentExtension
+               pattern="org.eclipse.jdt.java.ui.javaContent"/>
+         </includes>
+   </viewerContentBinding>
+   <viewer
+         viewerId="org.eclipse.virgo.ide.runtime.ui.ArtefactsBrowserView">
+   </viewer>
+   <viewerContentBinding
+         viewerId="org.eclipse.virgo.ide.runtime.ui.ArtefactsBrowserView">
+      <includes>
+         <contentExtension
+               isRoot="true"
+               pattern="org.eclipse.virgo.ide.runtime.ui.bundleContent">
+         </contentExtension>
+      </includes>
+   </viewerContentBinding>
+   <viewer
+         viewerId="org.eclipse.virgo.ide.runtime.ui.ArtefactsDetailView">
+   </viewer>
+   <viewerContentBinding
+         viewerId="org.eclipse.virgo.ide.runtime.ui.ArtefactsDetailView">
+      <includes>
+         <contentExtension
+               isRoot="true"
+               pattern="org.eclipse.virgo.ide.runtime.ui.runtimeArtefacts">
+         </contentExtension>
+         <contentExtension
+               isRoot="true"
+               pattern="org.eclipse.virgo.ide.runtime.ui.flattenedRuntimeArtefacts">
+         </contentExtension>
+         <contentExtension
+               pattern="org.eclipse.jdt.java.ui.javaContent">
+         </contentExtension>
+         <contentExtension
+               pattern="org.eclipse.virgo.ide.runtime.ui.filterLibraries">
+         </contentExtension>
+         <contentExtension
+               pattern="org.eclipse.virgo.ide.runtime.ui.filterBundles">
+         </contentExtension>
+      </includes>
+   </viewerContentBinding>
+   <viewer
+         viewerId="org.eclipse.virgo.ide.runtime.ui.OutlineView">
+   </viewer>
+   <viewerContentBinding
+         viewerId="org.eclipse.virgo.ide.runtime.ui.OutlineView">
+      <includes>
+         <contentExtension
+               isRoot="true"
+               pattern="org.eclipse.virgo.ide.pageContent">
+         </contentExtension>
+         <contentExtension
+               pattern="org.eclipse.virgo.ide.runtime.ui.repositoryPage"/>
+      </includes>
+   </viewerContentBinding>
+</extension>
 
 <extension
       point="org.eclipse.ui.navigator.navigatorContent">
@@ -395,91 +475,11 @@
          name="Bundles">
    </commonFilter>
 </extension>
-
-
-<extension
-      point="org.eclipse.ui.navigator.viewer">
-   <viewerContentBinding
-         viewerId="org.eclipse.wst.server.ui.ServersView">
-      <includes>
-         <contentExtension
-               pattern="org.eclipse.virgo.ide.runtime.ui.installedBundleContent"/>
-         <contentExtension
-               pattern="org.eclipse.jdt.java.ui.javaContent"/>
-         </includes>
-   </viewerContentBinding>
-   <viewer
-         viewerId="org.eclipse.virgo.ide.runtime.ui.ArtefactsBrowserView">
-   </viewer>
-   <viewerContentBinding
-         viewerId="org.eclipse.virgo.ide.runtime.ui.ArtefactsBrowserView">
-      <includes>
-         <contentExtension
-               isRoot="true"
-               pattern="org.eclipse.virgo.ide.runtime.ui.bundleContent">
-         </contentExtension>
-      </includes>
-   </viewerContentBinding>
-   <viewer
-         viewerId="org.eclipse.virgo.ide.runtime.ui.ArtefactsDetailView">
-   </viewer>
-   <viewerContentBinding
-         viewerId="org.eclipse.virgo.ide.runtime.ui.ArtefactsDetailView">
-      <includes>
-         <contentExtension
-               isRoot="true"
-               pattern="org.eclipse.virgo.ide.runtime.ui.runtimeArtefacts">
-         </contentExtension>
-         <contentExtension
-               isRoot="true"
-               pattern="org.eclipse.virgo.ide.runtime.ui.flattenedRuntimeArtefacts">
-         </contentExtension>
-         <contentExtension
-               pattern="org.eclipse.jdt.java.ui.javaContent">
-         </contentExtension>
-         <contentExtension
-               pattern="org.eclipse.virgo.ide.runtime.ui.filterLibraries">
-         </contentExtension>
-         <contentExtension
-               pattern="org.eclipse.virgo.ide.runtime.ui.filterBundles">
-         </contentExtension>
-      </includes>
-   </viewerContentBinding>
-   <viewer
-         viewerId="org.eclipse.virgo.ide.runtime.ui.OutlineView">
-   </viewer>
-   <viewerContentBinding
-         viewerId="org.eclipse.virgo.ide.runtime.ui.OutlineView">
-      <includes>
-         <contentExtension
-               isRoot="true"
-               pattern="org.eclipse.virgo.ide.pageContent">
-         </contentExtension>
-         <contentExtension
-               pattern="org.eclipse.virgo.ide.runtime.ui.repositoryPage"/>
-      </includes>
-   </viewerContentBinding>
-</extension>
 <extension
       point="org.eclipse.core.contenttype.contentTypes">
    <file-association
          content-type="org.eclipse.core.runtime.text"
          file-extensions="libd">
    </file-association>
-</extension>
-<extension
-      point="org.eclipse.ui.views">
-   <view
-         allowMultiple="true"
-         category="org.eclipse.virgo.ide.category"
-         class="org.eclipse.virgo.ide.runtime.ui.views.ArtefactCommonView"
-         icon="icons/full/obj16/virgo_obj.png"
-         id="org.eclipse.virgo.ide.runtime.ui.virgoArtefacts"
-         name="Artifacts"
-         restorable="true">
-      <description>
-         Displays artifacts that exist on runtimes.
-      </description>
-   </view>
 </extension>
 </plugin>

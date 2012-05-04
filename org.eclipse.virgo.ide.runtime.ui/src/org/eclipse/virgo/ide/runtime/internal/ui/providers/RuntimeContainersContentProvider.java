@@ -25,7 +25,9 @@ public class RuntimeContainersContentProvider implements ITreeContentProvider {
 		if (inputElement instanceof IServer) {
 			IServer server = (IServer) inputElement;
 			ServerProject project = ServerProjectManager.getInstance().getProject(server);
-			return project.getArtefactSets().toArray(new Object[0]);
+			if (project != null) {
+				return project.getArtefactSets().toArray(new Object[0]);
+			}
 //			return project.getContainers().toArray(new Object[0]);
 		}
 		if (inputElement instanceof IServerProjectContainer) {
@@ -35,11 +37,13 @@ public class RuntimeContainersContentProvider implements ITreeContentProvider {
 			ArtefactSet artefactSet = (ArtefactSet) inputElement;
 			ServerProject project = ServerProjectManager.getInstance().getProject(
 					artefactSet.getRepository().getServer());
-			IServerProjectContainer container = project.getContainer(artefactSet);
-			if (container != null) {
-				return container.getMembers();
+			if (project != null) {
+				IServerProjectContainer container = project.getContainer(artefactSet);
+				if (container != null) {
+					return container.getMembers();
+				}
+				return artefactSet.toArray();
 			}
-			return artefactSet.toArray();
 		}
 		return new Object[0];
 	}

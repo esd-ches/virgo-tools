@@ -18,15 +18,17 @@ import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.ui.statushandlers.StatusManager;
+import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ILocalArtefact;
 import org.eclipse.virgo.ide.runtime.core.artefacts.LocalArtefactSet;
 import org.eclipse.wst.server.core.IServer;
 
 /**
- * 
  * @author Miles Parker
- * 
  */
 public class ProjectFileContainer implements IServerProjectContainer {
 
@@ -41,7 +43,7 @@ public class ProjectFileContainer implements IServerProjectContainer {
 	protected ProjectFileContainer(ServerProject serverProject, LocalArtefactSet artefactSet) {
 		this.serverProject = serverProject;
 		this.artefactSet = artefactSet;
-		IProject project = serverProject.getProject();
+		IProject project = serverProject.getWorkspaceProject();
 		folder = project.getFolder(artefactSet.getRelativePath());
 		List<ProjectFileReference> references = new ArrayList<ProjectFileReference>();
 		createFolder(folder);
@@ -63,7 +65,9 @@ public class ProjectFileContainer implements IServerProjectContainer {
 			try {
 				folder.create(true, true, null);
 			} catch (CoreException e) {
-				throw new RuntimeException(e);
+				StatusManager.getManager().handle(
+						new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID,
+								"Problem occurred while managing server project.", e));
 			}
 		}
 	}

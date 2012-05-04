@@ -31,7 +31,7 @@ public class ArtefactContainersContentProvider implements ITreeContentProvider {
 	 */
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof IServer) {
-			ServerProject project = ServerProjectManager.getInstance().getProject((IServer) inputElement);
+			ServerProject project = ServerProjectManager.getInstance().getProject((IServer) inputElement, true, true);
 			Object[] containers = project.getContainers().toArray(new Object[0]);
 			return containers;
 		}

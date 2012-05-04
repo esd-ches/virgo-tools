@@ -49,7 +49,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.virgo.bundlor,
  org.eclipse.virgo.util.osgi.manifest,
  org.eclipse.libra.framework.editor.core;bundle-version="0.1.0",
- org.eclipse.libra.framework.editor.ui;bundle-version="0.1.0"
+ org.eclipse.libra.framework.editor.ui;bundle-version="0.1.0",
+ org.eclipse.jdt.ui;bundle-version="3.7.2"
 Import-Package: org.apache.commons.collections.collection,
  org.apache.commons.lang,
  org.apache.commons.logging
@@ -61,7 +62,11 @@ Export-Package: org.eclipse.virgo.ide.bundlerepository.domain,
  org.eclipse.virgo.ide.runtime.core.provisioning,
  org.eclipse.virgo.ide.runtime.internal.core,
  org.eclipse.virgo.ide.runtime.internal.core.actions,
- org.eclipse.virgo.ide.runtime.internal.core.command
+ org.eclipse.virgo.ide.runtime.internal.core.command,
+ org.eclipse.virgo.ide.runtime.internal.core.provisioning,
+ org.eclipse.virgo.ide.runtime.internal.core.runtimes,
+ org.eclipse.virgo.ide.runtime.internal.core.utils,
+ org.eclipse.virgo.ide.runtime.internal.ui.projects
 Bundle-Localization: plugin
 Bundle-ActivationPolicy: lazy
 Bundle-ClassPath: library.jar

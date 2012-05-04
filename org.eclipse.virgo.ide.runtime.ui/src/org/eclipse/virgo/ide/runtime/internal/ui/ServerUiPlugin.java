@@ -81,7 +81,7 @@ public class ServerUiPlugin extends AbstractUIPlugin {
 		}
 		plugin.getPreferenceStore().setDefault(PREF_DOWNLOAD_MESSAGE_KEY, false);
 
-		ServerProjectManager.getInstance().initialize();
+		ServerProjectManager.getInstance().updateProjects();
 	}
 
 	/*

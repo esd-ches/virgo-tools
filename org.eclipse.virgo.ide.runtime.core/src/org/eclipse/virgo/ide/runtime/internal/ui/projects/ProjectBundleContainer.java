@@ -16,7 +16,9 @@ import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.IClasspathContainer;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
@@ -26,15 +28,15 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.JavaPluginImages;
 import org.eclipse.jdt.internal.ui.packageview.PackageFragmentRootContainer;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.statushandlers.StatusManager;
+import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ILocalArtefact;
 import org.eclipse.virgo.ide.runtime.core.artefacts.LocalArtefactSet;
 import org.eclipse.wst.server.core.IServer;
 
 /**
- * Provides a wrapper for an artefact set that acts as a Library.
- * 
- * TODO we may not need artefact sets at all.
+ * Provides a wrapper for an artefact set that acts as a Library. TODO we may not need artefact sets at all.
  * 
  * @author Miles Parker
  */
@@ -67,10 +69,11 @@ public class ProjectBundleContainer extends PackageFragmentRootContainer impleme
 		try {
 			JavaCore.setClasspathContainer(getPath(), new IJavaProject[] { serverProject.javaProject },
 					new IClasspathContainer[] { ProjectBundleContainer.this }, null);
+			serverProject.getLibraryEntries().add(JavaCore.newContainerEntry(getPath()));
 		} catch (JavaModelException e) {
-			throw new RuntimeException(e);
+			StatusManager.getManager().handle(
+					new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, "Problem occurred in bundle manager.", e));
 		}
-		serverProject.getLibraryEntries().add(JavaCore.newContainerEntry(getPath()));
 	}
 
 	@Override

@@ -118,4 +118,9 @@
            class="org.eclipse.virgo.ide.preferences.PreferenceInitializer">
      </initializer>
   </extension>
+  <extension
+        id="org.eclipse.virgo.ide.runtime.managedProject"
+        name="Virgo Managed Server Project"
+        point="org.eclipse.core.resources.natures">
+  </extension>
 </plugin>

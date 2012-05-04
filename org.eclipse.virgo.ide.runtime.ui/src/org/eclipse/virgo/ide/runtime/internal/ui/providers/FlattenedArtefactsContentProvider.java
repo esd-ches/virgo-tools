@@ -29,13 +29,15 @@ public class FlattenedArtefactsContentProvider implements ITreeContentProvider {
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof IServer) {
 			ServerProject project = ServerProjectManager.getInstance().getProject((IServer) inputElement);
-			IServerProjectContainer[] containers = project.getContainers().toArray(new IServerProjectContainer[0]);
-			Object[] members = new Object[0];
-			for (IServerProjectContainer container : containers) {
-				Object[] roots = container.getMembers();
-				members = ArrayUtils.addAll(members, roots);
+			if (project != null) {
+				IServerProjectContainer[] containers = project.getContainers().toArray(new IServerProjectContainer[0]);
+				Object[] members = new Object[0];
+				for (IServerProjectContainer container : containers) {
+					Object[] roots = container.getMembers();
+					members = ArrayUtils.addAll(members, roots);
+				}
+				return members;
 			}
-			return members;
 		}
 		return new Object[0];
 	}

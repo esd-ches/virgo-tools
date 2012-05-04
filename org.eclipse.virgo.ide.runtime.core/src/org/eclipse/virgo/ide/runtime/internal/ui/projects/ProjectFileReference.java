@@ -21,9 +21,7 @@ import org.eclipse.virgo.ide.runtime.core.artefacts.ILocalArtefact;
 import org.eclipse.virgo.ide.runtime.core.artefacts.LocalArtefactSet;
 
 /**
- * 
  * @author Miles Parker
- * 
  */
 public class ProjectFileReference implements IServerProjectArtefact {
 
@@ -48,7 +46,7 @@ public class ProjectFileReference implements IServerProjectArtefact {
 			runtimeFile.setReadOnly();
 			workspaceFile.createLink(new Path(runtimeFile.getAbsolutePath()), IResource.REPLACE, null);
 		} catch (CoreException e) {
-			throw new RuntimeException(e);
+			ServerProjectManager.handleException(e);
 		}
 
 	}

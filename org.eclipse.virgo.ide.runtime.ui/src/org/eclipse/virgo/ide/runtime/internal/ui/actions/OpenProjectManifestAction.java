@@ -14,6 +14,8 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -23,10 +25,12 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestUtils;
+import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.wst.common.project.facet.core.FacetedProjectFramework;
 import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
@@ -59,8 +63,9 @@ public class OpenProjectManifestAction implements IObjectActionDelegate {
 					openResource(BundleManifestUtils.locateManifest(JavaCore.create(project), false));
 				}
 			} catch (CoreException e) {
-				//Unexpected
-				throw new RuntimeException(e);
+				StatusManager.getManager().handle(
+						new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID,
+								"Problem occurred while openeing project manifest.", e));
 			}
 		}
 	}
@@ -70,7 +75,9 @@ public class OpenProjectManifestAction implements IObjectActionDelegate {
 			try {
 				IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), (IFile) resource);
 			} catch (PartInitException e) {
-				throw new RuntimeException(e);
+				StatusManager.getManager().handle(
+						new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID,
+								"Problem occurred while opening project manifest.", e));
 			}
 		}
 	}

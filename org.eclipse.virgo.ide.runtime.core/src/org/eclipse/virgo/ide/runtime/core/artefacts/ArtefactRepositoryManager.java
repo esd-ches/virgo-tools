@@ -41,6 +41,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.ide.bundlerepository.domain.BundleImport;
 import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 import org.eclipse.virgo.ide.bundlerepository.domain.PackageExport;
@@ -67,10 +68,9 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.Version;
 
 /**
- * Manages instances of {@link ArtefactRepository} to represent the current
- * contents of the SpringSource Enterprise Bundle Repository and
- * {@link BundleRepository}s indexed by {@link IRuntime} representing local
- * bundle and library repositories in a Virgo Server instance.
+ * Manages instances of {@link ArtefactRepository} to represent the current contents of the SpringSource Enterprise
+ * Bundle Repository and {@link BundleRepository}s indexed by {@link IRuntime} representing local bundle and library
+ * repositories in a Virgo Server instance.
  * 
  * @author Christian Dupuis
  * @since 1.0.0
@@ -79,14 +79,13 @@ public class ArtefactRepositoryManager {
 
 	private ArtefactRepository artefactRepository = new ArtefactRepository();
 
-	private Map<IRuntime, BundleRepository> bundleRepositories = new ConcurrentHashMap<IRuntime, BundleRepository>();
+	private final Map<IRuntime, BundleRepository> bundleRepositories = new ConcurrentHashMap<IRuntime, BundleRepository>();
 
 	private Date repositoryDate = new Date();
 
-	private SpringSourceApplicationPlatform applicationPlatform = new SpringSourceApplicationPlatform();
+	private final SpringSourceApplicationPlatform applicationPlatform = new SpringSourceApplicationPlatform();
 
-	private Set<IBundleRepositoryChangeListener> changeListeners = Collections
-			.synchronizedSet(new HashSet<IBundleRepositoryChangeListener>());
+	private final Set<IBundleRepositoryChangeListener> changeListeners = Collections.synchronizedSet(new HashSet<IBundleRepositoryChangeListener>());
 
 	private volatile boolean initialized = false;
 
@@ -137,7 +136,7 @@ public class ArtefactRepositoryManager {
 			}
 
 			BundleRepository initializedBundleRepository = new InitializedBundleRepository(bundles,
-				new HashSet<LibraryDefinition>(locator.getLibraries()));
+					new HashSet<LibraryDefinition>(locator.getLibraries()));
 			bundleRepositories.put(runtime, initializedBundleRepository);
 			return initializedBundleRepository;
 		} finally {
@@ -395,7 +394,7 @@ public class ArtefactRepositoryManager {
 		public BundleDefinition findBySymbolicName(String symbolicName, VersionRange versionRange) {
 			for (BundleDefinition bundle : bundles) {
 				if (bundle.getManifest() != null && bundle.getManifest().getBundleSymbolicName() != null
-					&& bundle.getManifest().getBundleSymbolicName().getSymbolicName().equals(symbolicName)) {
+						&& bundle.getManifest().getBundleSymbolicName().getSymbolicName().equals(symbolicName)) {
 					Version version = bundle.getManifest().getBundleVersion();
 					if (versionRange.includes(version)) {
 						return bundle;
@@ -435,7 +434,7 @@ public class ArtefactRepositoryManager {
 
 	class ArtefactRepositoryStartJob extends Job {
 
-		private Bundle bundle = ServerCorePlugin.getDefault().getBundle();
+		private final Bundle bundle = ServerCorePlugin.getDefault().getBundle();
 
 		public ArtefactRepositoryStartJob() {
 			super("Initializing Bundle Repository Index");
@@ -542,8 +541,8 @@ public class ArtefactRepositoryManager {
 				initialized = true;
 
 				// secondly load the repository in memory
-				ArtefactRepository newArtefactRepository = createArtefactRespositoryLoader()
-						.loadArtefactRepository(getLocalDirectory());
+				ArtefactRepository newArtefactRepository = createArtefactRespositoryLoader().loadArtefactRepository(
+						getLocalDirectory());
 				try {
 					w.lock();
 					artefactRepository = newArtefactRepository;
@@ -579,8 +578,7 @@ public class ArtefactRepositoryManager {
 	public class ArtefactRepositoryUpdateJob extends ArtefactRepositoryStartJob {
 
 		/**
-		 * The url under which the newest version of the repository index will
-		 * be published
+		 * The url under which the newest version of the repository index will be published
 		 */
 		private static final String REPOSITORY_INDEX_URL = "http://static.springsource.com/projects/sts-dm-server/index/repository.zip";
 
@@ -591,9 +589,9 @@ public class ArtefactRepositoryManager {
 				// first download file from the online repository
 				Date lastModifiedDate = WebDownloadUtils.getLastModifiedDate(REPOSITORY_INDEX_URL, monitor);
 				if (lastModifiedDate != null
-					&& Long.valueOf(lastModifiedDate.getTime()).compareTo(getLocalRepositoryTimestamp()) == 1) {
-					File repositoryArchive = WebDownloadUtils.downloadFile(REPOSITORY_INDEX_URL, getLocalDirectory()
-							.getParentFile(), monitor);
+						&& Long.valueOf(lastModifiedDate.getTime()).compareTo(getLocalRepositoryTimestamp()) == 1) {
+					File repositoryArchive = WebDownloadUtils.downloadFile(REPOSITORY_INDEX_URL,
+							getLocalDirectory().getParentFile(), monitor);
 
 					if (repositoryArchive != null) {
 
@@ -615,8 +613,8 @@ public class ArtefactRepositoryManager {
 						}
 
 						// thirdly load the repository in memory
-						ArtefactRepository newArtefactRepository = createArtefactRespositoryLoader()
-								.loadArtefactRepository(getLocalDirectory());
+						ArtefactRepository newArtefactRepository = createArtefactRespositoryLoader().loadArtefactRepository(
+								getLocalDirectory());
 						try {
 							w.lock();
 							artefactRepository = newArtefactRepository;
@@ -638,6 +636,7 @@ public class ArtefactRepositoryManager {
 		}
 	}
 
+	//TODO why is this here?
 	public static byte[] convert(String string) {
 		if (string == null) {
 			return null;
@@ -646,7 +645,9 @@ public class ArtefactRepositoryManager {
 		try {
 			return newString.getBytes("UTF-8");
 		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
+			StatusManager.getManager().handle(
+					new Status(IStatus.WARNING, ServerCorePlugin.PLUGIN_ID, "Couldn't convert string.", e));
+			return string.getBytes();
 		}
 	}
 }
