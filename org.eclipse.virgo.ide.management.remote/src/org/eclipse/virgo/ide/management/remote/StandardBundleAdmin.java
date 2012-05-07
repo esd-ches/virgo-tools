@@ -31,6 +31,7 @@ import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.util.tracker.ServiceTracker;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
+import org.springframework.osgi.util.OsgiServiceReferenceUtils;
 
 /**
  * @author Christian Dupuis
@@ -45,7 +46,7 @@ public class StandardBundleAdmin implements BundleAdmin {
 
 	private final BundleContext bundleContext;
 
-	private ServiceTracker consoleProviderTracker;
+	private final ServiceTracker consoleProviderTracker;
 
 	public StandardBundleAdmin(PlatformAdmin platformAdmin, PackageAdmin packageAdmin, BundleContext bundleContext) {
 		this.platformAdmin = platformAdmin;
