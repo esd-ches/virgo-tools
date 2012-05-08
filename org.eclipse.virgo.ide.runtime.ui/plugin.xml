@@ -285,6 +285,9 @@
          <contentExtension
                pattern="org.eclipse.virgo.ide.runtime.ui.filterBundles">
          </contentExtension>
+         <actionExtension
+               pattern="org.eclipse.virgo.ide.runtime.ui.actions">
+         </actionExtension>
       </includes>
    </viewerContentBinding>
    <viewer
@@ -301,6 +304,14 @@
                pattern="org.eclipse.virgo.ide.runtime.ui.repositoryPage"/>
       </includes>
    </viewerContentBinding>
+   <viewerActionBinding
+         viewerId="org.eclipse.virgo.ide.runtime.ui.ArtefactsDetailView">
+      <includes>
+         <actionExtension
+               pattern="org.eclipse.virgo.ide.runtime.ui.actions">
+         </actionExtension>
+      </includes>
+   </viewerActionBinding>
 </extension>
 
 <extension
@@ -474,6 +485,17 @@
          id="org.eclipse.virgo.ide.runtime.ui.filterBundles"
          name="Bundles">
    </commonFilter>
+   <actionProvider
+         class="org.eclipse.virgo.ide.runtime.internal.ui.providers.RuntimeActionProvider"
+         id="org.eclipse.virgo.ide.runtime.ui.actions">
+      <enablement>
+         <or>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectFileReference">
+            </instanceof>
+         </or>
+      </enablement>
+   </actionProvider>
 </extension>
 <extension
       point="org.eclipse.core.contenttype.contentTypes">

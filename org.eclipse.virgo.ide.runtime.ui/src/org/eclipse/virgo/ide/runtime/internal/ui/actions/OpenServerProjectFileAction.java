@@ -11,18 +11,21 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.runtime.internal.ui.actions;
 
+import java.util.Iterator;
+
 import org.eclipse.core.resources.IFile;
-import org.eclipse.jface.util.OpenStrategy;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IEditorDescriptor;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.actions.OpenSystemEditorAction;
-import org.eclipse.ui.ide.IDE;
+import org.eclipse.ui.actions.SelectionListenerAction;
 import org.eclipse.ui.internal.ide.DialogUtil;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IIDEHelpContextIds;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectFileReference;
 
 /**
  * Standard action for opening an editor on the currently selected file resource(s).
@@ -37,7 +40,7 @@ import org.eclipse.ui.part.FileEditorInput;
  * @author Miles Parker
  * @noextend This class is not intended to be subclassed by clients.
  */
-public class OpenServerProjectFileAction extends OpenSystemEditorAction {
+public class OpenServerProjectFileAction extends SelectionListenerAction {
 
 	/**
 	 * The id of this action.
@@ -71,7 +74,7 @@ public class OpenServerProjectFileAction extends OpenSystemEditorAction {
 	 *            the editor descriptor, or <code>null</code> if unspecified
 	 */
 	public OpenServerProjectFileAction(IWorkbenchPage page, IEditorDescriptor descriptor) {
-		super(page);
+		super("Open Linked File");
 		this.workbenchPage2 = page;
 		setText(descriptor == null ? IDEWorkbenchMessages.OpenFileAction_text : descriptor.getLabel());
 		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IIDEHelpContextIds.OPEN_FILE_ACTION);
@@ -81,40 +84,38 @@ public class OpenServerProjectFileAction extends OpenSystemEditorAction {
 	}
 
 	/**
-	 * Ensures that the contents of the given file resource are local.
-	 * 
-	 * @param file
-	 *            the file resource
-	 * @return <code>true</code> if the file is local, and <code>false</code> if it could not be made local for some
-	 *         reason
+	 * @see org.eclipse.ui.actions.OpenSystemEditorAction#updateSelection(org.eclipse.jface.viewers.IStructuredSelection)
 	 */
-	boolean ensureFileLocal(final IFile file) {
-		//Currently fails due to Core PR.  Don't do it for now
-		//1G5I6PV: ITPCORE:WINNT - IResource.setLocal() attempts to modify immutable tree
-		//file.setLocal(true, IResource.DEPTH_ZERO);
-		return true;
+	@Override
+	public boolean updateSelection(IStructuredSelection selection) {
+		return selection instanceof StructuredSelection
+				&& ((StructuredSelection) selection).getFirstElement() instanceof ProjectFileReference;
 	}
 
 	/**
-	 * Opens an editor on the given file resource.
-	 * 
-	 * @param file
-	 *            the file resource
+	 * @see org.eclipse.ui.actions.OpenSystemEditorAction#run()
 	 */
-	void openFile(IFile file) {
-		try {
-			boolean activate = OpenStrategy.activateOnOpen();
-			if (editorDescriptor == null) {
-				IDE.openEditor(workbenchPage2, file, activate);
-			} else {
-				if (ensureFileLocal(file)) {
-					workbenchPage2.openEditor(new FileEditorInput(file), editorDescriptor.getId(), activate);
-				}
+	@Override
+	public void run() {
+		Iterator iterator = getStructuredSelection().iterator();
+		while (iterator.hasNext()) {
+			Object next = iterator.next();
+			if (next instanceof ProjectFileReference) {
+				openFile(((ProjectFileReference) next).getWorkspaceFile());
 			}
-		} catch (PartInitException e) {
-			DialogUtil.openError(workbenchPage2.getWorkbenchWindow().getShell(),
-					IDEWorkbenchMessages.OpenFileAction_openFileShellTitle, e.getMessage(), e);
 		}
 	}
 
+	public void openFile(IFile file) {
+		try {
+			IEditorDescriptor defaultEditor = workbenchPage2.getWorkbenchWindow()
+					.getWorkbench()
+					.getEditorRegistry()
+					.getDefaultEditor(file.getName());
+			workbenchPage2.openEditor(new FileEditorInput(file), defaultEditor.getId());
+		} catch (PartInitException e) {
+			DialogUtil.openError(workbenchPage2.getWorkbenchWindow().getShell(),
+					IDEWorkbenchMessages.OpenSystemEditorAction_dialogTitle, e.getMessage(), e);
+		}
+	}
 }

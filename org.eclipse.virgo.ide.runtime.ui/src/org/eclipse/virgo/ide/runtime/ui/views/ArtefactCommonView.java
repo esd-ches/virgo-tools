@@ -19,6 +19,8 @@ import java.util.List;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
+import org.eclipse.jface.viewers.DoubleClickEvent;
+import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
@@ -41,6 +43,7 @@ import org.eclipse.ui.navigator.INavigatorActivationService;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet;
 import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
+import org.eclipse.virgo.ide.runtime.internal.ui.actions.OpenServerProjectFileAction;
 import org.eclipse.virgo.ide.runtime.internal.ui.editor.VirgoEditorAdapterFactory;
 import org.eclipse.virgo.ide.runtime.internal.ui.filters.FilterAction;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectArtefact;
@@ -160,6 +163,23 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 			manager.appendToGroup(FILTER_ACTION_GROUP, action);
 		}
 
+		getCommonViewer().addDoubleClickListener(new IDoubleClickListener() {
+
+			public void doubleClick(DoubleClickEvent event) {
+				if (event.getSelection() instanceof StructuredSelection) {
+					final StructuredSelection sel = (StructuredSelection) event.getSelection();
+					OpenServerProjectFileAction fileAction = new OpenServerProjectFileAction(getSite().getPage()) {
+						@Override
+						public org.eclipse.jface.viewers.IStructuredSelection getStructuredSelection() {
+							return sel;
+						}
+					};
+					if (fileAction.updateSelection(sel)) {
+						fileAction.run();
+					}
+				}
+			}
+		});
 		updateActivations();
 	}
 

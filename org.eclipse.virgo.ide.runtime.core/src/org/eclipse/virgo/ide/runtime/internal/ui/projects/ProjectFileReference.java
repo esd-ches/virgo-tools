@@ -16,6 +16,7 @@ import java.io.File;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ILocalArtefact;
 import org.eclipse.virgo.ide.runtime.core.artefacts.LocalArtefactSet;
@@ -23,7 +24,7 @@ import org.eclipse.virgo.ide.runtime.core.artefacts.LocalArtefactSet;
 /**
  * @author Miles Parker
  */
-public class ProjectFileReference implements IServerProjectArtefact {
+public class ProjectFileReference implements IServerProjectArtefact, IAdaptable {
 
 	ProjectFileContainer container;
 
@@ -71,5 +72,15 @@ public class ProjectFileReference implements IServerProjectArtefact {
 
 	public IFile getWorkspaceFile() {
 		return workspaceFile;
+	}
+
+	/**
+	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+	 */
+	public Object getAdapter(Class adapter) {
+		if (adapter == IFile.class) {
+			return workspaceFile;
+		}
+		return null;
 	}
 }
