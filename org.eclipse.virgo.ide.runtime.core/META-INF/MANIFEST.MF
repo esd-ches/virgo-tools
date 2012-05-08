@@ -55,6 +55,7 @@ Import-Package: org.apache.commons.collections.collection,
  org.apache.commons.lang,
  org.apache.commons.logging
 Export-Package: org.eclipse.virgo.ide.bundlerepository.domain,
+ org.eclipse.virgo.ide.internal.utils.json,
  org.eclipse.virgo.ide.management.remote,
  org.eclipse.virgo.ide.preferences,
  org.eclipse.virgo.ide.runtime.core,

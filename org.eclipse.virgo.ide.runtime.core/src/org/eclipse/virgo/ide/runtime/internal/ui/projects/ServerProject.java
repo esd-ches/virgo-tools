@@ -115,7 +115,7 @@ public class ServerProject {
 						containers.add(container);
 						projectContainerForArtefactSet.put(localSet, container);
 					} else if (artefactSet.getArtefactType() == ArtefactType.LIBRARY) {
-						ProjectFileContainer container = new ProjectFileContainer(this, localSet);
+						ProjectFileContainer container = new ArtefactProjectFileContainer(this, localSet);
 						containers.add(container);
 						projectContainerForArtefactSet.put(localSet, container);
 					}

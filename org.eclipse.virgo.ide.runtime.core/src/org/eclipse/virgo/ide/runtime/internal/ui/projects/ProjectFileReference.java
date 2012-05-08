@@ -41,7 +41,7 @@ public class ProjectFileReference implements IServerProjectArtefact {
 		runtimeFile = artefact.getFile();
 		String artefactRelative = runtimeFile.getAbsolutePath().replace(
 				((LocalArtefactSet) artefact.getSet()).getFile().getAbsolutePath(), "");
-		workspaceFile = container.getFolder().getFile(artefactRelative);
+		workspaceFile = container.getRootFolder().getFile(artefactRelative);
 		try {
 			runtimeFile.setReadOnly();
 			workspaceFile.createLink(new Path(runtimeFile.getAbsolutePath()), IResource.REPLACE, null);

@@ -741,9 +741,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		shell.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				repositoryTableViewer.setInput(getServer());
-				repositoryTableViewer.expandToLevel(2);
 				searchResultTableViewer.refresh(true);
-				searchResultTableViewer.expandToLevel(2);
 			}
 		});
 	}
@@ -765,7 +763,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		public void done(IJobChangeEvent event) {
 			if (event.getJob() instanceof RepositoryProvisioningJob) {
 				if (((RepositoryProvisioningJob) event.getJob()).getRuntimes().contains(getServer().getRuntime())) {
-					intializeViewers();
+					refreshViewers();
 				}
 			} else if (event.getJob() instanceof ArtefactRepositoryManager.ArtefactRepositoryUpdateJob) {
 				shell.getDisplay().asyncExec(new Runnable() {

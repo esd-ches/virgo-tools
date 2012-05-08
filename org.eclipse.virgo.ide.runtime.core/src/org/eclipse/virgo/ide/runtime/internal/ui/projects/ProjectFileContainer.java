@@ -11,49 +11,26 @@
 
 package org.eclipse.virgo.ide.runtime.internal.ui.projects;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFolder;
-import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
-import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact;
-import org.eclipse.virgo.ide.runtime.core.artefacts.ILocalArtefact;
-import org.eclipse.virgo.ide.runtime.core.artefacts.LocalArtefactSet;
 import org.eclipse.wst.server.core.IServer;
 
 /**
  * @author Miles Parker
  */
-public class ProjectFileContainer implements IServerProjectContainer {
-
-	private final LocalArtefactSet artefactSet;
-
-	private final IFolder folder;
+public abstract class ProjectFileContainer implements IServerProjectContainer {
 
 	private final ServerProject serverProject;
 
-	private final ProjectFileReference[] fileReferences;
+	protected ProjectFileReference[] fileReferences;
 
-	protected ProjectFileContainer(ServerProject serverProject, LocalArtefactSet artefactSet) {
+	protected ProjectFileContainer(ServerProject serverProject) {
 		this.serverProject = serverProject;
-		this.artefactSet = artefactSet;
-		IProject project = serverProject.getWorkspaceProject();
-		folder = project.getFolder(artefactSet.getRelativePath());
-		List<ProjectFileReference> references = new ArrayList<ProjectFileReference>();
-		createFolder(folder);
-		for (IArtefact artefact : artefactSet.getArtefacts()) {
-			if (artefact instanceof ILocalArtefact) {
-				ProjectFileReference fileReference = new ProjectFileReference(this, (ILocalArtefact) artefact);
-				references.add(fileReference);
-			}
-		}
-		fileReferences = references.toArray(new ProjectFileReference[0]);
 	}
 
 	public static void createFolder(IFolder folder) {
@@ -83,21 +60,21 @@ public class ProjectFileContainer implements IServerProjectContainer {
 	 * @see org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer#getServer()
 	 */
 	public IServer getServer() {
-		return serverProject.getServer();
-	}
-
-	/**
-	 * @see org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer#getArtefactSet()
-	 */
-	public LocalArtefactSet getArtefactSet() {
-		return artefactSet;
+		return getServerProject().getServer();
 	}
 
 	public ProjectFileReference[] getFileReferences() {
+		if (fileReferences == null) {
+			fileReferences = createFileReferences();
+		}
 		return fileReferences;
 	}
 
-	public IFolder getFolder() {
-		return folder;
+	protected abstract ProjectFileReference[] createFileReferences();
+
+	protected abstract IFolder getRootFolder();
+
+	public ServerProject getServerProject() {
+		return serverProject;
 	}
 }

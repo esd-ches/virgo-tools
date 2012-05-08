@@ -39,9 +39,11 @@ import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.navigator.INavigatorActivationService;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet;
+import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
 import org.eclipse.virgo.ide.runtime.internal.ui.editor.VirgoEditorAdapterFactory;
 import org.eclipse.virgo.ide.runtime.internal.ui.filters.FilterAction;
+import org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectArtefact;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer;
 import org.eclipse.virgo.ide.runtime.internal.ui.providers.LibrariesNode;
 import org.eclipse.virgo.ide.runtime.internal.ui.providers.RuntimeFullLabelProvider;
@@ -92,7 +94,9 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 		@Override
 		public void run() {
 			if (isChecked()) {
-				memento.putBoolean(SHOW_VIEW_LIST, true);
+				if (memento != null) {
+					memento.putBoolean(SHOW_VIEW_LIST, true);
+				}
 				showList = true;
 				updateActivations();
 			}
@@ -116,7 +120,9 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 		@Override
 		public void run() {
 			if (isChecked()) {
-				memento.putBoolean(SHOW_VIEW_LIST, false);
+				if (memento != null) {
+					memento.putBoolean(SHOW_VIEW_LIST, false);
+				}
 				showList = false;
 				updateActivations();
 			}
@@ -183,25 +189,35 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
 		if (part instanceof IViewPart && part != this) {
 			if (sel instanceof StructuredSelection) {
-				List<Object> serverSelection = new ArrayList<Object>();
 				Iterator<Object> items = ((StructuredSelection) sel).iterator();
+				List<IServer> servers = new ArrayList<IServer>();
+				List<Object> containers = new ArrayList<Object>();
+				List<Object> artifacts = new ArrayList<Object>();
+
 				while (items.hasNext()) {
 					Object next = items.next();
 					if (next instanceof IServer) {
-						serverSelection.add(next);
+						servers.add((IServer) next);
 					}
 					if (next instanceof LibrariesNode) {
-						serverSelection.add(((LibrariesNode) next).getServer());
+						servers.add(((LibrariesNode) next).getServer());
 					}
 					if (next instanceof IServerProjectContainer || next instanceof ArtefactSet) {
-						//Don't add if we already have a server selected at top level.
-						if (serverSelection.isEmpty()) {
-							serverSelection.add(next);
-						}
+						containers.add(next);
+					}
+					if (next instanceof IArtefact || next instanceof IServerProjectArtefact) {
+						artifacts.add(next);
 					}
 				}
-				if (serverSelection.size() == 1) {
-					getCommonViewer().setInput(serverSelection.get(0));
+				List<Object> input = new ArrayList<Object>(servers);
+				if (input.size() == 0) {
+					input = new ArrayList<Object>(containers);
+				}
+				if (input.size() == 0) {
+					input = new ArrayList<Object>(artifacts);
+				}
+				if (input.size() == 1) {
+					getCommonViewer().setInput(input.get(0));
 				} else if (part instanceof ServersView2) {
 					getCommonViewer().setInput(null);
 				}
