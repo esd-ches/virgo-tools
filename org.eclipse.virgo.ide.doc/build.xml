@@ -29,6 +29,7 @@
 	<!--
 		Global vars
 	-->
+	
 	<property name="document.name" value="virgo" />
 
 	<property name="document.eclipse.stylesheet" value="${basedir}/styles/eclipsehelp.xsl" />
