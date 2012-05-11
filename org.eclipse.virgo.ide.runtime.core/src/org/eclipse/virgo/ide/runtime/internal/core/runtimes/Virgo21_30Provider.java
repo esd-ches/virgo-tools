@@ -11,6 +11,7 @@
 package org.eclipse.virgo.ide.runtime.internal.core.runtimes;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +19,7 @@ import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator;
 import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator.JavaVersion;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider;
+import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.virgo.kernel.osgi.provisioning.tools.Pre35DependencyLocatorVirgo;
 import org.eclipse.wst.server.core.IRuntime;
@@ -32,6 +34,8 @@ public class Virgo21_30Provider extends VirgoRuntimeProvider {
 
 	// Assumes Stateless
 	public static final VirgoRuntimeProvider INSTANCE = new Virgo21_30Provider();
+
+	public static final String LEGACY_CONNECTOR_BUNDLE_NAME = "org.eclipse.virgo.ide.management.remote_legacy.jar";
 
 	private static final String SERVER_VIRGO_21x_31x = SERVER_VIRGO_BASE;
 
@@ -48,6 +52,7 @@ public class Virgo21_30Provider extends VirgoRuntimeProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	String getConfigDir() {
 		return "config";
 	}
@@ -55,6 +60,7 @@ public class Virgo21_30Provider extends VirgoRuntimeProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	String getProfileDir() {
 		return "lib";
 	}
@@ -77,10 +83,12 @@ public class Virgo21_30Provider extends VirgoRuntimeProvider {
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider#getID()
 	 */
+	@Override
 	public String getID() {
 		return SERVER_VIRGO_21x_31x;
 	}
 
+	@Override
 	public String getSupportedVersions() {
 		return "2.1-3.0";
 	}
@@ -93,5 +101,9 @@ public class Virgo21_30Provider extends VirgoRuntimeProvider {
 	public IDependencyLocator createDependencyLocator(IRuntime runtime, String serverHomePath,
 			String[] additionalSearchPaths, String indexDirectoryPath, JavaVersion javaVersion) throws IOException {
 		return new Pre35DependencyLocatorVirgo(serverHomePath, additionalSearchPaths, indexDirectoryPath, javaVersion);
+	}
+
+	public URI getConnectorBundleUri() {
+		return ServerCorePlugin.getDefault().getBundleUri(LEGACY_CONNECTOR_BUNDLE_NAME);
 	}
 }

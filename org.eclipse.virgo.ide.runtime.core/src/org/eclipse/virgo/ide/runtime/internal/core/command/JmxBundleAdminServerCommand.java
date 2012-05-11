@@ -22,7 +22,6 @@ import javax.management.ObjectName;
 
 import org.eclipse.libra.framework.editor.core.model.IBundle;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
-import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 
 /**
  * @author Christian Dupuis
@@ -58,8 +57,7 @@ public class JmxBundleAdminServerCommand extends AbstractJmxServerCommand implem
 			connection.getObjectInstance(name);
 		} catch (InstanceNotFoundException e) {
 			// Install the BundleAdmin bundle
-			behaviour.getVersionHandler()
-					.getServerDeployCommand(behaviour, ServerCorePlugin.getDefault().getConnectorBundleUri()).execute();
+			behaviour.getVersionHandler().getServerDeployCommand(behaviour).execute();
 		}
 	}
 

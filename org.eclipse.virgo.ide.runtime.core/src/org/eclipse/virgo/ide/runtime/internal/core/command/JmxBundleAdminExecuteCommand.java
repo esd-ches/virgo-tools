@@ -19,7 +19,6 @@ import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
-import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 
 /**
  * @author Christian Dupuis
@@ -43,8 +42,8 @@ public class JmxBundleAdminExecuteCommand extends AbstractJmxServerCommand imple
 				// Verify that the BundleAdmin exists and runs
 				checkBundleAdminAndInstall(serverBehaviour, connection, name);
 
-				return connection.invoke(	name, "execute", new Object[] { cmdLine },
-											new String[] { String.class.getName() });
+				return connection.invoke(name, "execute", new Object[] { cmdLine },
+						new String[] { String.class.getName() });
 			}
 
 		});
@@ -57,8 +56,7 @@ public class JmxBundleAdminExecuteCommand extends AbstractJmxServerCommand imple
 			connection.getObjectInstance(name);
 		} catch (InstanceNotFoundException e) {
 			// Install the BundleAdmin bundle
-			behaviour.getVersionHandler()
-					.getServerDeployCommand(behaviour, ServerCorePlugin.getDefault().getConnectorBundleUri()).execute();
+			behaviour.getVersionHandler().getServerDeployCommand(behaviour).execute();
 		}
 	}
 

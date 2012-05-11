@@ -10,13 +10,18 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.runtime.core;
 
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.eclipse.core.runtime.FileLocator;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepositoryManager;
 import org.osgi.framework.BundleContext;
 
@@ -28,15 +33,10 @@ import org.osgi.framework.BundleContext;
  */
 public class ServerCorePlugin extends AbstractUIPlugin {
 
-	// TODO We should put this in a property so that we can maintain it
-	public static final String CONNECTOR_BUNDLE_NAME = "org.eclipse.virgo.ide.management.remote_1.0.0.201203091803.jar";
-
 	/** The bundle symbolic name */
 	public static final String PLUGIN_ID = "org.eclipse.virgo.ide.runtime.core";
 
 	public static final String PREF_LOAD_CLASSES_KEY = PLUGIN_ID + ".load.classes.from.index";
-
-	private URI connectorBundleUri;
 
 	/** The shared bundle instance */
 	private static ServerCorePlugin plugin;
@@ -46,16 +46,14 @@ public class ServerCorePlugin extends AbstractUIPlugin {
 
 	public static ExecutorService EXECUTOR = Executors.newCachedThreadPool();
 
+	private BundleContext context;
+
 	@Override
 	public void start(BundleContext context) throws Exception {
+		this.context = context;
 		super.start(context);
 		plugin = this;
 		ServerUtils.clearCacheDirectory();
-
-		URL url = FileLocator.toFileURL(context.getBundle().getEntry(CONNECTOR_BUNDLE_NAME));
-		if (url != null) {
-			connectorBundleUri = new URI("file", url.toString().substring(5), null);
-		}
 
 		plugin.getPreferenceStore().setDefault(PREF_LOAD_CLASSES_KEY, false);
 
@@ -88,7 +86,22 @@ public class ServerCorePlugin extends AbstractUIPlugin {
 		return getDefault().artefactRepositoryManager;
 	}
 
-	public URI getConnectorBundleUri() {
-		return connectorBundleUri;
+	public URI getBundleUri(String bundleName) {
+		URL url;
+		try {
+			url = FileLocator.toFileURL(context.getBundle().getEntry(bundleName));
+			if (url != null) {
+				URI uri = new URI("file", url.toString().substring(5), null);
+				return uri;
+			}
+		} catch (IOException e) {
+			StatusManager.getManager().handle(
+					new Status(IStatus.ERROR, PLUGIN_ID, "Problem occurred while getting bundle:" + bundleName, e));
+		} catch (URISyntaxException e) {
+			StatusManager.getManager().handle(
+					new Status(IStatus.ERROR, PLUGIN_ID, "Problem occurred while getting bundle:" + bundleName, e));
+		}
+		StatusManager.getManager().handle(new Status(IStatus.ERROR, PLUGIN_ID, "Couldn't locate bundle:" + bundleName));
+		return null;
 	}
 }

@@ -13,6 +13,7 @@ package org.eclipse.virgo.ide.runtime.internal.core.runtimes;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,6 +25,7 @@ import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator;
 import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator.JavaVersion;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider;
+import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocatorVirgo;
 import org.eclipse.wst.server.core.IRuntime;
@@ -41,6 +43,8 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
 
 	private static final String SERVER_VIRGO_35 = SERVER_VIRGO_BASE + ".35";
 
+	public static final String GEMINI_CONNECTOR_BUNDLE_NAME = "org.eclipse.virgo.ide.management.remote_3.5.0.201205101950.jar";
+
 	private Virgo35Provider() {
 	}
 
@@ -51,6 +55,7 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
 		return "org.eclipse.equinox.launcher.Main";
 	}
 
+	@Override
 	String getConfigDir() {
 		return "configuration";
 	}
@@ -58,6 +63,7 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider#getProfileDir()
 	 */
+	@Override
 	String getProfileDir() {
 		return getConfigDir();
 	}
@@ -65,6 +71,7 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getRuntimeClasspath(org.eclipse.core.runtime.IPath)
 	 */
+	@Override
 	public List<IRuntimeClasspathEntry> getRuntimeClasspath(IPath installPath) {
 		List<IRuntimeClasspathEntry> cp = super.getRuntimeClasspath(installPath);
 
@@ -74,8 +81,8 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
 			for (File library : pluginsFolder.listFiles(new FileFilter() {
 				public boolean accept(File pathname) {
 					return pathname.isFile() && pathname.toString().endsWith(".jar")
-						&& pathname.toString().contains("org.eclipse.osgi_")
-						&& pathname.toString().contains("org.eclipse.equinox.console.supportability_");
+							&& pathname.toString().contains("org.eclipse.osgi_")
+							&& pathname.toString().contains("org.eclipse.equinox.console.supportability_");
 				}
 			})) {
 				IPath path = pluginsPath.append(library.getName());
@@ -98,6 +105,7 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public String[] getRuntimeVMArguments(IServerBehaviour behaviour, IPath installPath, IPath configPath,
 			IPath deployPath) {
 		String[] commonArguments = super.getRuntimeVMArguments(behaviour, installPath, configPath, deployPath);
@@ -147,10 +155,12 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider#getID()
 	 */
+	@Override
 	public String getID() {
 		return SERVER_VIRGO_35;
 	}
 
+	@Override
 	public String getSupportedVersions() {
 		return "3.5+";
 	}
@@ -163,5 +173,12 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
 	public IDependencyLocator createDependencyLocator(IRuntime runtime, String serverHomePath,
 			String[] additionalSearchPaths, String indexDirectoryPath, JavaVersion javaVersion) throws IOException {
 		return new DependencyLocatorVirgo(serverHomePath, additionalSearchPaths, indexDirectoryPath, javaVersion);
+	}
+
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getConnectorBundleUri()
+	 */
+	public URI getConnectorBundleUri() {
+		return ServerCorePlugin.getDefault().getBundleUri(GEMINI_CONNECTOR_BUNDLE_NAME);
 	}
 }

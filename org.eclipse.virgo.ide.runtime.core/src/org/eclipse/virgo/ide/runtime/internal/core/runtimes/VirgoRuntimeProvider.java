@@ -17,7 +17,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -205,14 +204,6 @@ public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
 	/**
 	 * {@inheritDoc}
 	 */
-	public IServerCommand<DeploymentIdentity> getServerDeployCommand(IServerBehaviour IServerBehaviour,
-			URI connectorBundleUri) {
-		return new GenericJmxServerDeployCommand(IServerBehaviour, connectorBundleUri);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public String[] getExcludedRuntimeProgramArguments(boolean starting) {
 		List<String> list = new ArrayList<String>();
 		return list.toArray(new String[list.size()]);
@@ -296,6 +287,13 @@ public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
 	 */
 	public IServerCommand<Map<Long, IBundle>> getServerBundleAdminCommand(IServerBehaviour serverBehaviour) {
 		return new JmxBundleAdminServerCommand(serverBehaviour);
+	}
+
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getServerDeployCommand(org.eclipse.virgo.ide.runtime.core.IServerBehaviour)
+	 */
+	public IServerCommand<DeploymentIdentity> getServerDeployCommand(IServerBehaviour serverBehaviour) {
+		return new GenericJmxServerDeployCommand(serverBehaviour, getConnectorBundleUri());
 	}
 
 	/**

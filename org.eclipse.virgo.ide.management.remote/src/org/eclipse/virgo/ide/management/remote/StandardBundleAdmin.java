@@ -19,6 +19,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.gemini.blueprint.util.OsgiServiceReferenceUtils;
 import org.eclipse.osgi.framework.console.CommandProvider;
 import org.eclipse.osgi.framework.internal.core.Util;
 import org.eclipse.osgi.service.resolver.BundleDescription;
@@ -31,7 +32,6 @@ import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.util.tracker.ServiceTracker;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
-import org.springframework.osgi.util.OsgiServiceReferenceUtils;
 
 /**
  * @author Christian Dupuis

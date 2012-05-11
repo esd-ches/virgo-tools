@@ -31,21 +31,22 @@ import org.osgi.framework.Bundle;
 /**
  * @author Christian Dupuis
  */
+@SuppressWarnings("restriction")
 public class ServerCommandInterpreter implements CommandInterpreter {
 	private static final String WS_DELIM = " \t\n\r\f"; //$NON-NLS-1$
 
 	/** The command line in StringTokenizer form */
-	private StringTokenizer tok;
+	private final StringTokenizer tok;
 
 	/** The active CommandProviders */
-	private Object[] commandProviders;
+	private final Object[] commandProviders;
 
 	/** Strings used to format other strings */
-	private String tab = "\t"; //$NON-NLS-1$
+	private final String tab = "\t"; //$NON-NLS-1$
 
-	private String newline = "\r\n"; //$NON-NLS-1$
+	private final String newline = "\r\n"; //$NON-NLS-1$
 
-	private PrintWriter out;
+	private final PrintWriter out;
 
 	public ServerCommandInterpreter(String cmdLine, Object[] commandProviders, PrintWriter writer) {
 		this.commandProviders = commandProviders;
@@ -103,6 +104,7 @@ public class ServerCommandInterpreter implements CommandInterpreter {
 	 */
 	public Object execute(String cmd) {
 		Object retval = null;
+		@SuppressWarnings("rawtypes")
 		Class[] parameterTypes = new Class[] { CommandInterpreter.class };
 		Object[] parameters = new Object[] { this };
 		boolean executed = false;
@@ -189,7 +191,7 @@ public class ServerCommandInterpreter implements CommandInterpreter {
 		Method[] methods = t.getClass().getMethods();
 
 		int size = methods.length;
-		Class throwable = Throwable.class;
+		Class<Throwable> throwable = Throwable.class;
 
 		for (int i = 0; i < size; i++) {
 			Method method = methods[i];
@@ -197,7 +199,7 @@ public class ServerCommandInterpreter implements CommandInterpreter {
 			if (Modifier.isPublic(method.getModifiers())
 					&& method.getName().startsWith("get") && throwable.isAssignableFrom(method.getReturnType()) && (method.getParameterTypes().length == 0)) { //$NON-NLS-1$
 				try {
-					Throwable nested = (Throwable) method.invoke(t, null);
+					Throwable nested = (Throwable) method.invoke(t, new Object[0]);
 
 					if ((nested != null) && (nested != t)) {
 						out.println(ConsoleMsg.CONSOLE_NESTED_EXCEPTION);
@@ -238,14 +240,14 @@ public class ServerCommandInterpreter implements CommandInterpreter {
 	 * @param title
 	 *            the header to print above the key/value pairs
 	 */
-	public void printDictionary(Dictionary dic, String title) {
+	public void printDictionary(Dictionary<?, ?> dic, String title) {
 		if (dic == null) {
 			return;
 		}
 
 		int count = dic.size();
 		String[] keys = new String[count];
-		Enumeration keysEnum = dic.keys();
+		Enumeration<?> keysEnum = dic.keys();
 		int i = 0;
 		while (keysEnum.hasMoreElements()) {
 			keys[i++] = (String) keysEnum.nextElement();

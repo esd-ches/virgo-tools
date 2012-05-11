@@ -40,8 +40,7 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.model.IModuleFile;
 
 /**
- * A {@link IServerRuntimeProvider} representing an invalid server configuration
- * directory.
+ * A {@link IServerRuntimeProvider} representing an invalid server configuration directory.
  * 
  * @author Miles Parker
  */
@@ -74,7 +73,7 @@ public class InvalidRuntimeProvider implements IServerRuntimeProvider {
 			runtimeName = "The runtime";
 		}
 		String message = runtimeName
-			+ " is not a valid environment. Go to Preferences:Server:Runtime Environments to define a valid server.";
+				+ " is not a valid environment. Go to Preferences:Server:Runtime Environments to define a valid server.";
 		message += "\n(This error may be followed by related exceptions.)";
 		int type = StatusManager.LOG | StatusManager.SHOW;
 		// if (showError) {
@@ -113,8 +112,8 @@ public class InvalidRuntimeProvider implements IServerRuntimeProvider {
 	}
 
 	public IStatus verifyInstallation(IRuntime runtime) {
-		return new Status(Status.ERROR, ServerCorePlugin.PLUGIN_ID, "No Virgo Runtime found: " + runtime.getLocation()
-			+ ".");
+		return new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, "No Virgo Runtime found: " + runtime.getLocation()
+				+ ".");
 	}
 
 	/**
@@ -153,7 +152,7 @@ public class InvalidRuntimeProvider implements IServerRuntimeProvider {
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#canAddModule(org.eclipse.wst.server.core.IModule)
 	 */
 	public IStatus canAddModule(IModule module) {
-		return new Status(Status.ERROR, ServerCorePlugin.PLUGIN_ID, "No Virgo Runtime found.");
+		return new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, "No Virgo Runtime found.");
 	}
 
 	/**
@@ -182,8 +181,7 @@ public class InvalidRuntimeProvider implements IServerRuntimeProvider {
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getRuntimeVMArguments(org.eclipse.virgo.ide.runtime.core.IServerBehaviour,
-	 *      org.eclipse.core.runtime.IPath, org.eclipse.core.runtime.IPath,
-	 *      org.eclipse.core.runtime.IPath)
+	 *      org.eclipse.core.runtime.IPath, org.eclipse.core.runtime.IPath, org.eclipse.core.runtime.IPath)
 	 */
 	public String[] getRuntimeVMArguments(IServerBehaviour serverBehaviour, IPath installPath, IPath configPath,
 			IPath deployPath) {
@@ -292,10 +290,8 @@ public class InvalidRuntimeProvider implements IServerRuntimeProvider {
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getServerUpdateCommand(org.eclipse.virgo.ide.runtime.core.IServerBehaviour,
-	 *      org.eclipse.wst.server.core.IModule,
-	 *      org.eclipse.wst.server.core.model.IModuleFile,
-	 *      org.eclipse.virgo.ide.runtime.internal.core.DeploymentIdentity,
-	 *      java.lang.String, java.lang.String)
+	 *      org.eclipse.wst.server.core.IModule, org.eclipse.wst.server.core.model.IModuleFile,
+	 *      org.eclipse.virgo.ide.runtime.internal.core.DeploymentIdentity, java.lang.String, java.lang.String)
 	 */
 	public IServerCommand<Void> getServerUpdateCommand(IServerBehaviour serverBehaviour, IModule module,
 			IModuleFile moduleFile, DeploymentIdentity identity, String bundleSymbolicName, String targetPath) {
@@ -344,5 +340,19 @@ public class InvalidRuntimeProvider implements IServerRuntimeProvider {
 	 */
 	public void preStartup(IServerBehaviour serverBehaviour) {
 		handleError(serverBehaviour);
+	}
+
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getServerDeployCommand(org.eclipse.virgo.ide.runtime.core.IServerBehaviour)
+	 */
+	public IServerCommand<DeploymentIdentity> getServerDeployCommand(IServerBehaviour serverBehaviour) {
+		return null;
+	}
+
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getConnectorBundleUri()
+	 */
+	public URI getConnectorBundleUri() {
+		return null;
 	}
 }

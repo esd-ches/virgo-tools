@@ -154,7 +154,12 @@ public interface IServerRuntimeProvider {
 	/**
 	 * Returns the server deploy command.
 	 */
-	IServerCommand<DeploymentIdentity> getServerDeployCommand(IServerBehaviour serverBehaviour, URI connectorBundleUri);
+	IServerCommand<DeploymentIdentity> getServerDeployCommand(IServerBehaviour serverBehaviour);
+
+	/**
+	 * Returns the server deploy command.
+	 */
+	URI getConnectorBundleUri();
 
 	/**
 	 * Returns the server bundle admin command.
@@ -167,8 +172,7 @@ public interface IServerRuntimeProvider {
 	IServerCommand<String> getServerBundleAdminExecuteCommand(IServerBehaviour serverBehaviour, String command);
 
 	/**
-	 * Callback method for version handlers to setup servers before the server
-	 * starts
+	 * Callback method for version handlers to setup servers before the server starts
 	 */
 	void preStartup(IServerBehaviour serverBehaviour);
 
