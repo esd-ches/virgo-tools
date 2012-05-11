@@ -14,6 +14,7 @@ package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet;
+import org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectArtefact;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProject;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProjectManager;
@@ -55,6 +56,22 @@ public class RuntimeContainersContentProvider implements ITreeContentProvider {
 	public Object getParent(Object element) {
 		if (element instanceof IServerProjectContainer) {
 			return ((IServerProjectContainer) element).getServer();
+		}
+		if (element instanceof IServerProjectArtefact) {
+			return ((IServerProjectArtefact) element).getContainer();
+		}
+		return null;
+	}
+
+	public IServer getServer(Object element) {
+		if (element instanceof IServer) {
+			return (IServer) element;
+		}
+		if (element instanceof IServerProjectContainer) {
+			return ((IServerProjectContainer) element).getServer();
+		}
+		if (element instanceof IServerProjectArtefact) {
+			return ((IServerProjectArtefact) element).getContainer().getServer();
 		}
 		return null;
 	}

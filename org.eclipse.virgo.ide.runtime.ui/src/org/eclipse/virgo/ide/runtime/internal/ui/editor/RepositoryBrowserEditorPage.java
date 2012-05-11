@@ -12,7 +12,6 @@ package org.eclipse.virgo.ide.runtime.internal.ui.editor;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.lang.reflect.InvocationTargetException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashSet;
@@ -20,7 +19,6 @@ import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.IJobChangeListener;
 import org.eclipse.core.runtime.jobs.Job;
@@ -29,10 +27,7 @@ import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.dialogs.MessageDialogWithToggle;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.jface.layout.GridDataFactory;
-import org.eclipse.jface.operation.IRunnableContext;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.preference.PreferenceDialog;
 import org.eclipse.jface.viewers.AbstractTreeViewer;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;
@@ -89,6 +84,7 @@ import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact;
 import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefactTyped;
 import org.eclipse.virgo.ide.runtime.core.artefacts.LibraryArtefact;
 import org.eclipse.virgo.ide.runtime.core.artefacts.LocalBundleArtefact;
+import org.eclipse.virgo.ide.runtime.core.provisioning.IBundleRepositoryChangeListener;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryProvisioningJob;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositorySourceProvisiongJob;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryUtils;
@@ -96,6 +92,7 @@ import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiImages;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
 import org.eclipse.virgo.ide.runtime.internal.ui.providers.RepositorySearchResultContentProvider;
 import org.eclipse.virgo.ide.runtime.internal.ui.providers.RuntimeLabelProvider;
+import org.eclipse.virgo.ide.runtime.internal.ui.repository.RefreshBundleJob;
 import org.eclipse.virgo.ide.runtime.internal.ui.sorters.RepositoryViewerSorter;
 import org.eclipse.virgo.ide.ui.editors.BundleManifestEditor;
 import org.eclipse.wst.server.core.IRuntime;
@@ -152,6 +149,8 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 
 	private Link update;
 
+	private IBundleRepositoryChangeListener repositoryListener;
+
 	private static String PROXY_PREF_PAGE_ID = Messages.RepositoryBrowserEditorPage_0;
 
 	@Override
@@ -193,6 +192,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 			serverWC.removeConfigurationChangeListener(propertyListener);
 		}
 		Job.getJobManager().removeJobChangeListener(jobListener);
+		ServerCorePlugin.getArtefactRepositoryManager().removeBundleRepositoryChangeListener(repositoryListener);
 	}
 
 	@Override
@@ -201,7 +201,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 
 		IServerWorkingCopy ts = (IServerWorkingCopy) server.loadAdapter(IServerWorkingCopy.class, null);
 		serverWC = ts;
-		addChangeListener();
+		addListeners();
 		initialize();
 	}
 
@@ -627,23 +627,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 	}
 
 	private void refreshBundleRepository() {
-		IRunnableWithProgress runnable = new IRunnableWithProgress() {
-
-			public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-				monitor.subTask(Messages.RepositoryBrowserEditorPage_RefreshingBundlesMessage);
-
-				ServerCorePlugin.getArtefactRepositoryManager().refreshBundleRepository(getServer().getRuntime());
-
-				refreshViewers();
-				monitor.done();
-			}
-		};
-		try {
-			IRunnableContext context = new ProgressMonitorDialog(shell);
-			context.run(true, true, runnable);
-		} catch (InvocationTargetException e1) {
-		} catch (InterruptedException e2) {
-		}
+		RefreshBundleJob.execute(shell, getServer().getRuntime());
 	}
 
 	protected void downloadSources() {
@@ -712,7 +696,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		updateParentState(parent);
 	}
 
-	protected void addChangeListener() {
+	protected void addListeners() {
 		propertyListener = new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
 			}
@@ -720,6 +704,14 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 
 		serverWC.addConfigurationChangeListener(propertyListener);
 		Job.getJobManager().addJobChangeListener(jobListener);
+
+		repositoryListener = new IBundleRepositoryChangeListener() {
+			public void bundleRepositoryChanged(IRuntime runtime) {
+				refreshViewers();
+			}
+		};
+		ServerCorePlugin.getArtefactRepositoryManager().addBundleRepositoryChangeListener(repositoryListener);
+
 	}
 
 	protected void handleSearch() {
@@ -751,10 +743,10 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 	protected void refreshViewers() {
 		shell.getDisplay().asyncExec(new Runnable() {
 			public void run() {
+				ISelection selection = repositoryTableViewer.getSelection();
 				repositoryTableViewer.refresh();
-				repositoryTableViewer.collapseAll();
+				repositoryTableViewer.setSelection(selection);
 				searchResultTableViewer.refresh(true);
-				searchResultTableViewer.collapseAll();
 			}
 		});
 	}

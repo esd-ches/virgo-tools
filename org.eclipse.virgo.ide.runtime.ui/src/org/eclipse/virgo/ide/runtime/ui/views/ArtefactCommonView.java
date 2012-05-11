@@ -28,6 +28,7 @@ import org.eclipse.pde.internal.ui.PDEPluginImages;
 import org.eclipse.pde.internal.ui.PDEUIMessages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMemento;
@@ -36,20 +37,25 @@ import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.actions.ActionGroup;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.navigator.INavigatorActivationService;
+import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet;
 import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact;
+import org.eclipse.virgo.ide.runtime.core.provisioning.IBundleRepositoryChangeListener;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
 import org.eclipse.virgo.ide.runtime.internal.ui.actions.OpenServerProjectFileAction;
+import org.eclipse.virgo.ide.runtime.internal.ui.editor.Messages;
 import org.eclipse.virgo.ide.runtime.internal.ui.editor.VirgoEditorAdapterFactory;
 import org.eclipse.virgo.ide.runtime.internal.ui.filters.FilterAction;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectArtefact;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer;
 import org.eclipse.virgo.ide.runtime.internal.ui.providers.LibrariesNode;
+import org.eclipse.virgo.ide.runtime.internal.ui.providers.RuntimeContainersContentProvider;
 import org.eclipse.virgo.ide.runtime.internal.ui.providers.RuntimeFullLabelProvider;
+import org.eclipse.virgo.ide.runtime.internal.ui.repository.RefreshBundleJob;
+import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.cnf.ServersView2;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditor;
@@ -69,17 +75,19 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 
 	private static final String FILTER_ACTION_GROUP = "filters";
 
+	private static final String REFRESH_ACTION_GROUP = "refresh";
+
 	private IWorkbenchPart currentPart;
 
 	private final ILabelProvider titleLabelProvider = new RuntimeFullLabelProvider();
 
-	private ShowTreeAction showTreeAction;
-
-	private ShowListAction showListAction;
-
-	private FilterAction[] filterActions;
+	RuntimeContainersContentProvider containerProvider = new RuntimeContainersContentProvider();
 
 	private boolean showList;
+
+	private IBundleRepositoryChangeListener repositoryListener;
+
+	private RefreshArtefactsAction refreshArtefactsAction;
 
 	class ShowListAction extends Action {
 		public ShowListAction() {
@@ -132,6 +140,29 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 		}
 	}
 
+	class RefreshArtefactsAction extends Action {
+
+		public RefreshArtefactsAction() {
+			super("", AS_PUSH_BUTTON); //$NON-NLS-1$
+			setText(Messages.RepositoryBrowserEditorPage_Refresh);
+			setDescription(Messages.RepositoryBrowserEditorPage_RefreshMessage);
+			setToolTipText(Messages.RepositoryBrowserEditorPage_RefreshMessage);
+			setImageDescriptor(PDEPluginImages.DESC_REFRESH);
+			setDisabledImageDescriptor(PDEPluginImages.DESC_REFRESH_DISABLED);
+		}
+
+		/*
+		 * @see Action#actionPerformed
+		 */
+		@Override
+		public void run() {
+			IServer serverInput = getServerInput();
+			if (serverInput != null) {
+				RefreshBundleJob.execute(getSite().getShell(), serverInput.getRuntime());
+			}
+		}
+	}
+
 	/**
 	 * @see org.eclipse.ui.navigator.CommonNavigator#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
@@ -146,9 +177,9 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 		}
 		IActionBars actionBars = getViewSite().getActionBars();
 		IToolBarManager manager = actionBars.getToolBarManager();
-		showTreeAction = new ShowTreeAction();
+		ShowTreeAction showTreeAction = new ShowTreeAction();
 		showTreeAction.setChecked(!showList);
-		showListAction = new ShowListAction();
+		ShowListAction showListAction = new ShowListAction();
 		showListAction.setChecked(showList);
 		manager.add(new Separator(TREE_ACTION_GROUP));
 		manager.add(new Separator("presentation")); //$NON-NLS-1$
@@ -158,10 +189,15 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 		super.createPartControl(aParent);
 
 		manager.add(new Separator(FILTER_ACTION_GROUP));
-		filterActions = FilterAction.createSet(this);
+		FilterAction[] filterActions = FilterAction.createSet(this);
 		for (FilterAction action : filterActions) {
 			manager.appendToGroup(FILTER_ACTION_GROUP, action);
 		}
+
+		manager.add(new Separator(REFRESH_ACTION_GROUP));
+		refreshArtefactsAction = new RefreshArtefactsAction();
+		refreshArtefactsAction.setEnabled(false);
+		manager.appendToGroup(REFRESH_ACTION_GROUP, refreshArtefactsAction);
 
 		getCommonViewer().addDoubleClickListener(new IDoubleClickListener() {
 
@@ -181,6 +217,13 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 			}
 		});
 		updateActivations();
+
+		repositoryListener = new IBundleRepositoryChangeListener() {
+			public void bundleRepositoryChanged(IRuntime runtime) {
+				refreshView();
+			}
+		};
+		ServerCorePlugin.getArtefactRepositoryManager().addBundleRepositoryChangeListener(repositoryListener);
 	}
 
 	@Override
@@ -189,13 +232,23 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 				| SWT.V_SCROLL);
 	}
 
+	protected void refreshView() {
+		Display.getDefault().asyncExec(new Runnable() {
+			public void run() {
+				ISelection selection = getCommonViewer().getSelection();
+				getCommonViewer().setInput(getCommonViewer().getInput());
+				getCommonViewer().setSelection(selection, true);
+			}
+		});
+	}
+
 	protected void updateContentDescription() {
 		String title = "(No Selection)";
 		if (currentPart instanceof ServerEditor) {
 			title = ((ServerEditor) currentPart).getTitle();
 		} else {
 			Object input = getCommonViewer().getInput();
-			if (input != null) {
+			if (input != null && getServerInput() != null) {
 				title = titleLabelProvider.getText(input);
 			}
 		}
@@ -250,14 +303,7 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 			}
 		}
 		updateContentDescription();
-	}
-
-	/**
-	 * @see org.eclipse.ui.navigator.CommonNavigator#createCommonActionGroup()
-	 */
-	@Override
-	protected ActionGroup createCommonActionGroup() {
-		return super.createCommonActionGroup();
+		refreshArtefactsAction.setEnabled(getServerInput() != null);
 	}
 
 	/**
@@ -276,6 +322,7 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 	public void dispose() {
 		super.dispose();
 		getSite().getPage().removePostSelectionListener(this);
+		ServerCorePlugin.getArtefactRepositoryManager().removeBundleRepositoryChangeListener(repositoryListener);
 		currentPart = null;
 	}
 
@@ -308,5 +355,9 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 					new String[] { ServerUiPlugin.RUNTIME_FLATTENED_ARTEFACTS_CONTENT_ID }, false);
 			activationService.activateExtensions(new String[] { ServerUiPlugin.RUNTIME_ARTEFACTS_CONTENT_ID }, false);
 		}
+	}
+
+	public IServer getServerInput() {
+		return containerProvider.getServer(getCommonViewer().getInput());
 	}
 }
