@@ -411,8 +411,6 @@ public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
 		return getInstallationType(runtime).getName() + " v" + getVersionName(runtime);
 	}
 
-	public abstract String getID();
-
 	public abstract String getSupportedVersions();
 
 	/**

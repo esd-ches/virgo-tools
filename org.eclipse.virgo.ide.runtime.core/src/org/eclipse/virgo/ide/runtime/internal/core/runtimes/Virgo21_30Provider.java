@@ -35,11 +35,9 @@ public class Virgo21_30Provider extends VirgoRuntimeProvider {
 	// Assumes Stateless
 	public static final VirgoRuntimeProvider INSTANCE = new Virgo21_30Provider();
 
-	public static final String LEGACY_CONNECTOR_BUNDLE_NAME = "org.eclipse.virgo.ide.management.remote_legacy.jar";
+	public static final String LEGACY_CONNECTOR_BUNDLE_NAME = "org.eclipse.virgo.ide.management.remote_1.0.0.201203091803.jar"; //$NON-NLS-1$
 
-	private static final String SERVER_VIRGO_21x_31x = SERVER_VIRGO_BASE;
-
-	Virgo21_30Provider() {
+	private Virgo21_30Provider() {
 	}
 
 	/**
@@ -78,14 +76,6 @@ public class Virgo21_30Provider extends VirgoRuntimeProvider {
 		list.add("-Fosgi.java.profile=\"file:" + serverHome + "/lib/java6-server.profile\"");
 		list.add("-Fosgi.clean=true");
 		return list.toArray(new String[list.size()]);
-	}
-
-	/**
-	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider#getID()
-	 */
-	@Override
-	public String getID() {
-		return SERVER_VIRGO_21x_31x;
 	}
 
 	@Override

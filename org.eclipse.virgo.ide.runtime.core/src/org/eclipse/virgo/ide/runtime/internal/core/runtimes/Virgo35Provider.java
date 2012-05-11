@@ -41,9 +41,7 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
 	// Assumes Stateless
 	public static final VirgoRuntimeProvider INSTANCE = new Virgo35Provider();
 
-	private static final String SERVER_VIRGO_35 = SERVER_VIRGO_BASE + ".35";
-
-	public static final String GEMINI_CONNECTOR_BUNDLE_NAME = "org.eclipse.virgo.ide.management.remote_3.5.0.201205101950.jar";
+	public static final String GEMINI_CONNECTOR_BUNDLE_NAME = "org.eclipse.virgo.ide.management.remote_3.5.0.201205101950.jar"; //$NON-NLS-1$
 
 	private Virgo35Provider() {
 	}
@@ -150,14 +148,6 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
 		}
 		fwClassPath.deleteCharAt(fwClassPath.length() - 1);
 		return fwClassPath.toString();
-	}
-
-	/**
-	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider#getID()
-	 */
-	@Override
-	public String getID() {
-		return SERVER_VIRGO_35;
 	}
 
 	@Override
