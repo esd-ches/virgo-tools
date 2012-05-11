@@ -70,11 +70,10 @@ public class ServerUtils {
 	private static final AtomicLong REPOSITORY_COUNTER = new AtomicLong();
 
 	/**
-	 * Location of the bundle resolution cache used by the
-	 * {@link DependencyLocator}
+	 * Location of the bundle resolution cache used by the {@link DependencyLocator}
 	 */
 	public static final String CACHE_LOCATION = ServerCorePlugin.getDefault().getStateLocation().toFile() + "/"
-		+ CACHE_LOCATION_PREFIX + "-" + System.currentTimeMillis();
+			+ CACHE_LOCATION_PREFIX + "-" + System.currentTimeMillis();
 
 	/** Source jar file suffix */
 	private static final String SOURCES_SUFFIX = "-sources";
@@ -91,13 +90,14 @@ public class ServerUtils {
 	/**
 	 * Returns the root of the installation directory.
 	 * 
-	 * @param targetedServerRuntimes the targeted servers of this project
+	 * @param targetedServerRuntimes
+	 *            the targeted servers of this project
 	 * @return path to server.profile file
 	 */
 	public static String getServerHome(IRuntime... targetedServerRuntimes) {
 		for (org.eclipse.wst.server.core.IRuntime serverRuntime : targetedServerRuntimes) {
-			VirgoServerRuntime sRuntime = (VirgoServerRuntime) serverRuntime.loadAdapter(	VirgoServerRuntime.class,
-																							new NullProgressMonitor());
+			VirgoServerRuntime sRuntime = (VirgoServerRuntime) serverRuntime.loadAdapter(VirgoServerRuntime.class,
+					new NullProgressMonitor());
 			if (sRuntime != null) {
 				return serverRuntime.getLocation().toString();
 			}
@@ -108,7 +108,8 @@ public class ServerUtils {
 	/**
 	 * Returns the targeted runtimes of the given project
 	 * 
-	 * @param project the project to return the target runtimes for
+	 * @param project
+	 *            the project to return the target runtimes for
 	 */
 	public static IRuntime[] getTargettedRuntimes(IProject project) {
 		final Set<org.eclipse.wst.server.core.IRuntime> targetedServerRuntimes = new LinkedHashSet<org.eclipse.wst.server.core.IRuntime>();
@@ -125,11 +126,12 @@ public class ServerUtils {
 	}
 
 	/**
-	 * Creates a {@link DependencyLocator} instance suitable for the given
-	 * project.
+	 * Creates a {@link DependencyLocator} instance suitable for the given project.
 	 * 
-	 * @param project the project
-	 * @param additionalSearchPaths any additional search paths.
+	 * @param project
+	 *            the project
+	 * @param additionalSearchPaths
+	 *            any additional search paths.
 	 */
 	public static IDependencyLocator createDependencyLocator(IProject project, String[] additionalSearchPaths) {
 		try {
@@ -137,8 +139,8 @@ public class ServerUtils {
 			if (serverRuntimes == null || serverRuntimes.length == 0) {
 				return null;
 			}
-			return createDependencyLocator(	serverRuntimes[0], getServerHome(serverRuntimes), additionalSearchPaths,
-											getCacheDirectoryPath(), getJavaVersion(project));
+			return createDependencyLocator(serverRuntimes[0], getServerHome(serverRuntimes), additionalSearchPaths,
+					getCacheDirectoryPath(), getJavaVersion(project));
 		} catch (IOException e) {
 			StatusUtil.error("An IO Exception occurred.", e);
 		}
@@ -146,18 +148,19 @@ public class ServerUtils {
 	}
 
 	/**
-	 * Creates a {@link DependencyLocator} instance suitable for the given
-	 * runtime.
+	 * Creates a {@link DependencyLocator} instance suitable for the given runtime.
 	 * 
-	 * @param project the project
-	 * @param additionalSearchPaths any additional search paths.
+	 * @param project
+	 *            the project
+	 * @param additionalSearchPaths
+	 *            any additional search paths.
 	 */
 	public static IDependencyLocator createDependencyLocator(IRuntime serverRuntime) {
 		try {
 			// Create DependencyLocator with path to server.config and
 			// server.profile
-			return createDependencyLocator(	serverRuntime, getServerHome(serverRuntime), NO_ADDITIONAL_SEARCH_PATHS,
-											getCacheDirectoryPath(), null);
+			return createDependencyLocator(serverRuntime, getServerHome(serverRuntime), NO_ADDITIONAL_SEARCH_PATHS,
+					getCacheDirectoryPath(), null);
 		} catch (IOException e) {
 			StatusUtil.error(e);
 		}
@@ -166,12 +169,14 @@ public class ServerUtils {
 
 	private static IDependencyLocator createDependencyLocator(IRuntime runtime, String serverHomePath,
 			String[] additionalSearchPaths, String indexDirectoryPath, JavaVersion javaVersion) throws IOException {
-		IServerRuntimeWorkingCopy serverRuntime = (IServerRuntimeWorkingCopy) runtime
-				.loadAdapter(IServerRuntimeWorkingCopy.class, null);
-		IServerRuntimeProvider versionHandler = serverRuntime.getVirgoVersion();
-		if (versionHandler != null) {
-			return versionHandler.createDependencyLocator(	runtime, serverHomePath, additionalSearchPaths,
-															indexDirectoryPath, javaVersion);
+		IServerRuntimeWorkingCopy serverRuntime = (IServerRuntimeWorkingCopy) runtime.loadAdapter(
+				IServerRuntimeWorkingCopy.class, null);
+		if (serverRuntime != null) {
+			IServerRuntimeProvider versionHandler = serverRuntime.getVirgoVersion();
+			if (versionHandler != null) {
+				return versionHandler.createDependencyLocator(runtime, serverHomePath, additionalSearchPaths,
+						indexDirectoryPath, javaVersion);
+			}
 		}
 		return null;
 	}
@@ -182,7 +187,8 @@ public class ServerUtils {
 	private static String getCacheDirectoryPath() {
 		// trying to generated a thread unique directory name
 		File cacheDirectoryPath = new File(new StringBuilder(CACHE_LOCATION).append("-")
-				.append(REPOSITORY_COUNTER.getAndIncrement()).toString());
+				.append(REPOSITORY_COUNTER.getAndIncrement())
+				.toString());
 		if (!cacheDirectoryPath.exists()) {
 			cacheDirectoryPath.mkdirs();
 		}
@@ -226,8 +232,8 @@ public class ServerUtils {
 
 			// first check the manifest for that
 			// Bundle-RequiredExecutionEnvironment
-			BundleManifest bundleManifest = BundleManifestCorePlugin.getBundleManifestManager()
-					.getBundleManifest(javaProject);
+			BundleManifest bundleManifest = BundleManifestCorePlugin.getBundleManifestManager().getBundleManifest(
+					javaProject);
 			Dictionary<String, String> manifest = bundleManifest.toDictionary();
 			if (manifest != null && manifest.get(Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT) != null) {
 				String javaVersion = manifest.get(Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT);
@@ -254,7 +260,7 @@ public class ServerUtils {
 					// check for default
 					for (IExecutionEnvironment executionEnvironment : manager.getExecutionEnvironments()) {
 						if (executionEnvironment.getDefaultVM() != null
-							&& executionEnvironment.getDefaultVM().equals(vm)) {
+								&& executionEnvironment.getDefaultVM().equals(vm)) {
 							return JAVA_VERSION_MAPPING.get(executionEnvironment.getId());
 						}
 					}
@@ -285,7 +291,8 @@ public class ServerUtils {
 			if (((ServerBehaviour) server).getServer().getRuntime() == null) {
 				return null;
 			}
-			return (VirgoServerRuntime) ((ServerBehaviour) server).getServer().getRuntime()
+			return (VirgoServerRuntime) ((ServerBehaviour) server).getServer()
+					.getRuntime()
 					.loadAdapter(VirgoServerRuntime.class, null);
 		}
 		return null;
