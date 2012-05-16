@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2011 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009 - 2012 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -36,6 +36,7 @@ import org.eclipse.ui.forms.widgets.TableWrapData;
 /**
  * @author Christian Dupuis
  * @author Martin Lippert
+ * @author Leo Dos Santos
  */
 public class BundleGeneralInfoSection extends AbstractPdeGeneralInfoSection {
 
@@ -138,11 +139,39 @@ public class BundleGeneralInfoSection extends AbstractPdeGeneralInfoSection {
 		return fNameEntry.getText().getText();
 	}
 
+	@Override
 	public void dispose() {
 		super.dispose();
 		if (fTypeFieldAssistDisposer != null) {
 			fTypeFieldAssistDisposer.dispose();
 		}
+	}
+
+	@Override
+	public void commit(boolean onSave) {
+		fClassEntry.commit();
+		super.commit(onSave);
+	}
+
+	@Override
+	public void cancelEdit() {
+		fClassEntry.cancelEdit();
+		super.cancelEdit();
+	}
+
+	@Override
+	public void refresh() {
+		IPluginModelBase model = (IPluginModelBase) getPage().getModel();
+		if (model != null) {
+			IPlugin plugin = (IPlugin) model.getPluginBase();
+			// Only update this field if it already has not been modified
+			// This will prevent the cursor from being set to position 0 after
+			// accepting a field assist proposal using \r
+			if (fClassEntry.isDirty() == false) {
+				fClassEntry.setValue(plugin.getClassName(), true);
+			}
+		}
+		super.refresh();
 	}
 
 }
