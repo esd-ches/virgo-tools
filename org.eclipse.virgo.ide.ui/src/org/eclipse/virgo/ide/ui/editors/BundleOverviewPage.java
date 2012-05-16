@@ -23,6 +23,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
@@ -126,13 +127,13 @@ public class BundleOverviewPage extends PDEFormPage implements IHyperlinkListene
 					form.setImage(ServerIdeUiPlugin.getImage("full/obj16/osgi_obj.gif"));
 				}
 			} catch (OperationCanceledException e) {
-				StatusHandler.log(new Status(Status.ERROR, ServerIdeUiPlugin.PLUGIN_ID,
+				StatusHandler.log(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID,
 						"Could not update page title text", e));
 			} catch (InterruptedException e) {
-				StatusHandler.log(new Status(Status.ERROR, ServerIdeUiPlugin.PLUGIN_ID,
+				StatusHandler.log(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID,
 						"Could not update page title text", e));
 			} catch (CoreException e) {
-				StatusHandler.log(new Status(Status.ERROR, ServerIdeUiPlugin.PLUGIN_ID,
+				StatusHandler.log(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID,
 						"Could not update page title text", e));
 			}
 		}
@@ -191,23 +192,23 @@ public class BundleOverviewPage extends PDEFormPage implements IHyperlinkListene
 			@Override
 			public void widgetSelected(SelectionEvent e) {
 				IRunnableWithProgress op = new WorkspaceModifyOperation() {
+					@Override
 					protected void execute(IProgressMonitor monitor) throws CoreException, InterruptedException {
 						IProject project = resource.getProject();
 						IProjectDescription description = project.getDescription();
-
 						try {
 							List<ICommand> cmds = Arrays.asList(description.getBuildSpec());
 							List<ICommand> newCmds = new ArrayList<ICommand>(cmds);
-							for (ICommand config : cmds) {
-								if (config.getBuilderName().equals(BundlorCorePlugin.BUILDER_ID)) {
-									if (BundlorUiPlugin.isBundlorBuilding(project)) {
+							if (BundlorUiPlugin.isBundlorBuilding(project)) {
+								for (ICommand config : cmds) {
+									if (config.getBuilderName().equals(BundlorCorePlugin.BUILDER_ID)) {
 										newCmds.remove(config);
-									} else {
-										ICommand command = project.getDescription().newCommand();
-										command.setBuilderName(BundlorCorePlugin.BUILDER_ID);
-										newCmds.add(config);
 									}
 								}
+							} else {
+								ICommand command = project.getDescription().newCommand();
+								command.setBuilderName(BundlorCorePlugin.BUILDER_ID);
+								newCmds.add(command);
 							}
 							if (!cmds.equals(newCmds)) {
 								description.setBuildSpec(newCmds.toArray(new ICommand[] {}));
@@ -282,6 +283,7 @@ public class BundleOverviewPage extends PDEFormPage implements IHyperlinkListene
 			getEditor().setActivePage(BundleRuntimePage.PAGE_ID);
 		} else if (e.getHref().equals("refreshdependencies")) {
 			IRunnableWithProgress op = new WorkspaceModifyOperation() {
+				@Override
 				protected void execute(IProgressMonitor monitor) throws CoreException, InterruptedException {
 					ServerClasspathContainerUpdateJob.scheduleClasspathContainerUpdateJob(
 							JavaCore.create(resource.getProject()), BundleManifestManager.IMPORTS_CHANGED);
