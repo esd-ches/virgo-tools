@@ -70,22 +70,23 @@ class BundleManifestDiffer {
 
 		Set<Type> differences = new HashSet<Type>();
 
-		if (!ObjectUtils.equals(importPackageHeader1, importPackageHeader2)) {
+		if (!ObjectUtils.equals(importPackageHeader1.getImportedPackages(), importPackageHeader2.getImportedPackages())) {
 			differences.add(Type.IMPORT_PACKAGE);
 		}
 		if (!ObjectUtils.equals(execEnvironment1, execEnvironment2)) {
 			differences.add(Type.IMPORT_PACKAGE);
 		}
-		if (!ObjectUtils.equals(exportPackageHeader1, exportPackageHeader2)) {
+		if (!ObjectUtils.equals(exportPackageHeader1.getExportedPackages(), exportPackageHeader2.getExportedPackages())) {
 			differences.add(Type.EXPORT_PACKAGE);
 		}
-		if (!ObjectUtils.equals(importLibraryHeader1, importLibraryHeader2)) {
+		if (!ObjectUtils.equals(importLibraryHeader1.getImportedLibraries(),
+				importLibraryHeader2.getImportedLibraries())) {
 			differences.add(Type.IMPORT_LIBRARY);
 		}
-		if (!ObjectUtils.equals(importBundleHeader1, importBundleHeader2)) {
+		if (!ObjectUtils.equals(importBundleHeader1.getImportedBundles(), importBundleHeader2.getImportedBundles())) {
 			differences.add(Type.IMPORT_BUNDLE);
 		}
-		if (!ObjectUtils.equals(requireBundleHeader1, requireBundleHeader2)) {
+		if (!ObjectUtils.equals(requireBundleHeader1.getRequiredBundles(), requireBundleHeader2.getRequiredBundles())) {
 			differences.add(Type.REQUIRE_BUNDLE);
 		}
 
