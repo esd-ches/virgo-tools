@@ -58,7 +58,7 @@ public class OpenProjectManifestAction implements IObjectActionDelegate {
 			openResource(project.findMember(BundleManifestCorePlugin.MANIFEST_FILE_LOCATION));
 		} else {
 			try {
-				if (project.hasNature(JavaCore.NATURE_ID)
+				if (FacetUtils.hasNature(project, JavaCore.NATURE_ID)
 						&& FacetedProjectFramework.hasProjectFacet(project, FacetCorePlugin.WEB_FACET_ID)) {
 					openResource(BundleManifestUtils.locateManifest(JavaCore.create(project), false));
 				}

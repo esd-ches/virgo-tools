@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009 - 2012 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -27,7 +27,9 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.common.util.WrappedException;
 import org.eclipse.emf.ecore.resource.Resource;
@@ -35,6 +37,7 @@ import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.xmi.PackageNotFoundException;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.ide.par.Bundle;
 import org.eclipse.virgo.ide.par.Par;
 import org.eclipse.virgo.ide.par.ParPackage;
@@ -44,6 +47,7 @@ import org.eclipse.wst.common.project.facet.core.FacetedProjectFramework;
  * Utility to check if the given {@link IResource} belongs to a project that has the par or bundle facet.
  * 
  * @author Christian Dupuis
+ * @author Leo Dos Santos
  * @since 1.0.0
  */
 public class FacetUtils {
@@ -52,14 +56,7 @@ public class FacetUtils {
 	 * Checks if a given {@link IResource} has the bundle facet.
 	 */
 	public static boolean isBundleProject(IResource resource) {
-		boolean b;
-		try {
-			b = resource.getProject().hasNature(JavaCore.NATURE_ID)
-					&& hasProjectFacet(resource, FacetCorePlugin.BUNDLE_FACET_ID);
-			return b;
-		} catch (CoreException e) {
-			return false;
-		}
+		return hasNature(resource, JavaCore.NATURE_ID) && hasProjectFacet(resource, FacetCorePlugin.BUNDLE_FACET_ID);
 	}
 
 	/**
@@ -84,7 +81,28 @@ public class FacetUtils {
 			try {
 				return FacetedProjectFramework.hasProjectFacet(resource.getProject(), facetId);
 			} catch (CoreException e) {
-				throw new RuntimeException(e);
+				StatusManager.getManager().handle(
+						new Status(IStatus.ERROR, FacetCorePlugin.PLUGIN_ID,
+								"An error occurred inspecting project facet", e));
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Checks if a {@link IResource} has a given project nature.
+	 */
+	public static boolean hasNature(IResource resource, String natureId) {
+		if (resource != null && resource.isAccessible()) {
+			IProject project = resource.getProject();
+			if (project != null) {
+				try {
+					return project.hasNature(natureId);
+				} catch (CoreException e) {
+					StatusManager.getManager().handle(
+							new Status(IStatus.ERROR, FacetCorePlugin.PLUGIN_ID,
+									"An error occurred inspecting project nature", e));
+				}
 			}
 		}
 		return false;
@@ -166,7 +184,7 @@ public class FacetUtils {
 						BufferedWriter bw = new BufferedWriter(new FileWriter(parFile));
 						bw.write(sb.toString());
 						bw.close();
-						project.refreshLocal(IProject.DEPTH_INFINITE, null);
+						project.refreshLocal(IResource.DEPTH_INFINITE, null);
 						resource = resourceSet.getResource(fileUri, true);
 					} catch (IOException e1) {
 						throw new RuntimeException(e1);

@@ -20,6 +20,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.statushandlers.StatusManager;
+import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerLifecycleListener;
@@ -97,7 +98,7 @@ public class ServerProjectManager implements IServerLifecycleListener {
 		for (IProject project : root.getProjects()) {
 			try {
 				project.open(null);
-				if (project.hasNature(ServerProject.SERVER_PROJECT_ID)) {
+				if (FacetUtils.hasNature(project, ServerProject.SERVER_PROJECT_ID)) {
 					oldProjectForName.put(project.getName(), project);
 				}
 			} catch (CoreException e) {

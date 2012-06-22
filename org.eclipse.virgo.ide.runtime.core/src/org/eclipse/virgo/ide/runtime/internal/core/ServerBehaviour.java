@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2011 SpringSource, a divison of VMware, Inc. and others
+ * Copyright (c) 2009 - 2012 SpringSource, a divison of VMware, Inc. and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,6 +51,7 @@ import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
 import org.eclipse.ui.console.IOConsoleOutputStream;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
+import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.core.IServerDeployer;
@@ -164,28 +165,28 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 	public void setupLaunchConfiguration(ILaunchConfigurationWorkingCopy workingCopy, IProgressMonitor monitor)
 			throws CoreException {
 
-		String existingProgArgs = workingCopy.getAttribute(	IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
-															(String) null);
-		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS, LaunchArgumentUtils
-				.mergeArguments(existingProgArgs, getRuntimeProgramArguments(),
-								getExcludedRuntimeProgramArguments(true), true));
+		String existingProgArgs = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
+				(String) null);
+		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_PROGRAM_ARGUMENTS,
+				LaunchArgumentUtils.mergeArguments(existingProgArgs, getRuntimeProgramArguments(),
+						getExcludedRuntimeProgramArguments(true), true));
 
-		String existingVMArgs = workingCopy.getAttribute(	IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
-															(String) null);
+		String existingVMArgs = workingCopy.getAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
+				(String) null);
 		String[] configVMArgs = getRuntimeVMArguments();
 
-		workingCopy.setAttribute(	IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
-									LaunchArgumentUtils.mergeArguments(existingVMArgs, configVMArgs, null, false));
+		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_VM_ARGUMENTS,
+				LaunchArgumentUtils.mergeArguments(existingVMArgs, configVMArgs, null, false));
 
 		IServerRuntime runtime = ServerUtils.getServerRuntime(this);
 		IVMInstall vmInstall = runtime.getVMInstall();
 		if (vmInstall != null) {
-			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_JRE_CONTAINER_PATH, JavaRuntime
-					.newJREContainerPath(vmInstall).toPortableString());
+			workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_JRE_CONTAINER_PATH,
+					JavaRuntime.newJREContainerPath(vmInstall).toPortableString());
 		}
 
-		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_WORKING_DIRECTORY, getRuntimeBaseDirectory()
-				.toOSString());
+		workingCopy.setAttribute(IJavaLaunchConfigurationConstants.ATTR_WORKING_DIRECTORY,
+				getRuntimeBaseDirectory().toOSString());
 
 		IRuntimeClasspathEntry[] originalClasspath = JavaRuntime.computeUnresolvedRuntimeClasspath(workingCopy);
 		int size = originalClasspath.length;
@@ -204,14 +205,9 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 		if (vmInstall != null) {
 			try {
 				String typeId = vmInstall.getVMInstallType().getId();
-				LaunchArgumentUtils
-						.replaceJREContainer(	oldCp,
-												JavaRuntime.newRuntimeContainerClasspathEntry(	new Path(
-																									JavaRuntime.JRE_CONTAINER)
-																										.append(typeId)
-																										.append(vmInstall
-																														.getName()),
-																								IRuntimeClasspathEntry.BOOTSTRAP_CLASSES));
+				LaunchArgumentUtils.replaceJREContainer(oldCp, JavaRuntime.newRuntimeContainerClasspathEntry(new Path(
+						JavaRuntime.JRE_CONTAINER).append(typeId).append(vmInstall.getName()),
+						IRuntimeClasspathEntry.BOOTSTRAP_CLASSES));
 			} catch (Exception e) {
 				// ignore
 			}
@@ -225,7 +221,7 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 					for (toolsIndex = 0; toolsIndex < oldCp.size(); toolsIndex++) {
 						IRuntimeClasspathEntry entry = oldCp.get(toolsIndex);
 						if (entry.getType() == IRuntimeClasspathEntry.ARCHIVE
-							&& entry.getPath().lastSegment().equals("tools.jar")) {
+								&& entry.getPath().lastSegment().equals("tools.jar")) {
 							break;
 						}
 					}
@@ -292,7 +288,7 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 	public void tail(DeploymentIdentity identity) {
 		// add setting to enable/disable tailing
 		if (processConsole != null && ServerUtils.getServer(this).shouldTailTraceFiles() && identity != null
-			&& identity.getSymbolicName() != null && identity.getVersion() != null) {
+				&& identity.getSymbolicName() != null && identity.getVersion() != null) {
 			ServerLogTail tail = new ServerLogTail(this, identity, processConsole);
 			tail.setSystem(true);
 			tail.schedule();
@@ -316,7 +312,7 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 					int size = events.length;
 					for (int i = 0; i < size; i++) {
 						if (newProcess != null && newProcess.equals(events[i].getSource())
-							&& events[i].getKind() == DebugEvent.TERMINATE) {
+								&& events[i].getKind() == DebugEvent.TERMINATE) {
 							stopServer();
 						}
 					}
@@ -332,12 +328,12 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 		}
 
 		File traceDirectory = new File(getRuntimeBaseDirectory().toOSString() + File.separator + "serviceability"
-			+ File.separator + "trace");
+				+ File.separator + "trace");
 		if (traceDirectory.exists()) {
 			for (File applicationTraceDirectory : traceDirectory.listFiles()) {
 				if (applicationTraceDirectory.isDirectory()) {
 					File traceFile = new File(applicationTraceDirectory.getAbsolutePath() + File.separator
-						+ "trace.log");
+							+ "trace.log");
 					if (traceFile.exists()) {
 						traceFileSizes.put(traceFile.getAbsolutePath(), traceFile.length());
 					}
@@ -353,14 +349,14 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 			// are allowed
 			IProject project = module.getProject();
 			if (!FacetedProjectFramework.hasProjectFacet(project, FacetCorePlugin.WEB_FACET_ID)
-				|| !project.hasNature(JavaCore.NATURE_ID)) {
+					|| !FacetUtils.hasProjectFacet(project, JavaCore.NATURE_ID)) {
 				return null;
 			}
 
 			String contextPath = null;
 
-			BundleManifest bundleManifest = BundleManifestCorePlugin.getBundleManifestManager()
-					.getBundleManifest(JavaCore.create(project));
+			BundleManifest bundleManifest = BundleManifestCorePlugin.getBundleManifestManager().getBundleManifest(
+					JavaCore.create(project));
 			if (bundleManifest != null) {
 				Dictionary<String, String> manifest = bundleManifest.toDictionary();
 				if (manifest != null && manifest.get(WEB_CONTEXT_PATH_MANIFEST_HEADER) != null) {
@@ -485,13 +481,13 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 
 	class ServerLogTail extends Job {
 
-		private IOConsoleOutputStream stream;
+		private final IOConsoleOutputStream stream;
 
 		public ServerLogTail(ServerBehaviour server, DeploymentIdentity identity, ProcessConsole console) {
 			super(server.getServer().getName());
 			this.logfile = new File(server.getRuntimeBaseDirectory().toOSString() + File.separator + "serviceability"
-				+ File.separator + "trace" + File.separator + identity.getSymbolicName() + "-" + identity.getVersion()
-				+ File.separator + "trace.log");
+					+ File.separator + "trace" + File.separator + identity.getSymbolicName() + "-"
+					+ identity.getVersion() + File.separator + "trace.log");
 			this.stream = console.newOutputStream();
 			Long fileSize = traceFileSizes.get(logfile.getAbsolutePath());
 			if (fileSize != null) {
@@ -500,10 +496,10 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
 		}
 
 		/** How frequently to check for file changes; defaults to 5 seconds */
-		private long sampleInterval = 1000;
+		private final long sampleInterval = 1000;
 
 		/** The log file to tail */
-		private File logfile;
+		private final File logfile;
 
 		/** Is the tailer currently tailing? */
 		private boolean tailing = false;

@@ -12,9 +12,9 @@
 package org.eclipse.virgo.ide.runtime.internal.ui.filters;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
+import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProject;
 
 /**
@@ -30,10 +30,7 @@ public class VirgoServerFilter extends ViewerFilter {
 	 */
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		try {
-			return (element instanceof IProject) && !((IProject) element).hasNature(ServerProject.SERVER_PROJECT_ID);
-		} catch (CoreException e) {
-			return true;
-		}
+		return (element instanceof IProject)
+				&& !FacetUtils.hasNature((IProject) element, ServerProject.SERVER_PROJECT_ID);
 	}
 }

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2011 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009 - 2012 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -46,6 +46,7 @@ import org.eclipse.jface.text.IRegion;
 import org.eclipse.jst.j2ee.web.componentcore.util.WebArtifactEdit;
 import org.eclipse.osgi.util.ManifestElement;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
+import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.manifest.internal.core.model.BundleManifestHeader;
 import org.eclipse.virgo.ide.module.core.ServerModuleDelegate;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
@@ -302,7 +303,7 @@ public class BundleManifestUtils {
 
 	public static IFile getFirstPossibleManifestFile(final IProject project, boolean isTestManifest) {
 		try {
-			if (project.hasNature(JavaCore.NATURE_ID)) {
+			if (FacetUtils.hasNature(project, JavaCore.NATURE_ID)) {
 
 				List<IClasspathEntry> entries = new ArrayList<IClasspathEntry>(
 						ServerModuleDelegate.getSourceClasspathEntries(project, isTestManifest));

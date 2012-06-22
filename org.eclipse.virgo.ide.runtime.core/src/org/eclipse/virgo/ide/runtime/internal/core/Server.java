@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009 - 2012 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -78,37 +78,37 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 			for (int i = 0; i < size; i++) {
 				IModule module = add[i];
 				if (!FacetCorePlugin.WEB_FACET_ID.equals(module.getModuleType().getId())
-					&& !FacetCorePlugin.BUNDLE_FACET_ID.equals(module.getModuleType().getId())
-					&& !FacetCorePlugin.PAR_FACET_ID.equals(module.getModuleType().getId())
-					&& !FacetCorePlugin.PLAN_FACET_ID.equals(module.getModuleType().getId())) {
+						&& !FacetCorePlugin.BUNDLE_FACET_ID.equals(module.getModuleType().getId())
+						&& !FacetCorePlugin.PAR_FACET_ID.equals(module.getModuleType().getId())
+						&& !FacetCorePlugin.PLAN_FACET_ID.equals(module.getModuleType().getId())) {
 					return new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, 0,
-						"SpringSource par or bundle projects only", null);
+							"SpringSource par or bundle projects only", null);
 				}
 
 				IProject project = module.getProject();
 				// Check that nested par module is not displayed
 				if (module.getId().endsWith("$" + project.getName())) {
 					return new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, 0, "No nested par modules allowed",
-						null);
+							null);
 				}
 
 				// Check that shared war is only deployed as WAR
 				try {
-					if (project.hasNature(JavaCore.NATURE_ID)
-						&& FacetedProjectFramework.hasProjectFacet(project, FacetCorePlugin.WEB_FACET_ID)
-						&& FacetUtils.isBundleProject(project)
-						&& FacetCorePlugin.BUNDLE_FACET_ID.equals(module.getModuleType().getId())) {
+					if (FacetUtils.hasNature(project, JavaCore.NATURE_ID)
+							&& FacetedProjectFramework.hasProjectFacet(project, FacetCorePlugin.WEB_FACET_ID)
+							&& FacetUtils.isBundleProject(project)
+							&& FacetCorePlugin.BUNDLE_FACET_ID.equals(module.getModuleType().getId())) {
 						return new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, 0,
-							"Shared WAR deploy only as jst.web modules", null);
+								"Shared WAR deploy only as jst.web modules", null);
 					}
 				} catch (CoreException e) {
 					return new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, 0,
-						"Core Exception when resolving project: ", e);
+							"Core Exception when resolving project: ", e);
 				}
 
 				if (getVersionHandler() == null) {
 					return new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, 0, "No " + getServerName()
-						+ " runtime configured", null);
+							+ " runtime configured", null);
 				}
 
 				IStatus status = getVersionHandler().canAddModule(module);
@@ -131,6 +131,7 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 		return Status.OK_STATUS;
 	}
 
+	@Override
 	public void configurationChanged() {
 		configuration = null;
 	}
@@ -151,14 +152,14 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 					return modules;
 				}
 			} else if (FacetCorePlugin.PAR_FACET_ID.equals(moduleType.getId())) {
-				ServerModuleDelegate parModule = (ServerModuleDelegate) module[0]
-						.loadAdapter(ServerModuleDelegate.class, null);
+				ServerModuleDelegate parModule = (ServerModuleDelegate) module[0].loadAdapter(
+						ServerModuleDelegate.class, null);
 				if (parModule != null) {
 					return parModule.getChildModules();
 				}
 			} else if (FacetCorePlugin.PLAN_FACET_ID.equals(moduleType.getId())) {
-				ServerModuleDelegate planModule = (ServerModuleDelegate) module[0]
-						.loadAdapter(ServerModuleDelegate.class, null);
+				ServerModuleDelegate planModule = (ServerModuleDelegate) module[0].loadAdapter(
+						ServerModuleDelegate.class, null);
 				if (planModule != null) {
 					return planModule.getChildModules();
 				}
@@ -209,9 +210,9 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 	@Override
 	public IModule[] getRootModules(IModule module) throws CoreException {
 		if (FacetCorePlugin.WEB_FACET_ID.equals(module.getModuleType().getId())
-			|| FacetCorePlugin.BUNDLE_FACET_ID.equals(module.getModuleType().getId())
-			|| FacetCorePlugin.PAR_FACET_ID.equals(module.getModuleType().getId())
-			|| FacetCorePlugin.PLAN_FACET_ID.equals(module.getModuleType().getId())) {
+				|| FacetCorePlugin.BUNDLE_FACET_ID.equals(module.getModuleType().getId())
+				|| FacetCorePlugin.PAR_FACET_ID.equals(module.getModuleType().getId())
+				|| FacetCorePlugin.PLAN_FACET_ID.equals(module.getModuleType().getId())) {
 			IStatus status = canModifyModules(new IModule[] { module }, null);
 			if (status == null || !status.isOK()) {
 				return new IModule[0];
@@ -310,6 +311,7 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 		listeners.remove(listener);
 	}
 
+	@Override
 	public void saveConfiguration(IProgressMonitor monitor) throws CoreException {
 		if (configuration == null) {
 			return;
