@@ -245,8 +245,6 @@
          viewerId="org.eclipse.wst.server.ui.ServersView">
       <includes>
          <contentExtension
-               pattern="org.eclipse.virgo.ide.runtime.ui.installedBundleContent"/>
-         <contentExtension
                pattern="org.eclipse.jdt.java.ui.javaContent"/>
          </includes>
    </viewerContentBinding>
