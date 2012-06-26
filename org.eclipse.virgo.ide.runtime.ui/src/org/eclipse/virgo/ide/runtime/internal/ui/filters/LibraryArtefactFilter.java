@@ -16,6 +16,7 @@ import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.virgo.ide.runtime.core.artefacts.LocalLibraryArtefact;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectFileContainer;
+import org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectFileReference;
 
 /**
  * 
@@ -32,7 +33,8 @@ public class LibraryArtefactFilter extends ViewerFilter {
 	 */
 	@Override
 	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		return (!(element instanceof ProjectFileContainer) && !(element instanceof LocalLibraryArtefact) && !(element instanceof IFile && ((IFile) element).getFileExtension()
+		return (!(element instanceof ProjectFileContainer) && !(element instanceof ProjectFileReference)
+				&& !(element instanceof LocalLibraryArtefact) && !(element instanceof IFile && ((IFile) element).getFileExtension()
 				.equals(VIRGO_LIB_EXT)));
 	}
 
