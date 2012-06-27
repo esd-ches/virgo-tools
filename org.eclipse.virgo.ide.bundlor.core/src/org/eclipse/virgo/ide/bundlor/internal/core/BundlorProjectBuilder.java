@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009 - 2012 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -74,6 +74,7 @@ import org.eclipse.virgo.ide.bundlor.jdt.core.AstTypeArtifactAnalyser;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestUtils;
+import org.eclipse.virgo.ide.manifest.core.IHeaderConstants;
 import org.eclipse.virgo.ide.manifest.core.editor.model.SpringBundleModel;
 import org.eclipse.virgo.ide.manifest.core.editor.model.SpringBundleModelFactory;
 import org.eclipse.virgo.ide.module.core.ServerModuleDelegate;
@@ -85,11 +86,11 @@ import org.eclipse.virgo.util.parser.manifest.ManifestContents;
 import org.eclipse.virgo.util.parser.manifest.ManifestParser;
 import org.eclipse.virgo.util.parser.manifest.RecoveringManifestParser;
 import org.osgi.framework.BundleException;
+import org.osgi.framework.Constants;
 
 /**
- * {@link IncrementalProjectBuilder} that runs on a bundle project and generates
- * the MANIFEST.MF based on actual dependencies from the source code and the
- * Bundlor template.
+ * {@link IncrementalProjectBuilder} that runs on a bundle project and generates the MANIFEST.MF based on actual
+ * dependencies from the source code and the Bundlor template.
  * 
  * @author Christian Dupuis
  * @author Leo Dos Santos
@@ -104,27 +105,26 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 	private final static String CLASS_FILE_EXTENSION = ".class";
 
 	/** Deleted sources from a source directory */
-	private Set<IResource> deletedSourceResources = new HashSet<IResource>();
+	private final Set<IResource> deletedSourceResources = new HashSet<IResource>();
 
 	/** Deleted sources from a test source directory */
-	private Set<IResource> deletedTestResources = new HashSet<IResource>();
+	private final Set<IResource> deletedTestResources = new HashSet<IResource>();
 
 	/** Change or new sources from a source directory */
-	private Set<IResource> sourceResources = new HashSet<IResource>();
+	private final Set<IResource> sourceResources = new HashSet<IResource>();
 
 	/** Change or new sources from a test source directory */
-	private Set<IResource> testResources = new HashSet<IResource>();
+	private final Set<IResource> testResources = new HashSet<IResource>();
 
 	/**
-	 * <code>true</code> if a MANIFEST.MF, TEST.MF or template.mf has been
-	 * changed
+	 * <code>true</code> if a MANIFEST.MF, TEST.MF or template.mf has been changed
 	 */
 	private boolean forceFullBuild = false;
 
 	/** <code>true</code> if Bundlor should scan byte code instead of source code */
 	private boolean scanByteCode = true;
 
-	private List<ImportedPackage> templatePackageImports = new ArrayList<ImportedPackage>();
+	private final List<ImportedPackage> templatePackageImports = new ArrayList<ImportedPackage>();
 
 	/**
 	 * {@inheritDoc}
@@ -144,9 +144,8 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 		IResourceDelta delta = getDelta(project);
 
 		// Get the configuration setting
-		scanByteCode = getProjectPreferences(project)
-				.getBoolean(BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_KEY,
-							BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_DEFAULT);
+		scanByteCode = getProjectPreferences(project).getBoolean(BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_KEY,
+				BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_DEFAULT);
 
 		// Prepare the list of changed resources
 		visitResourceDelta(project, kind, delta);
@@ -164,8 +163,7 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 	}
 
 	/**
-	 * Checks if the given {@link IResource} is either on source or test source
-	 * folders.
+	 * Checks if the given {@link IResource} is either on source or test source folders.
 	 */
 	private void addResourceIfInSourceFolder(IResource resource, Set<IClasspathEntry> classpathEntries,
 			Set<IClasspathEntry> testClasspathEntries) {
@@ -189,7 +187,7 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 
 		// No resources selected -> on relevant change
 		if (sourceResources.size() == 0 && testResources.size() == 0 && deletedSourceResources.size() == 0
-			&& deletedTestResources.size() == 0 && !forceFullBuild) {
+				&& deletedTestResources.size() == 0 && !forceFullBuild) {
 			return;
 		}
 
@@ -206,7 +204,7 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 		// No incremental manifest model has been recorded or the build is a
 		// full build
 		final boolean isFullBuild = !manifestManager.hasPartialManifest(javaProject)
-			|| kind == IncrementalProjectBuilder.FULL_BUILD;
+				|| kind == IncrementalProjectBuilder.FULL_BUILD;
 
 		final ReadablePartialManifest model = manifestManager.getPartialManifest(javaProject, false, isFullBuild);
 		final ReadablePartialManifest testModel = manifestManager.getPartialManifest(javaProject, true, isFullBuild);
@@ -214,20 +212,18 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 		PropertiesSource[] propertiesSources = createPropertiesSource(javaProject);
 
 		// Firstly create the MANFIEST.MF
-		ArtifactAnalyzer artefactAnalyser = (scanByteCode ? new ProgressReportingAsmTypeArtefactAnalyser(monitor)
-			: new ProgressReportingAstTypeArtefactAnalyser(javaProject, monitor));
+		ArtifactAnalyzer artefactAnalyser = (scanByteCode
+				? new ProgressReportingAsmTypeArtefactAnalyser(monitor)
+				: new ProgressReportingAstTypeArtefactAnalyser(javaProject, monitor));
 
 		try {
-			BundleManifest manifest = generateManifest(	javaProject, model,
-														ManifestGeneratorFactory.create(model, artefactAnalyser,
-																						propertiesSources),
-														sourceResources, isFullBuild, false);
+			BundleManifest manifest = generateManifest(javaProject, model,
+					ManifestGeneratorFactory.create(model, artefactAnalyser, propertiesSources), sourceResources,
+					isFullBuild, false);
 			// Secondly create the TEST.MF
-			BundleManifest testManifest = generateManifest(	javaProject, testModel,
-															ManifestGeneratorFactory.create(testModel,
-																							artefactAnalyser,
-																							propertiesSources),
-															testResources, isFullBuild, true);
+			BundleManifest testManifest = generateManifest(javaProject, testModel,
+					ManifestGeneratorFactory.create(testModel, artefactAnalyser, propertiesSources), testResources,
+					isFullBuild, true);
 
 			// Lastly merge the manifests
 			mergeManifests(javaProject, manifest, testManifest);
@@ -235,21 +231,20 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 			monitor.done();
 		} catch (IOException e) {
 			throw new CoreException(new Status(IStatus.ERROR, BundlorCorePlugin.PLUGIN_ID,
-				"Exception while generating manifest.", e));
+					"Exception while generating manifest.", e));
 		}
 
 	}
 
 	/**
-	 * Set up {@link PropertiesSource} instances for configured properties
-	 * files.
+	 * Set up {@link PropertiesSource} instances for configured properties files.
 	 */
 	private PropertiesSource[] createPropertiesSource(final IJavaProject javaProject) throws CoreException {
 
 		IProject project = javaProject.getProject();
 		IEclipsePreferences preferences = getProjectPreferences(project);
-		String propertiesFiles = preferences.get(	BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_KEY,
-													BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_DEFAULT);
+		String propertiesFiles = preferences.get(BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_KEY,
+				BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_DEFAULT);
 		String[] properties = StringUtils.split(propertiesFiles, ";");
 
 		List<IPath> paths = new ArrayList<IPath>();
@@ -332,17 +327,16 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 		IWorkspaceRoot wsRoot = ResourcesPlugin.getWorkspace().getRoot();
 
 		// Get the source folders
-		Set<IClasspathEntry> classpathEntries = ServerModuleDelegate.getSourceClasspathEntries(	resource.getProject(),
-																								false);
-		Set<IClasspathEntry> testClasspathEntries = ServerModuleDelegate.getSourceClasspathEntries(resource
-				.getProject(), true);
+		Set<IClasspathEntry> classpathEntries = ServerModuleDelegate.getSourceClasspathEntries(resource.getProject(),
+				false);
+		Set<IClasspathEntry> testClasspathEntries = ServerModuleDelegate.getSourceClasspathEntries(
+				resource.getProject(), true);
 
 		// Java source files
 		if (!scanByteCode && resource.getName().endsWith("java")) { //$NON-NLS-1$
 			IJavaElement element = JavaCore.create(resource);
 			if (element != null && element.getJavaProject().isOnClasspath(element)) {
-				IPackageFragmentRoot root = (IPackageFragmentRoot) element
-						.getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT);
+				IPackageFragmentRoot root = (IPackageFragmentRoot) element.getAncestor(IJavaElement.PACKAGE_FRAGMENT_ROOT);
 				try {
 					IClasspathEntry classpathEntry = root.getRawClasspathEntry();
 					for (IClasspathEntry entry : classpathEntries) {
@@ -462,7 +456,7 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 		}
 		// JPA persistence descriptor
 		else if (resource.getName().equals("persistence.xml") && resource.getParent() != null
-			&& resource.getParent().getName().equals("META-INF")) {
+				&& resource.getParent().getName().equals("META-INF")) {
 			addResourceIfInSourceFolder(resource, classpathEntries, testClasspathEntries);
 		} else if (isWebXML(resource)) {
 			sourceResources.add(resource);
@@ -475,7 +469,7 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 
 	private boolean isWebXML(IResource resource) {
 		return resource.getFullPath().toString().endsWith(WEB_XML_PATH)
-			&& FacetUtils.hasProjectFacet(resource, FacetCorePlugin.WEB_FACET_ID);
+				&& FacetUtils.hasProjectFacet(resource, FacetCorePlugin.WEB_FACET_ID);
 	}
 
 	/**
@@ -512,34 +506,30 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 		// Test-Import-Package and Test-Import-Bundle -> Import-Package and
 		// Import-Bundle
 		if (isTestManifest) {
+			templateManifest.getMainAttributes().remove(Constants.IMPORT_PACKAGE);
+			templateManifest.getMainAttributes().remove(IHeaderConstants.IMPORT_BUNDLE);
+			templateManifest.getMainAttributes().remove(IHeaderConstants.IMPORT_LIBRARY);
 
-			templateManifest.getMainAttributes().remove("Import-Package");
-			templateManifest.getMainAttributes().remove("Import-Bundle");
-			templateManifest.getMainAttributes().remove("Import-Library");
-
-			if (templateManifest.getMainAttributes().containsKey("Test-Import-Bundle")) {
-				templateManifest.getMainAttributes().put(	"Import-Bundle",
-															templateManifest.getMainAttributes()
-																	.get("Test-Import-Bundle"));
+			if (templateManifest.getMainAttributes().containsKey(IHeaderConstants.TEST_IMPORT_BUNDLE)) {
+				templateManifest.getMainAttributes().put(IHeaderConstants.IMPORT_BUNDLE,
+						templateManifest.getMainAttributes().get(IHeaderConstants.TEST_IMPORT_BUNDLE));
 			}
-			if (templateManifest.getMainAttributes().containsKey("Test-Import-Package")) {
-				templateManifest.getMainAttributes().put(	"Import-Package",
-															templateManifest.getMainAttributes()
-																	.get("Test-Import-Package"));
+			if (templateManifest.getMainAttributes().containsKey(IHeaderConstants.TEST_IMPORT_PACKAGE)) {
+				templateManifest.getMainAttributes().put(Constants.IMPORT_PACKAGE,
+						templateManifest.getMainAttributes().get(IHeaderConstants.TEST_IMPORT_PACKAGE));
 			}
-			if (templateManifest.getMainAttributes().containsKey("Test-Import-Library")) {
-				templateManifest.getMainAttributes().put(	"Import-Library",
-															templateManifest.getMainAttributes()
-																	.get("Test-Import-Library"));
+			if (templateManifest.getMainAttributes().containsKey(IHeaderConstants.TEST_IMPORT_LIBRARY)) {
+				templateManifest.getMainAttributes().put(IHeaderConstants.IMPORT_LIBRARY,
+						templateManifest.getMainAttributes().get(IHeaderConstants.TEST_IMPORT_LIBRARY));
 			}
-
 		} else {
-			String importPackageHeader = templateManifest.getMainAttributes().get("Import-Package");
+			String importPackageHeader = templateManifest.getMainAttributes().get(Constants.IMPORT_PACKAGE);
 			Dictionary<String, String> contents = new Hashtable<String, String>();
 			if (importPackageHeader != null) {
-				contents.put("Import-Package", importPackageHeader);
+				contents.put(Constants.IMPORT_PACKAGE, importPackageHeader);
 			}
-			templatePackageImports.addAll(BundleManifestFactory.createBundleManifest(contents).getImportPackage()
+			templatePackageImports.addAll(BundleManifestFactory.createBundleManifest(contents)
+					.getImportPackage()
 					.getImportedPackages());
 		}
 
@@ -556,8 +546,8 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 			}
 		}
 
-		manifest = generator.generate(	templateManifest,
-										classpathEntries.toArray(new ClassPath[classpathEntries.size()]));
+		manifest = generator.generate(templateManifest,
+				classpathEntries.toArray(new ClassPath[classpathEntries.size()]));
 		return org.eclipse.virgo.bundlor.util.BundleManifestUtils.createBundleManifest(manifest);
 	}
 
@@ -624,14 +614,16 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 			cleanTestManifest = BundleManifestFactory.createBundleManifest();
 			cleanTestManifest.setBundleManifestVersion(2);
 			if (testManifest.getImportBundle() != null && testManifest.getImportBundle().getImportedBundles() != null
-				&& testManifest.getImportBundle().getImportedBundles().size() > 0) {
-				cleanTestManifest.getImportBundle().getImportedBundles()
+					&& testManifest.getImportBundle().getImportedBundles().size() > 0) {
+				cleanTestManifest.getImportBundle()
+						.getImportedBundles()
 						.addAll(testManifest.getImportBundle().getImportedBundles());
 			}
 			if (testManifest.getImportLibrary() != null
-				&& testManifest.getImportLibrary().getImportedLibraries() != null
-				&& testManifest.getImportLibrary().getImportedLibraries().size() > 0) {
-				cleanTestManifest.getImportLibrary().getImportedLibraries()
+					&& testManifest.getImportLibrary().getImportedLibraries() != null
+					&& testManifest.getImportLibrary().getImportedLibraries().size() > 0) {
+				cleanTestManifest.getImportLibrary()
+						.getImportedLibraries()
 						.addAll(testManifest.getImportLibrary().getImportedLibraries());
 			}
 			for (ImportedPackage packageImport : testManifest.getImportPackage().getImportedPackages()) {
@@ -696,9 +688,8 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 			testManifestResource = BundleManifestUtils.getFirstPossibleManifestFile(getProject(), true);
 		}
 
-		boolean formatPref = getProjectPreferences(javaProject.getProject())
-				.getBoolean(BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_KEY,
-							BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_DEFAULT);
+		boolean formatPref = getProjectPreferences(javaProject.getProject()).getBoolean(
+				BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_KEY, BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_DEFAULT);
 		if (manifestResource != null && manifestResource instanceof IFile) {
 			try {
 				StringWriter writer = new StringWriter();
@@ -708,10 +699,10 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 					manifestStream = formatManifest((IFile) manifestResource, manifestStream);
 				}
 				IStatus valid = ResourcesPlugin.getWorkspace().validateEdit(new IFile[] { (IFile) manifestResource },
-																			IWorkspace.VALIDATE_PROMPT);
+						IWorkspace.VALIDATE_PROMPT);
 				if (valid.isOK()) {
-					((IFile) manifestResource).setContents(	manifestStream, IResource.FORCE | IResource.KEEP_HISTORY,
-															new NullProgressMonitor());
+					((IFile) manifestResource).setContents(manifestStream, IResource.FORCE | IResource.KEEP_HISTORY,
+							new NullProgressMonitor());
 				}
 				writer.close();
 				manifestStream.close();
@@ -727,11 +718,11 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 				if (formatPref) {
 					testManifestStream = formatManifest((IFile) testManifestResource, testManifestStream);
 				}
-				IStatus valid = ResourcesPlugin.getWorkspace()
-						.validateEdit(new IFile[] { (IFile) testManifestResource }, IWorkspace.VALIDATE_PROMPT);
+				IStatus valid = ResourcesPlugin.getWorkspace().validateEdit(
+						new IFile[] { (IFile) testManifestResource }, IWorkspace.VALIDATE_PROMPT);
 				if (valid.isOK()) {
 					((IFile) testManifestResource).setContents(testManifestStream, IResource.FORCE
-						| IResource.KEEP_HISTORY, new NullProgressMonitor());
+							| IResource.KEEP_HISTORY, new NullProgressMonitor());
 				}
 				writer.close();
 				testManifestStream.close();
@@ -764,8 +755,7 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 	}
 
 	/**
-	 * Visit the {@link IResourceDelta} and prepare the internal structures of
-	 * changed and removed resources.
+	 * Visit the {@link IResourceDelta} and prepare the internal structures of changed and removed resources.
 	 */
 	private void visitResourceDelta(IProject project, final int kind, IResourceDelta delta) throws CoreException {
 		if (delta == null || kind == IncrementalProjectBuilder.FULL_BUILD) {
@@ -796,8 +786,7 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 	}
 
 	/**
-	 * Extension to {@link AstTypeArtifactAnalyser} that takes a
-	 * {@link IProgressMonitor} to report monitor
+	 * Extension to {@link AstTypeArtifactAnalyser} that takes a {@link IProgressMonitor} to report monitor
 	 */
 	class ProgressReportingAstTypeArtefactAnalyser extends AstTypeArtifactAnalyser {
 
