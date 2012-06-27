@@ -104,6 +104,12 @@ public class SpringBundleModelFactory implements IBundleModelFactory {
 			header = new ExportPackageHeader(key, value, bundle, newLine);
 		} else if (key.equalsIgnoreCase(IHeaderConstants.UNVERSIONED_IMPORTS)) {
 			header = new ImportPackageHeader(key, value, bundle, newLine);
+		} else if (key.equalsIgnoreCase(IHeaderConstants.TEST_IMPORT_BUNDLE)) {
+			header = new ImportBundleHeader(key, value, bundle, newLine);
+		} else if (key.equalsIgnoreCase(IHeaderConstants.TEST_IMPORT_LIBRARY)) {
+			header = new ImportLibraryHeader(key, value, bundle, newLine);
+		} else if (key.equalsIgnoreCase(IHeaderConstants.TEST_IMPORT_PACKAGE)) {
+			header = new ImportPackageHeader(key, value, bundle, newLine);
 		} else {
 			header = new ManifestHeader(key, value, bundle, newLine);
 		}
