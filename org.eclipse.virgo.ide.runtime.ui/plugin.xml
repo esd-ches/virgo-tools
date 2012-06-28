@@ -265,13 +265,6 @@
 
 <extension
       point="org.eclipse.ui.navigator.viewer">
-   <viewerContentBinding
-         viewerId="org.eclipse.wst.server.ui.ServersView">
-      <includes>
-         <contentExtension
-               pattern="org.eclipse.jdt.java.ui.javaContent"/>
-         </includes>
-   </viewerContentBinding>
    <viewer
          viewerId="org.eclipse.virgo.ide.runtime.ui.ArtefactsBrowserView">
    </viewer>
