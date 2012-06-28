@@ -101,7 +101,7 @@ public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
 	public String[] getRuntimeVMArguments(IServerBehaviour behaviour, IPath installPath, IPath configPath,
 			IPath deployPath) {
 		String serverHome = ServerUtils.getServer(behaviour).getRuntimeBaseDirectory().toOSString();
-		String absConfigDir = serverHome + "/" + getConfigDir();
+		String absConfigDir = serverHome + "/" + getConfigurationDir();
 		List<String> list = new ArrayList<String>();
 		list.add("-XX:+HeapDumpOnOutOfMemoryError");
 		list.add("-XX:ErrorFile=\"" + serverHome + "/serviceability/error.log\"");
@@ -216,7 +216,7 @@ public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
 	 * {@inheritDoc}
 	 */
 	public String getConfigPath(IRuntime runtime) {
-		return runtime.getLocation().append(getConfigDir()).append("server.config").toString();
+		return runtime.getLocation().append(getConfigurationDir()).append("server.config").toString();
 	}
 
 	/**
@@ -312,7 +312,8 @@ public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
 		File serverHome = ServerUtils.getServer(serverBehaviour).getRuntimeBaseDirectory().toFile();
 		Properties properties = new Properties();
 		try {
-			properties.load(new FileInputStream(new File(serverHome, getConfigDir() + File.separatorChar + fileName)));
+			properties.load(new FileInputStream(new File(serverHome, getConfigurationDir() + File.separatorChar
+					+ fileName)));
 		} catch (FileNotFoundException e) {
 			// TODO CD add logging
 		} catch (IOException e) {
@@ -350,7 +351,7 @@ public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
 	}
 
 	public boolean isHandlerFor(IRuntime runtime) {
-		IPath configPath = runtime.getLocation().append(getConfigDir());
+		IPath configPath = runtime.getLocation().append(getConfigurationDir());
 		File configDir = configPath.toFile();
 		return configDir.exists();
 	}
@@ -416,10 +417,7 @@ public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
 
 	public abstract String getSupportedVersions();
 
-	/**
-	 * Non-API
-	 */
-	abstract String getConfigDir();
+	public abstract String getConfigurationDir();
 
 	/**
 	 * Non-API

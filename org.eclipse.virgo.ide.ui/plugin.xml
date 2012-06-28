@@ -371,6 +371,13 @@
                         relationship="bottom"
                         relative="org.eclipse.ui.editorss">
       </view>
+                  <view
+                        id="org.eclipse.virgo.ide.runtime.ui.virgoProperties"
+                        minimized="false"
+                        ratio=".5"
+                        relationship="bottom"
+                        relative="org.eclipse.ui.editorss">
+                  </view>
 			<view
                   id="org.eclipse.ui.console.ConsoleView"
                   minimized="false"

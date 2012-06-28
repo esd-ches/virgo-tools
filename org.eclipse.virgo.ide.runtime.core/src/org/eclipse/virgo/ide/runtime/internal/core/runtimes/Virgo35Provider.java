@@ -54,7 +54,7 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
 	}
 
 	@Override
-	String getConfigDir() {
+	public String getConfigurationDir() {
 		return "configuration";
 	}
 
@@ -63,7 +63,7 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
 	 */
 	@Override
 	String getProfileDir() {
-		return getConfigDir();
+		return getConfigurationDir();
 	}
 
 	/**
@@ -111,12 +111,12 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
 		List<String> list = new ArrayList<String>();
 		list.addAll(Arrays.asList(commonArguments));
 
-		list.add("-Dorg.eclipse.virgo.kernel.config=" + serverHome + "/" + getConfigDir());
-		list.add("-Dosgi.java.profile=file:" + serverHome + "/" + getConfigDir() + "/java6-server.profile");
+		list.add("-Dorg.eclipse.virgo.kernel.config=" + serverHome + "/" + getConfigurationDir());
+		list.add("-Dosgi.java.profile=file:" + serverHome + "/" + getConfigurationDir() + "/java6-server.profile");
 		list.add("-Declipse.ignoreApp=true");
 		list.add("-Dosgi.install.area=" + serverHome);
 		list.add("-Dosgi.configuration.area=" + serverHome + "/work");
-		list.add("-Dssh.server.keystore=" + serverHome + "/" + getConfigDir() + "/hostkey.ser");
+		list.add("-Dssh.server.keystore=" + serverHome + "/" + getConfigurationDir() + "/hostkey.ser");
 
 		String fwClassPath = createFWClassPath(serverHome);
 

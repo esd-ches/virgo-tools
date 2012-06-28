@@ -17,6 +17,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.ui.IEditorDescriptor;
+import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.PlatformUI;
@@ -25,7 +26,9 @@ import org.eclipse.ui.internal.ide.DialogUtil;
 import org.eclipse.ui.internal.ide.IDEWorkbenchMessages;
 import org.eclipse.ui.internal.ide.IIDEHelpContextIds;
 import org.eclipse.ui.part.FileEditorInput;
+import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectFileReference;
+import org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFileSelection;
 
 /**
  * Standard action for opening an editor on the currently selected file resource(s).
@@ -89,7 +92,8 @@ public class OpenServerProjectFileAction extends SelectionListenerAction {
 	@Override
 	public boolean updateSelection(IStructuredSelection selection) {
 		return selection instanceof StructuredSelection
-				&& ((StructuredSelection) selection).getFirstElement() instanceof ProjectFileReference;
+				&& (((StructuredSelection) selection).getFirstElement() instanceof ProjectFileReference
+						|| ((StructuredSelection) selection).getFirstElement() instanceof IFile || ((StructuredSelection) selection).getFirstElement() instanceof ServerFileSelection);
 	}
 
 	/**
@@ -102,20 +106,41 @@ public class OpenServerProjectFileAction extends SelectionListenerAction {
 			Object next = iterator.next();
 			if (next instanceof ProjectFileReference) {
 				openFile(((ProjectFileReference) next).getWorkspaceFile());
+			} else if (next instanceof IFile) {
+				openFile((IFile) next);
+			} else if (next instanceof ServerFileSelection) {
+				openFile((ServerFileSelection) next);
 			}
 		}
 	}
 
-	public void openFile(IFile file) {
+	public void openFile(ServerFileSelection selection) {
+		IEditorPart openEditor = openFile(selection.getFile());
+		if (openEditor instanceof ITextEditor) {
+			((ITextEditor) openEditor).selectAndReveal(selection.getOffset(), selection.getLength());
+		}
+	}
+
+	public IEditorPart openFile(IFile file) {
 		try {
 			IEditorDescriptor defaultEditor = workbenchPage2.getWorkbenchWindow()
 					.getWorkbench()
 					.getEditorRegistry()
 					.getDefaultEditor(file.getName());
-			workbenchPage2.openEditor(new FileEditorInput(file), defaultEditor.getId());
+			if (defaultEditor == null) {
+				defaultEditor = workbenchPage2.getWorkbenchWindow()
+						.getWorkbench()
+						.getEditorRegistry()
+						.getDefaultEditor("fake.txt");
+			}
+			if (defaultEditor != null) {
+				IEditorPart openEditor = workbenchPage2.openEditor(new FileEditorInput(file), defaultEditor.getId());
+				return openEditor;
+			}
 		} catch (PartInitException e) {
 			DialogUtil.openError(workbenchPage2.getWorkbenchWindow().getShell(),
 					IDEWorkbenchMessages.OpenSystemEditorAction_dialogTitle, e.getMessage(), e);
 		}
+		return null;
 	}
 }

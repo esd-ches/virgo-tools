@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.eclipse.core.internal.resources.ProjectDescription;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
@@ -24,10 +25,12 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.JavaProject;
+import org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepository;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet;
@@ -37,6 +40,8 @@ import org.eclipse.virgo.ide.runtime.core.artefacts.ILocalArtefact;
 import org.eclipse.virgo.ide.runtime.core.artefacts.LocalArtefactRepository;
 import org.eclipse.virgo.ide.runtime.core.artefacts.LocalArtefactSet;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryUtils;
+import org.eclipse.virgo.ide.runtime.internal.core.runtimes.RuntimeProviders;
+import org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider;
 import org.eclipse.wst.server.core.IServer;
 
 /**
@@ -78,49 +83,9 @@ public class ServerProject {
 			//TODO we need a more efficient way of updating this
 			clearFiles();
 
-			ArtefactRepository repository = RepositoryUtils.getRepositoryContents(server.getRuntime());
-			repository.setServer(server);
-			Map<File, ArtefactRepository> setForFile = new HashMap<File, ArtefactRepository>();
+			refreshArtefacts();
 
-			for (IArtefact bundle : repository.getAllArtefacts().getArtefacts()) {
-				if (bundle instanceof ILocalArtefact) {
-					File file = ((ILocalArtefact) bundle).getFile().getParentFile();
-					if (file.getParentFile().getName().equals("subsystems")) {
-						file = file.getParentFile();
-					}
-					if (setForFile.containsKey(file)) {
-						setForFile.get(file).add(bundle);
-					} else {
-						ArtefactRepository localRepository = new LocalArtefactRepository(file);
-						localRepository.setServer(server);
-						localRepository.add(bundle);
-						setForFile.put(file, localRepository);
-					}
-				}
-			}
-			for (ArtefactRepository repos : setForFile.values()) {
-				if (repos.getBundleSet().getArtefacts().iterator().hasNext()) {
-					artefactSets.add(repos.getBundleSet());
-				}
-				if (repos.getLibrarySet().getArtefacts().iterator().hasNext()) {
-					artefactSets.add(repos.getLibrarySet());
-				}
-			}
-
-			for (ArtefactSet artefactSet : artefactSets) {
-				if (artefactSet instanceof LocalArtefactSet) {
-					LocalArtefactSet localSet = (LocalArtefactSet) artefactSet;
-					if (artefactSet.getArtefactType() == ArtefactType.BUNDLE) {
-						ProjectBundleContainer container = new ProjectBundleContainer(this, localSet);
-						containers.add(container);
-						projectContainerForArtefactSet.put(localSet, container);
-					} else if (artefactSet.getArtefactType() == ArtefactType.LIBRARY) {
-						ProjectFileContainer container = new ArtefactProjectFileContainer(this, localSet);
-						containers.add(container);
-						projectContainerForArtefactSet.put(localSet, container);
-					}
-				}
-			}
+			refreshDirectories();
 
 			try {
 				javaProject.setRawClasspath(
@@ -130,6 +95,77 @@ public class ServerProject {
 			}
 		} else {
 
+		}
+	}
+
+	public void refreshArtefacts() {
+		ArtefactRepository repository = RepositoryUtils.getRepositoryContents(server.getRuntime());
+		repository.setServer(server);
+		Map<File, ArtefactRepository> setForFile = new HashMap<File, ArtefactRepository>();
+
+		for (IArtefact bundle : repository.getAllArtefacts().getArtefacts()) {
+			if (bundle instanceof ILocalArtefact) {
+				File file = ((ILocalArtefact) bundle).getFile().getParentFile();
+				if (file.getParentFile().getName().equals("subsystems")) {
+					file = file.getParentFile();
+				}
+				if (setForFile.containsKey(file)) {
+					setForFile.get(file).add(bundle);
+				} else {
+					ArtefactRepository localRepository = new LocalArtefactRepository(file);
+					localRepository.setServer(server);
+					localRepository.add(bundle);
+					setForFile.put(file, localRepository);
+				}
+			}
+		}
+		for (ArtefactRepository repos : setForFile.values()) {
+			if (repos.getBundleSet().getArtefacts().iterator().hasNext()) {
+				artefactSets.add(repos.getBundleSet());
+			}
+			if (repos.getLibrarySet().getArtefacts().iterator().hasNext()) {
+				artefactSets.add(repos.getLibrarySet());
+			}
+		}
+
+		for (ArtefactSet artefactSet : artefactSets) {
+			if (artefactSet instanceof LocalArtefactSet) {
+				LocalArtefactSet localSet = (LocalArtefactSet) artefactSet;
+				if (artefactSet.getArtefactType() == ArtefactType.BUNDLE) {
+					ProjectBundleContainer container = new ProjectBundleContainer(this, localSet);
+					containers.add(container);
+					projectContainerForArtefactSet.put(localSet, container);
+				} else if (artefactSet.getArtefactType() == ArtefactType.LIBRARY) {
+					ProjectFileContainer container = new ArtefactProjectFileContainer(this, localSet);
+					containers.add(container);
+					projectContainerForArtefactSet.put(localSet, container);
+				}
+			}
+		}
+	}
+
+	public void refreshDirectories() {
+		IServerRuntimeProvider provider = RuntimeProviders.getRuntimeProvider(getServer().getRuntime());
+		VirgoRuntimeProvider virgoProvider = (VirgoRuntimeProvider) provider;
+		synchronizeRuntimeDirectory("configuration", virgoProvider.getConfigurationDir());
+	}
+
+	void synchronizeRuntimeDirectory(String workspaceDirectory, String runtimeDirectory) {
+		IFolder folder = getWorkspaceProject().getFolder(workspaceDirectory);
+		ProjectFileContainer.createFolder(folder);
+		File runtimeFolder = getServer().getRuntime().getLocation().append(runtimeDirectory).toFile();
+		File[] files = runtimeFolder.listFiles();
+		if (files != null) {
+			for (File runtimeFile : files) {
+				IFile workspaceFile = folder.getFile(runtimeFile.getName());
+				if (!runtimeFile.isDirectory()) {
+					try {
+						workspaceFile.createLink(new Path(runtimeFile.getAbsolutePath()), IResource.REPLACE, null);
+					} catch (CoreException e) {
+						ServerProjectManager.handleException(e);
+					}
+				}
+			}
 		}
 	}
 

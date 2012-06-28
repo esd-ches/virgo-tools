@@ -117,7 +117,7 @@ public class InvalidRuntimeProvider implements IServerRuntimeProvider {
 	}
 
 	/**
-	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider#getConfigDir()
+	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider#getConfigurationDir()
 	 */
 	String getConfigDir() {
 		handleError();

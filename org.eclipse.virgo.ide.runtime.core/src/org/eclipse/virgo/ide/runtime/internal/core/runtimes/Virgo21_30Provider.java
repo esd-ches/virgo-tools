@@ -51,7 +51,7 @@ public class Virgo21_30Provider extends VirgoRuntimeProvider {
 	 * {@inheritDoc}
 	 */
 	@Override
-	String getConfigDir() {
+	public String getConfigurationDir() {
 		return "config";
 	}
 
