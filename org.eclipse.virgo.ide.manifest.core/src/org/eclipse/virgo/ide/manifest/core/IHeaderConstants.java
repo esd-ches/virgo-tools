@@ -41,4 +41,12 @@ public interface IHeaderConstants {
 
 	public String PROMOTES_DIRECTIVE = "promotes-exports";
 
+	// template.mf headers
+
+	public String TEST_IMPORT_BUNDLE = "Test-Import-Bundle";
+
+	public String TEST_IMPORT_LIBRARY = "Test-Import-Library";
+
+	public String TEST_IMPORT_PACKAGE = "Test-Import-Package";
+
 }
