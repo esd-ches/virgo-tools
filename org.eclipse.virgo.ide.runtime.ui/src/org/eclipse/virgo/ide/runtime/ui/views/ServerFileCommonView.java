@@ -34,6 +34,7 @@ import org.eclipse.jface.viewers.DoubleClickEvent;
 import org.eclipse.jface.viewers.IDoubleClickListener;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.pde.internal.ui.PDEPluginImages;
 import org.eclipse.swt.SWT;
@@ -42,6 +43,7 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMemento;
+import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.ISelectionListener;
 import org.eclipse.ui.IViewPart;
 import org.eclipse.ui.IViewSite;
@@ -50,7 +52,6 @@ import org.eclipse.ui.PartInitException;
 import org.eclipse.ui.navigator.CommonNavigator;
 import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.navigator.INavigatorActivationService;
-import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
 import org.eclipse.virgo.ide.runtime.internal.ui.actions.OpenServerProjectFileAction;
 import org.eclipse.virgo.ide.runtime.internal.ui.editor.Messages;
 import org.eclipse.virgo.ide.runtime.internal.ui.editor.VirgoEditorAdapterFactory;
@@ -58,7 +59,6 @@ import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProject;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProjectManager;
 import org.eclipse.virgo.ide.runtime.internal.ui.providers.RuntimeContainersContentProvider;
 import org.eclipse.virgo.ide.runtime.internal.ui.providers.RuntimeFullLabelProvider;
-import org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFileContentProvider;
 import org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFileSelection;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditor;
@@ -70,9 +70,9 @@ import org.eclipse.wst.server.ui.internal.editor.ServerEditor;
  * 
  */
 @SuppressWarnings("restriction")
-public class ServerFileCommonView extends CommonNavigator implements ISelectionListener {
+public abstract class ServerFileCommonView extends CommonNavigator implements ISelectionListener {
 
-	private static final String FILTER_ACTION_GROUP = "filters";
+//	private static final String FILTER_ACTION_GROUP = "filters";
 
 	private static final String REFRESH_ACTION_GROUP = "refresh";
 
@@ -88,7 +88,19 @@ public class ServerFileCommonView extends CommonNavigator implements ISelectionL
 
 	private IResourceChangeListener resourceListener;
 
-	private IServer server;
+	private final String managedFolder;
+
+	private final String viewId;
+
+	private final String contentId;
+
+	private List<IServer> servers;
+
+	public ServerFileCommonView(String viewId, String contentId, String managedFolder) {
+		this.viewId = viewId;
+		this.contentId = contentId;
+		this.managedFolder = managedFolder;
+	}
 
 	class RefreshArtefactsAction extends Action {
 
@@ -114,6 +126,29 @@ public class ServerFileCommonView extends CommonNavigator implements ISelectionL
 		}
 	}
 
+	private final class DeltaVisitor implements IResourceDeltaVisitor {
+		boolean change;
+
+		public boolean visit(IResourceDelta delta) {
+			if (change) {
+				return false;
+			}
+			//only interested in changed resources (not added or removed)
+			if (delta.getKind() != IResourceDelta.CHANGED) {
+				return true;
+			}
+			//only interested in content changes
+			if ((delta.getFlags() & IResourceDelta.CONTENT) == 0) {
+				return true;
+			}
+			IResource resource = delta.getResource();
+			if (currentFiles.contains(resource)) {
+				change = true;
+			}
+			return true;
+		}
+	}
+
 	/**
 	 * @see org.eclipse.ui.navigator.CommonNavigator#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
@@ -122,40 +157,32 @@ public class ServerFileCommonView extends CommonNavigator implements ISelectionL
 		resourceListener = new IResourceChangeListener() {
 			public void resourceChanged(IResourceChangeEvent event) {
 				//we are only interested in POST_CHANGE events
-				if (server != null) {
+				if (servers.size() > 0) {
 					if (event.getType() != IResourceChangeEvent.POST_CHANGE) {
 						return;
 					}
 					IResourceDelta rootDelta = event.getDelta();
+					boolean refresh = false;
 					//get the delta, if any, for the documentation directory
-					ServerProject project = ServerProjectManager.getInstance().getProject(server);
-					IFolder folder = project.getWorkspaceProject().getFolder("configuration");
-					IResourceDelta docDelta = rootDelta.findMember(folder.getFullPath());
-					if (docDelta == null) {
-						return;
-					}
-					final ArrayList changed = new ArrayList();
-					IResourceDeltaVisitor visitor = new IResourceDeltaVisitor() {
-						public boolean visit(IResourceDelta delta) {
-							//only interested in changed resources (not added or removed)
-							if (delta.getKind() != IResourceDelta.CHANGED) {
-								return true;
-							}
-							//only interested in content changes
-							if ((delta.getFlags() & IResourceDelta.CONTENT) == 0) {
-								return true;
-							}
-							IResource resource = delta.getResource();
-							if (currentFiles.contains(resource)) {
-								refreshView();
-							}
-							return true;
+					for (IServer server : servers) {
+						ServerProject project = ServerProjectManager.getInstance().getProject(server);
+						IFolder folder = project.getWorkspaceProject().getFolder(managedFolder);
+						IResourceDelta docDelta = rootDelta.findMember(folder.getFullPath());
+						if (docDelta == null) {
+							return;
 						}
-					};
-					try {
-						docDelta.accept(visitor);
-					} catch (CoreException e) {
-						//open error dialog with syncExec or print to plugin log file
+						DeltaVisitor visitor = new DeltaVisitor();
+						try {
+							docDelta.accept(visitor);
+						} catch (CoreException e) {
+						}
+						if (visitor.change) {
+							refresh = true;
+							break;
+						}
+					}
+					if (refresh) {
+						refreshView();
 					}
 				}
 			}
@@ -191,11 +218,33 @@ public class ServerFileCommonView extends CommonNavigator implements ISelectionL
 			}
 		});
 		updateActivations();
+
+		getViewSite().getPage().addPartListener(new IPartListener() {
+
+			public void partOpened(IWorkbenchPart part) {
+			}
+
+			public void partDeactivated(IWorkbenchPart part) {
+			}
+
+			public void partClosed(IWorkbenchPart part) {
+			}
+
+			public void partBroughtToTop(IWorkbenchPart part) {
+			}
+
+			public void partActivated(IWorkbenchPart part) {
+				if (part == ServerFileCommonView.this) {
+					ISelection selection = getViewSite().getSelectionProvider().getSelection();
+					selectionChanged(part, selection);
+				}
+			}
+		});
 	}
 
 	@Override
 	protected CommonViewer createCommonViewerObject(Composite aParent) {
-		return new CommonViewer(ServerUiPlugin.PROPERTIES_VIEW_ID, aParent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+		return new CommonViewer(viewId, aParent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
 	}
 
 	protected void refreshView() {
@@ -229,20 +278,18 @@ public class ServerFileCommonView extends CommonNavigator implements ISelectionL
 		if (part instanceof IViewPart && part != this) {
 			if (sel instanceof StructuredSelection) {
 				Iterator<Object> items = ((StructuredSelection) sel).iterator();
-				List<IServer> servers = new ArrayList<IServer>();
-
-				server = null;
+				servers = new ArrayList<IServer>();
 				while (items.hasNext()) {
 					Object next = items.next();
 					if (next instanceof IServer) {
-						server = (IServer) next;
+						servers.add((IServer) next);
 					}
 				}
-				getCommonViewer().setInput(server);
+				getCommonViewer().setInput(servers);
 				getCommonViewer().refresh();
 				currentFiles = new HashSet<IFile>();
-				if (server != null) {
-					Object[] elements = new ServerFileContentProvider().getElements(server);
+				for (IServer server : servers) {
+					Object[] elements = ((ITreeContentProvider) getCommonViewer().getContentProvider()).getElements(server);
 					for (Object object : elements) {
 						if (object instanceof ServerFileSelection) {
 							currentFiles.add(((ServerFileSelection) object).getFile());
@@ -286,7 +333,7 @@ public class ServerFileCommonView extends CommonNavigator implements ISelectionL
 	protected void updateActivations() {
 		INavigatorActivationService activationService = getCommonViewer().getNavigatorContentService()
 				.getActivationService();
-		activationService.activateExtensions(new String[] { ServerUiPlugin.PROPERTIES_CONTENT_ID }, false);
+		activationService.activateExtensions(new String[] { contentId }, false);
 	}
 
 	public IServer getServerInput() {

@@ -230,7 +230,7 @@
          class="org.eclipse.virgo.ide.runtime.ui.views.ArtefactCommonView"
          icon="icons/full/obj16/virgo_obj.png"
          id="org.eclipse.virgo.ide.runtime.ui.virgoArtefacts"
-         name="Artifacts"
+         name="Server Artifacts"
          restorable="true">
       <description>
          Displays artifacts that exist on runtimes.
@@ -239,13 +239,25 @@
    <view
          allowMultiple="true"
          category="org.eclipse.virgo.ide.category"
-         class="org.eclipse.virgo.ide.runtime.ui.views.ServerFileCommonView"
+         class="org.eclipse.virgo.ide.runtime.ui.views.PropertiesFileCommonView"
          icon="icons/full/obj16/virgo_obj.png"
          id="org.eclipse.virgo.ide.runtime.ui.virgoProperties"
          name="Server Properties"
          restorable="true">
       <description>
          Displays properties files for runtime.
+      </description>
+   </view>
+   <view
+         allowMultiple="true"
+         category="org.eclipse.virgo.ide.category"
+         class="org.eclipse.virgo.ide.runtime.ui.views.LogFileCommonView"
+         icon="icons/full/obj16/virgo_obj.png"
+         id="org.eclipse.virgo.ide.runtime.ui.virgoLog"
+         name="Server Logs"
+         restorable="true">
+      <description>
+         Displays logs for runtime.
       </description>
    </view>
 </extension>
@@ -330,6 +342,17 @@
          <contentExtension
                isRoot="true"
                pattern="org.eclipse.virgo.ide.runtime.ui.properties">
+         </contentExtension>
+      </includes>
+      </viewerContentBinding>
+         <viewer
+         viewerId="org.eclipse.virgo.ide.runtime.ui.LogView">
+         </viewer>
+   <viewerContentBinding viewerId="org.eclipse.virgo.ide.runtime.ui.LogView">
+      <includes>
+         <contentExtension
+               isRoot="true"
+               pattern="org.eclipse.virgo.ide.runtime.ui.log">
          </contentExtension>
       </includes>
       </viewerContentBinding>
@@ -494,11 +517,30 @@
    </navigatorContent>
    <navigatorContent
          activeByDefault="true"
-         contentProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFileContentProvider"
+         contentProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.PropertiesFileContentProvider"
          icon="icons/full/obj16/file_obj.gif"
          id="org.eclipse.virgo.ide.runtime.ui.properties"
          labelProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFileLabelProvider"
          name="Properties">
+      <triggerPoints>
+         <or>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.core.IServer">
+            </instanceof>
+         </or>
+      </triggerPoints>
+      <commonSorter
+            class="org.eclipse.virgo.ide.runtime.internal.ui.sorters.ArtefactSignatureSorter"
+            id="org.eclipse.virgo.ide.simpleSorter">
+      </commonSorter>
+   </navigatorContent>
+   <navigatorContent
+         activeByDefault="true"
+         contentProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.LogFileContentProvider"
+         icon="icons/full/obj16/file_obj.gif"
+         id="org.eclipse.virgo.ide.runtime.ui.log"
+         labelProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFileLabelProvider"
+         name="Log">
       <triggerPoints>
          <or>
             <instanceof
@@ -543,5 +585,22 @@
          content-type="org.eclipse.core.runtime.text"
          file-extensions="libd">
    </file-association>
+</extension>
+<extension
+      point="org.eclipse.ui.decorators">
+   <decorator
+         class="org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFileLabelProvider"
+         id="org.eclipse.virgo.ide.runtime.ui.decorator1"
+         label="Server File Decorator"
+         lightweight="true"
+         state="true">
+      <enablement>
+         <and>
+            <objectClass
+                  name="org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFile">
+            </objectClass>
+         </and>
+      </enablement>
+   </decorator>
 </extension>
 </plugin>

@@ -31,6 +31,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.core.JavaProject;
 import org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider;
+import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepository;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet;
@@ -147,24 +148,34 @@ public class ServerProject {
 	public void refreshDirectories() {
 		IServerRuntimeProvider provider = RuntimeProviders.getRuntimeProvider(getServer().getRuntime());
 		VirgoRuntimeProvider virgoProvider = (VirgoRuntimeProvider) provider;
-		synchronizeRuntimeDirectory("configuration", virgoProvider.getConfigurationDir());
+		try {
+			synchronizeRuntimeDirectory(ServerCorePlugin.PROPERTIES_DIR, virgoProvider.getConfigurationDir());
+			synchronizeRuntimeDirectory(ServerCorePlugin.LOG_DIR, virgoProvider.getLogDir() + "/logs");
+			synchronizeRuntimeDirectory(ServerCorePlugin.LOG_DIR, virgoProvider.getLogDir() + "/eventlogs");
+		} catch (CoreException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
-	void synchronizeRuntimeDirectory(String workspaceDirectory, String runtimeDirectory) {
+	void synchronizeRuntimeDirectory(String workspaceDirectory, String runtimeDirectory) throws CoreException {
 		IFolder folder = getWorkspaceProject().getFolder(workspaceDirectory);
 		ProjectFileContainer.createFolder(folder);
 		File runtimeFolder = getServer().getRuntime().getLocation().append(runtimeDirectory).toFile();
 		File[] files = runtimeFolder.listFiles();
 		if (files != null) {
 			for (File runtimeFile : files) {
-				IFile workspaceFile = folder.getFile(runtimeFile.getName());
-				if (!runtimeFile.isDirectory()) {
-					try {
-						workspaceFile.createLink(new Path(runtimeFile.getAbsolutePath()), IResource.REPLACE, null);
-					} catch (CoreException e) {
-						ServerProjectManager.handleException(e);
-					}
-				}
+				linkFile(folder, runtimeFile);
+			}
+		}
+	}
+
+	protected void linkFile(IFolder folder, File runtimeFile) {
+		if (!runtimeFile.isDirectory()) {
+			IFile workspaceFile = folder.getFile(runtimeFile.getName());
+			try {
+				workspaceFile.createLink(new Path(runtimeFile.getAbsolutePath()), IResource.REPLACE, null);
+			} catch (CoreException e) {
+				ServerProjectManager.handleException(e);
 			}
 		}
 	}
@@ -250,6 +261,7 @@ public class ServerProject {
 		return project;
 	}
 
+	@SuppressWarnings("restriction")
 	public JavaProject getJavaProject() {
 		return javaProject;
 	}

@@ -13,15 +13,14 @@ package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 
 import org.apache.commons.lang.ObjectUtils;
 import org.eclipse.core.resources.IFile;
+import org.eclipse.wst.server.core.IServer;
 
 /**
  * 
  * @author Miles Parker
  * 
  */
-public class ServerFileSelection {
-	private final IFile file;
-
+public class ServerFileSelection extends ServerFile {
 	private final String line;
 
 	private final int offset;
@@ -30,17 +29,12 @@ public class ServerFileSelection {
 
 	private final int item;
 
-	public ServerFileSelection(IFile file, String line, int start, int end, int item) {
-		super();
-		this.file = file;
+	public ServerFileSelection(IServer server, IFile file, String line, int start, int end, int item) {
+		super(server, file);
 		this.line = line;
 		this.offset = start;
 		this.length = end;
 		this.item = item;
-	}
-
-	public IFile getFile() {
-		return file;
 	}
 
 	public String getLine() {

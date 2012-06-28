@@ -374,9 +374,14 @@
                   <view
                         id="org.eclipse.virgo.ide.runtime.ui.virgoProperties"
                         minimized="false"
-                        ratio=".5"
-                        relationship="bottom"
-                        relative="org.eclipse.ui.editorss">
+                        relationship="stack"
+                        relative="org.eclipse.virgo.ide.runtime.ui.virgoArtefacts">
+                  </view>
+                  <view
+                        id="org.eclipse.virgo.ide.runtime.ui.virgoLog"
+                        minimized="false"
+                        relationship="stack"
+                        relative="org.eclipse.virgo.ide.runtime.ui.virgoArtefacts">
                   </view>
 			<view
                   id="org.eclipse.ui.console.ConsoleView"
@@ -395,6 +400,12 @@
    </newWizardShortcut>
    <viewShortcut
          id="org.eclipse.virgo.ide.runtime.ui.virgoArtefacts">
+   </viewShortcut>
+   <viewShortcut
+         id="org.eclipse.virgo.ide.runtime.ui.virgoProperties">
+   </viewShortcut>
+   <viewShortcut
+         id="org.eclipse.virgo.ide.runtime.ui.virgoLog">
    </viewShortcut>
        </perspectiveExtension>
    <perspectiveExtension

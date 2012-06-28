@@ -48,6 +48,12 @@ public class ServerCorePlugin extends AbstractUIPlugin {
 
 	private BundleContext context;
 
+	public static final String LOG_DIR = "logs";
+
+	public static final String PROPERTIES_DIR = "properties";
+
+	public static final String VIRGO_SERVER_PROJECT_NATURE = "org.eclipse.virgo.ide.runtime.managedProject";
+
 	@Override
 	public void start(BundleContext context) throws Exception {
 		this.context = context;

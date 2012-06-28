@@ -420,6 +420,13 @@ public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
 	public abstract String getConfigurationDir();
 
 	/**
+	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider#getLogDir()
+	 */
+	public String getLogDir() {
+		return "serviceability";
+	}
+
+	/**
 	 * Non-API
 	 */
 	abstract String getProfileDir();

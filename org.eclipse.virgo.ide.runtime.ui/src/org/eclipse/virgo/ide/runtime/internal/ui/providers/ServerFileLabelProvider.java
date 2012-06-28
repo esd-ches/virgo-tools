@@ -14,16 +14,21 @@ package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 import java.io.File;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.debug.internal.ui.DebugPluginImages;
+import org.eclipse.debug.ui.IDebugUIConstants;
+import org.eclipse.jface.viewers.IDecoration;
+import org.eclipse.jface.viewers.ILightweightLabelDecorator;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.model.WorkbenchLabelProvider;
+import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiImages;
 
 /**
  * 
  * @author Miles Parker
  * 
  */
-public class ServerFileLabelProvider extends LabelProvider {
+public class ServerFileLabelProvider extends LabelProvider implements ILightweightLabelDecorator {
 	private static final String REMOVE_REGEXP = "org\\.eclipse\\.virgo\\.|\\.properties";
 
 	WorkbenchLabelProvider delegate = new WorkbenchLabelProvider();
@@ -44,6 +49,9 @@ public class ServerFileLabelProvider extends LabelProvider {
 		if (element instanceof ServerFileSelection) {
 			return ((ServerFileSelection) element).getLine();
 		}
+		if (element instanceof ServerFile) {
+			return getText(((ServerFile) element).getFile());
+		}
 		return delegate.getText(element);
 	}
 
@@ -53,12 +61,23 @@ public class ServerFileLabelProvider extends LabelProvider {
 	@Override
 	public Image getImage(Object element) {
 		if (element instanceof ServerFileSelection) {
-			return null;
+			return DebugPluginImages.getImage(IDebugUIConstants.IMG_OBJS_VARIABLE);
+		}
+		if (element instanceof ServerFile) {
+			return getImage(((ServerFile) element).getFile());
 		}
 		return delegate.getImage(element);
-//		if (element instanceof IFile || element instanceof File) {
-//			return PlatformUI.getWorkbench().getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
-//		}
-//		return super.getImage(element);
+	}
+
+	public void decorate(Object element, IDecoration decoration) {
+		if (element instanceof ServerFile && !(element instanceof ServerFileSelection)) {
+			ServerFile serverFile = (ServerFile) element;
+			decoration.addSuffix(new StringBuilder().append(" [")
+					.append(serverFile.getServer())
+					.append("] - ")
+					.append(serverFile.getFile().getLocation())
+					.toString());
+			decoration.addOverlay(ServerUiImages.DESC_OBJ_VIRGO_OVER, IDecoration.TOP_LEFT);
+		}
 	}
 }

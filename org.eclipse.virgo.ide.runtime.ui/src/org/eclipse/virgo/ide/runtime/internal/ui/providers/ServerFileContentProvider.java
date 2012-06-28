@@ -10,20 +10,15 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.virgo.ide.runtime.core.artefacts.Artefact;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProject;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProjectManager;
 import org.eclipse.wst.server.core.IServer;
@@ -35,57 +30,34 @@ import org.eclipse.wst.server.core.IServer;
  */
 public class ServerFileContentProvider implements ITreeContentProvider {
 
+	private final String serverDir;
+
+	public ServerFileContentProvider(String serverDir) {
+		this.serverDir = serverDir;
+	}
+
 	public Object[] getElements(Object inputElement) {
+		if (inputElement instanceof Collection) {
+			Collection<?> collection = (Collection<?>) inputElement;
+			Object[] elements = new Object[] {};
+			for (Object object : collection) {
+				elements = ArrayUtils.addAll(elements, getElements(object));
+			}
+			return elements;
+		}
 		if (inputElement instanceof IServer) {
 			IServer server = (IServer) inputElement;
 			ServerProject project = ServerProjectManager.getInstance().getProject(server);
-			IFolder folder = project.getWorkspaceProject().getFolder("configuration");
+			IFolder folder = project.getWorkspaceProject().getFolder(serverDir);
 			try {
-				return folder.members();
+				IResource[] members = folder.members();
+				Object[] serverFiles = new Object[members.length];
+				for (int i = 0; i < serverFiles.length; i++) {
+					serverFiles[i] = new ServerFile(server, (IFile) members[i]);
+				}
+				return serverFiles;
 			} catch (CoreException e) {
 				throw new RuntimeException(e);
-			}
-		}
-		if (inputElement instanceof IFile) {
-			IFile file = (IFile) inputElement;
-			if (file.getLocation().getFileExtension().equals("properties")) {
-				try {
-					String osString = file.getLocation().toOSString();
-					BufferedReader bufferedReader = new BufferedReader(new FileReader(osString));
-					List<ServerFileSelection> lines = new ArrayList<ServerFileSelection>();
-					String readLine = bufferedReader.readLine();
-					int offset = 0;
-					while (readLine != null) {
-						if (readLine.endsWith("\\")) {
-							String nextLine = bufferedReader.readLine();
-							int lineCount = 1;
-							while (nextLine.endsWith("\\")) {
-								readLine += nextLine;
-								nextLine = bufferedReader.readLine();
-								lineCount++;
-							}
-							readLine += nextLine;
-							String cleanLine = readLine.replaceAll("\\\\", "");
-							ServerFileSelection serverFileSelection = new ServerFileSelection(file, cleanLine, offset,
-									readLine.length() + lineCount, lines.size() - 1);
-							lines.add(serverFileSelection);
-							offset += lineCount;
-						} else if (!readLine.startsWith("#") && !StringUtils.isBlank(readLine)
-								&& !readLine.endsWith("\\")) {
-							ServerFileSelection serverFileSelection = new ServerFileSelection(file, readLine, offset,
-									readLine.length(), lines.size() - 1);
-							lines.add(serverFileSelection);
-						}
-						offset += readLine.length() + 1;
-						readLine = bufferedReader.readLine();
-					}
-					bufferedReader.close();
-					return lines.toArray();
-				} catch (FileNotFoundException e) {
-					//don't really care
-				} catch (IOException e) {
-					//don't really care
-				}
 			}
 		}
 		return new Object[0];
@@ -96,19 +68,14 @@ public class ServerFileContentProvider implements ITreeContentProvider {
 	}
 
 	public Object getParent(Object element) {
-		if (element instanceof Artefact) {
-			Artefact artefact = (Artefact) element;
-			return artefact.getSet();
+		if (element instanceof ServerFile) {
+			return ((ServerFile) element).getServer();
 		}
 		return null;
 	}
 
 	public boolean hasChildren(Object element) {
-		return (element instanceof IServer || (element instanceof IFile
-				&& (((IFile) element).getLocation().getFileExtension() != null) && ((IFile) element).getLocation()
-				.getFileExtension()
-				.equals("properties")))
-				&& getChildren(element).length > 0;
+		return element instanceof IServer;
 	}
 
 	public void dispose() {

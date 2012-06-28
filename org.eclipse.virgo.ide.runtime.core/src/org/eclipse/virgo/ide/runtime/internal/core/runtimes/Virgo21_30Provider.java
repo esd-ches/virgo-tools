@@ -50,22 +50,6 @@ public class Virgo21_30Provider extends VirgoRuntimeProvider {
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
-	public String getConfigurationDir() {
-		return "config";
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	String getProfileDir() {
-		return "lib";
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
 	public String[] getRuntimeProgramArguments(IServerBehaviour behaviour) {
 		String serverHome = ServerUtils.getServer(behaviour).getRuntimeBaseDirectory().toOSString();
 		List<String> list = new ArrayList<String>();
@@ -96,4 +80,21 @@ public class Virgo21_30Provider extends VirgoRuntimeProvider {
 	public URI getConnectorBundleUri() {
 		return ServerCorePlugin.getDefault().getBundleUri(LEGACY_CONNECTOR_BUNDLE_NAME);
 	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String getConfigurationDir() {
+		return "config";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	String getProfileDir() {
+		return "lib";
+	}
+
 }

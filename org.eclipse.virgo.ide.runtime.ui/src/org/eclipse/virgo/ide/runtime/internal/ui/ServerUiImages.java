@@ -68,6 +68,8 @@ public class ServerUiImages {
 
 	public static final String IMG_OBJ_VIRGO_FILE = NAME_PREFIX + "virgo_obj_file.png";
 
+	public static final String IMG_VIRGO_OVER = NAME_PREFIX + "virgo_over.png";
+
 	public static final String IMG_OBJ_BUNDLE = NAME_PREFIX + "bundle_obj.gif";
 
 	public static final String IMG_OBJ_BUNDLE_SRC = NAME_PREFIX + "bundle_src_obj.gif";
@@ -78,6 +80,9 @@ public class ServerUiImages {
 
 	// Use IPath and toOSString to build the names to ensure they have the slashes correct
 	private final static String OBJECT = "obj16/"; //basic colors - size 16x16
+
+	// Use IPath and toOSString to build the names to ensure they have the slashes correct
+	private final static String OVER = "over08/"; //basic colors - size 16x16
 
 	private final static String WIZBAN = "wizban/"; //basic colors - size 16x16
 
@@ -90,6 +95,8 @@ public class ServerUiImages {
 	public static final ImageDescriptor DESC_OBJ_VIRGO_LIB = createManaged(OBJECT, IMG_OBJ_VIRGO_LIB);
 
 	public static final ImageDescriptor DESC_OBJ_VIRGO_FILE = createManaged(OBJECT, IMG_OBJ_VIRGO_FILE);
+
+	public static final ImageDescriptor DESC_OBJ_VIRGO_OVER = createManaged(OVER, IMG_OBJ_VIRGO);
 
 	public static final ImageDescriptor DESC_OBJ_PORT = createManaged(OBJECT, IMG_OBJ_PORT);
 
