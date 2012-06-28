@@ -10,15 +10,10 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 
-import java.util.Collection;
-
-import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jface.viewers.ITreeContentProvider;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProject;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProjectManager;
 import org.eclipse.wst.server.core.IServer;
@@ -28,7 +23,7 @@ import org.eclipse.wst.server.core.IServer;
  * 
  * @author Miles Parker
  */
-public class ServerFileContentProvider implements ITreeContentProvider {
+public class ServerFileContentProvider extends GenericTreeProvider {
 
 	private final String serverDir;
 
@@ -36,15 +31,8 @@ public class ServerFileContentProvider implements ITreeContentProvider {
 		this.serverDir = serverDir;
 	}
 
+	@Override
 	public Object[] getElements(Object inputElement) {
-		if (inputElement instanceof Collection) {
-			Collection<?> collection = (Collection<?>) inputElement;
-			Object[] elements = new Object[] {};
-			for (Object object : collection) {
-				elements = ArrayUtils.addAll(elements, getElements(object));
-			}
-			return elements;
-		}
 		if (inputElement instanceof IServer) {
 			IServer server = (IServer) inputElement;
 			ServerProject project = ServerProjectManager.getInstance().getProject(server);
@@ -60,13 +48,10 @@ public class ServerFileContentProvider implements ITreeContentProvider {
 				throw new RuntimeException(e);
 			}
 		}
-		return new Object[0];
+		return super.getElements(inputElement);
 	}
 
-	public Object[] getChildren(Object parentElement) {
-		return getElements(parentElement);
-	}
-
+	@Override
 	public Object getParent(Object element) {
 		if (element instanceof ServerFile) {
 			return ((ServerFile) element).getServer();
@@ -74,13 +59,8 @@ public class ServerFileContentProvider implements ITreeContentProvider {
 		return null;
 	}
 
+	@Override
 	public boolean hasChildren(Object element) {
 		return element instanceof IServer;
-	}
-
-	public void dispose() {
-	}
-
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 	}
 }

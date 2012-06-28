@@ -23,7 +23,28 @@ import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
  */
 @SuppressWarnings("restriction")
 public class PropertiesFileCommonView extends ServerFileCommonView {
-	public PropertiesFileCommonView() {
-		super(ServerUiPlugin.PROPERTIES_VIEW_ID, ServerUiPlugin.PROPERTIES_CONTENT_ID, ServerCorePlugin.PROPERTIES_DIR);
+
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.ui.views.ServerFileCommonView#getManagedDir()
+	 */
+	@Override
+	public String getManagedDir() {
+		return ServerCorePlugin.PROPERTIES_DIR;
+	}
+
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#getContentId()
+	 */
+	@Override
+	protected String getContentId() {
+		return ServerUiPlugin.PROPERTIES_CONTENT_ID;
+	}
+
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#getViewId()
+	 */
+	@Override
+	protected String getViewId() {
+		return ServerUiPlugin.PROPERTIES_VIEW_ID;
 	}
 }

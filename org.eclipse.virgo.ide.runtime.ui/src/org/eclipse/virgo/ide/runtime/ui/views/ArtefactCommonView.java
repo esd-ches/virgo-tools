@@ -12,54 +12,23 @@
 
 package org.eclipse.virgo.ide.runtime.ui.views;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
-import org.eclipse.jface.viewers.DoubleClickEvent;
-import org.eclipse.jface.viewers.IDoubleClickListener;
-import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.jface.viewers.ISelection;
-import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.pde.internal.ui.PDEPluginImages;
 import org.eclipse.pde.internal.ui.PDEUIMessages;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IActionBars;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMemento;
-import org.eclipse.ui.ISelectionListener;
-import org.eclipse.ui.IViewPart;
-import org.eclipse.ui.IViewSite;
-import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.PartInitException;
-import org.eclipse.ui.navigator.CommonNavigator;
-import org.eclipse.ui.navigator.CommonViewer;
 import org.eclipse.ui.navigator.INavigatorActivationService;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
-import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet;
-import org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact;
 import org.eclipse.virgo.ide.runtime.core.provisioning.IBundleRepositoryChangeListener;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
-import org.eclipse.virgo.ide.runtime.internal.ui.actions.OpenServerProjectFileAction;
-import org.eclipse.virgo.ide.runtime.internal.ui.editor.Messages;
-import org.eclipse.virgo.ide.runtime.internal.ui.editor.VirgoEditorAdapterFactory;
 import org.eclipse.virgo.ide.runtime.internal.ui.filters.FilterAction;
-import org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectArtefact;
-import org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProjectManager;
-import org.eclipse.virgo.ide.runtime.internal.ui.providers.LibrariesNode;
-import org.eclipse.virgo.ide.runtime.internal.ui.providers.RuntimeContainersContentProvider;
-import org.eclipse.virgo.ide.runtime.internal.ui.providers.RuntimeFullLabelProvider;
 import org.eclipse.virgo.ide.runtime.internal.ui.repository.RefreshBundleJob;
 import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServer;
-import org.eclipse.wst.server.ui.internal.cnf.ServersView2;
-import org.eclipse.wst.server.ui.internal.editor.ServerEditor;
 
 /**
  * 
@@ -68,7 +37,7 @@ import org.eclipse.wst.server.ui.internal.editor.ServerEditor;
  * 
  */
 @SuppressWarnings("restriction")
-public class ArtefactCommonView extends CommonNavigator implements ISelectionListener {
+public class ArtefactCommonView extends CommonView {
 
 	public static final String SHOW_VIEW_LIST = "showViewList";
 
@@ -76,19 +45,9 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 
 	private static final String FILTER_ACTION_GROUP = "filters";
 
-	private static final String REFRESH_ACTION_GROUP = "refresh";
-
-	private IWorkbenchPart currentPart;
-
-	private final ILabelProvider titleLabelProvider = new RuntimeFullLabelProvider();
-
-	RuntimeContainersContentProvider containerProvider = new RuntimeContainersContentProvider();
-
 	private boolean showList;
 
 	private IBundleRepositoryChangeListener repositoryListener;
-
-	private RefreshArtefactsAction refreshArtefactsAction;
 
 	class ShowListAction extends Action {
 		public ShowListAction() {
@@ -141,30 +100,6 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 		}
 	}
 
-	class RefreshArtefactsAction extends Action {
-
-		public RefreshArtefactsAction() {
-			super("", AS_PUSH_BUTTON); //$NON-NLS-1$
-			setText(Messages.RepositoryBrowserEditorPage_Refresh);
-			setDescription(Messages.RepositoryBrowserEditorPage_RefreshMessage);
-			setToolTipText(Messages.RepositoryBrowserEditorPage_RefreshMessage);
-			setImageDescriptor(PDEPluginImages.DESC_REFRESH);
-			setDisabledImageDescriptor(PDEPluginImages.DESC_REFRESH_DISABLED);
-		}
-
-		/*
-		 * @see Action#actionPerformed
-		 */
-		@Override
-		public void run() {
-			IServer serverInput = getServerInput();
-			if (serverInput != null) {
-				RefreshBundleJob.execute(getSite().getShell(), serverInput.getRuntime());
-				ServerProjectManager.getInstance().getProject(serverInput).refresh();
-			}
-		}
-	}
-
 	/**
 	 * @see org.eclipse.ui.navigator.CommonNavigator#createPartControl(org.eclipse.swt.widgets.Composite)
 	 */
@@ -196,30 +131,6 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 			manager.appendToGroup(FILTER_ACTION_GROUP, action);
 		}
 
-		manager.add(new Separator(REFRESH_ACTION_GROUP));
-		refreshArtefactsAction = new RefreshArtefactsAction();
-		refreshArtefactsAction.setEnabled(false);
-		manager.appendToGroup(REFRESH_ACTION_GROUP, refreshArtefactsAction);
-
-		getCommonViewer().addDoubleClickListener(new IDoubleClickListener() {
-
-			public void doubleClick(DoubleClickEvent event) {
-				if (event.getSelection() instanceof StructuredSelection) {
-					final StructuredSelection sel = (StructuredSelection) event.getSelection();
-					OpenServerProjectFileAction fileAction = new OpenServerProjectFileAction(getSite().getPage()) {
-						@Override
-						public org.eclipse.jface.viewers.IStructuredSelection getStructuredSelection() {
-							return sel;
-						}
-					};
-					if (fileAction.updateSelection(sel)) {
-						fileAction.run();
-					}
-				}
-			}
-		});
-		updateActivations();
-
 		repositoryListener = new IBundleRepositoryChangeListener() {
 			public void bundleRepositoryChanged(IRuntime runtime) {
 				refreshView();
@@ -228,112 +139,16 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 		ServerCorePlugin.getArtefactRepositoryManager().addBundleRepositoryChangeListener(repositoryListener);
 	}
 
-	@Override
-	protected CommonViewer createCommonViewerObject(Composite aParent) {
-		return new CommonViewer(ServerUiPlugin.ARTEFACTS_DETAIL_VIEW_ID, aParent, SWT.MULTI | SWT.H_SCROLL
-				| SWT.V_SCROLL);
-	}
-
-	protected void refreshView() {
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				ISelection selection = getCommonViewer().getSelection();
-				getCommonViewer().setInput(getCommonViewer().getInput());
-				getCommonViewer().setSelection(selection, true);
-			}
-		});
-	}
-
-	protected void updateContentDescription() {
-		String title = "(No Selection)";
-		if (currentPart instanceof ServerEditor) {
-			title = ((ServerEditor) currentPart).getTitle();
-		} else {
-			Object input = getCommonViewer().getInput();
-			if (input != null && getServerInput() != null) {
-				title = titleLabelProvider.getText(input);
-			}
-		}
-		setContentDescription(title);
-	}
-
-	/* (non-Javadoc)
-	 * Method declared on ISelectionListener.
-	 * Notify the current page that the selection has changed.
-	 */
-	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
-		if (part instanceof IViewPart && part != this) {
-			if (sel instanceof StructuredSelection) {
-				Iterator<Object> items = ((StructuredSelection) sel).iterator();
-				List<IServer> servers = new ArrayList<IServer>();
-				List<Object> containers = new ArrayList<Object>();
-				List<Object> artifacts = new ArrayList<Object>();
-
-				while (items.hasNext()) {
-					Object next = items.next();
-					if (next instanceof IServer) {
-						servers.add((IServer) next);
-					}
-					if (next instanceof LibrariesNode) {
-						servers.add(((LibrariesNode) next).getServer());
-					}
-					if (next instanceof IServerProjectContainer || next instanceof ArtefactSet) {
-						containers.add(next);
-					}
-					if (next instanceof IArtefact || next instanceof IServerProjectArtefact) {
-						artifacts.add(next);
-					}
-				}
-				List<Object> input = new ArrayList<Object>(servers);
-				if (input.size() == 0) {
-					input = new ArrayList<Object>(containers);
-				}
-				if (input.size() == 0) {
-					input = new ArrayList<Object>(artifacts);
-				}
-				if (input.size() == 1) {
-					getCommonViewer().setInput(input.get(0));
-				} else if (part instanceof ServersView2) {
-					getCommonViewer().setInput(null);
-				}
-				getCommonViewer().refresh();
-			}
-		} else if (part instanceof IEditorPart) {
-			IServer virgoServer = VirgoEditorAdapterFactory.getVirgoServer((IEditorPart) part);
-			if (virgoServer != null) {
-				getCommonViewer().setInput(virgoServer);
-			}
-		}
-		updateContentDescription();
-		refreshArtefactsAction.setEnabled(getServerInput() != null);
-	}
-
 	/**
-	 * @see org.eclipse.ui.navigator.CommonNavigator#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
+	 * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#refreshAll()
 	 */
 	@Override
-	public void init(IViewSite site, IMemento memento) throws PartInitException {
-		site.getPage().addPostSelectionListener(this);
-		super.init(site, memento);
-	}
-
-	/* (non-Javadoc)
-	 * Method declared on IWorkbenchPart.
-	 */
-	@Override
-	public void dispose() {
-		super.dispose();
-		getSite().getPage().removePostSelectionListener(this);
-		ServerCorePlugin.getArtefactRepositoryManager().removeBundleRepositoryChangeListener(repositoryListener);
-		currentPart = null;
-	}
-
-	/**
-	 * @see org.eclipse.ui.navigator.CommonNavigator#getMemento()
-	 */
-	@Override
-	public IMemento getMemento() {
-		return super.getMemento();
+	protected void refreshAll() {
+		for (IServer server : getServers()) {
+			RefreshBundleJob.execute(getSite().getShell(), server.getRuntime());
+			ServerProjectManager.getInstance().getProject(server).refresh();
+		}
+		super.refreshAll();
 	}
 
 	/**
@@ -345,10 +160,12 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 		aMemento.putBoolean(SHOW_VIEW_LIST, showList);
 	}
 
+	@Override
 	protected void updateActivations() {
 		INavigatorActivationService activationService = getCommonViewer().getNavigatorContentService()
 				.getActivationService();
-		if (showList) {
+		String contentId = getContentId();
+		if (contentId == ServerUiPlugin.RUNTIME_FLATTENED_ARTEFACTS_CONTENT_ID) {
 			activationService.deactivateExtensions(new String[] { ServerUiPlugin.RUNTIME_ARTEFACTS_CONTENT_ID }, false);
 			activationService.activateExtensions(
 					new String[] { ServerUiPlugin.RUNTIME_FLATTENED_ARTEFACTS_CONTENT_ID }, false);
@@ -359,7 +176,23 @@ public class ArtefactCommonView extends CommonNavigator implements ISelectionLis
 		}
 	}
 
-	public IServer getServerInput() {
-		return containerProvider.getServer(getCommonViewer().getInput());
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#getContentId()
+	 */
+	@Override
+	protected String getContentId() {
+		if (showList) {
+			return ServerUiPlugin.RUNTIME_FLATTENED_ARTEFACTS_CONTENT_ID;
+		} else {
+			return ServerUiPlugin.RUNTIME_ARTEFACTS_CONTENT_ID;
+		}
+	}
+
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#getViewId()
+	 */
+	@Override
+	protected String getViewId() {
+		return ServerUiPlugin.ARTEFACTS_DETAIL_VIEW_ID;
 	}
 }

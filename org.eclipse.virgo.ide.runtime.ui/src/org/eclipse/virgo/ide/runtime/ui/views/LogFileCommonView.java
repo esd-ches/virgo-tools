@@ -23,7 +23,28 @@ import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
  */
 @SuppressWarnings("restriction")
 public class LogFileCommonView extends ServerFileCommonView {
-	public LogFileCommonView() {
-		super(ServerUiPlugin.LOG_VIEW_ID, ServerUiPlugin.LOG_CONTENT_ID, ServerCorePlugin.LOG_DIR);
+
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.ui.views.ServerFileCommonView#getManagedDir()
+	 */
+	@Override
+	public String getManagedDir() {
+		return ServerCorePlugin.LOG_DIR;
+	}
+
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#getContentId()
+	 */
+	@Override
+	protected String getContentId() {
+		return ServerUiPlugin.LOG_CONTENT_ID;
+	}
+
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#getViewId()
+	 */
+	@Override
+	protected String getViewId() {
+		return ServerUiPlugin.LOG_VIEW_ID;
 	}
 }
