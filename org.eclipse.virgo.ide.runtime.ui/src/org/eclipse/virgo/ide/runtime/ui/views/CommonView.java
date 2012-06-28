@@ -16,8 +16,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import org.eclipse.core.resources.IResourceChangeListener;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IToolBarManager;
 import org.eclipse.jface.action.Separator;
@@ -35,6 +33,7 @@ import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IMemento;
 import org.eclipse.ui.IPartListener;
 import org.eclipse.ui.ISelectionListener;
+import org.eclipse.ui.IViewReference;
 import org.eclipse.ui.IViewSite;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.PartInitException;
@@ -63,8 +62,6 @@ public abstract class CommonView extends CommonNavigator implements ISelectionLi
 	protected final ILabelProvider titleLabelProvider = new RuntimeFullLabelProvider();
 
 	RuntimeContainersContentProvider containerProvider = new RuntimeContainersContentProvider();
-
-	protected IResourceChangeListener resourceListener;
 
 	private List<IServer> servers = Collections.EMPTY_LIST;
 
@@ -118,6 +115,20 @@ public abstract class CommonView extends CommonNavigator implements ISelectionLi
 	 */
 	@Override
 	public void createPartControl(Composite aParent) {
+		for (IViewReference viewReference : getViewSite().getPage().getViewReferences()) {
+			IWorkbenchPart part = viewReference.getPart(false);
+			if (part instanceof ServersView2 && part != this) {
+				lastPartHint = part;
+				break;
+			}
+		}
+		if (lastPartHint == null) {
+			IEditorPart editor = getViewSite().getPage().getActiveEditor();
+			if (editor instanceof ServerEditor) {
+				lastPartHint = editor;
+			}
+		}
+
 		IActionBars actionBars = getViewSite().getActionBars();
 		IToolBarManager manager = actionBars.getToolBarManager();
 
@@ -163,28 +174,19 @@ public abstract class CommonView extends CommonNavigator implements ISelectionLi
 
 			public void partActivated(IWorkbenchPart part) {
 				if (part == CommonView.this) {
-					if (lastPartHint instanceof ServersView2) {
-						selectionChanged(lastPartHint, ((ServersView2) lastPartHint).getCommonViewer().getSelection());
-					} else if (lastPartHint instanceof IEditorPart) {
-						IServer virgoServer = VirgoEditorAdapterFactory.getVirgoServer((IEditorPart) lastPartHint);
-						if (virgoServer != null) {
-							selectionChanged(lastPartHint, StructuredSelection.EMPTY);
-						}
-					}
+					activated();
 				}
 			}
 		});
+
+		activated();
 	}
 
 	protected void updateContentDescription() {
 		String title = "(No Selection)";
-		if (currentPart instanceof ServerEditor) {
-			title = ((ServerEditor) currentPart).getTitle();
-		} else {
-			Object input = getCommonViewer().getInput();
-			if (input != null && !servers.isEmpty()) {
-				title = titleLabelProvider.getText(input);
-			}
+		Object input = getCommonViewer().getInput();
+		if (input != null && !servers.isEmpty()) {
+			title = titleLabelProvider.getText(input);
 		}
 		setContentDescription(title);
 	}
@@ -244,10 +246,8 @@ public abstract class CommonView extends CommonNavigator implements ISelectionLi
 	@Override
 	public void dispose() {
 		super.dispose();
-		ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceListener);
 		getSite().getPage().removePostSelectionListener(this);
 		currentPart = null;
-		//We need to avoid having a reference to part hanging around.
 		lastPartHint = null;
 	}
 
@@ -271,4 +271,15 @@ public abstract class CommonView extends CommonNavigator implements ISelectionLi
 	protected abstract String getContentId();
 
 	protected abstract String getViewId();
+
+	protected void activated() {
+		if (lastPartHint instanceof ServersView2) {
+			selectionChanged(lastPartHint, ((ServersView2) lastPartHint).getCommonViewer().getSelection());
+		} else if (lastPartHint instanceof IEditorPart) {
+			IServer virgoServer = VirgoEditorAdapterFactory.getVirgoServer((IEditorPart) lastPartHint);
+			if (virgoServer != null) {
+				selectionChanged(lastPartHint, StructuredSelection.EMPTY);
+			}
+		}
+	}
 }

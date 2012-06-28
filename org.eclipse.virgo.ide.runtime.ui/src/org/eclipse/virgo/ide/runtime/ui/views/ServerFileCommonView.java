@@ -43,6 +43,8 @@ public abstract class ServerFileCommonView extends CommonView implements ISelect
 
 	private Collection<IFile> currentFiles;
 
+	protected IResourceChangeListener resourceListener;
+
 	private final class DeltaVisitor implements IResourceDeltaVisitor {
 		boolean change;
 
@@ -84,19 +86,21 @@ public abstract class ServerFileCommonView extends CommonView implements ISelect
 					//get the delta, if any, for the documentation directory
 					for (IServer server : getServers()) {
 						ServerProject project = ServerProjectManager.getInstance().getProject(server);
-						IFolder folder = project.getWorkspaceProject().getFolder(getManagedDir());
-						IResourceDelta docDelta = rootDelta.findMember(folder.getFullPath());
-						if (docDelta == null) {
-							return;
-						}
-						DeltaVisitor visitor = new DeltaVisitor();
-						try {
-							docDelta.accept(visitor);
-						} catch (CoreException e) {
-						}
-						if (visitor.change) {
-							refresh = true;
-							break;
+						if (project != null) {
+							IFolder folder = project.getWorkspaceProject().getFolder(getManagedDir());
+							IResourceDelta docDelta = rootDelta.findMember(folder.getFullPath());
+							if (docDelta == null) {
+								return;
+							}
+							DeltaVisitor visitor = new DeltaVisitor();
+							try {
+								docDelta.accept(visitor);
+							} catch (CoreException e) {
+							}
+							if (visitor.change) {
+								refresh = true;
+								break;
+							}
 						}
 					}
 					if (refresh) {
@@ -127,6 +131,15 @@ public abstract class ServerFileCommonView extends CommonView implements ISelect
 				}
 			}
 		}
+	}
+
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#dispose()
+	 */
+	@Override
+	public void dispose() {
+		super.dispose();
+		ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceListener);
 	}
 
 	public abstract String getManagedDir();
