@@ -57,15 +57,18 @@ public class ServerProjectManager implements IServerLifecycleListener {
 	 *            (update) the contents of the server as well
 	 */
 	public synchronized ServerProject getProject(IServer server, boolean create, boolean refresh) {
-		ServerProject serverProject = projectForServer.get(server);
-		if (serverProject == null && create) {
-			serverProject = new ServerProject(server);
-			projectForServer.put(server, serverProject);
+		if (ServerProject.isVirgo(server)) {
+			ServerProject serverProject = projectForServer.get(server);
+			if (serverProject == null && create) {
+				serverProject = new ServerProject(server);
+				projectForServer.put(server, serverProject);
+			}
+			if (serverProject != null && refresh) {
+				serverProject.refresh();
+			}
+			return serverProject;
 		}
-		if (serverProject != null && refresh) {
-			serverProject.refresh();
-		}
-		return serverProject;
+		return null;
 	}
 
 	/**
@@ -80,7 +83,9 @@ public class ServerProjectManager implements IServerLifecycleListener {
 
 		for (IServer server : ServerCore.getServers()) {
 			ServerProject project = getProject(server, true, true);
-			oldProjectForName.remove(project.getWorkspaceProjectName());
+			if (project != null) {
+				oldProjectForName.remove(project.getWorkspaceProjectName());
+			}
 		}
 		for (IProject oldProject : oldProjectForName.values()) {
 			try {
@@ -125,12 +130,14 @@ public class ServerProjectManager implements IServerLifecycleListener {
 	 * @see org.eclipse.wst.server.core.IServerLifecycleListener#serverChanged(org.eclipse.wst.server.core.IServer)
 	 */
 	public synchronized void serverChanged(IServer server) {
-		Map<String, IProject> oldProjectForName = getExistingServerProjects();
-		ServerProject project = getProject(server, false, false);
-		if (project.getWorkspaceProject() == null
-				|| !oldProjectForName.containsKey(project.getWorkspaceProject().getName())) {
-			//The project name has probably changed, so update everything
-			updateProjects();
+		if (ServerProject.isVirgo(server)) {
+			Map<String, IProject> oldProjectForName = getExistingServerProjects();
+			ServerProject project = getProject(server, false, false);
+			if (project.getWorkspaceProject() == null
+					|| !oldProjectForName.containsKey(project.getWorkspaceProject().getName())) {
+				//The project name has probably changed, so update everything
+				updateProjects();
+			}
 		}
 	}
 

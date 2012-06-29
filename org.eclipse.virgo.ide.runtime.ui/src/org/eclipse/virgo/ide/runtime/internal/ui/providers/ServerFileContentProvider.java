@@ -36,16 +36,18 @@ public class ServerFileContentProvider extends GenericTreeProvider {
 		if (inputElement instanceof IServer) {
 			IServer server = (IServer) inputElement;
 			ServerProject project = ServerProjectManager.getInstance().getProject(server);
-			IFolder folder = project.getWorkspaceProject().getFolder(serverDir);
-			try {
-				IResource[] members = folder.members();
-				Object[] serverFiles = new Object[members.length];
-				for (int i = 0; i < serverFiles.length; i++) {
-					serverFiles[i] = new ServerFile(server, (IFile) members[i]);
+			if (project != null) {
+				IFolder folder = project.getWorkspaceProject().getFolder(serverDir);
+				try {
+					IResource[] members = folder.members();
+					Object[] serverFiles = new Object[members.length];
+					for (int i = 0; i < serverFiles.length; i++) {
+						serverFiles[i] = new ServerFile(server, (IFile) members[i]);
+					}
+					return serverFiles;
+				} catch (CoreException e) {
+					throw new RuntimeException(e);
 				}
-				return serverFiles;
-			} catch (CoreException e) {
-				throw new RuntimeException(e);
 			}
 		}
 		return super.getElements(inputElement);
@@ -61,6 +63,6 @@ public class ServerFileContentProvider extends GenericTreeProvider {
 
 	@Override
 	public boolean hasChildren(Object element) {
-		return element instanceof IServer;
+		return element instanceof IServer && ServerProject.isVirgo((IServer) element);
 	}
 }

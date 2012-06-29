@@ -287,6 +287,13 @@ public class ServerProject {
 	}
 
 	/**
+	 * Checks server type for virgo. Null safe.
+	 */
+	public static boolean isVirgo(IServer server) {
+		return server != null && server.getServerType().getId().equals(ServerCorePlugin.VIRGO_SERVER_ID);
+	}
+
+	/**
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

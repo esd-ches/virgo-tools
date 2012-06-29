@@ -31,8 +31,10 @@ public class ArtefactContainersContentProvider extends GenericTreeProvider {
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof IServer) {
 			ServerProject project = ServerProjectManager.getInstance().getProject((IServer) inputElement, true, true);
-			Object[] containers = project.getContainers().toArray(new Object[0]);
-			return containers;
+			if (project != null) {
+				Object[] containers = project.getContainers().toArray(new Object[0]);
+				return containers;
+			}
 		}
 		if (inputElement instanceof IServerProjectContainer) {
 			return ((IServerProjectContainer) inputElement).getMembers();

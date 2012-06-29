@@ -18,6 +18,7 @@ import org.eclipse.debug.ui.ILaunchConfigurationTab;
 import org.eclipse.debug.ui.sourcelookup.SourceLookupTab;
 import org.eclipse.jdt.debug.ui.launchConfigurations.JavaArgumentsTab;
 import org.eclipse.jdt.debug.ui.launchConfigurations.JavaClasspathTab;
+import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.wst.server.ui.ServerLaunchConfigurationTab;
 
 /**
@@ -27,7 +28,7 @@ public class VirgoLaunchConfigurationTabGroup extends AbstractLaunchConfiguratio
 
 	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
 		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[6];
-		tabs[0] = new ServerLaunchConfigurationTab(new String[] { ServerUiPlugin.VIRGO_SERVER_ID });
+		tabs[0] = new ServerLaunchConfigurationTab(new String[] { ServerCorePlugin.VIRGO_SERVER_ID });
 		tabs[0].setLaunchConfigurationDialog(dialog);
 		tabs[1] = new JavaArgumentsTab();
 		tabs[1].setLaunchConfigurationDialog(dialog);

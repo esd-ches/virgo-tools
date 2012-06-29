@@ -43,6 +43,7 @@ import org.eclipse.ui.navigator.INavigatorActivationService;
 import org.eclipse.virgo.ide.runtime.internal.ui.actions.OpenServerProjectFileAction;
 import org.eclipse.virgo.ide.runtime.internal.ui.editor.Messages;
 import org.eclipse.virgo.ide.runtime.internal.ui.editor.VirgoEditorAdapterFactory;
+import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProject;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProjectManager;
 import org.eclipse.virgo.ide.runtime.internal.ui.providers.RuntimeContainersContentProvider;
 import org.eclipse.virgo.ide.runtime.internal.ui.providers.RuntimeFullLabelProvider;
@@ -205,7 +206,10 @@ public abstract class CommonView extends CommonNavigator implements ISelectionLi
 				while (items.hasNext()) {
 					Object next = items.next();
 					if (next instanceof IServer) {
-						servers.add((IServer) next);
+						IServer server = (IServer) next;
+						if (ServerProject.isVirgo(server)) {
+							servers.add(server);
+						}
 					}
 				}
 				if (!servers.equals(lastServers)) {
@@ -263,7 +267,10 @@ public abstract class CommonView extends CommonNavigator implements ISelectionLi
 
 	protected void refreshAll() {
 		for (IServer server : getServers()) {
-			ServerProjectManager.getInstance().getProject(server).refreshDirectories();
+			ServerProject project = ServerProjectManager.getInstance().getProject(server);
+			if (project != null) {
+				project.refreshDirectories();
+			}
 		}
 		refreshView();
 	}

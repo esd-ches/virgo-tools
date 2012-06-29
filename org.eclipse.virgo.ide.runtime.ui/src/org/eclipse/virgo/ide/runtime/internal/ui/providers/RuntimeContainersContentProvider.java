@@ -24,19 +24,20 @@ public class RuntimeContainersContentProvider extends GenericTreeProvider {
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof IServer) {
 			IServer server = (IServer) inputElement;
-			ServerProject project = ServerProjectManager.getInstance().getProject(server);
-			if (project != null) {
-				return project.getArtefactSets().toArray(new Object[0]);
+			if (ServerProject.isVirgo(server)) {
+				ServerProject project = ServerProjectManager.getInstance().getProject(server);
+				if (project != null) {
+					return project.getArtefactSets().toArray(new Object[0]);
+				}
 			}
-//			return project.getContainers().toArray(new Object[0]);
 		}
 		if (inputElement instanceof IServerProjectContainer) {
 			return ((IServerProjectContainer) inputElement).getMembers();
 		}
 		if (inputElement instanceof ArtefactSet) {
 			ArtefactSet artefactSet = (ArtefactSet) inputElement;
-			ServerProject project = ServerProjectManager.getInstance().getProject(
-					artefactSet.getRepository().getServer());
+			IServer server = artefactSet.getRepository().getServer();
+			ServerProject project = ServerProjectManager.getInstance().getProject(server);
 			if (project != null) {
 				IServerProjectContainer container = project.getContainer(artefactSet);
 				if (container != null) {

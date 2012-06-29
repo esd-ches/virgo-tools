@@ -53,8 +53,6 @@ public class ServerUiPlugin extends AbstractUIPlugin {
 
 	public static final String RUNTIME_OUTLINE_VIEW_ID = "org.eclipse.virgo.ide.runtime.ui.OutlineView";
 
-	public static final String VIRGO_SERVER_ID = "org.eclipse.virgo.server.virgo";
-
 	public static final String PROPERTIES_VIEW_ID = "org.eclipse.virgo.ide.runtime.ui.PropertiesView";
 
 	public static final String PROPERTIES_CONTENT_ID = "org.eclipse.virgo.ide.runtime.ui.properties";

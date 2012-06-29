@@ -44,7 +44,8 @@ public class FlattenedArtefactsContentProvider extends RuntimeContainersContentP
 		}*/
 
 		if (inputElement instanceof IServer) {
-			ServerProject project = ServerProjectManager.getInstance().getProject((IServer) inputElement);
+			IServer server = (IServer) inputElement;
+			ServerProject project = ServerProjectManager.getInstance().getProject(server);
 			if (project != null) {
 				IServerProjectContainer[] containers = project.getContainers().toArray(new IServerProjectContainer[0]);
 				Object[] members = new Object[0];

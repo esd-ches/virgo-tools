@@ -15,7 +15,7 @@ import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
-import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
+import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProject;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.ui.editor.ServerEditorPart;
@@ -40,7 +40,7 @@ public class VirgoEditorAdapterFactory implements IAdapterFactory {
 
 	public static IServer getVirgoServer(IEditorPart part) {
 		IServer server = getServer(part);
-		if (server != null && server.getServerType().getId().equals(ServerUiPlugin.VIRGO_SERVER_ID)) {
+		if (ServerProject.isVirgo(server)) {
 			return server;
 		}
 		return null;
