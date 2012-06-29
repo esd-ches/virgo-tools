@@ -8,6 +8,7 @@
  */
 package org.eclipse.virgo.ide.runtime.internal.ui.editor;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.eclipse.core.runtime.IAdapterFactory;
@@ -16,6 +17,7 @@ import org.eclipse.ui.part.MultiPageEditorPart;
 import org.eclipse.ui.views.contentoutline.IContentOutlinePage;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
 import org.eclipse.wst.server.core.IServer;
+import org.eclipse.wst.server.core.IServerWorkingCopy;
 import org.eclipse.wst.server.ui.editor.ServerEditorPart;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditor;
 
@@ -46,15 +48,27 @@ public class VirgoEditorAdapterFactory implements IAdapterFactory {
 
 	public static IServer getServer(IEditorPart part) {
 		if (part instanceof ServerEditor) {
+			Method method;
 			try {
-				Method method = MultiPageEditorPart.class.getDeclaredMethod("getActiveEditor", new Class[] {});
+				method = MultiPageEditorPart.class.getDeclaredMethod("getActiveEditor", new Class[] {});
 				method.setAccessible(true);
 				Object result = method.invoke(part, new Object[] {});
 				if (result instanceof ServerEditorPart) {
-					IServer server = ((ServerEditorPart) result).getServer().getOriginal();
-					return server;
+					IServerWorkingCopy serverEditor = ((ServerEditorPart) result).getServer();
+					if (serverEditor != null) {
+						IServer server = serverEditor.getOriginal();
+						return server;
+					}
 				}
-			} catch (Exception e) {
+			} catch (SecurityException e) {
+				throw new RuntimeException(e);
+			} catch (NoSuchMethodException e) {
+				throw new RuntimeException(e);
+			} catch (IllegalArgumentException e) {
+				throw new RuntimeException(e);
+			} catch (IllegalAccessException e) {
+				throw new RuntimeException(e);
+			} catch (InvocationTargetException e) {
 				throw new RuntimeException(e);
 			}
 		}
