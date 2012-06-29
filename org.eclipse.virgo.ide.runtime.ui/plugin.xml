@@ -303,6 +303,9 @@
          <actionExtension
                pattern="org.eclipse.virgo.ide.runtime.ui.actions">
          </actionExtension>
+         <contentExtension
+               pattern="org.eclipse.jdt.java.ui.javaContent">
+         </contentExtension>
       </includes>
    </viewerContentBinding>
    <viewer
