@@ -36,7 +36,7 @@ public class LogFileCommonView extends ServerFileCommonView {
 	 * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#getContentId()
 	 */
 	@Override
-	protected String getContentId() {
+	protected String getTreeContentId() {
 		return ServerUiPlugin.LOG_CONTENT_ID;
 	}
 

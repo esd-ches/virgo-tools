@@ -33,11 +33,19 @@ public class PropertiesFileCommonView extends ServerFileCommonView {
 	}
 
 	/**
-	 * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#getContentId()
+	 * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#getTreeContentId()
 	 */
 	@Override
-	protected String getContentId() {
+	protected String getTreeContentId() {
 		return ServerUiPlugin.PROPERTIES_CONTENT_ID;
+	}
+
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#getListContentId()
+	 */
+	@Override
+	protected String getListContentId() {
+		return ServerUiPlugin.FLATTENED_PROPERTIES_CONTENT_ID;
 	}
 
 	/**

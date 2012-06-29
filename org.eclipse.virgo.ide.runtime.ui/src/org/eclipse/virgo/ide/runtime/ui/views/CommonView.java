@@ -25,6 +25,7 @@ import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.pde.internal.ui.PDEPluginImages;
+import org.eclipse.pde.internal.ui.PDEUIMessages;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
@@ -58,6 +59,10 @@ import org.eclipse.wst.server.ui.internal.editor.ServerEditor;
  */
 public abstract class CommonView extends CommonNavigator implements ISelectionListener {
 
+	public static final String SHOW_VIEW_LIST = "showViewList";
+
+	private static final String TREE_ACTION_GROUP = "tree";
+
 	protected IWorkbenchPart currentPart;
 
 	protected final ILabelProvider titleLabelProvider = new RuntimeFullLabelProvider();
@@ -70,11 +75,64 @@ public abstract class CommonView extends CommonNavigator implements ISelectionLi
 
 	private RefreshArtefactsAction refreshAction;
 
+	private boolean showList;
+
 	/**
 	 * This is a bit of a hack to determine the last view that was activated by the user in order to determine a
 	 * sensible input for any newly activated views.
 	 */
 	private IWorkbenchPart lastPartHint;
+
+	class ShowListAction extends Action {
+		public ShowListAction() {
+			super("", AS_RADIO_BUTTON); //$NON-NLS-1$
+			setText(PDEUIMessages.DependenciesView_ShowListAction_label);
+			setDescription(PDEUIMessages.DependenciesView_ShowListAction_description);
+			setToolTipText(PDEUIMessages.DependenciesView_ShowListAction_tooltip);
+			setImageDescriptor(PDEPluginImages.DESC_FLAT_LAYOUT);
+			setDisabledImageDescriptor(PDEPluginImages.DESC_FLAT_LAYOUT_DISABLED);
+		}
+
+		/*
+		 * @see Action#actionPerformed
+		 */
+		@Override
+		public void run() {
+			if (isChecked()) {
+				if (memento != null) {
+					memento.putBoolean(SHOW_VIEW_LIST, true);
+				}
+				showList = true;
+				updateActivations();
+			}
+		}
+	}
+
+	class ShowTreeAction extends Action {
+
+		public ShowTreeAction() {
+			super("", AS_RADIO_BUTTON); //$NON-NLS-1$
+			setText(PDEUIMessages.DependenciesView_ShowTreeAction_label);
+			setDescription(PDEUIMessages.DependenciesView_ShowTreeAction_description);
+			setToolTipText(PDEUIMessages.DependenciesView_ShowTreeAction_tooltip);
+			setImageDescriptor(PDEPluginImages.DESC_HIERARCHICAL_LAYOUT);
+			setDisabledImageDescriptor(PDEPluginImages.DESC_HIERARCHICAL_LAYOUT_DISABLED);
+		}
+
+		/*
+		 * @see Action#actionPerformed
+		 */
+		@Override
+		public void run() {
+			if (isChecked()) {
+				if (memento != null) {
+					memento.putBoolean(SHOW_VIEW_LIST, false);
+				}
+				showList = false;
+				updateActivations();
+			}
+		}
+	}
 
 	class RefreshArtefactsAction extends Action {
 
@@ -132,6 +190,24 @@ public abstract class CommonView extends CommonNavigator implements ISelectionLi
 
 		IActionBars actionBars = getViewSite().getActionBars();
 		IToolBarManager manager = actionBars.getToolBarManager();
+
+		if (isSupportsListTree()) {
+			showList = false;
+			if (getMemento() != null) {
+				Boolean value = getMemento().getBoolean(SHOW_VIEW_LIST);
+				if (value != null) {
+					showList = value;
+				}
+			}
+			ShowTreeAction showTreeAction = new ShowTreeAction();
+			showTreeAction.setChecked(!showList);
+			ShowListAction showListAction = new ShowListAction();
+			showListAction.setChecked(showList);
+			manager.add(new Separator(TREE_ACTION_GROUP));
+			manager.add(new Separator("presentation")); //$NON-NLS-1$
+			manager.appendToGroup("presentation", showTreeAction); //$NON-NLS-1$
+			manager.appendToGroup("presentation", showListAction); //$NON-NLS-1$
+		}
 
 		super.createPartControl(aParent);
 
@@ -236,6 +312,17 @@ public abstract class CommonView extends CommonNavigator implements ISelectionLi
 	}
 
 	/**
+	 * @see org.eclipse.ui.navigator.CommonNavigator#saveState(org.eclipse.ui.IMemento)
+	 */
+	@Override
+	public void saveState(IMemento aMemento) {
+		super.saveState(aMemento);
+		if (isSupportsListTree()) {
+			aMemento.putBoolean(SHOW_VIEW_LIST, showList);
+		}
+	}
+
+	/**
 	 * @see org.eclipse.ui.navigator.CommonNavigator#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
 	 */
 	@Override
@@ -255,12 +342,6 @@ public abstract class CommonView extends CommonNavigator implements ISelectionLi
 		lastPartHint = null;
 	}
 
-	protected void updateActivations() {
-		INavigatorActivationService activationService = getCommonViewer().getNavigatorContentService()
-				.getActivationService();
-		activationService.activateExtensions(new String[] { getContentId() }, false);
-	}
-
 	public List<IServer> getServers() {
 		return servers;
 	}
@@ -275,9 +356,40 @@ public abstract class CommonView extends CommonNavigator implements ISelectionLi
 		refreshView();
 	}
 
-	protected abstract String getContentId();
+	public boolean isShowList() {
+		return isSupportsListTree() && showList;
+	}
+
+	protected abstract String getTreeContentId();
+
+	/**
+	 * May return null in which case we won't show list.
+	 */
+	protected String getListContentId() {
+		return null;
+	}
 
 	protected abstract String getViewId();
+
+	protected final boolean isSupportsListTree() {
+		return getListContentId() != null;
+	}
+
+	protected void updateActivations() {
+		INavigatorActivationService activationService = getCommonViewer().getNavigatorContentService()
+				.getActivationService();
+		if (!isSupportsListTree()) {
+			activationService.activateExtensions(new String[] { getTreeContentId() }, false);
+		} else {
+			if (isShowList()) {
+				activationService.deactivateExtensions(new String[] { getTreeContentId() }, false);
+				activationService.activateExtensions(new String[] { getListContentId() }, false);
+			} else {
+				activationService.deactivateExtensions(new String[] { getListContentId() }, false);
+				activationService.activateExtensions(new String[] { getTreeContentId() }, false);
+			}
+		}
+	}
 
 	protected void activated() {
 		if (lastPartHint instanceof ServersView2) {

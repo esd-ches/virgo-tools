@@ -339,6 +339,10 @@
                isRoot="true"
                pattern="org.eclipse.virgo.ide.runtime.ui.properties">
          </contentExtension>
+         <contentExtension
+               isRoot="true"
+               pattern="org.eclipse.virgo.ide.runtime.ui.flattenedProperties">
+         </contentExtension>
       </includes>
       </viewerContentBinding>
          <viewer
@@ -517,7 +521,7 @@
          icon="icons/full/obj16/file_obj.gif"
          id="org.eclipse.virgo.ide.runtime.ui.properties"
          labelProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFileLabelProvider"
-         name="Properties">
+         name="Properties (Tree)">
       <triggerPoints>
          <or>
             <instanceof
@@ -574,6 +578,25 @@
          </or>
       </enablement>
    </actionProvider>
+   <navigatorContent
+         activeByDefault="true"
+         contentProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.FlattenedPropertiesFileContentProvider"
+         icon="icons/full/obj16/file_obj.gif"
+         id="org.eclipse.virgo.ide.runtime.ui.flattenedProperties"
+         labelProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFileLabelProvider"
+         name="Properties (List)">
+      <triggerPoints>
+         <or>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.core.IServer">
+            </instanceof>
+         </or>
+      </triggerPoints>
+      <commonSorter
+            class="org.eclipse.virgo.ide.runtime.internal.ui.sorters.ArtefactSignatureSorter"
+            id="org.eclipse.virgo.ide.simpleSorter">
+      </commonSorter>
+   </navigatorContent>
 </extension>
 <extension
       point="org.eclipse.core.contenttype.contentTypes">

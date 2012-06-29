@@ -40,7 +40,8 @@ public class PropertiesFileContentProvider extends ServerFileContentProvider {
 		if (inputElement instanceof ServerFile && !(inputElement instanceof ServerFileSelection)) {
 			ServerFile serverFile = (ServerFile) inputElement;
 			IFile file = serverFile.getFile();
-			if (file.getLocation().getFileExtension().equals(PROPERTIES_EXT)) {
+			if (file.getLocation().getFileExtension() != null
+					&& file.getLocation().getFileExtension().equals(PROPERTIES_EXT)) {
 				try {
 					String osString = file.getLocation().toOSString();
 					BufferedReader bufferedReader = new BufferedReader(new FileReader(osString));
@@ -61,13 +62,13 @@ public class PropertiesFileContentProvider extends ServerFileContentProvider {
 							String cleanLine = readLine.replaceAll("\\\\", "");
 							ServerFileSelection serverFileSelection = new ServerFileSelection(serverFile.getServer(),
 									file, cleanLine, offset + posEquals, readLine.length() + lineCount - posEquals,
-									lines.size() - 1);
+									lines.size() + 1);
 							lines.add(serverFileSelection);
 							offset += lineCount;
 						} else if (!readLine.startsWith("#") && !StringUtils.isBlank(readLine)
 								&& !readLine.endsWith("\\")) {
 							ServerFileSelection serverFileSelection = new ServerFileSelection(serverFile.getServer(),
-									file, readLine, offset + posEquals, readLine.length() - posEquals, lines.size() - 1);
+									file, readLine, offset + posEquals, readLine.length() - posEquals, lines.size() + 1);
 							lines.add(serverFileSelection);
 						}
 						offset += readLine.length() + 1;

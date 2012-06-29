@@ -57,6 +57,8 @@ public class ServerUiPlugin extends AbstractUIPlugin {
 
 	public static final String PROPERTIES_CONTENT_ID = "org.eclipse.virgo.ide.runtime.ui.properties";
 
+	public static final String FLATTENED_PROPERTIES_CONTENT_ID = "org.eclipse.virgo.ide.runtime.ui.flattenedProperties";
+
 	public static final String LOG_VIEW_ID = "org.eclipse.virgo.ide.runtime.ui.LogView";
 
 	public static final String LOG_CONTENT_ID = "org.eclipse.virgo.ide.runtime.ui.logs";

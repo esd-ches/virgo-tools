@@ -49,6 +49,10 @@ public class ServerFileSelection extends ServerFile {
 		return length;
 	}
 
+	public int getItem() {
+		return item;
+	}
+
 	/**
 	 * @see java.lang.Object#hashCode()
 	 */

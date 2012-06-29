@@ -70,14 +70,16 @@ public class ServerFileLabelProvider extends LabelProvider implements ILightweig
 	}
 
 	public void decorate(Object element, IDecoration decoration) {
-		if (element instanceof ServerFile && !(element instanceof ServerFileSelection)) {
+		if (element instanceof ServerFile) {
 			ServerFile serverFile = (ServerFile) element;
-			decoration.addSuffix(new StringBuilder().append(" [")
-					.append(serverFile.getServer())
-					.append("] - ")
-					.append(serverFile.getFile().getLocation())
-					.toString());
-			decoration.addOverlay(ServerUiImages.DESC_OBJ_VIRGO_OVER, IDecoration.TOP_LEFT);
+			String suffix = " [" + serverFile.getServer() + "] - " + serverFile.getFile().getLocation();
+			if (element instanceof ServerFileSelection) {
+				suffix += " #" + ((ServerFileSelection) element).getItem();
+			}
+			decoration.addSuffix(suffix);
+			if (!(element instanceof ServerFileSelection)) {
+				decoration.addOverlay(ServerUiImages.DESC_OBJ_VIRGO_OVER, IDecoration.TOP_LEFT);
+			}
 		}
 	}
 }
