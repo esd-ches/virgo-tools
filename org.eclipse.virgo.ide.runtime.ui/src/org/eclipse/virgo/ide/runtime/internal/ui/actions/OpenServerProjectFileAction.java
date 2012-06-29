@@ -28,6 +28,7 @@ import org.eclipse.ui.internal.ide.IIDEHelpContextIds;
 import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.texteditor.ITextEditor;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectFileReference;
+import org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFile;
 import org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFileSelection;
 
 /**
@@ -91,9 +92,9 @@ public class OpenServerProjectFileAction extends SelectionListenerAction {
 	 */
 	@Override
 	public boolean updateSelection(IStructuredSelection selection) {
+		Object element = ((StructuredSelection) selection).getFirstElement();
 		return selection instanceof StructuredSelection
-				&& (((StructuredSelection) selection).getFirstElement() instanceof ProjectFileReference
-						|| ((StructuredSelection) selection).getFirstElement() instanceof IFile || ((StructuredSelection) selection).getFirstElement() instanceof ServerFileSelection);
+				&& (element instanceof ProjectFileReference || element instanceof IFile || element instanceof ServerFile);
 	}
 
 	/**
@@ -110,6 +111,8 @@ public class OpenServerProjectFileAction extends SelectionListenerAction {
 				openFile((IFile) next);
 			} else if (next instanceof ServerFileSelection) {
 				openFile((ServerFileSelection) next);
+			} else if (next instanceof ServerFile) {
+				openFile(((ServerFile) next).getFile());
 			}
 		}
 	}
