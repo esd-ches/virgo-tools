@@ -87,19 +87,21 @@ public abstract class ServerFileCommonView extends CommonView implements ISelect
 					for (IServer server : getServers()) {
 						ServerProject project = ServerProjectManager.getInstance().getProject(server);
 						if (project != null) {
-							IFolder folder = project.getWorkspaceProject().getFolder(getManagedDir());
-							IResourceDelta docDelta = rootDelta.findMember(folder.getFullPath());
-							if (docDelta == null) {
-								return;
-							}
-							DeltaVisitor visitor = new DeltaVisitor();
-							try {
-								docDelta.accept(visitor);
-							} catch (CoreException e) {
-							}
-							if (visitor.change) {
-								refresh = true;
-								break;
+							for (String dir : getManagedDirs()) {
+								IFolder folder = project.getWorkspaceProject().getFolder(dir);
+								IResourceDelta docDelta = rootDelta.findMember(folder.getFullPath());
+								if (docDelta == null) {
+									return;
+								}
+								DeltaVisitor visitor = new DeltaVisitor();
+								try {
+									docDelta.accept(visitor);
+								} catch (CoreException e) {
+								}
+								if (visitor.change) {
+									refresh = true;
+									break;
+								}
 							}
 						}
 					}
@@ -118,7 +120,6 @@ public abstract class ServerFileCommonView extends CommonView implements ISelect
 	 */
 	@Override
 	protected void update() {
-		super.update();
 		currentFiles = new HashSet<IFile>();
 		for (IServer server : getServers()) {
 			Object[] elements = ((ITreeContentProvider) getCommonViewer().getContentProvider()).getElements(server);
@@ -131,6 +132,7 @@ public abstract class ServerFileCommonView extends CommonView implements ISelect
 				}
 			}
 		}
+		super.update();
 	}
 
 	/**
@@ -142,5 +144,5 @@ public abstract class ServerFileCommonView extends CommonView implements ISelect
 		ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceListener);
 	}
 
-	public abstract String getManagedDir();
+	public abstract String[] getManagedDirs();
 }

@@ -42,7 +42,6 @@ import org.eclipse.virgo.ide.runtime.core.artefacts.LocalArtefactRepository;
 import org.eclipse.virgo.ide.runtime.core.artefacts.LocalArtefactSet;
 import org.eclipse.virgo.ide.runtime.core.provisioning.RepositoryUtils;
 import org.eclipse.virgo.ide.runtime.internal.core.runtimes.RuntimeProviders;
-import org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider;
 import org.eclipse.wst.server.core.IServer;
 
 /**
@@ -69,6 +68,10 @@ public class ServerProject {
 	private List<ArtefactSet> artefactSets;
 
 	private Map<ArtefactSet, IServerProjectContainer> projectContainerForArtefactSet;
+
+	public static final String LOG_WORKSPACE_DIR = "logs";
+
+	public static final String PROPERTIES_DIR = "properties";
 
 	public ServerProject(IServer server) {
 		this.server = server;
@@ -146,30 +149,32 @@ public class ServerProject {
 	}
 
 	public void refreshDirectories() {
-		IServerRuntimeProvider provider = RuntimeProviders.getRuntimeProvider(getServer().getRuntime());
-		VirgoRuntimeProvider virgoProvider = (VirgoRuntimeProvider) provider;
 		try {
-			synchronizeRuntimeDirectory(ServerCorePlugin.PROPERTIES_DIR, virgoProvider.getConfigurationDir());
-			synchronizeRuntimeDirectory(ServerCorePlugin.LOG_DIR, virgoProvider.getLogDir() + "/logs");
-			synchronizeRuntimeDirectory(ServerCorePlugin.LOG_DIR, virgoProvider.getLogDir() + "/eventlogs");
+			IServerRuntimeProvider provider = RuntimeProviders.getRuntimeProvider(getServer().getRuntime());
+			for (String runtimeDir : provider.getServerPropertiesDirectories()) {
+				synchronizeRuntimeDirectory(PROPERTIES_DIR, runtimeDir);
+			}
+			for (String runtimeDir : provider.getServerLogDirectories()) {
+				synchronizeRuntimeDirectory(LOG_WORKSPACE_DIR, runtimeDir);
+			}
 		} catch (CoreException e) {
 			throw new RuntimeException(e);
 		}
 	}
 
 	void synchronizeRuntimeDirectory(String workspaceDirectory, String runtimeDirectory) throws CoreException {
-		IFolder folder = getWorkspaceProject().getFolder(workspaceDirectory);
+		IFolder folder = getWorkspaceProject().getFolder(workspaceDirectory + "/" + runtimeDirectory);
 		ProjectFileContainer.createFolder(folder);
 		File runtimeFolder = getServer().getRuntime().getLocation().append(runtimeDirectory).toFile();
 		File[] files = runtimeFolder.listFiles();
 		if (files != null) {
 			for (File runtimeFile : files) {
-				linkFile(folder, runtimeFile);
+				linkFile(folder, runtimeFile, runtimeDirectory);
 			}
 		}
 	}
 
-	protected void linkFile(IFolder folder, File runtimeFile) {
+	protected void linkFile(IFolder folder, File runtimeFile, String runtimeDirectory) {
 		if (!runtimeFile.isDirectory()) {
 			IFile workspaceFile = folder.getFile(runtimeFile.getName());
 			try {

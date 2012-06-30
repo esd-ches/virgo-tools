@@ -47,10 +47,25 @@ public class ServerFileLabelProvider extends LabelProvider implements ILightweig
 			return file.getName().replaceAll(REMOVE_REGEXP, "");
 		}
 		if (element instanceof ServerFileSelection) {
-			return ((ServerFileSelection) element).getLine();
+			IFile workspaceFile = ((ServerFile) element).getFile();
+			String line = ((ServerFileSelection) element).getLine();
+			if (workspaceFile.getFileExtension() != null && workspaceFile.getFileExtension().equals("properties")) {
+				String workspaceName = workspaceFile.getName();
+				if (workspaceFile.getLocation().toPortableString().contains("repository")) {
+					line += " [User]";
+				}
+			}
+			return line;
 		}
 		if (element instanceof ServerFile) {
-			return getText(((ServerFile) element).getFile());
+			IFile workspaceFile = ((ServerFile) element).getFile();
+			String serverName = workspaceFile.getLocation().lastSegment();
+			if (workspaceFile.getFileExtension() != null && workspaceFile.getFileExtension().equals("properties")) {
+				if (workspaceFile.getLocation().toPortableString().contains("repository")) {
+					serverName += " [User]";
+				}
+			}
+			return serverName.replaceAll(REMOVE_REGEXP, "");
 		}
 		return delegate.getText(element);
 	}

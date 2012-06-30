@@ -355,4 +355,18 @@ public class InvalidRuntimeProvider implements IServerRuntimeProvider {
 	public URI getConnectorBundleUri() {
 		return null;
 	}
+
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getServerPropertiesDirectories()
+	 */
+	public String[] getServerPropertiesDirectories() {
+		return null;
+	}
+
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getServerLogDirectories()
+	 */
+	public String[] getServerLogDirectories() {
+		return null;
+	}
 }

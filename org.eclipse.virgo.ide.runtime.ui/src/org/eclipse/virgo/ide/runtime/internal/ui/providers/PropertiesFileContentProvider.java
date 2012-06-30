@@ -19,8 +19,10 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
-import org.eclipse.jface.viewers.Viewer;
-import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
+import org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider;
+import org.eclipse.virgo.ide.runtime.internal.core.runtimes.RuntimeProviders;
+import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProject;
+import org.eclipse.wst.server.core.IServer;
 
 /**
  * Common content provider for views on server content.
@@ -31,9 +33,10 @@ public class PropertiesFileContentProvider extends ServerFileContentProvider {
 
 	public static final String PROPERTIES_EXT = "properties";
 
-	public PropertiesFileContentProvider() {
-		super(ServerCorePlugin.PROPERTIES_DIR);
-	}
+	public static final String[] PROPERTIES_INCLUDE_EXTS = null;
+
+	//Should be null or should we hide xml, etc?
+	public static final String[] PROPERTIES_EXCLUDE_EXTS = new String[] { "jar", "plan", "libd" };
 
 	@Override
 	public Object[] getElements(Object inputElement) {
@@ -96,11 +99,44 @@ public class PropertiesFileContentProvider extends ServerFileContentProvider {
 		return super.hasChildren(element);
 	}
 
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFileContentProvider#getServerDirectories(org.eclipse.wst.server.core.IServer)
+	 */
 	@Override
-	public void dispose() {
+	public String[] getServerDirectories(IServer server) {
+		IServerRuntimeProvider provider = RuntimeProviders.getRuntimeProvider(server.getRuntime());
+		return provider.getServerPropertiesDirectories();
 	}
 
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFileContentProvider#getBaseDirectory()
+	 */
 	@Override
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+	public String getBaseDirectory() {
+		return ServerProject.PROPERTIES_DIR;
+	}
+
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFileContentProvider#getIncludeExtensions()
+	 */
+	@Override
+	public String[] getIncludeExtensions() {
+		return PROPERTIES_INCLUDE_EXTS;
+	}
+
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFileContentProvider#getExcludeExtensions()
+	 */
+	@Override
+	public String[] getExcludeExtensions() {
+		return PROPERTIES_EXCLUDE_EXTS;
+	}
+
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFileContentProvider#isIncludeNoExtension()
+	 */
+	@Override
+	public boolean isIncludeNoExtension() {
+		return false;
 	}
 }

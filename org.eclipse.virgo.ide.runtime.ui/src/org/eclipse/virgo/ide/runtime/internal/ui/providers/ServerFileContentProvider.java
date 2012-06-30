@@ -10,6 +10,10 @@
  *******************************************************************************/
 package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.commons.lang.ArrayUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
@@ -23,13 +27,7 @@ import org.eclipse.wst.server.core.IServer;
  * 
  * @author Miles Parker
  */
-public class ServerFileContentProvider extends GenericTreeProvider {
-
-	private final String serverDir;
-
-	public ServerFileContentProvider(String serverDir) {
-		this.serverDir = serverDir;
-	}
+public abstract class ServerFileContentProvider extends GenericTreeProvider {
 
 	@Override
 	public Object[] getElements(Object inputElement) {
@@ -37,21 +35,61 @@ public class ServerFileContentProvider extends GenericTreeProvider {
 			IServer server = (IServer) inputElement;
 			ServerProject project = ServerProjectManager.getInstance().getProject(server);
 			if (project != null) {
-				IFolder folder = project.getWorkspaceProject().getFolder(serverDir);
-				try {
-					IResource[] members = folder.members();
-					Object[] serverFiles = new Object[members.length];
-					for (int i = 0; i < serverFiles.length; i++) {
-						serverFiles[i] = new ServerFile(server, (IFile) members[i]);
+				List<ServerFile> files = new ArrayList<ServerFile>();
+				for (String serverDir : getServerDirectories(server)) {
+					IFolder folder = project.getWorkspaceProject().getFolder(getBaseDirectory() + "/" + serverDir);
+					try {
+						IResource[] members = folder.members();
+						for (IResource resource : members) {
+							if (isIncludeType(resource)) {
+								files.add(new ServerFile(server, (IFile) resource));
+							}
+						}
+					} catch (CoreException e) {
+						throw new RuntimeException(e);
 					}
-					return serverFiles;
-				} catch (CoreException e) {
-					throw new RuntimeException(e);
 				}
+				return files.toArray(new Object[files.size()]);
 			}
 		}
 		return super.getElements(inputElement);
 	}
+
+	public boolean isIncludeType(IResource resource) {
+		if (resource instanceof IFile) {
+			String ext = resource.getFileExtension();
+			if (ext == null) {
+				return isIncludeNoExtension();
+			}
+			if (getIncludeExtensions() != null) {
+				return ArrayUtils.contains(getIncludeExtensions(), ext);
+			}
+			if (getExcludeExtensions() != null) {
+				return !ArrayUtils.contains(getExcludeExtensions(), ext);
+			}
+			return true;
+		}
+		return false;
+	}
+
+	public abstract String getBaseDirectory();
+
+	/**
+	 * If not null only files with include extensions will be added. Note: excluded files will be ignored in this case.
+	 */
+	public abstract String[] getIncludeExtensions();
+
+	/**
+	 * If not null files with extensions will not be added.
+	 */
+	public abstract String[] getExcludeExtensions();
+
+	public abstract String[] getServerDirectories(IServer server);
+
+	/**
+	 * Should files that don't have extensions be included?
+	 */
+	public abstract boolean isIncludeNoExtension();
 
 	@Override
 	public Object getParent(Object element) {

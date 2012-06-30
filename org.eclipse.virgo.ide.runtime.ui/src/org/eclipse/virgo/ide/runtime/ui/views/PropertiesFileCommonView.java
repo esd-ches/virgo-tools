@@ -12,8 +12,8 @@
 
 package org.eclipse.virgo.ide.runtime.ui.views;
 
-import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
+import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProject;
 
 /**
  * 
@@ -23,14 +23,6 @@ import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
  */
 @SuppressWarnings("restriction")
 public class PropertiesFileCommonView extends ServerFileCommonView {
-
-	/**
-	 * @see org.eclipse.virgo.ide.runtime.ui.views.ServerFileCommonView#getManagedDir()
-	 */
-	@Override
-	public String getManagedDir() {
-		return ServerCorePlugin.PROPERTIES_DIR;
-	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#getTreeContentId()
@@ -55,4 +47,14 @@ public class PropertiesFileCommonView extends ServerFileCommonView {
 	protected String getViewId() {
 		return ServerUiPlugin.PROPERTIES_VIEW_ID;
 	}
+
+	/**
+	 * @see org.eclipse.virgo.ide.runtime.ui.views.ServerFileCommonView#getManagedDirs[]()
+	 */
+	@Override
+	public String[] getManagedDirs() {
+		return new String[] { ServerProject.PROPERTIES_DIR };
+
+	}
+
 }

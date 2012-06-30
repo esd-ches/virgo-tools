@@ -273,11 +273,11 @@ public abstract class CommonView extends CommonNavigator implements ISelectionLi
 	 * Notify the current page that the selection has changed.
 	 */
 	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
+		List<IServer> lastServers = servers;
 		if (part instanceof ServersView2 && part != this) {
 			if (sel instanceof StructuredSelection) {
 				lastPartHint = part;
 				Iterator<Object> items = ((StructuredSelection) sel).iterator();
-				List<IServer> lastServers = servers;
 				servers = new ArrayList<IServer>();
 				while (items.hasNext()) {
 					Object next = items.next();
@@ -297,8 +297,9 @@ public abstract class CommonView extends CommonNavigator implements ISelectionLi
 			if (virgoServer != null) {
 				servers = Collections.singletonList(virgoServer);
 				lastPartHint = part;
-				getCommonViewer().setInput(virgoServer);
-				update();
+				if (!servers.equals(lastServers)) {
+					update();
+				}
 			}
 		}
 		updateContentDescription();
@@ -307,8 +308,8 @@ public abstract class CommonView extends CommonNavigator implements ISelectionLi
 
 	protected void update() {
 		getCommonViewer().setInput(servers);
-		getCommonViewer().refresh();
 		refreshAction.setEnabled(!getServers().isEmpty());
+		getCommonViewer().refresh();
 	}
 
 	/**

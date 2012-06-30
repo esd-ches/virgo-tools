@@ -171,6 +171,10 @@ public interface IServerRuntimeProvider {
 	 */
 	IServerCommand<String> getServerBundleAdminExecuteCommand(IServerBehaviour serverBehaviour, String command);
 
+	String[] getServerPropertiesDirectories();
+
+	String[] getServerLogDirectories();
+
 	/**
 	 * Callback method for version handlers to setup servers before the server starts
 	 */
