@@ -78,16 +78,20 @@ public class StandardBundleAdmin implements BundleAdmin {
 
 	@ManagedOperation(description = "Executes the given command")
 	public String execute(String cmdLine) {
+		System.err.println(cmdLine);
+
 		StringWriter writer = new StringWriter();
 		PrintWriter printWriter = new PrintWriter(writer);
 		try {
 			ServerCommandInterpreter interpreter = new ServerCommandInterpreter(cmdLine, getServices(), printWriter);
 			interpreter.execute(interpreter.nextArgument());
+
 			try {
 				writer.close();
 				printWriter.close();
 			} catch (IOException e) {
 			}
+			System.out.println(writer.toString());
 			return writer.toString();
 		} finally {
 			try {
