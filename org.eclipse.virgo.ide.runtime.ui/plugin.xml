@@ -230,7 +230,7 @@
          class="org.eclipse.virgo.ide.runtime.ui.views.ArtefactCommonView"
          icon="icons/full/obj16/virgo_obj.png"
          id="org.eclipse.virgo.ide.runtime.ui.virgoArtefacts"
-         name="Server Artifacts"
+         name="Virgo Repository"
          restorable="true">
       <description>
          Displays artifacts that exist on runtimes.
@@ -242,7 +242,7 @@
          class="org.eclipse.virgo.ide.runtime.ui.views.PropertiesFileCommonView"
          icon="icons/full/obj16/virgo_obj.png"
          id="org.eclipse.virgo.ide.runtime.ui.virgoProperties"
-         name="Server Properties"
+         name="Virgo Properties"
          restorable="true">
       <description>
          Displays properties files for runtime.
@@ -254,7 +254,7 @@
          class="org.eclipse.virgo.ide.runtime.ui.views.LogFileCommonView"
          icon="icons/full/obj16/virgo_obj.png"
          id="org.eclipse.virgo.ide.runtime.ui.virgoLog"
-         name="Server Logs"
+         name="Virgo Logs"
          restorable="true">
       <description>
          Displays logs for runtime.

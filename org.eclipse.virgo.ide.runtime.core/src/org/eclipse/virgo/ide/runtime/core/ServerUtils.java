@@ -156,6 +156,9 @@ public class ServerUtils {
 	 *            any additional search paths.
 	 */
 	public static IDependencyLocator createDependencyLocator(IRuntime serverRuntime) {
+		if (serverRuntime == null) {
+			return null;
+		}
 		try {
 			// Create DependencyLocator with path to server.config and
 			// server.profile

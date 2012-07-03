@@ -360,13 +360,13 @@ public class InvalidRuntimeProvider implements IServerRuntimeProvider {
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getServerPropertiesDirectories()
 	 */
 	public String[] getServerPropertiesDirectories() {
-		return null;
+		return new String[0];
 	}
 
 	/**
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getServerLogDirectories()
 	 */
 	public String[] getServerLogDirectories() {
-		return null;
+		return new String[0];
 	}
 }

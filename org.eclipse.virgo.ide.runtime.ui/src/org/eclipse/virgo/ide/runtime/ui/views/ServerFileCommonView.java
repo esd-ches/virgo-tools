@@ -88,19 +88,21 @@ public abstract class ServerFileCommonView extends CommonView implements ISelect
 						ServerProject project = ServerProjectManager.getInstance().getProject(server);
 						if (project != null) {
 							for (String dir : getManagedDirs()) {
-								IFolder folder = project.getWorkspaceProject().getFolder(dir);
-								IResourceDelta docDelta = rootDelta.findMember(folder.getFullPath());
-								if (docDelta == null) {
-									return;
-								}
-								DeltaVisitor visitor = new DeltaVisitor();
-								try {
-									docDelta.accept(visitor);
-								} catch (CoreException e) {
-								}
-								if (visitor.change) {
-									refresh = true;
-									break;
+								if (project.getWorkspaceProject() != null) {
+									IFolder folder = project.getWorkspaceProject().getFolder(dir);
+									IResourceDelta docDelta = rootDelta.findMember(folder.getFullPath());
+									if (docDelta == null) {
+										return;
+									}
+									DeltaVisitor visitor = new DeltaVisitor();
+									try {
+										docDelta.accept(visitor);
+									} catch (CoreException e) {
+									}
+									if (visitor.change) {
+										refresh = true;
+										break;
+									}
 								}
 							}
 						}
