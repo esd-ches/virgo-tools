@@ -115,7 +115,7 @@
     <repository>
       <id>bundlor-milestone</id>
       <layout>p2</layout>
-      <url>http://download.eclipse.org/virgo/releases/BNDLR/1.1.0.RELEASE/updatesite/</url>
+      <url>http://download.eclipse.org/virgo/release/BNDLR/1.1.0.RELEASE/updatesite/</url>
     </repository>
     <repository>
       <id>virgo-milestone</id>
