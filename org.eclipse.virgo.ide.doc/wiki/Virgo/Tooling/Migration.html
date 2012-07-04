@@ -30,12 +30,14 @@
 			</tr>
 		</table><hr/>
 		<h1 id="Migration">Migration</h1>
-		<h2 id="From_Pre_M2_to_M3">From Pre M2 to M3</h2>
+		<h2 id="From_Pre_M2_to_M4">From Pre M2 to M4</h2>
 		<h3 id="Server_Versions">Server Versions</h3>
 		<p>The good news: We have done away with the need for managing multiple server versions. This also means that we won't have to support multiple WebTools Server Runtimes and Servers which will make adding new servers and variants much easier. See 
 			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=373453" target="doc_external">https://bugs.eclipse.org/bugs/show_bug.cgi?id=373453</a> for more details.
 		</p>
-		<p>The bad news: Any Server Runtimes that you already created for Virgo Server 3.5 will not work. But since Virgo Tooling didn't work with Virgo Server 3.5 *anyway*, this is sort of a moot issue.</p>
+		<p>The bad news: Any Server Runtimes that you already created for Virgo Server 3.5 will not work -- and you will see nasty exceptions if you try to use them. But since pre-M4 Virgo Tooling didn't work with Virgo Server 3.5 
+			<i>anyway</i>, this should be a moot issue for most people.
+		</p>
 		<p>What to do: If you have an existing (i.e., created using Virgo IDE installed before 10 March 2012) Virgo Server 3.5 Runtime defined, just delete it and replace it with a new Virgo Runtime in 
 			<i>Preferences:Server:Runtime Environments</i>. You'll see that the correct version is discovered automatically. Then, open any Servers that uses the old runtime and select the new one from the Runtime Environment popup menu.
 		</p>

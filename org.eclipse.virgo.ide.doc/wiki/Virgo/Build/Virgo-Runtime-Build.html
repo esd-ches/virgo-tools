@@ -139,6 +139,10 @@ git push origin
 				<td>1.2.1</td>
 				<td>2.19 or higher</td>
 			</tr>
+			<tr>
+				<td>1.3.0</td>
+				<td>2.22 or higher</td>
+			</tr>
 		</table>
 		<h2 id="Building_Individual_Repositories">Building Individual Repositories</h2>
 		<p>To build a given git repository, first clone it: </p>
@@ -241,7 +245,6 @@ git push origin
 			<i>org.eclipse.equinox.launcher</i> used to launch the tools.
 		</p>
 		<pre>org.eclipse.virgo.build.tools=1.2.1.RELEASE
-org.eclipse.equinox.launcher=1.3.0.v20111003-1644
 </pre>
 		<p> 
 			The next step is to fetch 
@@ -261,6 +264,8 @@ org.eclipse.equinox.launcher=1.3.0.v20111003-1644
 		<pre> p2.generate-inf                  Generates p2.inf-s for all feature directories inside a wrapping 'features' directory.
  p2.install-iu                    Installs one or more IUs to a target p2 installation's profile.
  p2.install-virgo-product         Installs a Virgo product to a desired destination. Default profile(roaming) is VIRGOProfile, the environment cofigurations are ANY.
+ p2.mirror-artifacts              Mirrors an artifact set of rootIUs from a local or remote p2 repository to a local destination. The artifacts mirror app must be ran after the metadata one.
+ p2.mirror-metadata               Mirrors a metadata set of rootIUs from a local or remote p2 repository to a local destination. The metadata mirror app must be ran first.
  p2.publish-binary                Publishes a single zipped artifact with unzip instructions to a p2 repository.
  p2.publish-binary-chmod          Publishes a single zipped artifact with proper unzip and permissions instructions to a p2 repository.
  p2.publish-bundles-features      Publishes bundles and features located in separate folders in the source location to a p2 repository.
@@ -268,11 +273,37 @@ org.eclipse.equinox.launcher=1.3.0.v20111003-1644
  p2.publish-category              Categorizes features published in a p2 repository.
  p2.publish-product               Publishes a product to a p2 repository. The publishing uses ANY environment configurations.
  p2.uninstall-iu                  Uninstalls one or more IUs to a target p2 installation's profile.
+ convert-p2-to-ivy                Prepares p2 repository artifacts for Ivy publishing
 </pre>
 		<p> 
 			And an example of how to use each in the project's 
 			<i>build.xml</i> file
 		</p>
+		<pre>@Since 2.22
+&amp;lt;antcall target="convert-p2-to-ivy"&amp;gt;
+  &amp;lt;param name="tools.dir" value="${package.output.dir}"/&amp;gt;
+  &amp;lt;param name="source.plugins.dir" value="${mirrored.repository.dir}/plugins"/&amp;gt;
+  &amp;lt;param name="destination" value="${converted.repository.dir}"/&amp;gt;
+  &amp;lt;param name="offset.to.virgo.build" value="../../../..virgo-build"/&amp;gt;
+  &amp;lt;param name="updated.build.versions.location" value="${converted.repository.dir}/build.versions"/&amp;gt;
+&amp;lt;/antcall&amp;gt;
+</pre>
+		<pre>@Since 2.22
+&amp;lt;antcall target="p2.mirror-metadata"&amp;gt;
+  &amp;lt;param name="tools.dir" value="${package.output.dir}"/&amp;gt;
+  &amp;lt;param name="source" value="file:${repository.dir}"/&amp;gt;
+  &amp;lt;param name="destination" value="${mirrored.repository.dir}"/&amp;gt;
+  &amp;lt;param name="roots" value="testBundle"/&amp;gt;
+&amp;lt;/antcall&amp;gt;
+</pre>
+		<pre>@Since 2.22
+&amp;lt;antcall target="p2.mirror-artifacts"&amp;gt;
+  &amp;lt;param name="tools.dir" value="${package.output.dir}"/&amp;gt;
+  &amp;lt;param name="source" value="file:${repository.dir}"/&amp;gt;
+  &amp;lt;param name="destination" value="${mirrored.repository.dir}"/&amp;gt;
+  &amp;lt;param name="roots" value="testBundle"/&amp;gt;
+&amp;lt;/antcall&amp;gt;
+</pre>
 		<pre>@Since 2.19
 &amp;lt;antcall target="p2.generate-inf"&amp;gt;
   &amp;lt;param name="source" value="${target.dir}/assembly/features"/&amp;gt;
@@ -360,7 +391,57 @@ org.eclipse.equinox.launcher=1.3.0.v20111003-1644
 			<i>&lt;variable&gt;</i>'&lt;/code&gt; is the relevant property name in build.versions and &lt;code&gt;'
 			<i>&lt;new version&gt;</i>'&lt;/code&gt; is the replacement version. The script will report the changes it makes and may issue warnings, so pay attention to its output. 
 		</p>
-		<p>Please ensure you are running the latest version of &lt;code&gt;update-dependency&lt;/code&gt; script by updating &lt;code&gt;web-server&lt;/code&gt; git repository. </p>
+		<p>Please ensure you are running the latest version of &lt;code&gt;update-dependency&lt;/code&gt; script by updating &lt;code&gt;web-server&lt;/code&gt; git repository.</p>
+		<h3 id="Updating_Eclipse_dependencies">Updating Eclipse dependencies</h3>
+		<p>Virgo can consume artifacts from both Eclipse p2 repositories and Orbit. The Juno contribution is even required to consume the same artifacts that are present in Orbit and the other Juno-contributed p2 repositories.
+			As of version 2.22 virgo-build is capable of doing this by introducing new ant targets and a new git repository called "eclipse-mirror". 
+			Building this repository mirrors the artifacts from a specified p2 repository, adds Ivy metadata and publishes them to the Ivy repositories at build.eclipse.org. From then on it's business as usual for virgo-build.</p>
+		<p>Virgo's Eclipse dependencies are updated manually, on-demand, without this being an automatic step of a ripple or a release process.</p>
+		<p>Here's how to do it:</p>
+		<p>
+			<b>1.</b> The build.properties file in the eclipse-mirror repository contains two important properties
+		</p>
+		<pre>mirror.source - the URI to the p2 repository from which we will mirror
+mirror.ius - a coma-separated list of symbolic names that we want to mirror locally
+</pre>
+		<p>Prior triggering the update process these properties must be set with the desired values. Note the source bundles need to be described in the IU list as well if they are needed. </p>
+		<p>Here's an example of both properties:</p>
+		<pre>mirror.ius=\
+   org.eclipse.osgi,\
+   org.eclipse.osgi.source
+</pre>
+		<pre>mirror.source=http://download.eclipse.org/releases/juno
+</pre>
+		<p>Local locations are accepted as well:</p>
+		<pre>mirror.source=file:/&lt;location-to-local-p2-repo&gt;
+</pre>
+		<p>
+			<b>2.</b> Trigger ant build of the eclipse-mirror repository like this:
+		</p>
+		<pre>ant clean update-eclipse-artifacts
+</pre>
+		<p>Even if some versions are already published the process will overwrite them, so it won't fail.
+			As a result of this operation a new 
+			<i>mirrored.build.versions</i> file is generated in the repository root that contains the newly mirrored versions. In order to add them for propagation during a ripple copy the desired versions in the 
+			<i>build.versions</i> file of the 
+			<i>eclipse-mirror</i> repository.
+		</p>
+		<p>All Eclipse artifacts are published with the distinctive Ivy organisation: "org.eclipse.virgo.mirrored"</p>
+		<p>
+			<b>3.</b> Trigger a ripple or release to let the scripts propagate the updated versions upstream.
+		</p>
+		<p>
+			<b>Important:</b> 
+		</p>
+		<p>
+			<i>'- The conversion from p2 to Ivy currently ignores any dependencies between bundles. Respecting these dependencies is currently under development but until then the mirrored and converted bundles and their dependencies need to be referenced explicitly.</i>'
+		</p>
+		<ul style="list-style: square">
+			<li>If the specified mirror.source contains more than one version of an IU all of them will be mirrored and converted which may lead to problems with the versions propagation. Use source repositories with single version, e.g. the release train repositories. Orbit usually contains more than one version, and often we are not using the latest one available so mirroring Orbit involves a manual step of choosing which version to use and deleting the others from the resulting build.versions file.</li>
+		</ul>
+		<ul style="list-style: square">
+			<li>Keep in mind the time to mirror a large number of artifacts depends on your network and how well you can connect to Eclpse servers. Usually it takes some time, so go treat yourself with a cup of coffee :-)</li>
+		</ul>
 		<h2 id="Rippling">Rippling</h2>
 		<p>Since the Virgo components form a directed, acyclic graph, changing the graph to use a new version of a specific component involves not only updating that version throughout the graph, but also updating the versions of the components which have been changed. This is the tedious process known as 
 			<i>rippling</i> and so the &lt;code&gt;'
@@ -504,7 +585,6 @@ Optional arguments:
    release.type=release
    build.stamp=RELEASE
 </pre>
-		<p>Note: if you are releasing bundlor, make sure to update the version of the Maven Bundlor plugin in plugin.xml. </p>
 		<p>3. Do the build, commit the changes and then tag it with the version and release type appropriate. In order for publishing to eclipse to work you must have your ssh public key registered with the virgoBuild account. </p>
 		<pre>      cd build-xxx
    ant clean clean-integration clean-ivy test package publish-ivy publish-maven -Declipse.committerId=gnormington
@@ -513,6 +593,12 @@ Optional arguments:
    git commit -m 'Build properties for the release 1.1.0.RELEASE'
    git tag 1.1.0.RELEASE 
 </pre>
+		<p>Note: if you need to publish to p2, add the target publish-updatesite-download to the above list.</p>
+		<p>Note: if you are building bundlor, until 
+			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=384139" target="doc_external">bug 384139</a> is fixed, remember to update the version in org.eclipse.virgo.bundlor.maven/src/main/resources/META-INF/maven/plugin.xml follow these 
+			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=379061#c3" target="doc_external">instructions</a> for updating the composite p2 repository. Also, until 
+			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=384138" target="doc_external">bug 384138</a> is fixed the update site needs manually relocating.
+		</p>
 		<p>4. After the tag go back to master and delete the release branch. The branch will still be available from the tag. </p>
 		<pre>      git checkout master
    git branch -D release
@@ -529,7 +615,7 @@ Optional arguments:
 </pre>
 		<p>&lt;span style="color:#ff0000"&gt;Once this is done the usual steps to 
 			<b>make the release available on download servers</b> and to make announcements should be followed. For Eclipse, a committer with a full shell should sftp in to download1.eclipse.org and beam the file up.&lt;/span&gt; More information available 
-			<a href="http://wiki.eclipse.org/IT_Infrastructure_Doc#Put_files_on_the_download_server.3F" target="doc_external">here</a>. 
+			<a href="http://wiki.eclipse.org/IT_Infrastructure_Doc#Put_files_on_the_download_server.3F" target="doc_external">here</a>.
 		</p>
 		<h2 id="Releasing_a_Multi_Repository_Project">Releasing a Multi Repository Project</h2>
 		<p>This is for any release of the full Virgo Server. It makes use of the Releasolor ruby script. This is very similar to Ripplor but it also performs the steps above for a single repository to all the repositories it visits. Only committers can produce releases. </p>

@@ -1,0 +1,35 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;6.&nbsp;OSGi Profiles and Bundlor</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Bundlor User Guide"><link rel="up" href="index.html" title="Bundlor User Guide"><link rel="prev" href="ch05s05.html" title="Example Bundlor Manifest Template"><link rel="next" href="ch06s02.html" title="Using OSGi profiles with Bundlor"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch05s05.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch06s02.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter&nbsp;6.&nbsp;OSGi Profiles and Bundlor"><div class="titlepage"><div><div><h2 class="title"><a name="OSGi.profile"></a>Chapter&nbsp;6.&nbsp;OSGi Profiles and Bundlor</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="ch06.html#OSGi-profiles.about">Overview of OSGi profiles</a></span></dt><dt><span class="section"><a href="ch06s02.html">Using OSGi profiles with Bundlor</a></span></dt></dl></div><p>
+		When managing and transforming bundles it
+		can become difficult to remember which packages are boot delegated, which are exported from the system bundle,
+		and which are from other bundles in your system. This information is important because you typically do not want
+		to import packages into your own application that are boot delegated, you want to import system bundle packages
+		at version <code class="literal">0</code>, and you want to define custom imports for all the rest of the bundles. Trying
+		to keep track of which packages are in each of these categories can be error prone; similarly, defining template
+		entries for them in your manifest template can be time-consuming and tedious.
+	</p><p>
+		To solve this problem, you can specify that Bundlor take an
+		<a class="link" href="ch06.html#OSGi-profiles.about" title="Overview of OSGi profiles">OSGi profile</a> as input and automatically add template entries for boot
+		delegated packages and system bundles. These import entries would ignore boot-delegated packages and set the
+		version of system bundles to <code class="literal">version="0"</code>. This feature is available for all Bundlor front
+		ends: command-line, ANT and Maven.
+	</p><div class="section" title="Overview of OSGi profiles"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="OSGi-profiles.about"></a>Overview of OSGi profiles</h2></div></div></div><p>
+			An OSGi profile defines the packages that a particular OSGi runtime (such as Virgo) exports from the
+			system bundle and the packages that it delegates to the boot class loader. An OSGi profile isn't an actual
+			file; rather, it is two properties that are well known to an OSGi runtime. However, when you pass these
+			properties to Bundlor, you pass them as a file, as described in the next section. The properties that make
+			up an OSGi profile are as follows.
+		</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
+				The <code class="literal">org.OSGi.framework.system.packages</code> property defines the packages exported from
+				the system bundle.
+			</li><li class="listitem">
+				The <code class="literal">org.OSGi.framework.bootdelegation</code> property defines the packages that are boot
+				delegated.
+			</li></ul></div><p>
+			If you are using Virgo as your OSGi runtime, see the file
+			<code class="literal">$VIRGO_HOME/configuration/java6-server.profile</code> for its OSGi profile, where
+			<code class="literal">$VIRGO_HOME</code> refers to the main installation directory of Virgo. If you are using
+			another OSGi runtime, such as Equinox, then see their documentation for their OSGi profile.
+		</p><p>
+			For additional information about the syntax of the values of these properties, see 
+			the <a class="ulink" href="http://www.OSGi.org/Specifications/HomePage" target="_top">OSGi Core specification</a>.
+		</p></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch05s05.html">Prev</a>&nbsp;</td><td align="center" width="20%">&nbsp;</td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch06s02.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

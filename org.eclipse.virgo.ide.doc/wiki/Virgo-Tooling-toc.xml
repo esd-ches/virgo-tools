@@ -6,20 +6,14 @@
 		<topic href="wiki/Virgo/Tooling/Installation.html#Install_Virgo" label="Install Virgo"></topic>
 		<topic href="wiki/Virgo/Tooling/Installation.html#Update_Sites" label="Update Sites"></topic>
 	</topic>
-	<topic href="wiki/Virgo/Tooling/Known-Issues.html" label="Known Issues">
-		<topic href="wiki/Virgo/Tooling/Known-Issues.html#M4_Candidate_.28Current_Snapshot.29" label="M4 Candidate (Current Snapshot)"></topic>
-		<topic href="wiki/Virgo/Tooling/Known-Issues.html#M3" label="M3"></topic>
-		<topic href="wiki/Virgo/Tooling/Known-Issues.html#Milestone_M2" label="Milestone M2">
-			<topic href="wiki/Virgo/Tooling/Known-Issues.html#Version_Compatibility" label="Version Compatibility"></topic>
-		</topic>
-	</topic>
+	<topic href="wiki/Virgo/Tooling/Known-Issues.html" label="Known Issues"></topic>
 	<topic href="wiki/Virgo/Tooling/Notes.html" label="Notes">
 		<topic href="wiki/Virgo/Tooling/Notes.html#Web_Application_Bundles" label="Web Application Bundles"></topic>
 		<topic href="wiki/Virgo/Tooling/Notes.html#Bundlor" label="Bundlor"></topic>
 		<topic href="wiki/Virgo/Tooling/Notes.html#PDE.2FEquinox_Bundles_not_supported_yet" label="PDE/Equinox Bundles not supported yet"></topic>
 	</topic>
 	<topic href="wiki/Virgo/Tooling/Migration.html" label="Migration">
-		<topic href="wiki/Virgo/Tooling/Migration.html#From_Pre_M2_to_M3" label="From Pre M2 to M3">
+		<topic href="wiki/Virgo/Tooling/Migration.html#From_Pre_M2_to_M4" label="From Pre M2 to M4">
 			<topic href="wiki/Virgo/Tooling/Migration.html#Server_Versions" label="Server Versions"></topic>
 		</topic>
 		<topic href="wiki/Virgo/Tooling/Migration.html#From_Spring_Source_and_Virgo_2.x_Tooling" label="From Spring Source and Virgo 2.x Tooling"></topic>

@@ -14,6 +14,7 @@
 	<!--Assumes that documentation git repos is parallel to virgo.ide location. This will break on Hudson! We should replace with ant git.-->
 	<property name="virgo.docs.dir" value="../../org.eclipse.virgo.documentation" />
 	<property name="greenpages.docs.dir" value="../../org.eclipse.virgo.sample-greenpages/guide" />
+	<property name="bundlor.docs.dir" value="../../org.eclipse.virgo.bundlor/user-guide" />
 	<property name="wiki.docs.dir" value="${virgo.docs.dir}/wiki-guide" />
 
 	<property name="book" value="tooling" />
@@ -189,6 +190,21 @@
 		<delete dir="${virgo.docs.dir}/greenpages-guide" />
 	</target>
 
+	<target name="build-bundlor" depends="clean-temp">
+		<echo>${bundlor.docs.dir}/bundlor-guide</echo>
+		<copy todir="${virgo.docs.dir}/bundlor-guide">
+			<fileset dir="${bundlor.docs.dir}" erroronmissingdir="true">
+				<include name="**" />
+				<include name="images/**/**" />
+			</fileset>
+		</copy>
+		<move file="${virgo.docs.dir}/bundlor-guide/src/user-guide.xml" tofile="${virgo.docs.dir}/bundlor-guide/src/virgo-bundlor-guide.xml" failonerror="false"/>
+		<antcall target="build-book">
+			<param name="book" value="bundlor" />
+		</antcall>
+		<delete dir="${virgo.docs.dir}/bundlor-guide" />
+	</target>
+	
 	<target name="build-tooling-docs" depends="clean-temp">
 		<antcall target="build-book">
 			<param name="book" value="tooling" />
@@ -211,7 +227,7 @@
 		</copy>
 	</target>
 
-	<target name="build-all-books" depends="build-tooling-docs, build-runtime-docs, build-greenpages, build-wiki">
+	<target name="build-all-books" depends="build-bundlor, build-tooling-docs, build-runtime-docs, build-greenpages, build-wiki">
 		<delete dir="${temp.dir}" />
 	</target>
 </project>

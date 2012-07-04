@@ -1,0 +1,30 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Example Bundlor Manifest Template</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Bundlor User Guide"><link rel="up" href="ch05.html" title="Chapter&nbsp;5.&nbsp;Manifest Templates"><link rel="prev" href="ch05s04.html" title="Specifying automatic version expansion of imported packages based on a pattern"><link rel="next" href="ch06.html" title="Chapter&nbsp;6.&nbsp;OSGi Profiles and Bundlor"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch05s04.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch06.html">Next</a></td></tr></table><hr></div><div class="section" title="Example Bundlor Manifest Template"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="manifest.template.example"></a>Example Bundlor Manifest Template</h2></div></div></div><p>
+			The following shows a simple example of a Bundlor manifest template file, with a description after the
+			sample.
+		</p><pre class="programlisting">
+<span class="bold"><strong>Bundle-ManifestVersion</strong></span>: 2
+<span class="bold"><strong>Bundle-SymbolicName</strong></span>: org.springframework.binding
+Bundle-Name: ${bundle.name}
+Import-Package: 
+ ognl;version="[2.6.9, 3.0.0)";resolution:=optional,
+ org.jboss.el;version="[2.0.0, 3.0.0)";resolution:=optional
+Import-Template: 
+ org.springframework.*;version="[2.5.4.A, 3.0.0)",
+ org.apache.commons.logging;version="[1.1.1, 2.0.0)",
+ javax.el;version="[2.1.0, 3.0.0)";resolution:=optional,
+ ognl;version="[2.6.9, 3.0.0)";resolution:=optional,
+ org.jboss.el;version="[2.0.0, 3.0.0)";resolution:=optional
+		</pre><p>
+			The headers marked in bold are required in all manifest templates unless the jar already contains a manifest
+			with those headers.
+		</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><code class="literal">Bundle-ManifestVersion</code>: This should always be 2</li><li class="listitem"><code class="literal">Bundle-SymbolicName</code>: specifies a unique name for the bundle of
+				<code class="literal">org.springframework.binding</code></li><li class="listitem"><code class="literal">Bundle-Name</code>: specifies a human-readable name for the bundle. The example shows how to
+				use a property placeholder <code class="literal">${bundle.name}</code>, which at runtime Bundlor will substitute
+				with an actual value, such as <code class="literal">Spring Binding</code>.
+			</li><li class="listitem"><code class="literal">Import-Package</code>: hard-codes two packages that will be imported (
+				<code class="literal">ognl</code> and <code class="literal">org.jboss.el</code> in the generated manifest. Bundlor isn't
+				infallible; this lets you add imports that it misses.
+			</li><li class="listitem"><code class="literal">Import-Template</code>: specifies the versions for the package imports that Bundlor
+				generates, marking <code class="literal">javax.el</code>, <code class="literal">ognl</code>, and
+				<code class="literal">org.jboss.el</code> optional.
+			</li></ul></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch05s04.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch05.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch06.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

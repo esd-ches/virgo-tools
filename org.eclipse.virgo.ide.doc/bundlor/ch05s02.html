@@ -1,0 +1,41 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Manifest Template Format</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Bundlor User Guide"><link rel="up" href="ch05.html" title="Chapter&nbsp;5.&nbsp;Manifest Templates"><link rel="prev" href="ch05.html" title="Chapter&nbsp;5.&nbsp;Manifest Templates"><link rel="next" href="ch05s03.html" title="Specifying property placeholders"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch05.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch05s03.html">Next</a></td></tr></table><hr></div><div class="section" title="Manifest Template Format"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="manifest.template.format"></a>Manifest Template Format</h2></div></div></div><p>
+			The following table lists the headers you can add to the manifest template, in addition to the standard
+			manifest headers.
+		</p><div class="table"><a name="N103EC"></a><p class="title"><b>Table&nbsp;5.1.&nbsp;Headers for Manifest Template</b></p><div class="table-contents"><table summary="Headers for Manifest Template" border="1"><colgroup><col><col></colgroup><thead><tr><th>Header</th><th>Description</th></tr></thead><tbody><tr><td><code class="literal">Excluded-Exports</code></td><td>
+							A comma-separated list of packages that must not be added to the manifest's
+							<code class="literal">Export-Package</code> header. This is useful for preventing implementation
+							packages from being exported.
+						</td></tr><tr><td><code class="literal">Excluded-Imports</code></td><td>
+							By default, Bundlor adds imports for every package that Bundlor determines is referenced by
+							the code or for special files in the jar. Use this header to specify a comma-separated list
+							of packages for which imports Bundlor will <span class="emphasis"><em>not</em></span> generate.
+						</td></tr><tr><td><code class="literal">Export-Template</code></td><td>
+							By default, Bundlor versions all exported packages at the specified
+							<code class="literal">Bundle-Version</code>. Use this header to specify that individual exported
+							packages be exported at different versions. For example,
+							<code class="literal">Export-Template com.foo.*;version="1.5"</code> results in Bundlor versioning any
+							<code class="literal">Export-Package</code> entries for <code class="literal">com.foo</code> or its subpackages
+							at <code class="literal">1.5</code>.
+						</td></tr><tr><td><code class="literal">Ignored-Existing-Headers</code></td><td>
+							If the JAR for which you are generating a manifest already contains an OSGi-compliant
+							manifest, use this template header to list headers in the original manifest which Bundlor
+							should ignore.
+						</td></tr><tr><td><code class="literal">Import-Template</code></td><td>
+							Use this header to augment package imports that Bundlor generates via bytecode and special
+							file analysis. Typically you use the header to version the import and, in some cases, to
+							mark them as optional. When you use this header to version the import, you can optionally
+							specify a version expansion pattern so that Bundlor sets the version to a range rather than
+							a single version. To use the header, set its value to a comma-separated list of package
+							names and attributes.
+						</td></tr><tr><td><code class="literal">Version-Patterns</code></td><td>
+							Use this header to declare one or more version expansion patterns and give each one a name.
+							You can then use these named patterns in the <code class="literal">Import-Template</code> header if
+							you want to specify an expansion pattern for the <code class="literal">version</code> of an imported
+							package. This feature is described in detail later in this section. 
+						</td></tr></tbody></table></div></div><br class="table-break"><p>
+			A wilcard '<code class="literal">*</code>' at the end of the package name is supported to match multiple packages. For
+			example, the header <code class="literal">Import-Template: com.foo;version=[1.0,2.0);resolution:=optional,com.bar.*;version="[1.5,1.6)"</code>
+			will cause any import generated for the <code class="literal">com.foo</code> package to be versioned at 1.0
+			(inclusive) to 2.0 (exclusive) and to be considered optional, and for any import of
+			<code class="literal">com.bar</code> or its sub-packages to be versioned at 1.5 (inclusive) to 1.6 (exclusive).
+		</p></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch05.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch05.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch05s03.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

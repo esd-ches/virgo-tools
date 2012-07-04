@@ -21,7 +21,9 @@
 			<topic href="wiki/Virgo/Build/Virgo-Runtime-Build.html#Example" label="Example"></topic>
 		</topic>
 		<topic href="wiki/Virgo/Build/Virgo-Runtime-Build.html#Configuring_p2_Publishing_for_Individual_Repositories" label="Configuring p2 Publishing for Individual Repositories"></topic>
-		<topic href="wiki/Virgo/Build/Virgo-Runtime-Build.html#Updating_Dependencies" label="Updating Dependencies"></topic>
+		<topic href="wiki/Virgo/Build/Virgo-Runtime-Build.html#Updating_Dependencies" label="Updating Dependencies">
+			<topic href="wiki/Virgo/Build/Virgo-Runtime-Build.html#Updating_Eclipse_dependencies" label="Updating Eclipse dependencies"></topic>
+		</topic>
 		<topic href="wiki/Virgo/Build/Virgo-Runtime-Build.html#Rippling" label="Rippling">
 			<topic href="wiki/Virgo/Build/Virgo-Runtime-Build.html#When_should_Ripplor_be_used.3F" label="When should Ripplor be used?"></topic>
 			<topic href="wiki/Virgo/Build/Virgo-Runtime-Build.html#Usage" label="Usage"></topic>

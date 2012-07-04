@@ -33,7 +33,7 @@
 		<p>Virgo Tomcat Server 3.0 conforms more strictly to the OSGi web applications specification and does not apply default values to some of the manifest headers of a WAB like it used to in Virgo 2.x.</p>
 		<p>You can easily check whether this is the problem as follows.</p>
 		<p>As a migration aid, which may be removed in future releases, the previous behaviour may be re-instated by 
-			<a href="http://www.eclipse.org/virgo/documentation/virgo-documentation-3.0.0.RELEASE/docs/virgo-user-guide/html/ch11s08.html" target="doc_external">configuring</a> the Web Integration Layer. Please note there is a 
+			<a href="http://www.eclipse.org/virgo/documentation/virgo-documentation-3.0.0.RELEASE/docs/virgo-user-guide/html/ch11s08.html" target="doc_external">configuring</a> the Web Integration Layer to set WABHeaders=defaulted in $SERVER_HOME/repository/ext/org.eclipse.virgo.web.properties. Please note there is a 
 			<a href="http://www.eclipse.org/virgo/documentation/virgo-documentation-3.0.0.RELEASE/docs/virgo-user-guide/html/apbs07.html" target="doc_external">known issue</a> with certain WAR files which may be worked around using this migration aid.
 		</p><hr/>
 		<table class="navigation" style="width: 100%;" border="0" summary="navigation">

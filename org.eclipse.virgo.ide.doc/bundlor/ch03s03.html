@@ -1,0 +1,46 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Apache Maven Quickstart</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Bundlor User Guide"><link rel="up" href="ch03.html" title="Chapter&nbsp;3.&nbsp;Quickstart"><link rel="prev" href="ch03s02.html" title="Apache ANT Quickstart"><link rel="next" href="ch04.html" title="Chapter&nbsp;4.&nbsp;Usage"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch03s02.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch04.html">Next</a></td></tr></table><hr></div><div class="section" title="Apache Maven Quickstart"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="quickstart.maven"></a>Apache Maven Quickstart</h2></div></div></div><p>The Maven plugin allows Bundlor to be run from inside any Maven project.</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Add the Eclipse Virgo build and SpringSource Enterprise Bundle Repository to the <code class="filename">pom.xml</code> file</p><pre class="programlisting">&lt;pluginRepositories&gt;
+  &lt;pluginRepository&gt;
+    &lt;id&gt;eclipse.virgo.build.bundles.@release.type@&lt;/id&gt;
+    &lt;name&gt;Eclipse Virgo Build&lt;/name&gt;
+    &lt;url&gt;http://build.eclipse.org/rt/virgo/maven/bundles/@release.type@&lt;/url&gt;
+  &lt;/pluginRepository&gt;
+  &lt;pluginRepository&gt;
+    &lt;id&gt;com.springsource.repository.bundles.external&lt;/id&gt;
+    &lt;name&gt;SpringSource Enterprise Bundle Repository - External Bundle Releases&lt;/name&gt;
+    &lt;url&gt;http://repository.springsource.com/maven/bundles/external&lt;/url&gt;
+  &lt;/pluginRepository&gt;
+  ...
+&lt;/pluginRepositories&gt;</pre></li><li class="listitem"><p>
+				Use the <code class="literal">bundlor</code> plugin in the <code class="filename">pom.xml</code> file. See
+				<a class="xref" href="ch04s03.html" title="Apache Maven Usage">Apache Maven Usage</a> for details about the parameters of the plugin.
+			</p><pre class="programlisting">&lt;build&gt;
+  &lt;plugins&gt;
+    &lt;plugin&gt;
+      &lt;groupId&gt;org.eclipse.virgo.bundlor&lt;/groupId&gt;
+      &lt;artifactId&gt;org.eclipse.virgo.bundlor.maven&lt;/artifactId&gt;
+      &lt;version&gt;1.0.0&lt;/version&gt;
+      &lt;executions&gt;
+        &lt;execution&gt;
+          &lt;id&gt;bundlor&lt;/id&gt;
+          &lt;goals&gt;
+            &lt;goal&gt;bundlor&lt;/goal&gt;
+          &lt;/goals&gt;
+        &lt;/execution&gt;
+      &lt;/executions&gt;
+    &lt;/plugin&gt;
+    &lt;plugin&gt;
+      &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+      &lt;artifactId&gt;maven-jar-plugin&lt;/artifactId&gt;
+      &lt;version&gt;2.4&lt;/version&gt;
+      &lt;configuration&gt;
+        &lt;archive&gt;
+          &lt;manifestFile&gt;
+            target/classes/META-INF/MANIFEST.MF
+          &lt;/manifestFile&gt;
+        &lt;/archive&gt;
+      &lt;/configuration&gt;
+    &lt;/plugin&gt;
+    ...
+  &lt;/plugins&gt;
+  ...
+&lt;/build&gt;</pre></li></ol></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch03s02.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch03.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch04.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

@@ -1,0 +1,44 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;4.&nbsp;Usage</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Bundlor User Guide"><link rel="up" href="index.html" title="Bundlor User Guide"><link rel="prev" href="ch03s03.html" title="Apache Maven Quickstart"><link rel="next" href="ch04s02.html" title="Apache ANT Usage"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch03s03.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch04s02.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter&nbsp;4.&nbsp;Usage"><div class="titlepage"><div><div><h2 class="title"><a name="usage"></a>Chapter&nbsp;4.&nbsp;Usage</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="ch04.html#usage.command.line">Command-Line Usage</a></span></dt><dd><dl><dt><span class="section"><a href="ch04.html#usage.command.line.syntax">Command Syntax</a></span></dt><dt><span class="section"><a href="ch04.html#usage.command.line.reference">Command Line Reference</a></span></dt></dl></dd><dt><span class="section"><a href="ch04s02.html">Apache ANT Usage</a></span></dt><dd><dl><dt><span class="section"><a href="ch04s02.html#usage.ant.setup">ANT Setup</a></span></dt><dt><span class="section"><a href="ch04s02.html#usage.ant.reference">ANT Task Reference</a></span></dt><dt><span class="section"><a href="ch04s02.html#usage.ant.example">ANT Task Examples</a></span></dt></dl></dd><dt><span class="section"><a href="ch04s03.html">Apache Maven Usage</a></span></dt><dd><dl><dt><span class="section"><a href="ch04s03.html#usage.maven.setup">Maven Setup</a></span></dt><dt><span class="section"><a href="ch04s03.html#usage.maven.reference">Maven Plugin Reference</a></span></dt><dt><span class="section"><a href="ch04s03.html#usage.maven.example">Maven Plugin Examples</a></span></dt></dl></dd></dl></div><div class="section" title="Command-Line Usage"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="usage.command.line"></a>Command-Line Usage</h2></div></div></div><p>The command line client allows Bundlor to be run from the command line of any platform</p><div class="section" title="Command Syntax"><div class="titlepage"><div><div><h3 class="title"><a name="usage.command.line.syntax"></a>Command Syntax</h3></div></div></div><p>To use Bundlor run the following for UNIX and Windows respectively.</p><pre class="programlisting">$BUNDLOR_HOME/bin/bundlor.sh [options] </pre><pre class="programlisting">%BUNDLOR_HOME%\bin\bundlor.bat [options] </pre></div><div class="section" title="Command Line Reference"><div class="titlepage"><div><div><h3 class="title"><a name="usage.command.line.reference"></a>Command Line Reference</h3></div></div></div><div class="section" title="Command Line Parameters"><div class="titlepage"><div><div><h4 class="title"><a name="N1014B"></a>Command Line Parameters</h4></div></div></div><p>
+				The following table lists all the parameters that you can specify for the <code class="literal">bundlor</code>
+				command line client.
+			</p><div class="table"><a name="N10154"></a><p class="title"><b>Table&nbsp;4.1.&nbsp;Attributes</b></p><div class="table-contents"><table summary="Attributes" border="1"><colgroup><col><col><col></colgroup><thead><tr><th>Attribute</th><th>Description</th><th>Required</th></tr></thead><tbody><tr><td>-f</td><td>
+								Whether Bundlor should cause a build failure when there are warnings about the
+								resulting manifest
+							</td><td>No - defaults to <code class="literal">false</code></td></tr><tr><td>-i &lt;path&gt;</td><td>
+								The path to the input to create a manifest for. This can either be a directory or a JAR
+								file.
+							</td><td>Yes</td></tr><tr><td>-m &lt;path&gt;</td><td>
+								The path to the manifest template. See <a class="xref" href="ch05.html" title="Chapter&nbsp;5.&nbsp;Manifest Templates">Chapter&nbsp;5.&nbsp;<i>Manifest Templates</i></a> for details.
+							</td><td>No</td></tr><tr><td>-p &lt;path&gt;</td><td>
+								The path to the OSGi profile.  See <a class="xref" href="">???</a> for details.
+							</td><td>No</td></tr><tr><td>-o &lt;path&gt;</td><td>
+								<p>
+									The path to write the manifest to. This can either be a directory, a JAR file, or
+									not specified.
+								</p>
+								<p>
+									If a directory is specified, the manifest will be written to
+									<code class="literal">${directory}/META-INF/MANIFEST.MF</code>.
+								</p>
+								<p>
+									If a JAR file is specified, the manifest will be written as the manifest for that
+									JAR file.
+								</p>
+								<p>
+									If nothing is specified, the manifest will be written to
+									<code class="literal">System.out</code>.
+								</p>
+							</td><td>No - defaults to <code class="literal">System.out</code></td></tr><tr><td>-r &lt;path&gt;</td><td>
+								The path to a properties file used for substitution.  See
+								<a class="xref" href="ch05s03.html" title="Specifying property placeholders">Specifying property placeholders</a> for details.
+							</td><td>No</td></tr></tbody></table></div></div><br class="table-break"></div><div class="section" title="Command Line Property Values"><div class="titlepage"><div><div><h4 class="title"><a name="N101AF"></a>Command Line Property Values</h4></div></div></div><p>
+				Property substitution values can be optionally specified on the command line instead of as an external file
+				using the <code class="literal">-Dproperty=value</code> parameter.
+			</p><pre class="programlisting">% ./bundlor.sh \
+-i ./org.springframework.integration.jar \
+-m ./template.mf \
+-o ./target/org.springframework.integration.jar \
+-Dname="Spring Integration"
+
+Transformed bundle written to ./target/org.springframework.integration.jar
+%</pre><p>See <a class="xref" href="ch05s03.html" title="Specifying property placeholders">Specifying property placeholders</a> for details.</p></div></div></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch03s03.html">Prev</a>&nbsp;</td><td align="center" width="20%">&nbsp;</td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch04s02.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

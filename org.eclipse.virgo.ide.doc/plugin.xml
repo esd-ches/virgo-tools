@@ -19,6 +19,10 @@
       primary="false"></toc>
       <toc
       category="virgo"
+      file="bundlor/toc.xml"
+      primary="false"></toc>
+      <toc
+      category="virgo"
       file="greenpages/toc.xml"
       primary="false"></toc>
       <toc

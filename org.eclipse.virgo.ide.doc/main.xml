@@ -9,6 +9,9 @@
 <topic label="Tooling Guide" > 
    <link toc="tooling/toc.xml"/>
    </topic>
+<topic label="Bundlor Guide" > 
+   <link toc="bundlor/toc.xml"/>
+   </topic>
 <topic label="Greenpages Example Guide" > 
    <link toc="greenpages/toc.xml"/>
    </topic>
