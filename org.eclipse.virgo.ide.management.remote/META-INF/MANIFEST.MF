@@ -15,7 +15,8 @@ Import-Package: org.eclipse.gemini.blueprint,
  org.springframework.jmx.export,
  org.springframework.jmx.export.annotation,
  org.springframework.jmx.export.assembler,
- org.springframework.jmx.export.naming
+ org.springframework.jmx.export.naming,
+ org.apache.felix.service.command;status=provisional
 Bundle-Vendor: Eclipse.org - Virgo
 Export-Package: org.eclipse.virgo.ide.management.remote
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
