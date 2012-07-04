@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
 
-<target name="Virgo Target" sequenceNumber="40">
+<target name="Virgo Target" sequenceNumber="52">
 <locations>
-<location path="${eclipse_home}" type="Profile"/>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
-<unit id="org.eclipse.virgo.bundlor.feature.group" version="1.1.0.RELEASE"/>
-<repository location="http://download.eclipse.org/virgo/release/BNDLR/1.1.0.RELEASE/updatesite"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.apache.commons.collections.source" version="3.2.0.v201005080500"/>
 <unit id="org.apache.commons.collections" version="3.2.0.v201005080500"/>
 <unit id="org.apache.commons.lang" version="2.6.0.v201205030909"/>
@@ -20,21 +15,33 @@
 <unit id="org.slf4j.log4j.source" version="1.6.4.v20120130-2120"/>
 <repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.emf.sdk.feature.group" version="2.8.0.v20120608-0554"/>
 <unit id="org.eclipse.jdt.feature.group" version="3.8.0.v20120525-1249-8-8nFqlFNOfwKDRGz-pXLdGxEM83"/>
+<unit id="org.eclipse.wst.xml_ui.feature.feature.group" version="3.4.0.v201111021744-7H7GFeBDxumUpsl5liePhK3loz-m62J4rSz011R1"/>
 <unit id="org.eclipse.wst.common.fproj.feature.group" version="3.4.0.v201202292300-377F8N8s735555393B7B"/>
 <unit id="org.eclipse.jst.common.fproj.enablement.jdt.feature.group" version="3.4.0.v201108231500-377DG8s73543J5H6D66"/>
 <unit id="org.eclipse.jst.enterprise_ui.feature.feature.group" version="3.4.0.v201107072300-7b7JIM0FSK2WM1PS9Ar7AKUz0TrWn"/>
+<unit id="org.eclipse.jst.web_ui.feature.feature.group" version="3.4.0.v201111022313-7F7DFSgC25TrkWsplelWwGPu4Ajn5UiEiyuqxZp4"/>
+<unit id="org.eclipse.wst.web_ui.feature.feature.group" version="3.4.0.v201203141800-7O7MFsGEMkBJz0rWbgfTLwn-4WKIocbP_pkka3Il"/>
+<unit id="org.eclipse.wst.xsl.feature.feature.group" version="1.3.100.v201111021744-7T7ZFUaFIqUoJuvaKoCpQDKaGVPc"/>
 <unit id="org.eclipse.jst.server_adapters.feature.feature.group" version="3.2.200.v20120517_1442-20A77w31231628a2553"/>
 <unit id="org.eclipse.jst.server_adapters.ext.feature.feature.group" version="3.3.100.v20110810_1722-777HFL5CcNBDmBfJVFHJD6"/>
 <unit id="org.eclipse.jst.server_ui.feature.feature.group" version="3.4.0.v20120503_1042-7A77FHr9xFcC2CFLZBCJMHLg7D64"/>
+<unit id="org.eclipse.libra.framework.editor.feature.feature.group" version="0.2.0.201206060754"/>
+<unit id="org.eclipse.wst.server_adapters.feature.feature.group" version="3.2.101.v20111212_1019-51F8OAkF79S8JCTA597K"/>
 <repository location="http://download.eclipse.org/releases/juno"/>
 </location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.sdk.ide" version="3.8.0.I20120608-1200"/>
+<repository location="http://download.eclipse.org/eclipse/updates/3.8"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.virgo.bundlor.feature.group" version="1.1.0.RELEASE"/>
 <unit id="org.eclipse.virgo.kernel.feature.group" version="3.5.0.RC1"/>
 <unit id="org.eclipse.virgo.medic.feature.group" version="3.5.0.RC1"/>
 <unit id="org.eclipse.virgo.util.feature.group" version="3.5.0.RC1"/>
-<repository location="http://download.eclipse.org/virgo/updatesite/3.5.0.RC1"/>
+<repository location="http://download.eclipse.org/virgo/snapshot/tooling"/>
 </location>
 </locations>
 <environment>
