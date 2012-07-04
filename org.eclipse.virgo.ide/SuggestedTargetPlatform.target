@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?pde version="3.8"?>
 
-<target name="Virgo Target" sequenceNumber="52">
+<target name="Virgo Target" sequenceNumber="60">
 <locations>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.sdk.ide" version="3.8.0.I20120608-1200"/>
+<repository location="http://download.eclipse.org/eclipse/updates/3.8"/>
+</location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.apache.commons.collections.source" version="3.2.0.v201005080500"/>
 <unit id="org.apache.commons.collections" version="3.2.0.v201005080500"/>
 <unit id="org.apache.commons.lang" version="2.6.0.v201205030909"/>
 <unit id="org.apache.commons.lang.source" version="2.6.0.v201205030909"/>
 <unit id="org.json" version="1.0.0.v201011060100"/>
+<unit id="ch.qos.logback.classic" version="1.0.0.v20111214-2030"/>
+<unit id="ch.qos.logback.classic.source" version="1.0.0.v20111214-2030"/>
+<unit id="ch.qos.logback.core" version="1.0.0.v20111214-2030"/>
+<unit id="ch.qos.logback.core.source" version="1.0.0.v20111214-2030"/>
+<unit id="org.slf4j.api" version="1.6.4.v20120130-2120"/>
 <unit id="org.slf4j.jul" version="1.6.4.v20120130-2120"/>
 <unit id="org.slf4j.jul.source" version="1.6.4.v20120130-2120"/>
 <unit id="org.slf4j.log4j" version="1.6.4.v20120130-2120"/>
@@ -17,6 +26,8 @@
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.emf.sdk.feature.group" version="2.8.0.v20120608-0554"/>
+<unit id="org.eclipse.gef.sdk.feature.group" version="3.8.0.201206112118"/>
+<unit id="org.eclipse.zest.sdk.feature.group" version="1.4.0.201206112118"/>
 <unit id="org.eclipse.jdt.feature.group" version="3.8.0.v20120525-1249-8-8nFqlFNOfwKDRGz-pXLdGxEM83"/>
 <unit id="org.eclipse.wst.xml_ui.feature.feature.group" version="3.4.0.v201111021744-7H7GFeBDxumUpsl5liePhK3loz-m62J4rSz011R1"/>
 <unit id="org.eclipse.wst.common.fproj.feature.group" version="3.4.0.v201202292300-377F8N8s735555393B7B"/>
@@ -33,15 +44,17 @@
 <repository location="http://download.eclipse.org/releases/juno"/>
 </location>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.sdk.ide" version="3.8.0.I20120608-1200"/>
-<repository location="http://download.eclipse.org/eclipse/updates/3.8"/>
-</location>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.virgo.bundlor.feature.group" version="1.1.0.RELEASE"/>
+<unit id="org.eclipse.virgo.core.feature.group" version="3.5.0.RC1"/>
 <unit id="org.eclipse.virgo.kernel.feature.group" version="3.5.0.RC1"/>
 <unit id="org.eclipse.virgo.medic.feature.group" version="3.5.0.RC1"/>
 <unit id="org.eclipse.virgo.util.feature.group" version="3.5.0.RC1"/>
 <repository location="http://download.eclipse.org/virgo/snapshot/tooling"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.ajdt.feature.group" version="2.2.0.e37x-RELEASE-20120704-0900"/>
+<unit id="org.eclipse.ajdt.source.feature.group" version="2.2.0.e37x-RELEASE-20120704-0900"/>
+<repository location="http://download.eclipse.org/tools/ajdt/37/dev/update"/>
 </location>
 </locations>
 <environment>
