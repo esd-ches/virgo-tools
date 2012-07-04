@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.6"?>
+<?pde version="3.8"?>
 
-<target name="Virgo Target" sequenceNumber="30">
+<target name="Virgo Target" sequenceNumber="40">
 <locations>
 <location path="${eclipse_home}" type="Profile"/>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.eclipse.virgo.kernel.feature.group" version="3.5.0.M04"/>
-<unit id="org.eclipse.virgo.util.feature.group" version="3.5.0.M04"/>
-<repository location="http://download.eclipse.org/virgo/updatesite/3.5.0.M04"/>
-</location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
 <unit id="org.eclipse.virgo.bundlor.feature.group" version="1.1.0.RELEASE"/>
 <repository location="http://download.eclipse.org/virgo/release/BNDLR/1.1.0.RELEASE/updatesite"/>
 </location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+<unit id="org.apache.commons.collections.source" version="3.2.0.v201005080500"/>
+<unit id="org.apache.commons.collections" version="3.2.0.v201005080500"/>
+<unit id="org.apache.commons.lang" version="2.6.0.v201205030909"/>
+<unit id="org.apache.commons.lang.source" version="2.6.0.v201205030909"/>
+<unit id="org.json" version="1.0.0.v201011060100"/>
+<unit id="org.slf4j.jul" version="1.6.4.v20120130-2120"/>
+<unit id="org.slf4j.jul.source" version="1.6.4.v20120130-2120"/>
+<unit id="org.slf4j.log4j" version="1.6.4.v20120130-2120"/>
+<unit id="org.slf4j.log4j.source" version="1.6.4.v20120130-2120"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+<unit id="org.eclipse.jdt.feature.group" version="3.8.0.v20120525-1249-8-8nFqlFNOfwKDRGz-pXLdGxEM83"/>
 <unit id="org.eclipse.wst.common.fproj.feature.group" version="3.4.0.v201202292300-377F8N8s735555393B7B"/>
 <unit id="org.eclipse.jst.common.fproj.enablement.jdt.feature.group" version="3.4.0.v201108231500-377DG8s73543J5H6D66"/>
 <unit id="org.eclipse.jst.enterprise_ui.feature.feature.group" version="3.4.0.v201107072300-7b7JIM0FSK2WM1PS9Ar7AKUz0TrWn"/>
@@ -22,11 +30,11 @@
 <unit id="org.eclipse.jst.server_ui.feature.feature.group" version="3.4.0.v20120503_1042-7A77FHr9xFcC2CFLZBCJMHLg7D64"/>
 <repository location="http://download.eclipse.org/releases/juno"/>
 </location>
-<location includeAllPlatforms="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="org.apache.commons.collections.source" version="3.2.0.v201005080500"/>
-<unit id="org.apache.commons.collections" version="3.2.0.v201005080500"/>
-<unit id="org.json" version="1.0.0.v201011060100"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120119162704/repository/"/>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="false" type="InstallableUnit">
+<unit id="org.eclipse.virgo.kernel.feature.group" version="3.5.0.RC1"/>
+<unit id="org.eclipse.virgo.medic.feature.group" version="3.5.0.RC1"/>
+<unit id="org.eclipse.virgo.util.feature.group" version="3.5.0.RC1"/>
+<repository location="http://download.eclipse.org/virgo/updatesite/3.5.0.RC1"/>
 </location>
 </locations>
 <environment>
