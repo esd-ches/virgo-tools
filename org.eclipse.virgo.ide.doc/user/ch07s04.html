@@ -1,11 +1,11 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Starting with JMX Access Modifications</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo User Guide"><link rel="up" href="ch07.html" title="Chapter&nbsp;7.&nbsp;Starting and Stopping Virgo Tomcat Server"><link rel="prev" href="ch07s03.html" title="Starting in Debug Mode"><link rel="next" href="ch07s05.html" title="Starting with a Custom Configuration Directory"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch07s03.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch07s05.html">Next</a></td></tr></table><hr></div><div class="section" title="Starting with JMX Access Modifications"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="N1074B"></a>Starting with JMX Access Modifications</h2></div></div></div>
-			The Virgo Tomcat Server always starts with JMX access enabled, allowing you to use a management tool such as JConsole 
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Starting with JMX Access Modifications</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo User Guide"><link rel="up" href="ch07.html" title="Chapter&nbsp;7.&nbsp;Starting and Stopping Virgo Server for Apache Tomcat"><link rel="prev" href="ch07s03.html" title="Starting in Debug Mode"><link rel="next" href="ch07s05.html" title="Starting with a Custom Configuration Directory"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch07s03.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch07s05.html">Next</a></td></tr></table><hr></div><div class="section" title="Starting with JMX Access Modifications"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="N1074B"></a>Starting with JMX Access Modifications</h2></div></div></div>
+			The Virgo Server for Apache Tomcat always starts with JMX access enabled, allowing you to use a management tool such as JConsole 
 			to attach to the Web Server instance.
 			By default both local access and remote access over SSL with username and password
 			authentication are provided. The default port for secure JMX access is <code class="literal">9875</code> 
 			and the default username and password are <code class="literal">admin</code> and <code class="literal">springsource</code>.
 			<div class="section" title="Linux"><div class="titlepage"><div><div><h3 class="title"><a name="N1075B"></a>Linux</h3></div></div></div><p>
-					To start Virgo Tomcat Server with default JMX access enabled, run <code class="literal">startup.sh</code> passing
+					To start Virgo Server for Apache Tomcat with default JMX access enabled, run <code class="literal">startup.sh</code> passing
 					in no arguments:
 				</p><pre class="screen">prompt$ cd $SERVER_HOME
 prompt$ bin/startup.sh </pre><p>
@@ -26,7 +26,7 @@ prompt$ bin/jconsole.sh </pre><p>
 					of the <code class="literal">-jmxport</code> argument:
 				</p><pre class="screen">prompt$ cd $SERVER_HOME
 prompt$ bin/startup.sh -jmxport 9090</pre><p>
-					This will start the Virgo Tomcat Server with JMX enabled for remote connections on port <code class="literal">9090</code>.
+					This will start the Virgo Server for Apache Tomcat with JMX enabled for remote connections on port <code class="literal">9090</code>.
 				</p><p>
 					<img src="images/jmx-remote-attach-jmxport.png">
 				</p><p>To start the JMX remote access with a custom username and password, update the <code class="literal">$SERVER_HOME/configuration/org.eclipse.virgo.kernel.users.properties</code> file.  First specify the custom username by changing the value of the <code class="literal">role.admin</code> property.  Then set the password of this new user by adding a new property called <code class="literal">user.<span class="emphasis"><em>username</em></span></code>, where <code class="literal"><span class="emphasis"><em>username</em></span></code> refers to the actual name of the user.  Finally, restart VTS for the changes to take effect.</p><p>For example, if you want change the JMX remote access username to <code class="literal">zebedee</code> with password <code class="literal">florence</code>, change the file as follows: 
@@ -48,10 +48,10 @@ role.admin=zebedee</pre><p>Specify the custom username in JConsole as shown.  </
 					password in as the value for the <code class="literal">-keystorePassword</code> argument:
 				</p><pre class="screen">prompt$ cd $SERVER_HOME
 prompt$ bin/startup.sh -keystore customKeystore -keystorePassword customKeystorePassword</pre><p>
-					This will start the Virgo Tomcat Server with JMX enabled for remote connections using an SSL certificate from
+					This will start the Virgo Server for Apache Tomcat with JMX enabled for remote connections using an SSL certificate from
 					<code class="literal">customKeystore</code> with a password of <code class="literal">customKeystorePassword</code>.
 				</p></div><div class="section" title="Microsoft Windows"><div class="titlepage"><div><div><h3 class="title"><a name="N107E6"></a>Microsoft Windows</h3></div></div></div><p>
-					To start Virgo Tomcat Server with default JMX access enabled, run <code class="literal">startup.bat</code> passing
+					To start Virgo Server for Apache Tomcat with default JMX access enabled, run <code class="literal">startup.bat</code> passing
 					in no arguments:
 				</p><pre class="screen">prompt&gt; cd %SERVER_HOME%
 prompt&gt; bin\startup.bat</pre><p>
@@ -71,7 +71,7 @@ prompt&gt; bin\jconsole.bat </pre><p>
 					pass this port number in as the value of the <code class="literal">-jmxport</code> argument: 
 				</p><pre class="screen">prompt&gt; cd %SERVER_HOME%
 prompt&gt; bin\startup.bat -jmxport 9090</pre><p>
-					This will start the Virgo Tomcat Server with JMX enabled for remote connections on port
+					This will start the Virgo Server for Apache Tomcat with JMX enabled for remote connections on port
 					<code class="literal">9090</code>.
 				</p><p>
 					<img src="images/jmx-remote-attach-jmxport.png">
@@ -94,6 +94,6 @@ role.admin=zebedee</pre><p>Specify the custom username in JConsole as shown.  </
 					keystore password in as the value for the <code class="literal">-keystorePassword</code> argument:
 				</p><pre class="screen">prompt&gt; cd %SERVER_HOME%
 prompt&gt; bin\startup.bat -keystore customKeystore -keystorePassword customKeystorePassword</pre><p>
-					This will start the Virgo Tomcat Server with JMX enabled for remote attach using an SSL certificate from
+					This will start the Virgo Server for Apache Tomcat with JMX enabled for remote attach using an SSL certificate from
 					<code class="literal">customKeystore</code> with a password of <code class="literal">customKeystorePassword</code>.
 				</p></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch07s03.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch07.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch07s05.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

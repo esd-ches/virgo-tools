@@ -1,20 +1,20 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Why the Virgo Tomcat Server?</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="ch02.html" title="Chapter&nbsp;2.&nbsp;Introduction to the Virgo Tomcat Server"><link rel="prev" href="ch02s02.html" title="What is the Virgo Tomcat Server?"><link rel="next" href="ch03.html" title="Chapter&nbsp;3.&nbsp;Deployment Architecture"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch02s02.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch03.html">Next</a></td></tr></table><hr></div><div class="section" title="Why the Virgo Tomcat Server?"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="introduction-why"></a>Why the Virgo Tomcat Server?</h2></div></div></div><p>
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Why the Virgo Server for Apache Tomcat?</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="ch02.html" title="Chapter&nbsp;2.&nbsp;Introduction to the Virgo Server for Apache Tomcat"><link rel="prev" href="ch02s02.html" title="What is the Virgo Server for Apache Tomcat?"><link rel="next" href="ch03.html" title="Chapter&nbsp;3.&nbsp;Deployment Architecture"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch02s02.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch03.html">Next</a></td></tr></table><hr></div><div class="section" title="Why the Virgo Server for Apache Tomcat?"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="introduction-why"></a>Why the Virgo Server for Apache Tomcat?</h2></div></div></div><p>
 			You could deploy a web application in a stand-alone servlet engine or application server.
 			Or you could even deploy directly in an OSGi container such as Equinox. However,
-			deploying in the Virgo Tomcat Server offers a number of key benefits that make it both more
+			deploying in the Virgo Server for Apache Tomcat offers a number of key benefits that make it both more
 			appealing and more suitable for enterprise application development.
 		</p><div class="section" title="Deployment Options and Migration Paths"><div class="titlepage"><div><div><h3 class="title"><a name="introduction-unified-deployment"></a>Deployment Options and Migration Paths</h3></div></div></div><p>
-				While many applications deployed in the Virgo Tomcat Server will take advantage
+				While many applications deployed in the Virgo Server for Apache Tomcat will take advantage
 				of OSGi capabilities, not all applications need such sophistication.
 				For example, development teams may initially choose to continue packaging
 				existing web applications as standard WAR files and then gradually migrate
-				toward a fully OSGi-based packaging and deployment model. The Virgo Tomcat Server
+				toward a fully OSGi-based packaging and deployment model. The Virgo Server for Apache Tomcat
 				makes such migrations easy for developers by supporting multiple packaging
 				and deployment formats. These formats and migration strategies are discussed
 				in greater detail in <a class="xref" href="ch05.html" title="Chapter&nbsp;5.&nbsp;Migrating to OSGi">Chapter&nbsp;5.&nbsp;<i>Migrating to OSGi</i></a> and
 				<a class="xref" href="ch06.html" title="Chapter&nbsp;6.&nbsp;Case Study: Migrating the Form Tags Sample Application">Chapter&nbsp;6.&nbsp;<i>Case Study: Migrating the Form Tags Sample Application</i></a>. 
 			</p></div><div class="section" title="Simplified Development and Deployment of OSGi-based Applications"><div class="titlepage"><div><div><h3 class="title"><a name="introduction-simplified-deployment"></a>Simplified Development and Deployment of OSGi-based Applications</h3></div></div></div><p>
-				Prior to the release of the Virgo Tomcat Server, developing and deploying OSGi
+				Prior to the release of the Virgo Server for Apache Tomcat, developing and deploying OSGi
 				applications involved inherent complexity such as:
 			</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><span class="emphasis"><em>Obtaining OSGi bundles for popular Java libraries:</em></span>
 					For optimal benefits, every technology you use in an OSGi application must
@@ -58,7 +58,7 @@
 				Furthermore, since standard OSGi does not define a notion of an application as a set of bundles,
 				you cannot deploy or undeploy an application and its constituent bundles as a single unit.
 			</p><p>
-				The Virgo Tomcat Server introduces a number of features to solve these issues:
+				The Virgo Server for Apache Tomcat introduces a number of features to solve these issues:
 			</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem">
 					A full set of OSGi bundles for many popular Java libraries to get you
 					started quickly with creating OSGi applications.
@@ -69,7 +69,7 @@
 					The PAR packaging format which offers
 					application-level isolation and deployment.
 				</li><li class="listitem">
-					The concept of a plan, which is an XML file that lists a collection of bundles that Virgo Tomcat Server should load together as a single application.  Conceptually, plans are very like PARs, except that a plan describes the contents of the application rather than a PAR that actually contains them.
+					The concept of a plan, which is an XML file that lists a collection of bundles that Virgo Server for Apache Tomcat should load together as a single application.  Conceptually, plans are very like PARs, except that a plan describes the contents of the application rather than a PAR that actually contains them.
 				</li></ul></div></div><div class="section" title="Enhanced Diagnostics During Deployment and in Production"><div class="titlepage"><div><div><h3 class="title"><a name="introduction-diagnostics"></a>Enhanced Diagnostics During Deployment and in Production</h3></div></div></div><p>
 			    Identifying why an application won&rsquo;t deploy or which particular library
 			    dependencies are unsatisfied is the cause of many headaches!

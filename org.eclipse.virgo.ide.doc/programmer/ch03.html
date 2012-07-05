@@ -1,9 +1,9 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;3.&nbsp;Deployment Architecture</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="index.html" title="Virgo Programmer Guide"><link rel="prev" href="ch02s03.html" title="Why the Virgo Tomcat Server?"><link rel="next" href="ch03s02.html" title="Dependency Types"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch02s03.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch03s02.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter&nbsp;3.&nbsp;Deployment Architecture"><div class="titlepage"><div><div><h2 class="title"><a name="architecture"></a>Chapter&nbsp;3.&nbsp;Deployment Architecture</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="ch03.html#architecture-deployment-formats">Supported Deployment Formats</a></span></dt><dd><dl><dt><span class="section"><a href="ch03.html#architecture-raw-osgi-bundles">Raw OSGi Bundles</a></span></dt><dt><span class="section"><a href="ch03.html#architecture-wars">WAR Deployment Formats</a></span></dt><dt><span class="section"><a href="ch03.html#architecture-pars">PAR</a></span></dt><dt><span class="section"><a href="ch03.html#architecture-plans">Plans</a></span></dt><dt><span class="section"><a href="ch03.html#architecture-configurations">Configurations</a></span></dt></dl></dd><dt><span class="section"><a href="ch03s02.html">Dependency Types</a></span></dt><dt><span class="section"><a href="ch03s03.html">Regions</a></span></dt><dt><span class="section"><a href="ch03s04.html">A Guide to Forming Bundles</a></span></dt></dl></div><p> The Virgo Tomcat Server offers several choices when it comes to deploying applications. Each
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;3.&nbsp;Deployment Architecture</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="index.html" title="Virgo Programmer Guide"><link rel="prev" href="ch02s03.html" title="Why the Virgo Server for Apache Tomcat?"><link rel="next" href="ch03s02.html" title="Dependency Types"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch02s03.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch03s02.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter&nbsp;3.&nbsp;Deployment Architecture"><div class="titlepage"><div><div><h2 class="title"><a name="architecture"></a>Chapter&nbsp;3.&nbsp;Deployment Architecture</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="ch03.html#architecture-deployment-formats">Supported Deployment Formats</a></span></dt><dd><dl><dt><span class="section"><a href="ch03.html#architecture-raw-osgi-bundles">Raw OSGi Bundles</a></span></dt><dt><span class="section"><a href="ch03.html#architecture-wars">WAR Deployment Formats</a></span></dt><dt><span class="section"><a href="ch03.html#architecture-pars">PAR</a></span></dt><dt><span class="section"><a href="ch03.html#architecture-plans">Plans</a></span></dt><dt><span class="section"><a href="ch03.html#architecture-configurations">Configurations</a></span></dt></dl></dd><dt><span class="section"><a href="ch03s02.html">Dependency Types</a></span></dt><dt><span class="section"><a href="ch03s03.html">Regions</a></span></dt><dt><span class="section"><a href="ch03s04.html">A Guide to Forming Bundles</a></span></dt></dl></div><p> The Virgo Server for Apache Tomcat offers several choices when it comes to deploying applications. Each
 		choice offers certain advantages, and it is important to understand those in order to make
 		the right choice for your application. In this chapter, we take a closer look at the choices
 		offered, compare them, and provide guidelines in choosing the right one based on your
 		specific needs. </p><p> The VTS supports standard self-contained WAR files thus allowing you to
-		use the Virgo Tomcat Server as an enhanced web server. The VTS also supports the
+		use the Virgo Server for Apache Tomcat as an enhanced web server. The VTS also supports the
 			<span class="emphasis"><em>Shared Libraries</em></span> WAR format which allows for slimmer WAR files that
 		depend on OSGi bundles instead of including JAR files inside the WAR. The <span class="emphasis"><em>Shared
 			Services</em></span> WAR format allows developers to further reduce the complexity of
@@ -14,16 +14,16 @@
 		provided by a shared services WAR. In addition to this, VTS provides
 		additional conveniences for developing and deploying Spring MVC-based web applications. </p><p>For applications consisting of multiple bundles and web applications, plans and the PAR
 		format are the primary deployment models that take advantage of OSGi capabilities. We will
-		explore all of these formats and their suitability later in this guide.</p><div class="section" title="Supported Deployment Formats"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="architecture-deployment-formats"></a>Supported Deployment Formats</h2></div></div></div><p> The Virgo Tomcat Server supports applications packaged in the following formats: </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p><a class="link" href="ch03.html#architecture-raw-osgi-bundles" title="Raw OSGi Bundles">Raw OSGi Bundles</a></p></li><li class="listitem"><p><a class="link" href="ch03.html#architecture-wars" title="WAR Deployment Formats">Java EE WAR</a></p></li><li class="listitem"><p><a class="link" href="ch03.html#architecture-war-gemini" title="WARs and the Gemini Web Container">Web Application Bundles</a></p></li><li class="listitem"><p><a class="link" href="ch03.html#architecture-pars" title="PAR">PARs</a></p></li><li class="listitem"><p><a class="link" href="ch03.html#architecture-plans" title="Plans">Plans</a></p></li><li class="listitem"><p><a class="link" href="ch03.html#architecture-configurations" title="Configurations">Configurations</a></p></li></ol></div><p> When you deploy an application to the VTS, each deployment artifact
+		explore all of these formats and their suitability later in this guide.</p><div class="section" title="Supported Deployment Formats"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="architecture-deployment-formats"></a>Supported Deployment Formats</h2></div></div></div><p> The Virgo Server for Apache Tomcat supports applications packaged in the following formats: </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p><a class="link" href="ch03.html#architecture-raw-osgi-bundles" title="Raw OSGi Bundles">Raw OSGi Bundles</a></p></li><li class="listitem"><p><a class="link" href="ch03.html#architecture-wars" title="WAR Deployment Formats">Java EE WAR</a></p></li><li class="listitem"><p><a class="link" href="ch03.html#architecture-war-gemini" title="WARs and the Gemini Web Container">Web Application Bundles</a></p></li><li class="listitem"><p><a class="link" href="ch03.html#architecture-pars" title="PAR">PARs</a></p></li><li class="listitem"><p><a class="link" href="ch03.html#architecture-plans" title="Plans">Plans</a></p></li><li class="listitem"><p><a class="link" href="ch03.html#architecture-configurations" title="Configurations">Configurations</a></p></li></ol></div><p> When you deploy an application to the VTS, each deployment artifact
 			(e.g., a single bundle, WAR, PAR, or plan) passes through a deployment pipeline. This
 			deployment pipeline is responsible for processing applications of certain types (i.e.,
 			application type). The 1.0.0 release of the VTS natively
 			supports deployers analogous to each of the aforementioned packaging options. </p><p> Let&rsquo;s take a closer look now at each of the supported deployment and packaging
-			options to explore which one is best suited to your application.</p><div class="section" title="Raw OSGi Bundles"><div class="titlepage"><div><div><h3 class="title"><a name="architecture-raw-osgi-bundles"></a>Raw OSGi Bundles</h3></div></div></div><p> At its core, the Virgo Tomcat Server is an OSGi container. Thus any OSGi-compliant
+			options to explore which one is best suited to your application.</p><div class="section" title="Raw OSGi Bundles"><div class="titlepage"><div><div><h3 class="title"><a name="architecture-raw-osgi-bundles"></a>Raw OSGi Bundles</h3></div></div></div><p> At its core, the Virgo Server for Apache Tomcat is an OSGi container. Thus any OSGi-compliant
 				bundle can be deployed directly on the VTS unmodified. You&rsquo;ll
 				typically deploy an application as a single bundle or a set of stand-alone bundles
 				if you&rsquo;d like to publish or consume services globally within the container via
-				the OSGi Service Registry. </p></div><div class="section" title="WAR Deployment Formats"><div class="titlepage"><div><div><h3 class="title"><a name="architecture-wars"></a>WAR Deployment Formats</h3></div></div></div><p> For Web Application Archives (WAR), the Virgo Tomcat Server provides support for the
+				the OSGi Service Registry. </p></div><div class="section" title="WAR Deployment Formats"><div class="titlepage"><div><div><h3 class="title"><a name="architecture-wars"></a>WAR Deployment Formats</h3></div></div></div><p> For Web Application Archives (WAR), the Virgo Server for Apache Tomcat provides support for the
 				following three formats. </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p><a class="link" href="ch03.html#architecture-standard-war" title="Standard WAR">Standard WAR</a></p></li><li class="listitem"><p><a class="link" href="ch03.html#architecture-shared-libraries-war" title="Shared Libraries WAR">Shared Libraries
 						WAR</a></p></li><li class="listitem"><p><a class="link" href="ch03.html#architecture-shared-services-war" title="Shared Services WAR">Shared Services
 						WAR</a></p></li></ol></div><p> Each of these formats plays a distinct role in the incremental migration path
@@ -31,7 +31,7 @@
 					deployment time, the WAR file is transformed into an OSGi bundle and installed
 					into Tomcat. All the standard WAR contracts are honoured, and your existing WAR
 					files should just drop in and deploy without change. Support for standard,
-					unmodified WAR files allows you to try out the Virgo Tomcat Server on your existing
+					unmodified WAR files allows you to try out the Virgo Server for Apache Tomcat on your existing
 					web applications and then gradually migrate toward the <span class="emphasis"><em>Shared
 						Libraries WAR</em></span> and <span class="emphasis"><em>Shared Services WAR</em></span>
 					formats. </p><p> In addition to the standard support for WARs that you would expect from
@@ -48,7 +48,7 @@
 					library bloat. So, unless you&rsquo;re installing shared libraries in a common
 					library folder for your Servlet container, you have to pack all JARs required by
 					your web application in <code class="literal">/WEB-INF/lib</code>. Prior to the release of
-					the Virgo Tomcat Server, such library bloat has essentially been the norm for web
+					the Virgo Server for Apache Tomcat, such library bloat has essentially been the norm for web
 					applications, but now there is a better solution! The Shared Libraries WAR
 					format reduces your application&rsquo;s deployment footprint and eradicates
 					library bloat by allowing you to declare dependencies on libraries via standard
@@ -72,7 +72,7 @@
 					WAR deployment formats, the Shared Services WAR is by far the most attractive in
 					terms of modularity and reduced overall footprint of your web applications.
 				</p></div><div class="section" title="WARs and the Gemini Web Container"><div class="titlepage"><div><div><h4 class="title"><a name="architecture-war-gemini"></a>WARs and the Gemini Web Container</h4></div></div></div><p> 
-					Virgo Tomcat Server fully supports the OSGi Web Applications standard. Using the
+					Virgo Server for Apache Tomcat fully supports the OSGi Web Applications standard. Using the
 					reference implementation from Gemini Web that was developed by SpringSource from
 					an offshoot of the original VTS codebase. This RI is now fully
 					integrated in VTS as the basis of the support for web
@@ -84,7 +84,7 @@
 					as needed. 
 				</p><p> 
 					You can find an introduction to the Web Container in blog entries written by
-					the Virgo team <a class="ulink" href="http://blog.springsource.com/2009/05/27/introduction-to-the-osgi-web-container/" target="_top">here</a> and <a class="ulink" href="http://blog.springsource.com/2009/06/01/what-the-osgi-web-container-means-for-dm-server/" target="_top">here</a>. </p><div class="section" title="Extensions to the Web Container"><div class="titlepage"><div><div><h5 class="title"><a name="architecture-war-gemini-extensions"></a>Extensions to the Web Container</h5></div></div></div><p> Virgo Tomcat Server provides a variety of extensions to the Web Container that
+					the Virgo team <a class="ulink" href="http://blog.springsource.com/2009/05/27/introduction-to-the-osgi-web-container/" target="_top">here</a> and <a class="ulink" href="http://blog.springsource.com/2009/06/01/what-the-osgi-web-container-means-for-dm-server/" target="_top">here</a>. </p><div class="section" title="Extensions to the Web Container"><div class="titlepage"><div><div><h5 class="title"><a name="architecture-war-gemini-extensions"></a>Extensions to the Web Container</h5></div></div></div><p> Virgo Server for Apache Tomcat provides a variety of extensions to the Web Container that
 						allow you to construct sophisticated applications. The table below 
 						summarises the extensions that are available or in development. </p><div class="table"><a name="N10291"></a><p class="title"><b>Table&nbsp;3.1.&nbsp;</b></p><div class="table-contents"><table border="1"><colgroup><col><col></colgroup><thead><tr><th>Feature</th><th>Description</th></tr></thead><tbody><tr><td>Instrumentable ClassLoaders</td><td>All web bundle ClassLoaders are instrumentable by
 										Spring&rsquo;s load-time weaving infrastructure.</td></tr><tr><td>Support for exploded bundles/WARs</td><td>Bundles/WARs in directory form can be deployed as Web
@@ -121,7 +121,7 @@
 				Service Registry). You get support for load-time weaving, classpath scanning,
 				context class loading, etc., and the VTS does the heavy lifting for
 				you to make all this work seamlessly in an OSGi environment. If you want to take
-				full advantage of all that the Virgo Tomcat Server and OSGi have to offer, packaging and
+				full advantage of all that the Virgo Server for Apache Tomcat and OSGi have to offer, packaging and
 				deploying your applications as a PAR is a good choice, although plans are an even
 				better one, as described in the next section.</p><div class="tip" title="OSGi != multiple JARs" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">OSGi != multiple JARs</h3><p> Note that while physically separated modules can, in theory, be implemented
 					simply using multiple JARs, complex versioning requirements often make this
@@ -138,7 +138,7 @@
 				contrast, is an actual JAR file that physically contains the artifacts. Just like a
 				PAR, you deploy, refresh, and undeploy a plan as a single entity. We highly
 				recommends the use of plans for creating applications. </p><p> When you create a plan, you can specify that the included bundles and services
-				are in a scope that isolates them from the rest of Virgo Tomcat Server and its
+				are in a scope that isolates them from the rest of Virgo Server for Apache Tomcat and its
 				deployments. This scoping ensures that the bundles wire to each other and see each
 				other&rsquo;s services in preference to services from outside the scope. Scoping
 				also prevents application code from leaking into the global scope or scope of
