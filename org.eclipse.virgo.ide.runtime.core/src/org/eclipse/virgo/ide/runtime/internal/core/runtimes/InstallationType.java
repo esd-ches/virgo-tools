@@ -15,7 +15,7 @@ package org.eclipse.virgo.ide.runtime.internal.core.runtimes;
  * 
  */
 public enum InstallationType {
-	TOMCAT("Virgo Tomcat Server"), JETTY("Virgo Jetty Server"), KERNEL("Virgo Kernel"), NANO("Virgo Nano");
+	TOMCAT("Virgo Server for Apache Tomcat"), JETTY("Virgo Jetty Server"), KERNEL("Virgo Kernel"), NANO("Virgo Nano");
 
 	private final String name;
 
