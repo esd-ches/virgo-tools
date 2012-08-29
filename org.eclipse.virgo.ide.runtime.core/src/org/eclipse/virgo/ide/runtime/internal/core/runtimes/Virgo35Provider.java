@@ -41,7 +41,7 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
 	// Assumes Stateless
 	public static final VirgoRuntimeProvider INSTANCE = new Virgo35Provider();
 
-	public static final String GEMINI_CONNECTOR_BUNDLE_NAME = "org.eclipse.virgo.ide.management.remote_3.5.0.201205101950.jar"; //$NON-NLS-1$
+	public static final String GEMINI_CONNECTOR_BUNDLE_NAME = "org.eclipse.virgo.ide.management.remote_3.5.0.201208291630.jar"; //$NON-NLS-1$
 
 	private Virgo35Provider() {
 	}
