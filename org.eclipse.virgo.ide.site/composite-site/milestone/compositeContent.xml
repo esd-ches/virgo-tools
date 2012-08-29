@@ -7,8 +7,8 @@
   </properties>
   <children size='1'>
     <child location='http://download.eclipse.org/virgo/milestone/IDE'/>
-    <child location='http://download.eclipse.org/virgo/milestone/BNDLR/1.1.0.M04/updatesite'/>
-    <child location='http://download.eclipse.org/virgo/updatesite/3.5.0.M03'/>
+    <child location='http://download.eclipse.org/virgo/release/BNDLR/1.1.1.RELEASE/updatesite'/>
+    <child location='http://download.eclipse.org/virgo/updatesite/3.5.0.RELEASE'/>
     <child location='http://download.eclipse.org/libra/milestones'/>
   </children>
 </repository>
