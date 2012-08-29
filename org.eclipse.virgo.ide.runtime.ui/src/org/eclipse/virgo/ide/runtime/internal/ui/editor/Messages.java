@@ -32,6 +32,8 @@ public class Messages extends NLS {
 
 	public static String RepositoryBrowserEditorPage_BundleBrowserLabel;
 
+	public static String RepositoryBrowserEditorPage_BundlesAndLibrariesProviso;
+
 	public static String RepositoryBrowserEditorPage_ConfirmIndexMessage;
 
 	public static String RepositoryBrowserEditorPage_DeselectAllBundlesAndLibraries;
@@ -50,9 +52,9 @@ public class Messages extends NLS {
 
 	public static String RepositoryBrowserEditorPage_FirewallConfigureMessage;
 
-	public static String RepositoryBrowserEditorPage_InstalledBundlesAndLibraries;
+	public static String RepositoryBrowserEditorPage_BundlesAndLibraries;
 
-	public static String RepositoryBrowserEditorPage_InstalledBundlesAndLibrariesMessage;
+	public static String RepositoryBrowserEditorPage_BundlesAndLibrariesMessage;
 
 	public static String RepositoryBrowserEditorPage_InstallSources;
 

@@ -504,9 +504,10 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 	private Section createRightSection(FormToolkit toolkit, ScrolledForm form) {
 		GridLayout layout;
 		Section leftSection = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.DESCRIPTION);
-		leftSection.setText(Messages.RepositoryBrowserEditorPage_InstalledBundlesAndLibraries);
-		leftSection.setDescription(Messages.RepositoryBrowserEditorPage_InstalledBundlesAndLibrariesMessage
-				+ getServerName() + ".");
+		leftSection.setText(Messages.RepositoryBrowserEditorPage_BundlesAndLibraries);
+		leftSection.setDescription(Messages.RepositoryBrowserEditorPage_BundlesAndLibrariesMessage + getServerName()
+				+ ". " //$NON-NLS-1$
+				+ Messages.RepositoryBrowserEditorPage_BundlesAndLibrariesProviso);
 		leftSection.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		Composite leftComposite = toolkit.createComposite(leftSection);

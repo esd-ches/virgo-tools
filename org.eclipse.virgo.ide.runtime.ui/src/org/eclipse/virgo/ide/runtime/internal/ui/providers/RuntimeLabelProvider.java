@@ -85,7 +85,7 @@ public class RuntimeLabelProvider extends LabelProvider {
 			return getText(((IServerProjectContainer) element).getArtefactSet());
 		}
 		if (element instanceof LibrariesNode) {
-			return Messages.RepositoryBrowserEditorPage_InstalledBundlesAndLibraries;
+			return Messages.RepositoryBrowserEditorPage_BundlesAndLibraries;
 		}
 		if (element instanceof IFile) {
 			return ((IFile) element).getName();

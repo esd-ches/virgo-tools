@@ -36,7 +36,7 @@ public class RuntimeFullLabelProvider extends RuntimeLabelProvider {
 		}
 		if (element instanceof LibrariesNode) {
 			return getText(((LibrariesNode) element).getServer()) + " "
-					+ Messages.RepositoryBrowserEditorPage_InstalledBundlesAndLibraries;
+					+ Messages.RepositoryBrowserEditorPage_BundlesAndLibraries;
 		}
 		if (element instanceof IFile) {
 			return ((IFile) element).getName();
