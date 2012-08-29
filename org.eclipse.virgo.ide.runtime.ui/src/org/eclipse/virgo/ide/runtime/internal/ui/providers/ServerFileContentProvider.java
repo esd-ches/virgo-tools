@@ -18,6 +18,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProject;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProjectManager;
 import org.eclipse.wst.server.core.IServer;
@@ -46,7 +47,7 @@ public abstract class ServerFileContentProvider extends GenericTreeProvider {
 							}
 						}
 					} catch (CoreException e) {
-						throw new RuntimeException(e);
+						StatusManager.getManager().handle(e.getStatus());
 					}
 				}
 				return files.toArray(new Object[files.size()]);

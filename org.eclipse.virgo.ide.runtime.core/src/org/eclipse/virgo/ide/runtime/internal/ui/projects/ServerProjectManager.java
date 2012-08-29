@@ -13,14 +13,10 @@ package org.eclipse.virgo.ide.runtime.internal.ui.projects;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IWorkspaceRoot;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.statushandlers.StatusManager;
-import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.IServerLifecycleListener;
@@ -37,6 +33,8 @@ public class ServerProjectManager implements IServerLifecycleListener {
 	private static ServerProjectManager INSTANCE;
 
 	private final Map<IServer, ServerProject> projectForServer = new HashMap<IServer, ServerProject>();
+
+	private final Map<String, ServerProject> projectForName = new HashMap<String, ServerProject>();
 
 	public static ServerProjectManager getInstance() {
 		if (INSTANCE == null) {
@@ -62,6 +60,7 @@ public class ServerProjectManager implements IServerLifecycleListener {
 			if (serverProject == null && create) {
 				serverProject = new ServerProject(server);
 				projectForServer.put(server, serverProject);
+				projectForName.put(serverProject.getWorkspaceProject().getName(), serverProject);
 			}
 			if (serverProject != null && refresh) {
 				serverProject.refresh();
@@ -79,38 +78,17 @@ public class ServerProjectManager implements IServerLifecycleListener {
 	}
 
 	public synchronized void updateProjects() {
-		Map<String, IProject> oldProjectForName = getExistingServerProjects();
-
+		Map<String, ServerProject> unmatchedProjects = new HashMap<String, ServerProject>(projectForName);
 		for (IServer server : ServerCore.getServers()) {
 			ServerProject project = getProject(server, true, true);
 			if (project != null) {
-				oldProjectForName.remove(project.getWorkspaceProjectName());
+				unmatchedProjects.remove(project.getWorkspaceProjectName());
 			}
 		}
-		for (IProject oldProject : oldProjectForName.values()) {
-			try {
-				oldProject.delete(true, null);
-			} catch (CoreException e) {
-				ServerProjectManager.handleException(e);
-			}
+		for (ServerProject oldProject : unmatchedProjects.values()) {
+			oldProject.deleteWorkspaceProject();
+			projectForName.remove(oldProject.getJavaProject().getProject().getName());
 		}
-	}
-
-	protected synchronized Map<String, IProject> getExistingServerProjects() {
-		Map<String, IProject> oldProjectForName = new HashMap<String, IProject>();
-
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		for (IProject project : root.getProjects()) {
-			try {
-				project.open(null);
-				if (FacetUtils.hasNature(project, ServerProject.SERVER_PROJECT_ID)) {
-					oldProjectForName.put(project.getName(), project);
-				}
-			} catch (CoreException e) {
-				ServerProjectManager.handleException(e);
-			}
-		}
-		return oldProjectForName;
 	}
 
 	protected static void handleException(CoreException e) {
@@ -131,10 +109,9 @@ public class ServerProjectManager implements IServerLifecycleListener {
 	 */
 	public synchronized void serverChanged(IServer server) {
 		if (ServerProject.isVirgo(server)) {
-			Map<String, IProject> oldProjectForName = getExistingServerProjects();
 			ServerProject project = getProject(server, false, false);
 			if (project.getWorkspaceProject() == null
-					|| !oldProjectForName.containsKey(project.getWorkspaceProject().getName())) {
+					|| !projectForName.containsKey(project.getWorkspaceProject().getName())) {
 				//The project name has probably changed, so update everything
 				updateProjects();
 			}
@@ -148,6 +125,7 @@ public class ServerProjectManager implements IServerLifecycleListener {
 		ServerProject project = getProject(server);
 		if (project != null) {
 			projectForServer.remove(server);
+			projectForName.remove(project.getWorkspaceProject().getName());
 			project.deleteWorkspaceProject();
 		}
 	}
