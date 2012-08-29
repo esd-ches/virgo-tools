@@ -5,7 +5,6 @@
 
 	<bean id="standardBundleAdmin" class="org.eclipse.virgo.ide.management.remote.StandardBundleAdmin">
 		<constructor-arg ref="platformAdmin" />
-		<constructor-arg ref="packageAdmin" />
 		<constructor-arg ref="bundleContext" /> 
 	</bean> 
   

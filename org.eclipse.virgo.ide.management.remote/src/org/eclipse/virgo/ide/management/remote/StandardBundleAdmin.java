@@ -7,28 +7,29 @@
  * 
  * Contributors:
  *     SpringSource, a divison of VMware, Inc. - initial API and implementation
+ *     SAP AG - support for new equinox console
  *******************************************************************************/
 package org.eclipse.virgo.ide.management.remote;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import java.io.PrintStream;
+import java.io.StringBufferInputStream;
 import java.util.Arrays;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.felix.service.command.CommandProcessor;
+import org.apache.felix.service.command.CommandSession;
 import org.eclipse.gemini.blueprint.util.OsgiServiceReferenceUtils;
-import org.eclipse.osgi.framework.console.CommandProvider;
-import org.eclipse.osgi.framework.internal.core.Util;
 import org.eclipse.osgi.service.resolver.BundleDescription;
 import org.eclipse.osgi.service.resolver.ExportPackageDescription;
 import org.eclipse.osgi.service.resolver.PlatformAdmin;
 import org.eclipse.virgo.ide.management.remote.ServiceReference.Type;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
-import org.osgi.service.packageadmin.PackageAdmin;
 import org.osgi.util.tracker.ServiceTracker;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
@@ -41,19 +42,16 @@ public class StandardBundleAdmin implements BundleAdmin {
 
 	private final PlatformAdmin platformAdmin;
 
-	@SuppressWarnings("unused")
-	private final PackageAdmin packageAdmin;
-
 	private final BundleContext bundleContext;
 
-	private final ServiceTracker consoleProviderTracker;
+	private final ServiceTracker<CommandProcessor, CommandProcessor> commandProcessorTracker;
 
-	public StandardBundleAdmin(PlatformAdmin platformAdmin, PackageAdmin packageAdmin, BundleContext bundleContext) {
+	public StandardBundleAdmin(PlatformAdmin platformAdmin, /*PackageAdmin packageAdmin,*/BundleContext bundleContext) {
 		this.platformAdmin = platformAdmin;
-		this.packageAdmin = packageAdmin;
 		this.bundleContext = bundleContext;
-		this.consoleProviderTracker = new ServiceTracker(bundleContext, CommandProvider.class.getName(), null);
-		this.consoleProviderTracker.open();
+		this.commandProcessorTracker = new ServiceTracker<CommandProcessor, CommandProcessor>(bundleContext,
+				CommandProcessor.class, null);
+		this.commandProcessorTracker.open();
 	}
 
 	@ManagedOperation(description = "Stop the given bundle")
@@ -78,25 +76,32 @@ public class StandardBundleAdmin implements BundleAdmin {
 
 	@ManagedOperation(description = "Executes the given command")
 	public String execute(String cmdLine) {
-		System.err.println(cmdLine);
+		@SuppressWarnings("deprecation")
+		StringBufferInputStream in = new StringBufferInputStream("");
+		ByteArrayOutputStream output = new ByteArrayOutputStream();
+		PrintStream out = new PrintStream(output);
 
-		StringWriter writer = new StringWriter();
-		PrintWriter printWriter = new PrintWriter(writer);
 		try {
-			ServerCommandInterpreter interpreter = new ServerCommandInterpreter(cmdLine, getServices(), printWriter);
-			interpreter.execute(interpreter.nextArgument());
-
-			try {
-				writer.close();
-				printWriter.close();
-			} catch (IOException e) {
+			CommandProcessor commandProcessor = commandProcessorTracker.getService();
+			if (commandProcessor != null) {
+				CommandSession commandSession = commandProcessor.createSession(in, out, out);
+				Object result = null;
+				try {
+					result = commandSession.execute(cmdLine);
+				} catch (Exception e) {
+					e.printStackTrace(out);
+					return output.toString();
+				}
+				if (result == null) {
+					result = "";
+				}
+				return output.toString() + "\n" + result.toString();
 			}
-			System.out.println(writer.toString());
-			return writer.toString();
+			return "No CommandProcessor registered; cannot execute commands";
 		} finally {
 			try {
-				writer.close();
-				printWriter.close();
+				out.close();
+				output.close();
 			} catch (IOException e) {
 			}
 		}
@@ -193,20 +198,6 @@ public class StandardBundleAdmin implements BundleAdmin {
 			bundles.put(Long.valueOf(bundle.getId()), bundle);
 		}
 		return bundles;
-	}
-
-	private Object[] getServices() {
-		ServiceReference[] serviceRefs = consoleProviderTracker.getServiceReferences();
-		if (serviceRefs == null) {
-			return new Object[0];
-		}
-		Util.dsort(serviceRefs, 0, serviceRefs.length);
-
-		Object[] serviceObjects = new Object[serviceRefs.length];
-		for (int i = 0; i < serviceRefs.length; i++) {
-			serviceObjects[i] = bundleContext.getService(serviceRefs[i]);
-		}
-		return serviceObjects;
 	}
 
 	private String getState(org.osgi.framework.Bundle b) {

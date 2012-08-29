@@ -24,6 +24,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ProjectScope;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.preferences.IEclipsePreferences;
@@ -32,7 +33,6 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.viewsupport.FilteredElementTreeSelectionDialog;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
 import org.eclipse.jdt.ui.JavaElementSorter;
-import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -40,6 +40,7 @@ import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
+import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -92,6 +93,7 @@ public class BundlorPreferencePage extends PropertyPage {
 
 	private boolean checkFormatManifestsButton;
 
+	@Override
 	protected Control createContents(Composite parent) {
 
 		Font font = parent.getFont();
@@ -188,11 +190,13 @@ public class BundlorPreferencePage extends PropertyPage {
 				});
 				selDialog.setInput(ResourcesPlugin.getWorkspace().getRoot());
 				selDialog.setSorter(new JavaElementSorter());
-				if (selDialog.open() == Dialog.OK) {
+				if (selDialog.open() == Window.OK) {
 					IResource resource = (IResource) selDialog.getFirstResult();
 					if (resource instanceof IFile) {
 						if (resource.getProject().equals(project)) {
-							filenames.add(resource.getProjectRelativePath().toString());
+							IPath projectRelativePath = resource.getProjectRelativePath();
+							String string = projectRelativePath.toString();
+							filenames.add(string);
 						} else {
 							filenames.add(resource.getFullPath().toString());
 						}
@@ -248,6 +252,7 @@ public class BundlorPreferencePage extends PropertyPage {
 		return node;
 	}
 
+	@Override
 	public boolean performOk() {
 		if (!modified) {
 			return true;
@@ -303,10 +308,12 @@ public class BundlorPreferencePage extends PropertyPage {
 
 	class FilenameLabelProvider extends LabelProvider {
 
+		@Override
 		public Image getImage(Object element) {
 			return BundlorUiPlugin.getImage("full/obj16/file_obj.gif");
 		}
 
+		@Override
 		public String getText(Object element) {
 			return element.toString();
 		}
