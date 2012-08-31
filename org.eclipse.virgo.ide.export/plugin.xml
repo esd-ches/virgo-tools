@@ -16,7 +16,7 @@
     </wizard>
     <category
           id="org.eclipse.virgo.ide.export"
-          name="EclipseRT">
+          name="Virgo">
     </category>
     <wizard
           category="org.eclipse.virgo.ide.export"
