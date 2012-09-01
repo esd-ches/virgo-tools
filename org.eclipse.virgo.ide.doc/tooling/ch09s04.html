@@ -1,0 +1,72 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Migration</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Tools Guide"><link rel="up" href="ch09.html" title="Chapter&nbsp;9.&nbsp;Installation and Release Notes"><link rel="prev" href="ch09s03.html" title="Known Issues"><link rel="next" href="ch09s05.html" title="Maven plugin"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch09s03.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch09s05.html">Next</a></td></tr></table><hr></div><div class="section" title="Migration"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="Migration"></a>Migration</h2></div></div></div><div class="section" title="From Pre M2 to M4"><div class="titlepage"><div><div><h3 class="title"><a name="From_Pre_M2_to_M4"></a>From Pre M2 to M4</h3></div></div></div><div class="section" title="Server Versions"><div class="titlepage"><div><div><h4 class="title"><a name="Server_Versions"></a>Server Versions</h4></div></div></div><p>The good news: We have done away with the need for managing multiple server versions. This also means that we won't have to support multiple WebTools Server Runtimes and Servers which will make adding new servers and variants much easier. See 
+					<a class="ulink" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=373453" target="_top">https://bugs.eclipse.org/bugs/show_bug.cgi?id=373453</a> for more details.
+				</p><p>The bad news: Any Server Runtimes that you already created for Virgo Server 3.5 will not work -- and you will see nasty exceptions if you try to use them. But since pre-M4 Virgo Tooling didn't work with Virgo Server 3.5 
+					<span class="italic">anyway</span>, this should be a moot issue for most people.
+				</p><p>What to do: If you have an existing (i.e., created using Virgo IDE installed before 10 March 2012) Virgo Server 3.5 Runtime defined, just delete it and replace it with a new Virgo Runtime in 
+					<span class="italic">Preferences:Server:Runtime Environments</span>. You'll see that the correct version is discovered automatically. Then, open any Servers that uses the old runtime and select the new one from the Runtime Environment popup menu.
+				</p></div></div><div class="section" title="From Spring Source and Virgo 2.x Tooling"><div class="titlepage"><div><div><h3 class="title"><a name="From_Spring_Source_and_Virgo_2.x_Tooling"></a>From Spring Source and Virgo 2.x Tooling</h3></div></div></div><p>Moving from the old tooling to the new requires some changes to your existing projects, these are documented here. </p><p>The Bundlor .settings file has a new name (
+				<span class="italic">com.springsource.server.ide.bundlor.core.prefs</span> -&amp;gt; 
+				<span class="italic">org.eclipse.virgo.ide.bundlor.core.prefs</span>) and the property keys in it have new names as well. Currently these just need to be changed manually (replace 
+				<span class="italic">com.springsource.server</span> by 
+				<span class="italic">org.eclipse.virgo</span>) 
+				<span class="bold"><strong>or use the project properties pane to create new settings and delete the old one.</strong></span> (recommended)
+			</p><p>The Bundle Dependencies classpath entry has a new name (
+				<span class="italic">com.springsource.server.ide.jdt.core.MANIFEST_CLASSPATH_CONTAINER</span> -&amp;gt; 
+				<span class="italic">org.eclipse.virgo.ide.jdt.core.MANIFEST_CLASSPATH_CONTAINER</span>). This can be changed manually (in the .classpath file) or in the Java Build Path section of the project properties. 
+			</p><p>The attributes used to mark folders as test folders have been renamed (
+				<span class="italic">com.springsource.server.ide.jdt.core.test.classpathentry</span> -&amp;gt; 
+				<span class="italic">org.eclipse.virgo.ide.jdt.core.test.classpathentry</span>). This can be changed manually (in the .classpath file). 
+			</p><p>The PAR and Bundle nature have been renamed (
+				<span class="italic">com.springsource.server.ide.facet.core.bundlenature</span> -&amp;gt; 
+				<span class="italic">org.eclipse.virgo.ide.facet.core.bundlenature</span> and (
+				<span class="italic">com.springsource.server.ide.facet.core.parnature</span> -&amp;gt; 
+				<span class="italic">org.eclipse.virgo.ide.facet.core.parnature</span>)). This can be changed manually (in the .project file). 
+			</p><p>The format and name of a PAR project changed. Rename 
+				<span class="italic">.settings/com.springsource.server.ide.runtime.core.par.xml</span> to 
+				<span class="italic">.settings/org.eclipse.virgo.ide.runtime.core.par.xml</span>. Inside the file rename occurences of 
+				<span class="italic">com.springsource.server</span> to 
+				<span class="italic">org.eclipse.virgo</span>. 
+			</p><p>
+				<span class="bold"><strong>Snapshot build change:</strong></span> We've made a change in our tooling that will require modifying the org.eclipse.virgo.ide.runtime.core.par.xml file so that it points to the correct par.ecore URI. Rename 
+				<span class="italic">xmlns:com.springsource.server.ide.par="
+					<a class="ulink" href="http:///com/springsource/server/ide/par.ecore&amp;quot" target="_top">http:///com/springsource/server/ide/par.ecore&amp;quot</a>;
+				</span> to 
+				<span class="italic">"xmlns:org.eclipse.virgo.ide.par="
+					<a class="ulink" href="http://eclipse.org/virgo/par.ecore&amp;quot" target="_top">http://eclipse.org/virgo/par.ecore&amp;quot</a>;
+				</span>
+			</p><p>Inside the WST settings file (
+				<span class="italic">.settings/org.eclipse.wst.common.project.facet.core.xml</span>) rename occurences of 
+				<span class="italic">com.springsource.server.bundle</span> to 
+				<span class="italic">org.eclipse.virgo.server.bundle</span> and occurences of 
+				<span class="italic">com.springsource.server.par</span> to 
+				<span class="italic">org.eclipse.virgo.server.par</span>. 
+			</p><p>Most/all of the conversion should be done by the following script (it has only see marginal testing, use at your own risk): 
+&lt;				pre&gt;#!/bin/sh</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>NOTE1: Run this at your own risk&amp;nbsp;:)</p></li><li class="listitem"><p>NOTE2: I should quote more dots in sed expressions but I'm lazy.</p></li><li class="listitem"><p>TODO: Delete old com.springsource files after conversion</p></li></ol></div><p>if 
+				<a class="ulink" href="&amp;amp;nbsp;!" target="_top">-d &amp;quot;$1&amp;quot; </a>; then 
+			</p><div class="literallayout"><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;&amp;quot;Please&nbsp;point&nbsp;me&nbsp;at&nbsp;an&nbsp;eclipse&nbsp;project&amp;quot;&amp;amp;nbsp;;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exit&nbsp;1<br>
+</p></div><p>fi</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Bundlor settings</p></li></ol></div><p>f="$1/.settings/com.springsource.server.ide.bundlor.core.prefs"
+				[ -f "$f" ] &amp;amp;&amp;amp;  (</p><div class="literallayout"><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;&amp;quot;$1:&nbsp;Converting&nbsp;bundlor&nbsp;preferences&amp;quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sed&nbsp;-e&nbsp;'s/com\.springsource\.server/org.eclipse.virgo/g'&nbsp;&amp;quot;$f&amp;quot;&nbsp;&amp;amp;gt;&nbsp;&amp;quot;$(echo&nbsp;$f&nbsp;|&nbsp;sed&nbsp;-e&nbsp;s/com.springsource.server/org.eclipse.virgo/)&amp;quot;<br>
+</p></div><p>)</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>convert PAR</p></li></ol></div><p>f="$1/.settings/com.springsource.server.ide.runtime.core.par.xml"
+				[ -f "$f" ] &amp;amp;&amp;amp;  (</p><div class="literallayout"><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;&amp;quot;$1:&nbsp;Converting&nbsp;PAR&nbsp;project&nbsp;dependencies&amp;quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sed&nbsp;-e&nbsp;'s/com\.springsource\.server/org.eclipse.virgo/g'&nbsp;&amp;quot;$f&amp;quot;&nbsp;&amp;amp;gt;&nbsp;&amp;quot;$(echo&nbsp;$f&nbsp;|&nbsp;sed&nbsp;-e&nbsp;s/com.springsource.server/org.eclipse.virgo/)&amp;quot;<br>
+</p></div><p>)</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Fix classpaths        </p></li></ol></div><p>f="$1/.classpath"
+				[ -f "$f" ] &amp;amp;&amp;amp; (</p><div class="literallayout"><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;&amp;quot;$1:&nbsp;Converting&nbsp;classpath&nbsp;containers&nbsp;and&nbsp;entries&amp;quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sed&nbsp;-i&nbsp;\<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-e&nbsp;'s/com.springsource.server.ide.jdt.core.MANIFEST_CLASSPATH_CONTAINER/org.eclipse.virgo.ide.jdt.core.MANIFEST_CLASSPATH_CONTAINER/g'&nbsp;\<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-e&nbsp;'s/com.springsource.server.ide.jdt.core.test.classpathentry/org.eclipse.virgo.ide.jdt.core.test.classpathentry/g'&nbsp;\<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;quot;$f&amp;quot;<br>
+</p></div><p>)</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Fix natures..</p></li></ol></div><p>f="$1/.project"
+				[ -f "$f" ] &amp;amp;&amp;amp; (</p><div class="literallayout"><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;&amp;quot;$1:&nbsp;Converting&nbsp;project&nbsp;natures&amp;quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sed&nbsp;-i&nbsp;\<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-e&nbsp;'s/com.springsource.server.ide.facet.core.bundlenature/org.eclipse.virgo.ide.facet.core.bundlenature/g'&nbsp;\<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-e&nbsp;'s/com.springsource.server.ide.facet.core.parnature/org.eclipse.virgo.ide.facet.core.parnature/g'&nbsp;\<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;quot;$f&amp;quot;<br>
+</p></div><p>)</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Fix the wst file, could also replace runtime name here</p></li></ol></div><p>f="$1/.settings/org.eclipse.wst.common.project.facet.core.xml"
+				[ -f "$f" ] &amp;amp;&amp;amp; (</p><div class="literallayout"><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo&nbsp;&amp;quot;$1:&nbsp;Converting&nbsp;org.eclipse.wst.common.project.facet.core.xml&amp;quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sed&nbsp;-i&nbsp;\<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-e&nbsp;'s/com.springsource.server.bundle/org.eclipse.virgo.server.bundle/g'&nbsp;&nbsp;\<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-e&nbsp;'s/com.springsource.server.par/org.eclipse.virgo.server.par/g'&nbsp;&nbsp;\<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&amp;quot;$f&amp;quot;<br>
+</p></div><p>)</p><p>&lt;/pre&gt;</p></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch09s03.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch09.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch09s05.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

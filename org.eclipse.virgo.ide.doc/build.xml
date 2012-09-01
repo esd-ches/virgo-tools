@@ -227,7 +227,6 @@
 		</copy>
 	</target>
 
-	<target name="build-all-books" depends="build-tooling-docs, build-runtime-docs, build-wiki">
-		<delete dir="${temp.dir}" />
+	<target name="build-all-books" depends="build-wiki">
 	</target>
 </project>

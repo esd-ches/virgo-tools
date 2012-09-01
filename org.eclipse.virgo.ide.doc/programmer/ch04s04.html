@@ -96,7 +96,7 @@ password          = secret</pre><p>The example shows four properties whose name 
 ...
 
 &lt;/beans&gt; </pre></div><p>The preceding example shows how the id <code class="literal">configAdminProperites</code> wires the <code class="literal">&lt;context:property-placeholder&gt;</code> and <code class="literal">&lt;osgi-compendium:cm-properties&gt;</code> elements together.  Based on the value of the <code class="literal">persistent-id</code> attribute, you must also deploy a properties file called <code class="literal">app-properties.properties</code> which Virgo installs as a configuration artifact.</p><div class="section" title="Adding the Configuration Artifact to a Plan"><div class="titlepage"><div><div><h3 class="title"><a name="developing-applications-configuration-artifacts-plan"></a>Adding the Configuration Artifact to a Plan</h3></div></div></div><p>Although you can always deploy your application and associated configuration artifact using the <code class="literal">pickup</code> directory, we recommends that you group the two together in a plan, add the two artifacts to the repository, and then deploy the plan using the <code class="literal">pickup</code> directory.  The following sample plan includes the two artifacts:</p><pre class="programlisting">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-&lt;plan name="multi-artifact.plan" version="1.0.0" 
+&lt;plan name="multi-artifact.plan" version="3.5.0" 
          scoped="false" atomic="false"
         xmlns="http://www.eclipse.org/virgo/schema/plan"
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -105,5 +105,5 @@ password          = secret</pre><p>The example shows four properties whose name 
 		        http://www.eclipse.org/virgo/schema/plan/eclipse-virgo-plan.xsd"&gt;
 
     &lt;artifact type="configuration" name="app-properties" version="0"/&gt;
-    &lt;artifact type="bundle" name="org.eclipse.virgo.configuration.properties" version="1.0.0"/&gt;
+    &lt;artifact type="bundle" name="org.eclipse.virgo.configuration.properties" version="3.5.0"/&gt;
 &lt;/plan&gt;</pre><p>For additional information about plans, see <a class="link" href="ch04s03.html" title="Creating Plans">Creating Plans</a>.</p></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch04s03.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch04.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch04s05.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

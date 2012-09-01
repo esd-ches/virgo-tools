@@ -13,7 +13,9 @@
 	<topic href="wiki/Virgo/FAQ/Should-I-put-Spring-XML-files-in-tt-META-INF-spring-tt-or-tt-WEB-INF-tt-.html" label="Should I put Spring XML files in &lt;tt&quot;META-INF/spring&lt;/tt&quot; or &lt;tt&quot;WEB-INF&lt;/tt&quot;?"></topic>
 	<topic href="wiki/Virgo/FAQ/Why-is-there-both-a-config-and-a-configuration-directory-.html" label="Why is there both a config and a configuration directory?"></topic>
 	<topic href="wiki/Virgo/FAQ/Why-is-my-required-bundle-with-version-x-y-z-not-resolved-.html" label="Why is my required bundle with version x.y.z. not resolved?"></topic>
-	<topic href="wiki/Virgo/FAQ/What-s-the-difference-between-Virgo-Tomcat-Server-and-Virgo-Jetty-Server-.html" label="What's the difference between Virgo Tomcat Server and Virgo Jetty Server?"></topic>
+	<topic href="wiki/Virgo/FAQ/What-s-the-difference-between-Virgo-Server-for-Apache-Tomcat-and-Virgo-Jetty-Server-.html" label="What's the difference between Virgo Server for Apache Tomcat and Virgo Jetty Server?"></topic>
+	<topic href="wiki/Virgo/FAQ/What-s-the-difference-between-Virgo-Server-for-Apache-Tomcat-and-Virgo-Nano-Web-.html" label="What's the difference between Virgo Server for Apache Tomcat and Virgo Nano Web?"></topic>
+	<topic href="wiki/Virgo/FAQ/What-s-the-difference-between-Virgo-Server-for-Apache-Tomcat-and-Virgo-Tomcat-Server-.html" label="What's the difference between Virgo Server for Apache Tomcat and Virgo Tomcat Server?"></topic>
 	<topic href="wiki/Virgo/FAQ/What-version-of-the-Servlet-Specification-is-supported-by-Virgo-.html" label="What version of the Servlet Specification is supported by Virgo?"></topic>
 	<topic href="wiki/Virgo/FAQ/Updating-This-Document.html" label="Updating This Document"></topic>
 </toc>

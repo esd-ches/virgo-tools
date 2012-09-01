@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <toc label="Virgo Guides">
-<topic label="User Guide" > 
+<topic href="user/index.html" label="User Guide"> 
    <link toc="user/toc.xml"/>
    </topic>
-<topic label="Programmer Guide" > 
+<topic href="programmer/index.html" label="Programmer Guide"> 
    <link toc="programmer/toc.xml"/>
    </topic>
-<topic label="Tooling Guide" > 
+<topic href="tooling/index.html" label="Tooling Guide"> 
    <link toc="tooling/toc.xml"/>
    </topic>
-<topic label="Bundlor Guide" > 
+<topic href="bundlor/index.html" label="Bundlor Guide"> 
    <link toc="bundlor/toc.xml"/>
    </topic>
-<topic label="Greenpages Example Guide" > 
+<topic href="greenpages/index.html" label="Greenpages Example Guide"> 
    <link toc="greenpages/toc.xml"/>
    </topic>
-<topic label="Wiki" > 
+<topic href="wiki/Virgo/Virgo.html" label="Wiki"> 
    <link toc="wiki/toc.xml"/>
    </topic>
 </toc>

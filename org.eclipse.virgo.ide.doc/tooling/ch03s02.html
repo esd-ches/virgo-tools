@@ -1,0 +1,47 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Views</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Tools Guide"><link rel="up" href="ch03.html" title="Chapter&nbsp;3.&nbsp;Server Perspective and Views"><link rel="prev" href="ch03.html" title="Chapter&nbsp;3.&nbsp;Server Perspective and Views"><link rel="next" href="ch03s03.html" title="Virgo Server Projects"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch03.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch03s03.html">Next</a></td></tr></table><hr></div><div class="section" title="Views"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="views"></a>Views</h2></div></div></div><p>
+			You can explore the contents of installed servers using the Virgo Server Views. These views are designed to help you
+			get to resources on the server without having to switch to the native file system, and integrate those resources with
+			other Eclipse IDE tools. (You can also use the Virgo views from within other perspectives, of course. Select
+			<span class="guimenu">Window</span> &rarr; <span class="guisubmenu">Show View</span> &rarr; <span class="guimenuitem">Other...</span>
+			and then open the "Virgo" folder to display them.)
+		</p><div class="section" title="Repository View"><div class="titlepage"><div><div><h3 class="title"><a name="views-respository"></a>Repository View</h3></div></div></div><p>The Virgo Repository view allows you to work directly with the contents of installed bundles and libraries on
+				Virgo Runtime instances.
+			</p><p>
+				<img src="images/views-repository.png">
+			</p><p>To view resources, select a repository in the Servers View. You can customize what and how they are displayed
+				using the view toolbar buttons.
+			</p><p>You can select multiple respositories as well, allowing you to easily navigate and compare resources on
+				multiple servers. You can double-click on items, open them, and even explore class hierchies and other Eclipse
+				features by right clicking on the repository resources.
+			</p><p>
+				<span class="emphasis"><em>Hint:</em></span>
+				In the example below we have selected the Flat Layout and can see that javax.ejb library is present in one
+				Virgo Runtime, but not the other.
+			</p><p>
+				<img src="images/views-repository-example.png">
+			</p></div><div class="section" title="Properties View"><div class="titlepage"><div><div><h3 class="title"><a name="views-properties"></a>Properties View</h3></div></div></div><p>The Virgo Properties view allows you to inspect the properties of Virgo Runtime instances. Rather then digging
+				through files on the server instance to find the parameters you need to adjust, simply select the server(s) you want
+				to find parameters for, and a list of properties files will be displayed in the editor. To open a file in the
+				appropriate Eclipse editor, just double-click on it. Or open a tree node and double-click on a specific property and
+				the property value will be highlighted for editing.
+			</p><p>
+				<img src="images/views-properties-tree.png">
+			</p><p>
+				<span class="emphasis"><em>Hint:</em></span>
+				Not sure where a given property is even located? You can easily see all properties within a given
+				Virgo Runtime
+				across all properties files, sorted by name. Click the "List" button in the view
+				toolbar. You can even see properties across runtime instances by selecting multiple servers in the Server View.
+			</p><p>
+				<img src="images/views-properties-list.png">
+			</p></div><div class="section" title="Logs View"><div class="titlepage"><div><div><h3 class="title"><a name="views-logs"></a>Logs View</h3></div></div></div><p>The Virgo Logs view supports easy access to runtime log files. As with the other views, just select the
+				Virgo Runtime instance(s) you are interested in. Then double-click to open the relevant log file.
+			</p><p>
+				<img src="images/views-logs.png">
+			</p></div><div class="section" title="Console View"><div class="titlepage"><div><div><h3 class="title"><a name="views-console"></a>Console View</h3></div></div></div><p>The Console view is the same view that is used in the Java and other perspectives. It displays the console
+				activity for the last server instance you launched, assuming that you haven't launched another console hosted
+				process in the mean-time. (This view is not connected to the Server View -- if you want to examine consoles for
+				differnt running servers, click the "Down Triangle" icon in the view toolbar and select the appropriate console.)
+			</p><p>
+				<img src="images/views-logs.png">
+			</p></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch03.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch03.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch03s03.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

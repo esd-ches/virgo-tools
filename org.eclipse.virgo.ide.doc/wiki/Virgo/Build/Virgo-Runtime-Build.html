@@ -434,7 +434,7 @@ mirror.ius - a coma-separated list of symbolic names that we want to mirror loca
 			<b>Important:</b> 
 		</p>
 		<p>
-			<i>'- The conversion from p2 to Ivy currently ignores any dependencies between bundles. Respecting these dependencies is currently under development but until then the mirrored and converted bundles and their dependencies need to be referenced explicitly.</i>'
+			<i>'- &lt;span style="color:#ff0000"&gt;The conversion from p2 to Ivy currently ignores any dependencies between bundles. Respecting these dependencies is currently under development but until then the mirrored and converted bundles and their dependencies need to be referenced explicitly.&lt;/span&gt;</i>'
 		</p>
 		<ul style="list-style: square">
 			<li>If the specified mirror.source contains more than one version of an IU all of them will be mirrored and converted which may lead to problems with the versions propagation. Use source repositories with single version, e.g. the release train repositories. Orbit usually contains more than one version, and often we are not using the latest one available so mirroring Orbit involves a manual step of choosing which version to use and deleting the others from the resulting build.versions file.</li>
@@ -447,11 +447,11 @@ mirror.ius - a coma-separated list of symbolic names that we want to mirror loca
 			<i>rippling</i> and so the &lt;code&gt;'
 			<i>ripplor</i>'&lt;/code&gt; ruby script was written to automate it. Essentially, Ripplor handles the most commonly updated components and flattens the dependency graph into a linear sequence. The sequence is (at the time of writing): 
 		</p>
-		<pre>osgi-test-stubs
-osgi-extensions
+		<pre>eclipse-mirror
 util
 test
 medic
+nano
 artifact-repository
 kernel
 kernel-tools
@@ -459,8 +459,7 @@ web
 snaps
 apps
 documentation
-web-server
-jetty-server
+packaging
 </pre>
 		<p> 
 			So, for example, if you change the kernel and want to produce a package web server containing the updated kernel, you would run: </p>
@@ -545,7 +544,14 @@ Optional arguments:
 		<p>
 			<a href="If">a ripple fails (due to test or compile failure), simply fix any problems in the working copy that Ripplor is using and restart the ripple at the same location you originally used. Ripplor will bring in any new commits since you last started the ripple and continue up the stack as done previously. This behaviour is very useful if you are rippling a breaking API change and need to fix code as the ripple moves upwards.</a> 
 		</p>
-		<p>Unfortunately this behaviour is broken, since the version updates (accumulated during the ripple and propagated up) are not correctly restored. Also, when committing the changes (to all the repositories) at the end, after a failure in the middle, not all of the rippled repositories will be committed at the end. </p>
+		<h4 id="How_to_rebuild_a_broken_rippled_repository">How to rebuild a broken rippled repository</h4>
+		<p>Use the normally executed for that repository targets plus one additional -D parameter:</p>
+		<pre>
+ant -Dvirgo.deps.location=integration-repo clean clean-integration test
+</pre>
+		<p>The important part here is to add the -Dvirgo.deps.location parameter. Its default value is "ivy-cache". It is automatically set by the ruby scripts. It is also not needed during a single repository build.
+			Its purpose is to point the integration tests to the right location of the Virgo artifacts. During a ripple - the integration repo, during a single repo build - the ivy-cache.</p>
+		<p>Unfortunately this behaviour is broken, since the version updates (accumulated during the ripple and propagated up) are not correctly restored. Also, when committing the changes (to all the repositories) at the end, after a failure in the middle, not all of the rippled repositories will be committed at the end.</p>
 		<h3 id="Re-Building">Re-Building</h3>
 		<p>To re-start ripplor and fix a broken build you can use two strategies: </p>
 		<h4 id="Restart_from_lowest">Restart from lowest</h4>
@@ -571,7 +577,6 @@ Optional arguments:
 			Rippling a breaking API change to kernel </p>
 		<pre>./ripplor.rb -r kernel -m ~/workingcopy.repository.map
 </pre>
-		<p> </p>
 		<h2 id="Releasing_a_Single_Repository_Project">Releasing a Single Repository Project</h2>
 		<p>Simply follow these steps to produce a release of a product that is within a single Git repository. The aim is to have a tag of the right name pointing to the codebase at release time and to leave master or the current development branch version at the next version ready for development to continue. Only committers can produce releases. </p>
 		<p>1. Create a new branch and make sure everything is up to date and clean </p>

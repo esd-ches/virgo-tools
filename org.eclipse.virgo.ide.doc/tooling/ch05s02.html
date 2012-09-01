@@ -1,54 +1,17 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Editing the Manifest</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Tools Guide"><link rel="up" href="ch05.html" title="Chapter&nbsp;5.&nbsp;Developing OSGi Bundles"><link rel="prev" href="ch05.html" title="Chapter&nbsp;5.&nbsp;Developing OSGi Bundles"><link rel="next" href="ch06.html" title="Chapter&nbsp;6.&nbsp;Developing PARs"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch05.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch06.html">Next</a></td></tr></table><hr></div><div class="section" title="Editing the Manifest"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="tooling-developing-editing-manifest-mf"></a>Editing the Manifest</h2></div></div></div><p>
-			The Tools provide a Bundle Manifest Editor that assists the developer
-			to create and
-			edit MANIFEST.MF files. The editor understands the Virgo Server for Apache Tomcat
-			specific headers
-			like
-			<code class="code">Import-Library</code>
-			and
-			<code class="code">Import-Bundle</code>
-			and provides content
-			assist features while editing source code. Furthermore a Eclipse Form-based
-			UI is also
-			available.
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Repository Page</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Tools Guide"><link rel="up" href="ch05.html" title="Chapter&nbsp;5.&nbsp;Server Editor"><link rel="prev" href="ch05.html" title="Chapter&nbsp;5.&nbsp;Server Editor"><link rel="next" href="ch05s03.html" title="Bundle Overview Page"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch05.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch05s03.html">Next</a></td></tr></table><hr></div><div class="section" title="Repository Page"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="N10209"></a>Repository Page</h2></div></div></div><p>The Repository Browser allows you to see what bundles and libraries are available on the @product.instance and
+			to very easily install bundles and libraries from the remote Enterprise Bundle Repository. To view resources
+			installed on the Server select the "Repository" tab in the server editor.
 		</p><p>
-			To open the Bundle Manifest Editor right click a MANIFEST.MF file and
-			select "Bundle
-			Manifest Editor" from the "Open With" menu.
-		</p><p>
-			</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
-				Please note that the Virgo Server for Apache Tomcat specific manifest headers
-				appear in green color
-				to distinguish them from those headers defined in the OSGi
-				specification. This also
-				makes navigating much easier.
-			</div><p>
-		</p><p>
-			<img src="images/tooling-manifest-source-editor.png">
-		</p><p>
-			The content assist proposals in the source tab as well as in the
-			UI-based tabs are
-			resolved from the bundle and library repository of an installed and
-			configured
-			Virgo Server for Apache Tomcat. Therefore it is important to target the project or PAR to a specific
-			VTS instance to indicate to the tooling which
-			bundle repository to use.
-		</p><p>
-			</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
-				If a OSGi bundle project is not targeted to a
-				VTS instance, either
-				directory or indirectly via a PAR project&rsquo;s targetting, the manifest
-				editor will not
-				be able to provide content assist for importing packages, bundles, and
-				libraries.
-			</div><p>
-		</p><p>
-			<img src="images/tooling-manifest-form-ui-editor.png">
-		</p><p>
-			The Dependencies tab of the Bundle Manifest Editor enables the user to
-			easily download
-			and install bundles and libraries from the SpringSource Enterprise Bundle Repository
-			by using the "Download..." buttons next to the "Import Bundle" and
-			"Import Library"
-			sections.
-		</p></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch05.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch05.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch06.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>
+			<img src="images/editor-repository-page.png">
+		</p><p>The left section of the Repository Browser allows the user to run searches against the SpringSource Enterprise Bundle Repository and displays
+			matching results. The search can take parts of bundle symbolic names, class or package names and allows wildcards
+			such as &lsquo;?&rsquo; and &lsquo;*&rsquo;. By selecting the checkbox left to a matching bundle and/or library and
+			clicking the "Download" button it is very easy to install new bundles in the Virgo Runtime. For your
+			convenience JARs containing the bundle source code can be automatically downloaded as well.
+		</p><p>Clicking the "Download" button will trigger an Eclipse background job that will download the selected repository
+			artifacts and -- if desired -- the source JARs one after another.
+		</p><p>The section on the right displays the bundles and libraries that exist on the server. Bundles with available
+			sources are visually marked. You can very easily download missing source JARs by using the "Install Sources" button.
+			Note that these bundles may or may not be actually "installed" on the Virgo Runtime in the sense that
+			they are known to it -- they may simply exist in the respective directories.
+		</p></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch05.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch05.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch05s03.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

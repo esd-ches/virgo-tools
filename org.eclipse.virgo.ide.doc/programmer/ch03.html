@@ -17,7 +17,7 @@
 		explore all of these formats and their suitability later in this guide.</p><div class="section" title="Supported Deployment Formats"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="architecture-deployment-formats"></a>Supported Deployment Formats</h2></div></div></div><p> The Virgo Server for Apache Tomcat supports applications packaged in the following formats: </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p><a class="link" href="ch03.html#architecture-raw-osgi-bundles" title="Raw OSGi Bundles">Raw OSGi Bundles</a></p></li><li class="listitem"><p><a class="link" href="ch03.html#architecture-wars" title="WAR Deployment Formats">Java EE WAR</a></p></li><li class="listitem"><p><a class="link" href="ch03.html#architecture-war-gemini" title="WARs and the Gemini Web Container">Web Application Bundles</a></p></li><li class="listitem"><p><a class="link" href="ch03.html#architecture-pars" title="PAR">PARs</a></p></li><li class="listitem"><p><a class="link" href="ch03.html#architecture-plans" title="Plans">Plans</a></p></li><li class="listitem"><p><a class="link" href="ch03.html#architecture-configurations" title="Configurations">Configurations</a></p></li></ol></div><p> When you deploy an application to the VTS, each deployment artifact
 			(e.g., a single bundle, WAR, PAR, or plan) passes through a deployment pipeline. This
 			deployment pipeline is responsible for processing applications of certain types (i.e.,
-			application type). The 1.0.0 release of the VTS natively
+			application type). The 3.5.0 release of the VTS natively
 			supports deployers analogous to each of the aforementioned packaging options. </p><p> Let&rsquo;s take a closer look now at each of the supported deployment and packaging
 			options to explore which one is best suited to your application.</p><div class="section" title="Raw OSGi Bundles"><div class="titlepage"><div><div><h3 class="title"><a name="architecture-raw-osgi-bundles"></a>Raw OSGi Bundles</h3></div></div></div><p> At its core, the Virgo Server for Apache Tomcat is an OSGi container. Thus any OSGi-compliant
 				bundle can be deployed directly on the VTS unmodified. You&rsquo;ll
@@ -35,7 +35,7 @@
 					web applications and then gradually migrate toward the <span class="emphasis"><em>Shared
 						Libraries WAR</em></span> and <span class="emphasis"><em>Shared Services WAR</em></span>
 					formats. </p><p> In addition to the standard support for WARs that you would expect from
-					Tomcat, the VTS also enables the following features:</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Spring-driven load-time weaving (see Section 6.8.4, &ldquo;Load-time weaving
+					Tomcat, the VTS also enables the following features:</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Spring-driven load-time weaving (see Section 6.8.4, ???Load-time weaving
 							with AspectJ in the Spring Framework").</p></li><li class="listitem"><p>Diagnostic information such as FFDC (first failure data
 						capture)</p></li></ol></div><p> The main benefit of this application style is familiarity -- developers know
 					how to create a WAR file! You can take advantage of the

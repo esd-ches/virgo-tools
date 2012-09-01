@@ -3,7 +3,7 @@
 	</p><div class="section" title="ANT Setup"><div class="titlepage"><div><div><h3 class="title"><a name="usage.ant.setup"></a>ANT Setup</h3></div></div></div><p>The following procedure shows how to set up Bundlor inside of an existing ANT build file</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Define a <code class="literal">bundlor</code> namespace</p><pre class="programlisting">&lt;project name="bundlor-sample-ant"
     xmlns:bundlor="antlib:org.eclipse.virgo.bundlor.ant"&gt;</pre></li><li class="listitem"><p>Import the <code class="literal">bundlor</code> task into your build</p><pre class="programlisting">&lt;target name="bundlor.init"&gt;
   &lt;ivy:cachepath resolveId="bundlor.classpath" pathid="bundlor.classpath" organisation="org.eclipse.virgo.bundlor"
-                 module="org.eclipse.virgo.bundlor.ant" revision="1.0.0" conf="ant" inline="true"
+                 module="org.eclipse.virgo.bundlor.ant" revision="3.5.0" conf="ant" inline="true"
                  type="jar" log="download-only"/&gt;
   &lt;taskdef resource="org/eclipse/virgo/bundlor/ant/antlib.xml" uri="antlib:org.eclipse.virgo.bundlor.ant"
            classpathref="bundlor.classpath"/&gt;

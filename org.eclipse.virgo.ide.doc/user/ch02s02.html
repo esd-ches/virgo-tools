@@ -78,15 +78,15 @@ class of the service.
 
 </p><pre class="programlisting">Export-Package: org.bar
 </pre><p>
-</p><p>&hellip;implement the interface with a class <code class="literal">SomeImpl</code>:
+</p><p>???implement the interface with a class <code class="literal">SomeImpl</code>:
 
 </p><pre class="programlisting">package org.bar.impl;
 
 class SomeImpl implements SomeInterface {
-	&hellip;
+	???
 }
 </pre><p>
-</p><p>&hellip;create an instance of <code class="literal">SomeImpl</code> and 
+</p><p>???create an instance of <code class="literal">SomeImpl</code> and 
 then publish this instance (as an instance of the interface <code class="literal">SomeInterface</code>).
 </p><p>An OSGi framework publishes a number of standard services. For example, the 
 <span class="emphasis"><em>Package Admin</em></span> service provides the <span class="quote">&ldquo;<span class="quote">refresh packages</span>&rdquo;</span> life cycle operation

@@ -7,11 +7,6 @@
 		<topic href="wiki/Virgo/Tooling/Installation.html#Update_Sites" label="Update Sites"></topic>
 	</topic>
 	<topic href="wiki/Virgo/Tooling/Known-Issues.html" label="Known Issues"></topic>
-	<topic href="wiki/Virgo/Tooling/Notes.html" label="Notes">
-		<topic href="wiki/Virgo/Tooling/Notes.html#Web_Application_Bundles" label="Web Application Bundles"></topic>
-		<topic href="wiki/Virgo/Tooling/Notes.html#Bundlor" label="Bundlor"></topic>
-		<topic href="wiki/Virgo/Tooling/Notes.html#PDE.2FEquinox_Bundles_not_supported_yet" label="PDE/Equinox Bundles not supported yet"></topic>
-	</topic>
 	<topic href="wiki/Virgo/Tooling/Migration.html" label="Migration">
 		<topic href="wiki/Virgo/Tooling/Migration.html#From_Pre_M2_to_M4" label="From Pre M2 to M4">
 			<topic href="wiki/Virgo/Tooling/Migration.html#Server_Versions" label="Server Versions"></topic>
@@ -24,5 +19,6 @@
 		<topic href="wiki/Virgo/Tooling/Maven-plugin.html#Simple_example_POM" label="Simple example POM"></topic>
 	</topic>
 	<topic href="wiki/Virgo/Tooling/Importing-Virgo-Projects-into-Eclipse.html" label="Importing Virgo Projects into Eclipse"></topic>
+	<topic href="wiki/Virgo/Tooling/FAQ.html" label="FAQ"></topic>
 	<topic href="wiki/Virgo/Tooling/Updating-This-Document.html" label="Updating This Document"></topic>
 </toc>

@@ -1,65 +1,12 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;5.&nbsp;Developing OSGi Bundles</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Tools Guide"><link rel="up" href="index.html" title="Virgo Tools Guide"><link rel="prev" href="ch04.html" title="Chapter&nbsp;4.&nbsp;Bundle and Library Provisioning"><link rel="next" href="ch05s02.html" title="Editing the Manifest"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch04.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch05s02.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter&nbsp;5.&nbsp;Developing OSGi Bundles"><div class="titlepage"><div><div><h2 class="title"><a name="developing"></a>Chapter&nbsp;5.&nbsp;Developing OSGi Bundles</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="ch05.html#tooling-developing-resolving-bundle-dependencies">Resolving Bundle Dependencies</a></span></dt><dt><span class="section"><a href="ch05s02.html">Editing the Manifest</a></span></dt></dl></div><p>
-		The Tools provide functionality that makes developing OSGi bundles,
-		especially the editing of MANIFEST.MF files, easier.
-	</p><div class="section" title="Resolving Bundle Dependencies"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="tooling-developing-resolving-bundle-dependencies"></a>Resolving Bundle Dependencies</h2></div></div></div><p>
-			While working with OSGi bundles, one of the most interesting and
-			challenging aspects is defining
-			the package, bundle, and library imports in the manifest and then
-			keeping this in sync
-			with your compile classpath either in Ant and Maven or Eclipse. In most
-			cases you would typically
-			be required to manually set up the Eclipse classpath. Ultimately, the
-			Eclipse compile
-			classpath is still different from the bundle runtime classpath, as normally an
-			entire
-			JAR file is being made available on the Eclipse classpath but not
-			necessarily at runtime
-			due to the explicit visibility rules defined in
-			<code class="code">Import-Package</code>
-			headers.
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;5.&nbsp;Server Editor</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Tools Guide"><link rel="up" href="index.html" title="Virgo Tools Guide"><link rel="prev" href="ch04s03.html" title="Virgo Server Projects"><link rel="next" href="ch05s02.html" title="Repository Page"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch04s03.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch05s02.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter&nbsp;5.&nbsp;Server Editor"><div class="titlepage"><div><div><h2 class="title"><a name="server-editor"></a>Chapter&nbsp;5.&nbsp;Server Editor</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="ch05.html#N101F9">Overview Page</a></span></dt><dt><span class="section"><a href="ch05s02.html">Repository Page</a></span></dt><dt><span class="section"><a href="ch05s03.html">Bundle Overview Page</a></span></dt><dt><span class="section"><a href="ch05s04.html">Bundle Dependency Graph Page</a></span></dt><dt><span class="section"><a href="ch05s05.html">Server Console Page</a></span></dt></dl></div><p>After successful configuration of an instance of the Virgo Runtime Environment in Eclipse you can use the server
+		editor to configure and explore many different aspects of the Virgo Runtime instance. To open a server editor double-click
+		a Virgo Runtime instance in the Servers view.
+	</p><div class="section" title="Overview Page"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="N101F9"></a>Overview Page</h2></div></div></div><p>The server overview page is the first page of the editor. Please note that opening of the Editor may take a few
+			seconds as the contents of the local repository needs to be indexed before opening.
 		</p><p>
-			The Tools address this problem by providing an Eclipse classpath
-			container that
-			uses an Virgo Server for Apache Tomcat-specific dependency resolution mechanism.
-			This classpath
-			container makes resolved dependencies available on the project&rsquo;s
-			classpath but allows
-			only access to those package that are imported explicitly (e.g., via
-			<code class="code">Import-Package</code>
-			)
-			or implicitly by using
-			<code class="code">Import-Library</code>
-			or
-			<code class="code">Import-Bundle</code>
-			.
+			<img src="images/editor-overview-page.png">
 		</p><p>
-			To use the automatic dependency resolution, an OSGi bundle or PAR
-			project needs to be
-			targeted to a configured Virgo Server for Apache Tomcat instance. This can be done
-			from the project&rsquo;s
-			preferences by selecting the runtime on the "Targeted Runtimes" preference page.
-		</p><p>
-			</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
-				In most scenarios it is sufficient to target the PAR project to a
-				runtime. The nested
-				bundles will then automatically inherit this setting.
-			</div><p>
-		</p><p>
-			<img src="images/tooling-classpath.png">
-		</p><p>
-			After targeting the project or PAR you will see a "Bundle Dependencies"
-			classpath
-			container in your Java project. It is now safe to remove any manually
-			configured classpath
-			entries.
-		</p><p>
-			The classpath container will automatically attach Java source code to
-			the classpath
-			entries by looking for source JARs next to the binary JARs in the
-			Virgo Server for Apache Tomcat&rsquo;s
-			repository. You can also manually override the source code attachment by using
-			the
-			properties dialog on a single JAR entry. This manual attachment will always
-			override
-			the convention-based attachment.
-		</p></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch04.html">Prev</a>&nbsp;</td><td align="center" width="20%">&nbsp;</td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch05s02.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>
+			See the
+			<span class="emphasis"><em>Web Tools Platform Guide</em></span>
+			for more information on what the various configuration options do.
+		</p></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch04s03.html">Prev</a>&nbsp;</td><td align="center" width="20%">&nbsp;</td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch05s02.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>
