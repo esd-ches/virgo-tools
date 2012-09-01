@@ -325,13 +325,6 @@
                   relationship="left"
                   relative="org.eclipse.ui.editorss">
             </view>
-                        <view
-                  id="org.eclipse.wst.server.ui.ServersView"
-                  minimized="false"
-                  ratio=".2"
-                  relationship="left"
-                  relative="org.eclipse.ui.editorss">
-            </view>
    <view
          id="org.eclipse.pde.runtime.LogView"
          minimized="true"
@@ -357,13 +350,6 @@
          relationship="stack"
          relative="org.eclipse.pde.runtime.LogView">
    </view>
-                        <view
-                              id="org.eclipse.ui.views.ContentOutline"
-                              minimized="false"
-                              ratio=".2"
-                              relationship="left"
-                              relative="org.eclipse.ui.editorss">
-                        </view>
                   <view
                         id="org.eclipse.virgo.ide.runtime.ui.virgoArtefacts"
                         minimized="false"
@@ -383,6 +369,19 @@
                         relationship="stack"
                         relative="org.eclipse.virgo.ide.runtime.ui.virgoArtefacts">
                   </view>
+                        <view
+                  id="org.eclipse.wst.server.ui.ServersView"
+                  minimized="false"
+                  ratio=".2"
+                  relationship="left"
+                  relative="org.eclipse.ui.editorss">
+            </view>
+                        <view
+                              id="org.eclipse.ui.views.ContentOutline"
+                              minimized="false"
+                              relationship="stack"
+                              relative="org.eclipse.wst.server.ui.ServersView">
+                        </view>
 			<view
                   id="org.eclipse.ui.console.ConsoleView"
                   minimized="false"
