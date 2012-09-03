@@ -388,6 +388,10 @@ public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
 		if (versionString != null) {
 			return InstallationType.KERNEL;
 		}
+        versionString = versionProperties.getProperty("virgo.nano.version");
+		if (versionString != null) {
+			return InstallationType.NANO;
+		}
 		return null;
 	}
 
