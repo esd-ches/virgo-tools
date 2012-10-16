@@ -70,6 +70,7 @@ import org.eclipse.virgo.bundlor.support.properties.FileSystemPropertiesSource;
 import org.eclipse.virgo.bundlor.support.properties.PropertiesSource;
 import org.eclipse.virgo.bundlor.util.SimpleManifestContents;
 import org.eclipse.virgo.ide.bundlor.internal.core.asm.ExtensibleAsmTypeArtefactAnalyser;
+import org.eclipse.virgo.ide.bundlor.internal.core.maven.MavenPropertiesSourceFactory;
 import org.eclipse.virgo.ide.bundlor.jdt.core.AstTypeArtifactAnalyser;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
@@ -297,6 +298,11 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 		Set<PropertiesSource> propertiesSources = new HashSet<PropertiesSource>();
 		for (IPath path : paths) {
 			propertiesSources.add(new FileSystemPropertiesSource(path.toFile()));
+		}
+
+		// Check if the project has a pom.xml in the root of the project file structure
+		if (MavenPropertiesSourceFactory.shouldCreate(getProject())) {
+			propertiesSources.add(MavenPropertiesSourceFactory.createPropertiesSource(getProject()));
 		}
 		return propertiesSources.toArray(new PropertiesSource[] {});
 	}
