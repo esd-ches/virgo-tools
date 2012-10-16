@@ -88,7 +88,7 @@
 
   <repositories>
 	<repository>
-	  <id>helios</id>
+	  <id>indigo</id>
 	  <layout>p2</layout>
 	  <url>http://download.eclipse.org/releases/indigo/</url>
 	</repository>
@@ -121,6 +121,11 @@
       <id>virgo-milestone</id>
       <layout>p2</layout>
       <url>http://download.eclipse.org/virgo/updatesite/3.5.0.RELEASE</url>
+    </repository>
+    <repository>
+      <id>m2e</id>
+      <layout>p2</layout>
+      <url>http://download.eclipse.org/technology/m2e/releases</url>
     </repository>
   </repositories>
 
