@@ -138,7 +138,6 @@
 		<version>${tycho-version}</version>
 		<configuration>
 		  <resolver>p2</resolver>
-		  <pomDependencies>consider</pomDependencies>
 		  <ignoreTychoRepositories>true</ignoreTychoRepositories>
 		  <dependency-resolution>
 			<optionalDependencies>ignore</optionalDependencies>
