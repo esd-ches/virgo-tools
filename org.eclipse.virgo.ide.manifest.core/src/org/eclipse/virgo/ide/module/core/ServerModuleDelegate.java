@@ -94,9 +94,8 @@ public class ServerModuleDelegate extends ProjectModule {
 						resources.addAll(Arrays.asList(delegate.members()));
 					}
 				}
-			} else {
-				resources.addAll(getMembers(getProject(), moduleRelativePath));
 			}
+			resources.addAll(getMembers(getProject(), moduleRelativePath));
 		}
 		// More complex handling of PAR and nested bundle project
 		else if (getModule().getModuleType().getId().equals(FacetCorePlugin.PAR_FACET_ID)) {
