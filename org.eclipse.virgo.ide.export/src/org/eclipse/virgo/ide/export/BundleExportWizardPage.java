@@ -11,14 +11,10 @@
 package org.eclipse.virgo.ide.export;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.ui.StandardJavaElementContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
@@ -32,6 +28,7 @@ import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
  * 
  * @author Christian Dupuis
  * @author Terry Hon
+ * @author Leo Dos Santos
  */
 public class BundleExportWizardPage extends AbstractProjectExportWizardPage {
 
@@ -51,39 +48,22 @@ public class BundleExportWizardPage extends AbstractProjectExportWizardPage {
 				if (element instanceof IPackageFragmentRoot) {
 					IPackageFragmentRoot root = (IPackageFragmentRoot) element;
 					return !root.isArchive() && !root.isExternal();
-				} else if (element instanceof IJavaProject) {
-					IJavaProject javaProject = (IJavaProject) element;
+				} else if (element instanceof IProject) {
+					IProject project = (IProject) element;
 					try {
-						IFacetedProject facetedProject = ProjectFacetsManager.create(javaProject.getProject());
-						if (facetedProject != null) {
-							return facetedProject.hasProjectFacet(ProjectFacetsManager.getProjectFacet(
-									FacetCorePlugin.BUNDLE_FACET_ID).getDefaultVersion());
+						IFacetedProject facetedProject = ProjectFacetsManager.create(project);
+						if (facetedProject == null) {
+							return false;
 						}
+						return facetedProject.hasProjectFacet(ProjectFacetsManager.getProjectFacet(
+								FacetCorePlugin.BUNDLE_FACET_ID).getDefaultVersion());
 					} catch (CoreException e) {
+						return false;
 					}
-					return false;
 				}
-				return true;
+				return false;
 			}
 		};
-	}
-
-	@Override
-	protected ITreeContentProvider getTreeContentProvider() {
-		return new StandardJavaElementContentProvider() {
-			@Override
-			public Object[] getChildren(Object element) {
-				if (element instanceof IJavaProject) {
-					return NO_CHILDREN;
-				}
-				return super.getChildren(element);
-			}
-		};
-	}
-
-	@Override
-	protected Object getInput() {
-		return JavaCore.create(ResourcesPlugin.getWorkspace().getRoot());
 	}
 
 	@Override

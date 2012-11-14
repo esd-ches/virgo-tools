@@ -15,6 +15,7 @@ import java.io.File;
 import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IJavaProject;
@@ -30,6 +31,7 @@ import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -50,6 +52,7 @@ import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
  * 
  * @author Christian Dupuis
  * @author Terry Hon
+ * @author Leo Dos Santos
  */
 @SuppressWarnings("restriction")
 public abstract class AbstractProjectExportWizardPage extends WizardExportResourcesPage {
@@ -217,7 +220,9 @@ public abstract class AbstractProjectExportWizardPage extends WizardExportResour
 
 	abstract protected String getExtension();
 
-	abstract protected Object getInput();
+	protected Object getInput() {
+		return ResourcesPlugin.getWorkspace().getRoot();
+	}
 
 	public IPath getJarLocation() {
 		return Path.fromOSString(destinationText.getText());
@@ -246,7 +251,47 @@ public abstract class AbstractProjectExportWizardPage extends WizardExportResour
 		return null;
 	}
 
-	abstract protected ITreeContentProvider getTreeContentProvider();
+	protected ITreeContentProvider getTreeContentProvider() {
+		return new ITreeContentProvider() {
+
+			private final Object[] NO_CHILDREN = new Object[0];
+
+			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+				// no op
+			}
+
+			public void dispose() {
+				// no op
+			}
+
+			public Object[] getElements(Object inputElement) {
+				return getChildren(inputElement);
+			}
+
+			public boolean hasChildren(Object element) {
+				return getChildren(element).length > 0;
+			}
+
+			public Object getParent(Object element) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public Object[] getChildren(Object parentElement) {
+				if (parentElement instanceof IProject) {
+					return NO_CHILDREN;
+				}
+				if (parentElement instanceof IContainer) {
+					IContainer container = (IContainer) parentElement;
+					try {
+						return container.members();
+					} catch (CoreException e) {
+					}
+				}
+				return NO_CHILDREN;
+			}
+		};
+	}
 
 	abstract protected ViewerFilter getTreeViewerFilter();
 

@@ -13,15 +13,12 @@ package org.eclipse.virgo.ide.export;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.viewers.ViewerFilter;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
@@ -35,6 +32,7 @@ import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
  * 
  * @author Christian Dupuis
  * @author Terry Hon
+ * @author Leo Dos Santos
  */
 public class ParExportWizardPage extends AbstractProjectExportWizardPage {
 
@@ -70,54 +68,6 @@ public class ParExportWizardPage extends AbstractProjectExportWizardPage {
 				return false;
 			}
 		};
-	}
-
-	@Override
-	protected ITreeContentProvider getTreeContentProvider() {
-		return new ITreeContentProvider() {
-
-			private final Object[] NO_CHILDREN = new Object[0];
-
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-				// no op
-			}
-
-			public void dispose() {
-				// no op
-			}
-
-			public Object[] getElements(Object inputElement) {
-				return getChildren(inputElement);
-			}
-
-			public boolean hasChildren(Object element) {
-				return getChildren(element).length > 0;
-			}
-
-			public Object getParent(Object element) {
-				// TODO Auto-generated method stub
-				return null;
-			}
-
-			public Object[] getChildren(Object parentElement) {
-				if (parentElement instanceof IProject) {
-					return NO_CHILDREN;
-				}
-				if (parentElement instanceof IContainer) {
-					IContainer container = (IContainer) parentElement;
-					try {
-						return container.members();
-					} catch (CoreException e) {
-					}
-				}
-				return NO_CHILDREN;
-			}
-		};
-	}
-
-	@Override
-	protected Object getInput() {
-		return ResourcesPlugin.getWorkspace().getRoot();
 	}
 
 	@Override
