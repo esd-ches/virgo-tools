@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2012 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009 - 2013 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -59,8 +59,12 @@ public class ServerProjectManager implements IServerLifecycleListener {
 			ServerProject serverProject = projectForServer.get(server);
 			if (serverProject == null && create) {
 				serverProject = new ServerProject(server);
-				projectForServer.put(server, serverProject);
-				projectForName.put(serverProject.getWorkspaceProject().getName(), serverProject);
+				if (serverProject.getWorkspaceProject() != null) {
+					projectForServer.put(server, serverProject);
+					projectForName.put(serverProject.getWorkspaceProject().getName(), serverProject);
+				} else {
+					serverProject = null;
+				}
 			}
 			if (serverProject != null && refresh) {
 				serverProject.refresh();
