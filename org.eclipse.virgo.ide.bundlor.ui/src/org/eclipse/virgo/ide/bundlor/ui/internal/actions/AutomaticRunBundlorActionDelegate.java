@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2012 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009 - 2013 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -47,6 +47,7 @@ import org.eclipse.virgo.ide.facet.core.FacetUtils;
  */
 public class AutomaticRunBundlorActionDelegate extends RunBundlorActionDelegate {
 
+	@Override
 	public void run(IAction action) {
 		final Set<IJavaProject> projects = new LinkedHashSet<IJavaProject>();
 		Iterator<IProject> iter = getSelected().iterator();
@@ -57,6 +58,7 @@ public class AutomaticRunBundlorActionDelegate extends RunBundlorActionDelegate 
 			}
 		}
 		IRunnableWithProgress op = new WorkspaceModifyOperation() {
+			@Override
 			protected void execute(IProgressMonitor monitor) throws CoreException, InterruptedException {
 				for (final IJavaProject javaProject : projects) {
 					IProject project = javaProject.getProject();
@@ -64,16 +66,16 @@ public class AutomaticRunBundlorActionDelegate extends RunBundlorActionDelegate 
 					try {
 						List<ICommand> cmds = Arrays.asList(description.getBuildSpec());
 						List<ICommand> newCmds = new ArrayList<ICommand>(cmds);
-						for (ICommand config : cmds) {
-							if (config.getBuilderName().equals(BundlorCorePlugin.BUILDER_ID)) {
-								if (BundlorUiPlugin.isBundlorBuilding(project)) {
+						if (BundlorUiPlugin.isBundlorBuilding(project)) {
+							for (ICommand config : cmds) {
+								if (config.getBuilderName().equals(BundlorCorePlugin.BUILDER_ID)) {
 									newCmds.remove(config);
-								} else {
-									ICommand command = project.getDescription().newCommand();
-									command.setBuilderName(BundlorCorePlugin.BUILDER_ID);
-									newCmds.add(config);
 								}
 							}
+						} else {
+							ICommand command = project.getDescription().newCommand();
+							command.setBuilderName(BundlorCorePlugin.BUILDER_ID);
+							newCmds.add(command);
 						}
 						if (!cmds.equals(newCmds)) {
 							description.setBuildSpec(newCmds.toArray(new ICommand[] {}));
@@ -102,6 +104,7 @@ public class AutomaticRunBundlorActionDelegate extends RunBundlorActionDelegate 
 
 	}
 
+	@Override
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 	}
 
