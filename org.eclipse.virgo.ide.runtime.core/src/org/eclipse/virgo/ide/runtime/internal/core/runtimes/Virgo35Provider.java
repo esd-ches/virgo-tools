@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 Eclipse Foundation
+ * Copyright (c) 2012 - 2013 Eclipse Foundation
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -117,6 +117,7 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
 		list.add("-Dosgi.install.area=" + serverHome);
 		list.add("-Dosgi.configuration.area=" + serverHome + "/work");
 		list.add("-Dssh.server.keystore=" + serverHome + "/" + getConfigurationDir() + "/hostkey.ser");
+		list.add("-Djava.endorsed.dirs=\"" + serverHome + "/lib/endorsed\"");
 
 		String fwClassPath = createFWClassPath(serverHome);
 
