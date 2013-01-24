@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2012 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009 - 2013 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,6 +33,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.viewsupport.FilteredElementTreeSelectionDialog;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
 import org.eclipse.jdt.ui.JavaElementSorter;
+import org.eclipse.jface.dialogs.IDialogConstants;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -80,6 +81,8 @@ public class BundlorPreferencePage extends PropertyPage {
 	private TableViewer filenamesTableViewer;
 
 	private Button addButton;
+
+	private Button pathButton;
 
 	private Button deleteButton;
 
@@ -165,7 +168,7 @@ public class BundlorPreferencePage extends PropertyPage {
 		buttonComposite.setLayoutData(data);
 
 		addButton = new Button(buttonComposite, SWT.PUSH);
-		addButton.setText("Add");
+		addButton.setText("Add...");
 		data = new GridData();
 		data.widthHint = 100;
 		addButton.setLayoutData(data);
@@ -207,6 +210,24 @@ public class BundlorPreferencePage extends PropertyPage {
 			}
 		});
 
+		pathButton = new Button(buttonComposite, SWT.PUSH);
+		pathButton.setText("Enter Path...");
+		data = new GridData();
+		data.widthHint = 100;
+		pathButton.setLayoutData(data);
+		pathButton.addSelectionListener(new SelectionAdapter() {
+			@Override
+			public void widgetSelected(SelectionEvent e) {
+				BundlorPropertiesPathDialog pathDialog = new BundlorPropertiesPathDialog(getShell());
+				if (pathDialog.open() == IDialogConstants.OK_ID) {
+					String path = pathDialog.getPropertiesPath();
+					filenames.add(path);
+					modified = true;
+					filenamesTableViewer.setInput(project);
+				}
+			}
+		});
+
 		deleteButton = new Button(buttonComposite, SWT.PUSH);
 		deleteButton.setText("Delete");
 		deleteButton.setLayoutData(data);
@@ -234,7 +255,7 @@ public class BundlorPreferencePage extends PropertyPage {
 			IEclipsePreferences node = getProjectPreferences(project);
 			String properties = node.get(BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_KEY,
 					BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_DEFAULT);
-			filenames = Arrays.asList(StringUtils.split(properties, ";"));
+			filenames = new ArrayList<String>(Arrays.asList(StringUtils.split(properties, ";")));
 			checkScanByteCodeButton = node.getBoolean(BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_KEY,
 					BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_DEFAULT);
 			checkFormatManifestsButton = node.getBoolean(BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_KEY,

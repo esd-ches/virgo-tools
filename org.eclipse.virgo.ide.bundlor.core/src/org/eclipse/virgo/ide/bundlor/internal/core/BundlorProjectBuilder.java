@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 - 2012 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009 - 2013 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -58,6 +58,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.osgi.util.ManifestElement;
 import org.eclipse.pde.internal.core.text.bundle.ManifestHeader;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.bundlor.ClassPath;
 import org.eclipse.virgo.bundlor.ClassPathEntry;
 import org.eclipse.virgo.bundlor.EntryScannerListener;
@@ -256,8 +257,8 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 				// Assume file is relative to the project but still in the
 				// workspace
 				IPath location = new Path(propertiesFile);
-				IFile propertiesResource = project.getFile(location);
-				if (propertiesResource.exists()) {
+				if (project.exists(location)) {
+					IFile propertiesResource = project.getFile(location);
 					if (propertiesResource.isLinked()) {
 						paths.add(propertiesResource.getLocation());
 					} else {
@@ -288,9 +289,14 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 				// Assume absolute path
 				if (location.toFile().exists()) {
 					paths.add(location);
+					continue;
 				}
 				// TODO CD we could add an error marker for those files that
 				// can't be resolved to a resource
+				StatusManager.getManager().handle(
+						new Status(IStatus.INFO, BundlorCorePlugin.PLUGIN_ID,
+								"Bundlor property substitution is skipping over file " + location.toString()
+										+ " for project " + project.getName() + " because it could not be found."));
 			}
 		}
 
