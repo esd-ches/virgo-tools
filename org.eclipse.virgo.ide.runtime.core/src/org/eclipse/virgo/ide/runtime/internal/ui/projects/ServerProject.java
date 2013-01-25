@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2012 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009 - 2013 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -50,6 +50,7 @@ import org.eclipse.wst.server.core.IServer;
  * and PDE support. There should be one and only one server project for a given server.
  * 
  * @author Miles Parker
+ * @author Leo Dos Santos
  */
 public class ServerProject {
 
@@ -186,7 +187,11 @@ public class ServerProject {
 	}
 
 	protected boolean isRuntimeExists() {
-		return ServerUtils.createDependencyLocator(server.getRuntime()) != null;
+		String home = ServerUtils.getServerHome(server.getRuntime());
+		if (home == null) {
+			return false;
+		}
+		return new File(home).exists();
 	}
 
 	protected void clearFiles() {

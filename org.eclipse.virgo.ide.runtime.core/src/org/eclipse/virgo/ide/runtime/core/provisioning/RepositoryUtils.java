@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2012 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009 - 2013 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -33,6 +33,7 @@ import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 import org.eclipse.virgo.ide.bundlerepository.domain.PackageMember;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
+import org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.virgo.ide.runtime.core.artefacts.Artefact;
@@ -45,7 +46,11 @@ import org.eclipse.virgo.ide.runtime.core.artefacts.LocalBundleArtefact;
 import org.eclipse.virgo.ide.runtime.core.artefacts.LocalLibraryArtefact;
 import org.eclipse.virgo.ide.runtime.internal.core.ServerRuntimeUtils;
 import org.eclipse.virgo.ide.runtime.internal.core.VirgoServerRuntime;
+import org.eclipse.virgo.ide.runtime.internal.core.runtimes.InstallationType;
+import org.eclipse.virgo.ide.runtime.internal.core.runtimes.RuntimeProviders;
+import org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider;
 import org.eclipse.virgo.kernel.repository.BundleRepository;
+import org.eclipse.virgo.repository.Repository;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.virgo.util.osgi.manifest.ExportedPackage;
 import org.eclipse.wst.server.core.IRuntime;
@@ -53,9 +58,10 @@ import org.osgi.framework.Version;
 
 /**
  * Utility class that is able to create {@link Repository} instances from either the remote enterprise bundle repository
- * or from a local installed dm Server instance.
+ * or from a local installed Virgo instance.
  * 
  * @author Christian Dupuis
+ * @author Leo Dos Santos
  * @since 1.0.0
  */
 @SuppressWarnings("restriction")
@@ -78,6 +84,20 @@ public class RepositoryUtils {
 	private static final String BRITS_BASE = "http://www.springsource.com/repository/app";
 
 	private static final String DOWNLOAD_BASE = "http://repository.springsource.com/ivy";
+
+	public static boolean doesRuntimeSupportRepositories(IRuntime runtime) {
+		IServerRuntimeProvider provider = RuntimeProviders.getRuntimeProvider(runtime);
+		if (provider instanceof VirgoRuntimeProvider) {
+			VirgoRuntimeProvider virgoProvider = (VirgoRuntimeProvider) provider;
+			InstallationType install = virgoProvider.getInstallationType(runtime);
+			if (InstallationType.NANO.equals(install)) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+		return false;
+	}
 
 	/**
 	 * Downloads the given <code>artifacts</code>.
@@ -244,37 +264,37 @@ public class RepositoryUtils {
 	 * Creates a {@link Repository} inventory from the given runtime.
 	 */
 	public static ArtefactRepository getRepositoryContents(IRuntime runtime) {
-
 		ArtefactRepository artifacts = new ArtefactRepository();
+		if (doesRuntimeSupportRepositories(runtime)) {
+			BundleRepository bundleRepository = ServerCorePlugin.getArtefactRepositoryManager().getBundleRepository(
+					runtime);
 
-		BundleRepository bundleRepository = ServerCorePlugin.getArtefactRepositoryManager()
-				.getBundleRepository(runtime);
-
-		for (org.eclipse.virgo.kernel.repository.BundleDefinition bundleDefinition : bundleRepository.getBundles()) {
-			if (bundleDefinition.getManifest() != null
-					&& bundleDefinition.getManifest().getBundleSymbolicName() != null
-					&& bundleDefinition.getManifest().getBundleSymbolicName().getSymbolicName() != null) {
-				BundleManifest manifest = bundleDefinition.getManifest();
-				boolean sourcefileExists = (ServerUtils.getSourceFile(bundleDefinition.getLocation()) != null && ServerUtils.getSourceFile(
-						bundleDefinition.getLocation())
-						.exists());
-				OsgiVersion version = null;
-				if (manifest.getBundleVersion() != null) {
-					version = new OsgiVersion(manifest.getBundleVersion());
+			for (org.eclipse.virgo.kernel.repository.BundleDefinition bundleDefinition : bundleRepository.getBundles()) {
+				if (bundleDefinition.getManifest() != null
+						&& bundleDefinition.getManifest().getBundleSymbolicName() != null
+						&& bundleDefinition.getManifest().getBundleSymbolicName().getSymbolicName() != null) {
+					BundleManifest manifest = bundleDefinition.getManifest();
+					boolean sourcefileExists = (ServerUtils.getSourceFile(bundleDefinition.getLocation()) != null && ServerUtils.getSourceFile(
+							bundleDefinition.getLocation())
+							.exists());
+					OsgiVersion version = null;
+					if (manifest.getBundleVersion() != null) {
+						version = new OsgiVersion(manifest.getBundleVersion());
+					}
+					artifacts.addBundle(new LocalBundleArtefact(manifest.getBundleName(),
+							manifest.getBundleSymbolicName().getSymbolicName(), version, sourcefileExists,
+							bundleDefinition.getLocation()));
 				}
-				artifacts.addBundle(new LocalBundleArtefact(manifest.getBundleName(), manifest.getBundleSymbolicName()
-						.getSymbolicName(), version, sourcefileExists, bundleDefinition.getLocation()));
-			}
 
-		}
-		for (org.eclipse.virgo.kernel.repository.LibraryDefinition libraryDefinition : bundleRepository.getLibraries()) {
-			if (libraryDefinition.getSymbolicName() != null) {
-				artifacts.addLibrary(new LocalLibraryArtefact(libraryDefinition.getName(),
-						libraryDefinition.getSymbolicName(), new OsgiVersion(libraryDefinition.getVersion()),
-						libraryDefinition.getLocation()));
+			}
+			for (org.eclipse.virgo.kernel.repository.LibraryDefinition libraryDefinition : bundleRepository.getLibraries()) {
+				if (libraryDefinition.getSymbolicName() != null) {
+					artifacts.addLibrary(new LocalLibraryArtefact(libraryDefinition.getName(),
+							libraryDefinition.getSymbolicName(), new OsgiVersion(libraryDefinition.getVersion()),
+							libraryDefinition.getLocation()));
+				}
 			}
 		}
-
 		return artifacts;
 	}
 
