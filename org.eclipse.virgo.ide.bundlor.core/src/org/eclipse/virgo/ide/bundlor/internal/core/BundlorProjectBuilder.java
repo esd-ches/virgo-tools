@@ -273,7 +273,7 @@ public class BundlorProjectBuilder extends IncrementalProjectBuilder {
 				if (projectRelativeLocation == null) {
 					projectRelativeLocation = project.getRawLocation();
 				}
-				projectRelativeLocation = location.append(propertiesFile);
+				projectRelativeLocation = projectRelativeLocation.append(propertiesFile);
 				if (projectRelativeLocation.toFile().exists()) {
 					paths.add(projectRelativeLocation);
 					continue;
