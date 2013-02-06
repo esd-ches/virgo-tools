@@ -45,22 +45,24 @@ public class MavenPropertiesSource implements PropertiesSource {
 		try {
 			IMavenProjectRegistry registry = MavenPlugin.getMavenProjectRegistry();
 			IMavenProjectFacade facade = registry.create(project, new NullProgressMonitor());
-			MavenProject mavenProj = facade.getMavenProject(new NullProgressMonitor());
-			Properties props = mavenProj.getProperties();
+			if (facade != null) {
+				MavenProject mavenProj = facade.getMavenProject(new NullProgressMonitor());
+				Properties props = mavenProj.getProperties();
 
-			// add in some special maven properties
-			addPropertyIfNotNull(props, "project.artifactId", mavenProj.getArtifactId()); //$NON-NLS-1$
-			addPropertyIfNotNull(props, "project.groupId", mavenProj.getGroupId()); //$NON-NLS-1$
-			addPropertyIfNotNull(props, "project.description", mavenProj.getDescription()); //$NON-NLS-1$
-			addPropertyIfNotNull(props, "project.name", mavenProj.getName()); //$NON-NLS-1$
-			addPropertyIfNotNull(props, "project.version", mavenProj.getVersion()); //$NON-NLS-1$
-			addPropertyIfNotNull(props, "pom.artifactId", mavenProj.getArtifactId()); //$NON-NLS-1$
-			addPropertyIfNotNull(props, "pom.groupId", mavenProj.getGroupId()); //$NON-NLS-1$
-			addPropertyIfNotNull(props, "pom.description", mavenProj.getDescription()); //$NON-NLS-1$
-			addPropertyIfNotNull(props, "pom.name", mavenProj.getName()); //$NON-NLS-1$
-			addPropertyIfNotNull(props, "pom.version", mavenProj.getVersion()); //$NON-NLS-1$
+				// add in some special maven properties
+				addPropertyIfNotNull(props, "project.artifactId", mavenProj.getArtifactId()); //$NON-NLS-1$
+				addPropertyIfNotNull(props, "project.groupId", mavenProj.getGroupId()); //$NON-NLS-1$
+				addPropertyIfNotNull(props, "project.description", mavenProj.getDescription()); //$NON-NLS-1$
+				addPropertyIfNotNull(props, "project.name", mavenProj.getName()); //$NON-NLS-1$
+				addPropertyIfNotNull(props, "project.version", mavenProj.getVersion()); //$NON-NLS-1$
+				addPropertyIfNotNull(props, "pom.artifactId", mavenProj.getArtifactId()); //$NON-NLS-1$
+				addPropertyIfNotNull(props, "pom.groupId", mavenProj.getGroupId()); //$NON-NLS-1$
+				addPropertyIfNotNull(props, "pom.description", mavenProj.getDescription()); //$NON-NLS-1$
+				addPropertyIfNotNull(props, "pom.name", mavenProj.getName()); //$NON-NLS-1$
+				addPropertyIfNotNull(props, "pom.version", mavenProj.getVersion()); //$NON-NLS-1$
 
-			return props;
+				return props;
+			}
 		} catch (CoreException e) {
 			// this exception will be reported later on as the properties can't be reported.
 		}
