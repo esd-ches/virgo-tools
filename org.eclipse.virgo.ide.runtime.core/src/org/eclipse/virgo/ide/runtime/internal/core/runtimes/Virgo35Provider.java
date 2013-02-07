@@ -27,10 +27,7 @@ import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
-import org.eclipse.virgo.ide.runtime.internal.core.command.IServerCommand;
-import org.eclipse.virgo.ide.runtime.internal.core.command.JmxServer35UndeployCommand;
 import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocatorVirgo;
-import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IRuntime;
 
 /**
@@ -153,11 +150,6 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
 		}
 		fwClassPath.deleteCharAt(fwClassPath.length() - 1);
 		return fwClassPath.toString();
-	}
-
-	@Override
-	public IServerCommand<Void> getServerUndeployCommand(IServerBehaviour serverBehaviour, IModule module) {
-		return new JmxServer35UndeployCommand(serverBehaviour, module);
 	}
 
 	@Override

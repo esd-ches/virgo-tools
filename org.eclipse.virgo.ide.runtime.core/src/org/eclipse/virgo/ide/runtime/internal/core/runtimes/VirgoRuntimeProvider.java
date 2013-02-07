@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2010 - 2013 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -57,6 +57,7 @@ import org.eclipse.wst.server.core.util.PublishHelper;
  * @author Terry Hon
  * @author Christian Dupuis
  * @author Miles Parker
+ * @author Leo Dos Santos
  * @since 2.0.0
  */
 public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
@@ -131,8 +132,7 @@ public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
 	 * {@inheritDoc}
 	 */
 	public IServerCommand<Void> getServerUndeployCommand(IServerBehaviour serverBehaviour, IModule module) {
-		return new JmxServerUndeployCommand(serverBehaviour, module, BUNDLE_OBJECT_NAME, PAR_OBJECT_NAME,
-				PLAN_OBJECT_NAME);
+		return new JmxServerUndeployCommand(serverBehaviour, module);
 	}
 
 	/**
@@ -388,7 +388,7 @@ public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
 		if (versionString != null) {
 			return InstallationType.KERNEL;
 		}
-        versionString = versionProperties.getProperty("virgo.nano.version");
+		versionString = versionProperties.getProperty("virgo.nano.version");
 		if (versionString != null) {
 			return InstallationType.NANO;
 		}
