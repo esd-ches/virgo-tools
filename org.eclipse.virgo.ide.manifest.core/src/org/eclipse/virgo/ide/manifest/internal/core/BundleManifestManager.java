@@ -417,6 +417,9 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 			}
 
 			protected boolean resourceAdded(IResource resource) {
+				if (resource instanceof IFile && isParXml(resource)) {
+					parResourceChanged(resource);
+				}
 				return true;
 			}
 
@@ -436,22 +439,25 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 							}
 						}
 
-						if (resource.getName().equals("org.eclipse.wst.common.project.facet.core.xml")
-								|| resource.getName().equals("org.eclipse.virgo.ide.runtime.core.par.xml")) {
-							// target of a par project or par bundles has changed
-							if (FacetUtils.isParProject(resource)) {
-								Par par = FacetUtils.getParDefinition(resource.getProject());
-								updateParLinkedBundleManifests(par);
-							}
-							// target of bundle project could have changed
-							else if (FacetUtils.isBundleProject(resource)) {
-								updateBundleManifestForResource(resource);
-							}
+						if (isParXml(resource)) {
+							parResourceChanged(resource);
 						}
 					}
 					return false;
 				}
 				return true;
+			}
+
+			private void parResourceChanged(IResource resource) {
+				// target of a par project or par bundles has changed
+				if (FacetUtils.isParProject(resource)) {
+					Par par = FacetUtils.getParDefinition(resource.getProject());
+					updateParLinkedBundleManifests(par);
+				}
+				// target of bundle project could have changed
+				else if (FacetUtils.isBundleProject(resource)) {
+					updateBundleManifestForResource(resource);
+				}
 			}
 
 			protected boolean resourceOpened(IResource resource) {
@@ -525,6 +531,12 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 					&& resource.getName().equals(BundleManifestCorePlugin.MANIFEST_FILE_NAME)
 					&& resource.getParent() != null
 					&& resource.getParent().getProjectRelativePath().lastSegment().equals("META-INF");
+		}
+
+		public boolean isParXml(IResource resource) {
+			return resource != null
+					&& (resource.getName().equals("org.eclipse.wst.common.project.facet.core.xml") || resource.getName()
+							.equals("org.eclipse.virgo.ide.runtime.core.par.xml"));
 		}
 
 	}
