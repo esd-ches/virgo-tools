@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2012 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009 - 2013 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -11,6 +11,7 @@
 package org.eclipse.virgo.ide.manifest.internal.core;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -53,6 +54,7 @@ import org.eclipse.virgo.util.osgi.manifest.ExportedPackage;
  * instances.
  * 
  * @author Christian Dupuis
+ * @author Leo Dos Santos
  * @since 1.0.0
  */
 public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
@@ -80,23 +82,25 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 	private Map<IJavaProject, BundleManifest> bundles = new ConcurrentHashMap<IJavaProject, BundleManifest>();
 
 	/** Internal cache of {@link BundleManifest} keyed by {@link IJavaProject}; these represent the */
-	private Map<IJavaProject, BundleManifest> testBundles = new ConcurrentHashMap<IJavaProject, BundleManifest>();
+	private final Map<IJavaProject, BundleManifest> testBundles = new ConcurrentHashMap<IJavaProject, BundleManifest>();
 
 	/** Internal cache of resolved package imports keyed by {@link IJavaProject} */
 	private Map<IJavaProject, Set<String>> packageImports = new ConcurrentHashMap<IJavaProject, Set<String>>();
 
 	/** Internal listener list */
-	private List<IBundleManifestChangeListener> bundleManifestChangeListeners = new CopyOnWriteArrayList<IBundleManifestChangeListener>();
+	private final List<IBundleManifestChangeListener> bundleManifestChangeListeners = new CopyOnWriteArrayList<IBundleManifestChangeListener>();
 
-	private Map<IJavaProject, Long> bundleTimestamps = new ConcurrentHashMap<IJavaProject, Long>();
+	private final Map<IJavaProject, Long> bundleTimestamps = new ConcurrentHashMap<IJavaProject, Long>();
 
-	private Map<IJavaProject, Long> testBundleTimestamps = new ConcurrentHashMap<IJavaProject, Long>();
+	private final Map<IJavaProject, Long> testBundleTimestamps = new ConcurrentHashMap<IJavaProject, Long>();
 
 	/**
 	 * Resource change listener that listens to changes of Eclipse file resources and triggers a refresh for
 	 * corresponding class path container
 	 */
 	private IResourceChangeListener resourceChangeListener = null;
+
+	private IResourceChangeListener parChangeListener = null;
 
 	/**
 	 * {@inheritDoc}
@@ -173,7 +177,9 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 	 */
 	public void start() {
 		this.resourceChangeListener = new ManifestResourceChangeListener();
+		this.parChangeListener = new ParChangeListener();
 		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceChangeListener);
+		ResourcesPlugin.getWorkspace().addResourceChangeListener(parChangeListener);
 	}
 
 	/**
@@ -181,6 +187,7 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 	 */
 	public void stop() {
 		ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceChangeListener);
+		ResourcesPlugin.getWorkspace().removeResourceChangeListener(parChangeListener);
 		bundles = null;
 		packageImports = null;
 	}
@@ -303,6 +310,78 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 		}
 	}
 
+	private void updateBundleManifestForResource(IResource resource) {
+		IJavaProject javaProject = JavaCore.create(resource.getProject());
+		BundleManifest bundleManifest = getBundleManifest(javaProject);
+		BundleManifest testBundleManifest = getTestBundleManifest(javaProject);
+		bundleManifestChanged(bundleManifest, bundleManifest, testBundleManifest, testBundleManifest, IMPORTS_CHANGED,
+				javaProject);
+	}
+
+	private void updateParLinkedBundleManifests(Par par) {
+		if (par != null && par.getBundle() != null) {
+			for (Bundle bundle : par.getBundle()) {
+				IProject bundleProject = ResourcesPlugin.getWorkspace().getRoot().getProject(bundle.getSymbolicName());
+				if (FacetUtils.isBundleProject(bundleProject)) {
+					updateBundleManifestForResource(bundleProject);
+				}
+			}
+		}
+	}
+
+	/**
+	 * {@link IResourceChangeListener} that listens to changes to PAR project deletions. Collects information about
+	 * dependent bundles during the pre-delete phase, then updates those bundles' classpath containers during the
+	 * post-change phase.
+	 */
+	class ParChangeListener implements IResourceChangeListener, IResourceDeltaVisitor {
+
+		private final Map<IResource, Par> parProjects = new HashMap<IResource, Par>();
+
+		public void resourceChanged(IResourceChangeEvent event) {
+			if (event.getSource() instanceof IWorkspace) {
+				int eventType = event.getType();
+				switch (eventType) {
+				case IResourceChangeEvent.PRE_DELETE:
+					// capture information about the par contents before deletion
+					IResource resource = event.getResource();
+					if (resource != null && FacetUtils.isParProject(resource)) {
+						Par par = FacetUtils.getParDefinition(resource.getProject());
+						if (par != null) {
+							parProjects.put(resource, par);
+						}
+					}
+					break;
+				case IResourceChangeEvent.POST_CHANGE:
+					// then update bundle manifests post deletion
+					IResourceDelta delta = event.getDelta();
+					if (delta != null) {
+						try {
+							delta.accept(this);
+						} catch (CoreException e) {
+							StatusManager.getManager().handle(
+									new Status(IStatus.ERROR, BundleManifestCorePlugin.PLUGIN_ID,
+											"Error while traversing resource change delta", e));
+						}
+					}
+					break;
+				}
+			}
+		}
+
+		public boolean visit(IResourceDelta delta) throws CoreException {
+			IResource resource = delta.getResource();
+			if (delta.getKind() == IResourceDelta.REMOVED) {
+				if (parProjects.containsKey(resource)) {
+					updateParLinkedBundleManifests(parProjects.get(resource));
+					parProjects.remove(resource);
+					return false;
+				}
+			}
+			return true;
+		}
+	};
+
 	/**
 	 * {@link IResourceChangeListener} that listens to changes to the MANIFEST.MF resources.
 	 */
@@ -362,16 +441,7 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 							// target of a par project or par bundles has changed
 							if (FacetUtils.isParProject(resource)) {
 								Par par = FacetUtils.getParDefinition(resource.getProject());
-								if (par != null && par.getBundle() != null) {
-									for (Bundle bundle : par.getBundle()) {
-										IProject bundleProject = ResourcesPlugin.getWorkspace()
-												.getRoot()
-												.getProject(bundle.getSymbolicName());
-										if (FacetUtils.isBundleProject(bundleProject)) {
-											updateBundleManifestForResource(bundleProject);
-										}
-									}
-								}
+								updateParLinkedBundleManifests(par);
 							}
 							// target of bundle project could have changed
 							else if (FacetUtils.isBundleProject(resource)) {
@@ -382,14 +452,6 @@ public class BundleManifestManager implements IBundleManifestMangerWorkingCopy {
 					return false;
 				}
 				return true;
-			}
-
-			private void updateBundleManifestForResource(IResource resource) {
-				IJavaProject javaProject = JavaCore.create(resource.getProject());
-				BundleManifest bundleManifest = getBundleManifest(javaProject);
-				BundleManifest testBundleManifest = getTestBundleManifest(javaProject);
-				bundleManifestChanged(bundleManifest, bundleManifest, testBundleManifest, testBundleManifest,
-						IMPORTS_CHANGED, javaProject);
 			}
 
 			protected boolean resourceOpened(IResource resource) {
