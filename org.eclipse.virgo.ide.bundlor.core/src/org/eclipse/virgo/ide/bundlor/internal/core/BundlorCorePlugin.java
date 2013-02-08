@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2012 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009 - 2013 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -38,7 +38,7 @@ public class BundlorCorePlugin extends Plugin {
 	public static final String TEMPLATE_BYTE_CODE_SCANNING_KEY = "byte.code.scanning";
 
 	/** Default property value for byte code vs source code scanning */
-	public static final boolean TEMPLATE_BYTE_CODE_SCANNING_DEFAULT = true;
+	public static final boolean TEMPLATE_BYTE_CODE_SCANNING_DEFAULT = false;
 
 	/** The properties key for auto-formatting generated manifests */
 	public static final String FORMAT_GENERATED_MANIFESTS_KEY = "bundlor.generated.manifest.autoformatting";
@@ -55,6 +55,7 @@ public class BundlorCorePlugin extends Plugin {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
@@ -65,6 +66,7 @@ public class BundlorCorePlugin extends Plugin {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void stop(BundleContext context) throws Exception {
 		plugin = null;
 		super.stop(context);
