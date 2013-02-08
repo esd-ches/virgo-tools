@@ -112,7 +112,8 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
 		List<String> list = new ArrayList<String>();
 		list.addAll(Arrays.asList(commonArguments));
 
-		list.add("-Dorg.eclipse.virgo.kernel.config=" + serverHome + "/" + getConfigurationDir());
+		list.add("-Dorg.eclipse.virgo.kernel.config=" + serverHome + "/" + getConfigurationDir() + "," + serverHome
+				+ "/stage");
 		list.add("-Dosgi.java.profile=file:" + serverHome + "/" + getConfigurationDir() + "/java6-server.profile");
 		list.add("-Declipse.ignoreApp=true");
 		list.add("-Dosgi.install.area=" + serverHome);
