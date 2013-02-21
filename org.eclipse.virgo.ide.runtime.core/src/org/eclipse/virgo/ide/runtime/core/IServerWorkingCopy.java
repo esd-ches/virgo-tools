@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009 - 2013 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -17,6 +17,7 @@ import java.util.List;
  * Extension to {@link IServer}.
  * 
  * @author Christian Dupuis
+ * @author Leo Dos Santos
  * @since 1.0.0
  */
 public interface IServerWorkingCopy extends IServer {
@@ -36,6 +37,9 @@ public interface IServerWorkingCopy extends IServer {
 	/** Default filename patters that should not trigger a bundle refresh */
 	String DEFAULT_STATIC_FILENAMES = "*.html,*.xhtml,*.css,*.js,*.jspx,*.jsp,*.gif,*.jpg,*.png,*.swf,*-flow.xml,*.properties,*.xml,!tiles.xml,!web.xml";
 
+	/** Default -XX:MaxPermSize value based on Virgo 3.6 dmk.sh */
+	String DEFAULT_MAX_PERM_SIZE = "512m";
+
 	/** Default setting if the server should tail trace files */
 	boolean DEFAULT_TAIL_LOG_FILES = false;
 
@@ -47,8 +51,7 @@ public interface IServerWorkingCopy extends IServer {
 	void setDeployDirectory(String deployDir);
 
 	/**
-	 * Adds a {@link PropertyChangeListener} to the configuration backing the
-	 * server.
+	 * Adds a {@link PropertyChangeListener} to the configuration backing the server.
 	 */
 	void addConfigurationChangeListener(PropertyChangeListener listener);
 
@@ -82,5 +85,7 @@ public interface IServerWorkingCopy extends IServer {
 	void setArtefactOrder(List<String> artefactOrder);
 
 	void setStaticFilenamePatterns(String filenamePatterns);
+
+	void setMaxPermSize(String maxPermSize);
 
 }

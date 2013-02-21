@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009 - 2013 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -15,26 +15,34 @@ import java.beans.PropertyChangeListener;
 
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Text;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorSite;
+import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.virgo.ide.runtime.core.IServer;
 import org.eclipse.virgo.ide.runtime.core.IServerWorkingCopy;
 import org.eclipse.virgo.ide.runtime.internal.core.actions.ModifyCleanStartupCommand;
+import org.eclipse.virgo.ide.runtime.internal.core.actions.ModifyMaxPermSizeCommand;
 import org.eclipse.virgo.ide.runtime.internal.core.actions.ModifyTailLogFilesCommand;
 import org.eclipse.wst.server.ui.editor.ServerEditorSection;
 
 /**
- * {@link ServerEditorSection} section that allows to configure the JMX deployer credentials
+ * {@link ServerEditorSection} section that allows to configure some startup parameters
  * 
  * @author Christian Dupuis
+ * @author Leo Dos Santos
  * @since 1.0.1
  */
 public class StartupEditorSection extends ServerEditorSection {
@@ -49,6 +57,8 @@ public class StartupEditorSection extends ServerEditorSection {
 
 	private Button cleanStartup;
 
+	private Text maxPermSizeField;
+
 	protected void addConfigurationChangeListener() {
 		listener = new PropertyChangeListener() {
 			public void propertyChange(PropertyChangeEvent event) {
@@ -56,10 +66,12 @@ public class StartupEditorSection extends ServerEditorSection {
 					return;
 				}
 				updating = true;
-				if (IServerWorkingCopy.PROPERTY_TAIL_LOG_FILES.equals(event.getPropertyName())) {
+				if (IServer.PROPERTY_TAIL_LOG_FILES.equals(event.getPropertyName())) {
 					tailLogFiles.setSelection(Boolean.valueOf(event.getNewValue().toString()));
-				} else if (IServerWorkingCopy.PROPERTY_CLEAN_STARTUP.equals(event.getPropertyName())) {
+				} else if (IServer.PROPERTY_CLEAN_STARTUP.equals(event.getPropertyName())) {
 					cleanStartup.setSelection(Boolean.valueOf(event.getNewValue().toString()));
+				} else if (IServer.PROPERTY_MAX_PERM_SIZE.equals(event.getPropertyName())) {
+					maxPermSizeField.setText(event.getNewValue().toString());
 				}
 				updating = false;
 			}
@@ -67,6 +79,7 @@ public class StartupEditorSection extends ServerEditorSection {
 		serverWorkingCopy.addConfigurationChangeListener(listener);
 	}
 
+	@Override
 	public void createSection(Composite parent) {
 		super.createSection(parent);
 		FormToolkit toolkit = getFormToolkit(parent.getDisplay());
@@ -79,7 +92,7 @@ public class StartupEditorSection extends ServerEditorSection {
 
 		Composite composite = toolkit.createComposite(section);
 		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
+		layout.numColumns = 2;
 		layout.marginHeight = 5;
 		layout.marginWidth = 10;
 		layout.verticalSpacing = 5;
@@ -90,6 +103,7 @@ public class StartupEditorSection extends ServerEditorSection {
 		section.setClient(composite);
 
 		GridData data = new GridData(SWT.FILL, SWT.TOP, true, false);
+		data.horizontalSpan = 2;
 
 		tailLogFiles = toolkit.createButton(composite, "Tail application trace files into Console view", SWT.CHECK);
 		tailLogFiles.setLayoutData(data);
@@ -121,6 +135,23 @@ public class StartupEditorSection extends ServerEditorSection {
 			}
 		});
 
+		data = new GridData(SWT.FILL, SWT.CENTER, true, false);
+
+		Label maxPermSizeLabel = toolkit.createLabel(composite, "-XX:MaxPermSize=");
+		maxPermSizeLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		maxPermSizeField = toolkit.createText(composite, "");
+		maxPermSizeField.setLayoutData(data);
+		maxPermSizeField.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				if (updating) {
+					return;
+				}
+				updating = true;
+				execute(new ModifyMaxPermSizeCommand(serverWorkingCopy, maxPermSizeField.getText()));
+				updating = false;
+			}
+		});
+
 		toolkit.createLabel(composite, "");
 
 		initialize();
@@ -129,6 +160,7 @@ public class StartupEditorSection extends ServerEditorSection {
 	/**
 	 * @see ServerEditorSection#dispose()
 	 */
+	@Override
 	public void dispose() {
 		if (server != null) {
 			server.removePropertyChangeListener(listener);
@@ -138,6 +170,7 @@ public class StartupEditorSection extends ServerEditorSection {
 	/**
 	 * @see ServerEditorSection#init(IEditorSite, IEditorInput)
 	 */
+	@Override
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
 		serverWorkingCopy = (IServerWorkingCopy) server.loadAdapter(IServerWorkingCopy.class, new NullProgressMonitor());
@@ -151,6 +184,7 @@ public class StartupEditorSection extends ServerEditorSection {
 		updating = true;
 		this.tailLogFiles.setSelection(serverWorkingCopy.shouldTailTraceFiles());
 		this.cleanStartup.setSelection(serverWorkingCopy.shouldCleanStartup());
+		this.maxPermSizeField.setText(serverWorkingCopy.getMaxPermSize());
 		updating = false;
 	}
 

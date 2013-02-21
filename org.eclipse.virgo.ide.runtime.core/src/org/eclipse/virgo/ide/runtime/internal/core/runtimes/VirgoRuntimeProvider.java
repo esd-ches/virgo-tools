@@ -107,9 +107,7 @@ public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
 		list.add("-XX:+HeapDumpOnOutOfMemoryError");
 		list.add("-XX:ErrorFile=\"" + serverHome + "/serviceability/error.log\"");
 		list.add("-XX:HeapDumpPath=\"" + serverHome + "/serviceability/heap_dump.hprof\"");
-		list.add("-XX:MaxPermSize=256m");
-		list.add("-Xms256m");
-		list.add("-Xmx768m");
+		list.add("-XX:MaxPermSize=" + ServerUtils.getServer(behaviour).getMaxPermSize());
 		list.add("-Djava.rmi.server.hostname=127.0.0.1");
 		list.add("-Dorg.eclipse.virgo.kernel.home=\"" + serverHome + "\"");
 		list.add("-Djava.io.tmpdir=\"" + serverHome + "/work/tmp/\"");

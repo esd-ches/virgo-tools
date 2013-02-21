@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2012 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009 - 2013 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -13,9 +13,10 @@ package org.eclipse.virgo.ide.runtime.core;
 import java.util.List;
 
 /**
- * dm Server specific interface to be implemented by a server
+ * Virgo specific interface to be implemented by a server
  * 
  * @author Christian Dupuis
+ * @author Leo Dos Santos
  * @since 1.0.0
  */
 public interface IServer {
@@ -47,6 +48,8 @@ public interface IServer {
 	String PROPERTY_CLEAN_STARTUP = ServerCorePlugin.PLUGIN_ID + "clean.startup";
 
 	String PROPERTY_ARTEFACT_ORDER = ServerCorePlugin.PLUGIN_ID + "artefact.deploy.order";
+
+	String PROPERTY_MAX_PERM_SIZE = ServerCorePlugin.PLUGIN_ID + "max.perm.size";
 
 	/**
 	 * Returns the deploy directory.
@@ -83,4 +86,7 @@ public interface IServer {
 	List<String> getArtefactOrder();
 
 	String getStaticFilenamePatterns();
+
+	String getMaxPermSize();
+
 }

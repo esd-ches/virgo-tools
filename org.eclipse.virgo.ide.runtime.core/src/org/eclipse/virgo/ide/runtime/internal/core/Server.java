@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009 - 2012 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009 - 2013 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -51,6 +51,7 @@ import org.eclipse.wst.server.core.model.ServerDelegate;
  * Default dm server implementation.
  * 
  * @author Christian Dupuis
+ * @author Leo Dos Santos
  * @since 1.0.0
  */
 public class Server extends ServerDelegate implements IServer, IServerWorkingCopy {
@@ -193,6 +194,10 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 
 	public String getMBeanServerUsername() {
 		return getAttribute(PROPERTY_MBEAN_SERVER_USERNAME, DEFAULT_MBEAN_SERVER_USERNAME);
+	}
+
+	public String getMaxPermSize() {
+		return getAttribute(PROPERTY_MAX_PERM_SIZE, DEFAULT_MAX_PERM_SIZE);
 	}
 
 	public IPath getModuleDeployDirectory(IModule module) {
@@ -343,6 +348,12 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 		String oldPassword = getMBeanServerUsername();
 		setAttribute(PROPERTY_MBEAN_SERVER_USERNAME, username);
 		fireConfigurationChanged(PROPERTY_MBEAN_SERVER_USERNAME, oldPassword, username);
+	}
+
+	public void setMaxPermSize(String maxPermSize) {
+		String oldMaxPermSize = getMaxPermSize();
+		setAttribute(PROPERTY_MAX_PERM_SIZE, maxPermSize);
+		fireConfigurationChanged(PROPERTY_MAX_PERM_SIZE, oldMaxPermSize, maxPermSize);
 	}
 
 	public boolean shouldTailTraceFiles() {
