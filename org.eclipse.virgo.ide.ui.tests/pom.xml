@@ -7,9 +7,7 @@
     <groupId>org.eclipse.virgo.ide</groupId>
     <version>1.0.1-SNAPSHOT</version>
   </parent>
-  <groupId>org.eclipse.virgo.ide</groupId>
   <artifactId>org.eclipse.virgo.ide.ui.tests</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
   <packaging>eclipse-test-plugin</packaging>
   <build>
     <plugins>

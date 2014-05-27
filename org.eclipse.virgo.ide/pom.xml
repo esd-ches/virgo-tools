@@ -7,8 +7,6 @@
     <groupId>org.eclipse.virgo.ide</groupId>
     <version>1.0.1-SNAPSHOT</version>
   </parent>
-  <groupId>org.eclipse.virgo.ide</groupId>
   <artifactId>org.eclipse.virgo.ide</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
   <packaging>eclipse-plugin</packaging>
 </project>
