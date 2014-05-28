@@ -281,7 +281,7 @@
          id="org.eclipse.virgo.ide.runtime.ui.perspective"
          name="Virgo">
       <description>
-         The Virgo perspective provides a convenitent environment for developing and working with running Virgo-based OSGi applications.
+         The Virgo perspective provides a convenient environment for developing and working with running Virgo-based OSGi applications.
       </description>
    </perspective>
 </extension>
