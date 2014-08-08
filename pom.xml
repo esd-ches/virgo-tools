@@ -24,7 +24,7 @@
 	<pack200>"${java.home}/bin"</pack200>
 	<test.osvmargs></test.osvmargs>
 
-	<tycho-version>0.14.1</tycho-version>
+	<tycho-version>0.21.0</tycho-version>
 	<skip-source-check>true</skip-source-check>
   </properties>
 
