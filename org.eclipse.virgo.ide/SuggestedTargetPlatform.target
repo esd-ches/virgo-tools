@@ -1,36 +1,31 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Virgo Target" sequenceNumber="71">
+<?pde version="3.8"?><target name="Virgo Target" sequenceNumber="36">
 <locations>
-<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-<unit id="javax.el" version="2.2.0.v201108011116"/>
-<unit id="org.apache.commons.collections.source" version="3.2.0.v201005080500"/>
-<unit id="org.apache.commons.collections" version="3.2.0.v201005080500"/>
-<unit id="org.apache.commons.lang" version="2.6.0.v201205030909"/>
-<unit id="org.apache.commons.lang.source" version="2.6.0.v201205030909"/>
-<unit id="org.json" version="1.0.0.v201011060100"/>
-<unit id="org.apache.log4j" version="1.2.15.v201012070815"/>
-<unit id="org.apache.log4j.source" version="1.2.15.v201012070815"/>
-<unit id="ch.qos.logback.classic" version="1.0.0.v20111214-2030"/>
-<unit id="ch.qos.logback.classic.source" version="1.0.0.v20111214-2030"/>
-<unit id="ch.qos.logback.core" version="1.0.0.v20111214-2030"/>
-<unit id="ch.qos.logback.core.source" version="1.0.0.v20111214-2030"/>
-<unit id="org.slf4j.api" version="1.6.4.v20120130-2120"/>
-<unit id="org.slf4j.api.source" version="1.6.4.v20120130-2120"/>
-<unit id="org.slf4j.jul" version="1.6.4.v20120130-2120"/>
-<unit id="org.slf4j.jul.source" version="1.6.4.v20120130-2120"/>
-<unit id="org.slf4j.log4j" version="1.6.4.v20120130-2120"/>
-<unit id="org.slf4j.log4j.source" version="1.6.4.v20120130-2120"/>
-<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20120526062928/repository/"/>
-</location>
+<location path="${eclipse_home}" type="Profile"/>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
 <unit id="org.eclipse.virgo.bundlor.feature.group" version="1.1.0.RELEASE"/>
-<unit id="org.eclipse.virgo.core.feature.group" version="3.5.0.RC1"/>
-<unit id="org.eclipse.virgo.kernel.feature.group" version="3.5.0.RC1"/>
-<unit id="org.eclipse.virgo.medic.feature.group" version="3.5.0.RC1"/>
-<unit id="org.eclipse.virgo.util.feature.group" version="3.5.0.RC1"/>
-<repository location="http://download.eclipse.org/virgo/snapshot/tooling"/>
+<repository location="http://download.eclipse.org/virgo/release/BNDLR/1.1.0.RELEASE/updatesite"/>
 </location>
-<location path="/Developer/eclipse42" type="Profile"/>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.jst.server_adapters.ext.feature.feature.group" version="3.3.300.v20140501_1027-46FKs9oB58F6KBJl8JA8"/>
+<unit id="org.eclipse.jst.server_adapters.feature.feature.group" version="3.2.300.v20140501_1027-20Bg7w31241A29a2752"/>
+<unit id="org.eclipse.jst.common.fproj.enablement.jdt.feature.group" version="3.6.0.v201405010300-377F8N8s73573E6H6966"/>
+<unit id="org.eclipse.jst.enterprise_ui.feature.feature.group" version="3.6.0.v201405070300-7b7OIumFSK2W_CbOM9lcCU_kNlXd"/>
+<unit id="org.eclipse.jst.server_ui.feature.feature.group" version="3.4.100.v20140501_1027-7A77FPZ9xFccxQKMbwPWmPWnAQGG"/>
+<unit id="org.eclipse.wst.common.fproj.feature.group" version="3.6.0.v201405011300-377F8N8s735555393B7B"/>
+<repository location="http://download.eclipse.org/releases/luna"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.json" version="1.0.0.v201011060100"/>
+<unit id="org.apache.commons.collections.source" version="3.2.0.v2013030210310"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20140525021250/repository/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.virgo.medic.feature.group" version="3.6.2.RELEASE"/>
+<unit id="org.eclipse.virgo.util.feature.group" version="3.6.2.RELEASE"/>
+<unit id="org.eclipse.virgo.kernel.feature.group" version="3.6.2.RELEASE"/>
+<repository location="http://download.eclipse.org/virgo/updatesite/3.6.2.RELEASE"/>
+</location>
 </locations>
 <environment>
 <os>macosx</os>
