@@ -88,9 +88,9 @@
 
   <repositories>
 	<repository>
-	  <id>indigo</id>
+	  <id>eclipse</id>
 	  <layout>p2</layout>
-	  <url>http://download.eclipse.org/releases/indigo/</url>
+	  <url>http://download.eclipse.org/releases/juno/</url>
 	</repository>
 	<repository>
 	  <id>orbit</id>
@@ -105,7 +105,7 @@
 	<repository>
 	  <id>swtbot</id>
 	  <layout>p2</layout>
-	  <url>http://download.eclipse.org/technology/swtbot/helios/dev-build/update-site/</url>
+	  <url>http://download.eclipse.org/technology/swtbot/releases/latest/</url>
 	</repository>
 	<repository>
       <id>libra-milestone</id>
@@ -153,11 +153,6 @@
 			  <os>macosx</os>
 			  <ws>cocoa</ws>
 			  <arch>x86_64</arch>
-			</environment>
-			<environment>
-			  <os>macosx</os>
-			  <ws>carbon</ws>
-			  <arch>x86</arch>
 			</environment>
 			<environment>
 			  <os>win32</os>
