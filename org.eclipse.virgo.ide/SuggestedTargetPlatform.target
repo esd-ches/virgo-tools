@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<?pde version="3.8"?><target name="Virgo Target" sequenceNumber="36">
+<?pde version="3.8"?><target name="Virgo Target" sequenceNumber="37">
 <locations>
 <location path="${eclipse_home}" type="Profile"/>
 <location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
@@ -25,6 +25,13 @@
 <unit id="org.eclipse.virgo.util.feature.group" version="3.6.2.RELEASE"/>
 <unit id="org.eclipse.virgo.kernel.feature.group" version="3.6.2.RELEASE"/>
 <repository location="http://download.eclipse.org/virgo/updatesite/3.6.2.RELEASE"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.libra.framework.feature.feature.group" version="0.3.1.201405141436"/>
+<unit id="org.eclipse.libra.framework.editor.feature.feature.group" version="0.3.1.201405141436"/>
+<unit id="org.eclipse.libra.warproducts.feature.feature.group" version="0.3.1.201405141436"/>
+<unit id="org.eclipse.libra.facet.feature.feature.group" version="0.3.1.201405141436"/>
+<repository location="http://download.eclipse.org/libra/milestones"/>
 </location>
 </locations>
 <environment>
