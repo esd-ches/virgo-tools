@@ -32,6 +32,7 @@ import org.eclipse.virgo.ide.ui.editors.BundleManifestEditor;
 import org.eclipse.virgo.ide.ui.editors.ParManifestEditor;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -55,14 +56,16 @@ public class BundleManifestEditorTest {
 	}
 
 	@Test
+	@Ignore
+	// FIXME Bug 438506
 	public void testCreateSystemFileContextsFromDotSettings() throws Exception {
 		File source = VirgoIdeTestUtil.getFilePath(VirgoIdeTestsPlugin.PLUGIN_ID, "/testdata/bundle/manifest.mf");
 		IPath path = new Path(source.getAbsolutePath());
 		IFileStore file = EFS.getLocalFileSystem().getStore(path);
 		PlatformUI.getWorkbench()
-				.getActiveWorkbenchWindow()
-				.getActivePage()
-				.openEditor(new FileStoreEditorInput(file), BundleManifestEditor.ID_EDITOR);
+		.getActiveWorkbenchWindow()
+		.getActivePage()
+		.openEditor(new FileStoreEditorInput(file), BundleManifestEditor.ID_EDITOR);
 
 		assertEquals(1, activePage.getEditorReferences().length);
 		IEditorPart editor = activePage.getEditorReferences()[0].getEditor(true);
@@ -72,6 +75,8 @@ public class BundleManifestEditorTest {
 	}
 
 	@Test
+	@Ignore
+	// FIXME Bug 438506
 	public void testOpenInDefaultEditor() throws Exception {
 		IProject project = VirgoIdeTestUtil.createPredefinedProject("SimpleBundleProject",
 				VirgoIdeTestsPlugin.PLUGIN_ID);
