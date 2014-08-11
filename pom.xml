@@ -50,7 +50,9 @@
     <module>org.eclipse.virgo.ide.tests</module>
     <module>org.eclipse.virgo.ide.tests.util</module>
     <module>org.eclipse.virgo.ide.ui</module>
+    <!-- FIXME Bug 438506
     <module>org.eclipse.virgo.ide.ui.tests</module>
+     -->
 
 	<!-- site -->
 	<module>org.eclipse.virgo.ide.site</module>
