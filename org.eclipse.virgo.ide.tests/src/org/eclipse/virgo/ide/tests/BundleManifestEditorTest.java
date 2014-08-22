@@ -32,7 +32,6 @@ import org.eclipse.virgo.ide.ui.editors.BundleManifestEditor;
 import org.eclipse.virgo.ide.ui.editors.ParManifestEditor;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -56,8 +55,6 @@ public class BundleManifestEditorTest {
 	}
 
 	@Test
-	@Ignore
-	// FIXME Bug 438506
 	public void testCreateSystemFileContextsFromDotSettings() throws Exception {
 		File source = VirgoIdeTestUtil.getFilePath(VirgoIdeTestsPlugin.PLUGIN_ID, "/testdata/bundle/manifest.mf");
 		IPath path = new Path(source.getAbsolutePath());
@@ -75,8 +72,6 @@ public class BundleManifestEditorTest {
 	}
 
 	@Test
-	@Ignore
-	// FIXME Bug 438506
 	public void testOpenInDefaultEditor() throws Exception {
 		IProject project = VirgoIdeTestUtil.createPredefinedProject("SimpleBundleProject",
 				VirgoIdeTestsPlugin.PLUGIN_ID);

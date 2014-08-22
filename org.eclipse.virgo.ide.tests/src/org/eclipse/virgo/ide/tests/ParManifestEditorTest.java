@@ -26,7 +26,6 @@ import org.eclipse.virgo.ide.tests.util.VirgoIdeTestUtil;
 import org.eclipse.virgo.ide.ui.editors.ParManifestEditor;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -49,8 +48,6 @@ public class ParManifestEditorTest {
 	}
 
 	@Test
-	@Ignore
-	// FIXME Bug 438506
 	public void testCreateSystemFileContextsFromDotSettings() throws Exception {
 		File source = VirgoIdeTestUtil.getFilePath(VirgoIdeTestsPlugin.PLUGIN_ID,
 				"/testdata/par/.settings/org.eclipse.virgo.ide.runtime.core.par.xml");
@@ -69,8 +66,6 @@ public class ParManifestEditorTest {
 	}
 
 	@Test
-	@Ignore
-	// FIXME Bug 438506
 	public void testCreateSystemFileContextsFromParXml() throws Exception {
 		File source = VirgoIdeTestUtil.getFilePath(VirgoIdeTestsPlugin.PLUGIN_ID, "/testdata/par/par.xml");
 		IPath path = new Path(source.getAbsolutePath());

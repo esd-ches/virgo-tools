@@ -50,4 +50,5 @@ Import-Package: org.apache.commons.lang,
 Bundle-ActivationPolicy: lazy
 Bundle-Localization: plugin
 Bundle-ClassPath: .,
- lib/org.eclipse.virgo.kernel.tools.jar
+ lib/org.eclipse.virgo.kernel.tools.jar,
+ lib/org.eclipse.virgo.kernel.artifact_3.6.3.RELEASE.jar
