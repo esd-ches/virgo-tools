@@ -184,10 +184,6 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 		return getAttribute(PROPERTY_DEPLOY_DIR, DEFAULT_DEPLOYDIR);
 	}
 
-	public int getDeployTimeout() {
-		return getAttribute(PROPERTY_DEPLOY_TIMEOUT, DEFAULT_DEPLOY_TIMEOUT);
-	}
-
 	public String getMBeanServerPassword() {
 		return getAttribute(PROPERTY_MBEAN_SERVER_PASSWORD, DEFAULT_MBEAN_SERVER_PASSWORD);
 	}
@@ -346,12 +342,6 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 		int oldPort = getMBeanServerPort();
 		setAttribute(PROPERTY_MBEAN_SERVER_PORT, port);
 		fireConfigurationChanged(PROPERTY_MBEAN_SERVER_PORT, oldPort, port);
-	}
-
-	public void setDeployTimeout(int timeout) {
-		int oldTimeout = getDeployTimeout();
-		setAttribute(PROPERTY_DEPLOY_TIMEOUT, timeout);
-		fireConfigurationChanged(PROPERTY_DEPLOY_TIMEOUT, oldTimeout, timeout);
 	}
 
 	public void setMBeanServerUsername(String username) {

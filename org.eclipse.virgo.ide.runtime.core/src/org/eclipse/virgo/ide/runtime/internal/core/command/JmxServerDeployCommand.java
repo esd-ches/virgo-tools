@@ -19,9 +19,7 @@ import javax.management.openmbean.CompositeData;
 
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
-import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.virgo.ide.runtime.internal.core.DeploymentIdentity;
-import org.eclipse.virgo.ide.runtime.internal.core.Server;
 import org.eclipse.wst.server.core.IModule;
 
 /**
@@ -64,7 +62,6 @@ public class JmxServerDeployCommand extends AbstractJmxServerDeployerCommand<Com
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	protected Object[] getOperationArguments() {
 		URI uri = null;
 		if (module.getModuleType().getId().equals(FacetCorePlugin.PLAN_FACET_ID)) {
@@ -80,15 +77,8 @@ public class JmxServerDeployCommand extends AbstractJmxServerDeployerCommand<Com
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	protected String getOperationName() {
 		return "deploy";
-	}
-
-	@Override
-	protected int getTimeout() {
-		Server server = ServerUtils.getServer(serverBehaviour);
-		return server.getDeployTimeout();
 	}
 
 }

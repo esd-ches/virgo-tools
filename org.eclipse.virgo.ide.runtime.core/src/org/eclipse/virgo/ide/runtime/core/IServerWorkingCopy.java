@@ -25,9 +25,6 @@ public interface IServerWorkingCopy extends IServer {
 	/** Default deploy directory name */
 	String DEFAULT_DEPLOYDIR = "stage";
 
-	/** Default deploy timeout */
-	int DEFAULT_DEPLOY_TIMEOUT = 30;
-
 	/** Default deployer control username */
 	String DEFAULT_MBEAN_SERVER_USERNAME = "admin";
 
@@ -72,11 +69,6 @@ public interface IServerWorkingCopy extends IServer {
 	 * Sets the port of the JMX deployer control
 	 */
 	void setMBeanServerPort(int port);
-
-	/**
-	 * Sets the timeout of the JMX deploy command
-	 */
-	void setDeployTimeout(int timeout);
 
 	/**
 	 * Sets the password of the JMX deployer control
