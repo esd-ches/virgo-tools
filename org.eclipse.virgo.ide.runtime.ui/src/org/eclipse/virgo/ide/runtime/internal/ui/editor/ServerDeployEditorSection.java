@@ -30,14 +30,16 @@ import org.eclipse.ui.forms.IFormColors;
 import org.eclipse.ui.forms.widgets.ExpandableComposite;
 import org.eclipse.ui.forms.widgets.FormToolkit;
 import org.eclipse.ui.forms.widgets.Section;
+import org.eclipse.virgo.ide.runtime.core.IServer;
 import org.eclipse.virgo.ide.runtime.core.IServerWorkingCopy;
 import org.eclipse.virgo.ide.runtime.internal.core.actions.ModifyDeployerPortCommand;
+import org.eclipse.virgo.ide.runtime.internal.core.actions.ModifyDeployerTimeoutCommand;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
 import org.eclipse.wst.server.ui.editor.ServerEditorSection;
 
 /**
  * {@link ServerEditorSection} section that allows to configure the JMX deployer credentials
- * 
+ *
  * @author Christian Dupuis
  * @since 1.0.1
  */
@@ -46,6 +48,8 @@ public class ServerDeployEditorSection extends ServerEditorSection {
 	protected IServerWorkingCopy serverWorkingCopy;
 
 	protected Text port;
+
+	protected Text timeout;
 
 	protected Text username;
 
@@ -62,11 +66,13 @@ public class ServerDeployEditorSection extends ServerEditorSection {
 					return;
 				}
 				updating = true;
-				if (IServerWorkingCopy.PROPERTY_MBEAN_SERVER_PASSWORD.equals(event.getPropertyName())) {
+				if (IServer.PROPERTY_MBEAN_SERVER_PASSWORD.equals(event.getPropertyName())) {
 					password.setText(event.getNewValue().toString());
-				} else if (IServerWorkingCopy.PROPERTY_MBEAN_SERVER_PORT.equals(event.getPropertyName())) {
+				} else if (IServer.PROPERTY_DEPLOY_TIMEOUT.equals(event.getPropertyName())) {
+					timeout.setText(event.getNewValue().toString());
+				} else if (IServer.PROPERTY_MBEAN_SERVER_PORT.equals(event.getPropertyName())) {
 					port.setText(event.getNewValue().toString());
-				} else if (IServerWorkingCopy.PROPERTY_MBEAN_SERVER_USERNAME.equals(event.getPropertyName())) {
+				} else if (IServer.PROPERTY_MBEAN_SERVER_USERNAME.equals(event.getPropertyName())) {
 					username.setText(event.getNewValue().toString());
 				}
 				updating = false;
@@ -75,6 +81,7 @@ public class ServerDeployEditorSection extends ServerEditorSection {
 		serverWorkingCopy.addConfigurationChangeListener(listener);
 	}
 
+	@Override
 	public void createSection(Composite parent) {
 		super.createSection(parent);
 		FormToolkit toolkit = getFormToolkit(parent.getDisplay());
@@ -122,6 +129,29 @@ public class ServerDeployEditorSection extends ServerEditorSection {
 			}
 		});
 
+		Label timeoutLabel = toolkit.createLabel(composite, "Timeout:");
+		timeoutLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+		timeout = toolkit.createText(composite, "");
+		timeout.setLayoutData(data);
+		timeout.addModifyListener(new ModifyListener() {
+			public void modifyText(ModifyEvent e) {
+				if (updating) {
+					return;
+				}
+				int newTimeout = -1;
+				try {
+					newTimeout = Integer.valueOf(timeout.getText());
+				} catch (NumberFormatException nfe) {
+					setErrorMessage(timeout.getText() + " is not a valid timeout");
+					return;
+				}
+				setErrorMessage(null);
+				updating = true;
+				execute(new ModifyDeployerTimeoutCommand(serverWorkingCopy, newTimeout));
+				updating = false;
+			}
+		});
+
 //		Label usernameLabel = toolkit.createLabel(composite, "Username:");
 //		usernameLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
 //		username = toolkit.createText(composite, "");
@@ -156,6 +186,7 @@ public class ServerDeployEditorSection extends ServerEditorSection {
 	/**
 	 * @see ServerEditorSection#dispose()
 	 */
+	@Override
 	public void dispose() {
 		if (server != null) {
 			server.removePropertyChangeListener(listener);
@@ -165,6 +196,7 @@ public class ServerDeployEditorSection extends ServerEditorSection {
 	/**
 	 * @see ServerEditorSection#init(IEditorSite, IEditorInput)
 	 */
+	@Override
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
 		serverWorkingCopy = (IServerWorkingCopy) server.loadAdapter(IServerWorkingCopy.class, new NullProgressMonitor());
@@ -177,6 +209,7 @@ public class ServerDeployEditorSection extends ServerEditorSection {
 	protected void initialize() {
 		updating = true;
 		this.port.setText("" + serverWorkingCopy.getMBeanServerPort());
+		this.timeout.setText("" + serverWorkingCopy.getDeployTimeout());
 //		this.username.setText(serverWorkingCopy.getDeployerUsername());
 //		this.password.setText(serverWorkingCopy.getDeployerPassword());
 		updating = false;
@@ -189,6 +222,12 @@ public class ServerDeployEditorSection extends ServerEditorSection {
 		} catch (NumberFormatException nfe) {
 			return new IStatus[] { new Status(IStatus.ERROR, ServerUiPlugin.PLUGIN_ID, "'" + port.getText()
 					+ "' is not a valid port number") };
+		}
+		try {
+			Integer.valueOf(timeout.getText());
+		} catch (NumberFormatException nfe) {
+			return new IStatus[] { new Status(IStatus.ERROR, ServerUiPlugin.PLUGIN_ID, "'" + timeout.getText()
+					+ "' is not a valid timeout") };
 		}
 		return super.getSaveStatus();
 	}
