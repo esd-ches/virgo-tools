@@ -53,7 +53,7 @@ import org.eclipse.wst.server.core.util.PublishHelper;
 
 /**
  * {@link IServerRuntimeProvider} for Generic Virgo Server.
- * 
+ *
  * @author Terry Hon
  * @author Christian Dupuis
  * @author Miles Parker
@@ -151,7 +151,7 @@ public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	public Properties getProperties(IPath installPath, String type) throws IOException {
@@ -233,7 +233,7 @@ public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
 
 	/**
 	 * Provides runtime class path common to server versions.
-	 * 
+	 *
 	 * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getRuntimeClasspath(org.eclipse.core.runtime.IPath)
 	 */
 	public List<IRuntimeClasspathEntry> getRuntimeClasspath(IPath installPath) {
@@ -340,11 +340,13 @@ public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
 	}
 
 	public void preStartup(IServerBehaviour serverBehaviour) {
+		File serverHome = ServerUtils.getServer(serverBehaviour).getRuntimeBaseDirectory().toFile();
+		File workFolder = new File(serverHome, "work");
 		if (ServerUtils.getServer(serverBehaviour).shouldCleanStartup()) {
-			File serverHome = ServerUtils.getServer(serverBehaviour).getRuntimeBaseDirectory().toFile();
-			PublishHelper.deleteDirectory(new File(serverHome, "work"), new NullProgressMonitor());
+			PublishHelper.deleteDirectory(workFolder, new NullProgressMonitor());
 			PublishHelper.deleteDirectory(new File(serverHome, "serviceability"), new NullProgressMonitor());
 		}
+		new File(workFolder, "tmp").mkdirs(); // Fix 464814
 		createRepositoryConfiguration(serverBehaviour, getRepositoryConfigurationFileName());
 	}
 
