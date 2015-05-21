@@ -30,6 +30,9 @@ public interface IServer {
 	/** Property indicating the deploy directory */
 	String PROPERTY_DEPLOY_DIR = ServerCorePlugin.PLUGIN_ID + "deploy.dir";
 
+	/** Property indicating the deploy timeout */
+	String PROPERTY_DEPLOY_TIMEOUT = ServerCorePlugin.PLUGIN_ID + "deploy.timeout";
+
 	/** Property indicating the username of the deployer JMX control */
 	String PROPERTY_MBEAN_SERVER_USERNAME = ServerCorePlugin.PLUGIN_ID + "deployer.username";
 
@@ -70,6 +73,11 @@ public interface IServer {
 	 * Returns the port of the JMX deployer control
 	 */
 	int getMBeanServerPort();
+
+	/**
+	 * Returns the timeout of the JMX deploy operation
+	 */
+	int getDeployTimeout();
 
 	/**
 	 * Returns the password of the JMX deployer control

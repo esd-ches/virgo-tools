@@ -86,7 +86,7 @@ public abstract class AbstractJmxServerCommand {
 		ServerCorePlugin.EXECUTOR.submit(task);
 
 		try {
-			return task.get(30, TimeUnit.SECONDS);
+			return task.get(getTimeout(), TimeUnit.SECONDS);
 		} catch (InterruptedException e) {
 			// swallow exception here
 		} catch (ExecutionException e) {
@@ -94,6 +94,13 @@ public abstract class AbstractJmxServerCommand {
 		}
 
 		return null;
+	}
+
+	/**
+	 * @return the timeout of the operation in seconds
+	 */
+	protected int getTimeout() {
+		return 30;
 	}
 
 }
