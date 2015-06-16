@@ -94,12 +94,12 @@
 	<repository>
 	  <id>eclipse</id>
 	  <layout>p2</layout>
-	  <url>http://download.eclipse.org/releases/luna/</url>
+	  <url>http://download.eclipse.org/releases/mars/</url>
 	</repository>
 	<repository>
 	  <id>orbit</id>
 	  <layout>p2</layout>
-	  <url>http://download.eclipse.org/tools/orbit/downloads/drops/R20140525021250/repository/</url>
+	  <url>http://download.eclipse.org/tools/orbit/downloads/drops/R20150519210750/repository/</url>
 	</repository>
     <repository>
 	  <id>ajdt</id>
@@ -122,9 +122,9 @@
       <url>http://download.eclipse.org/virgo/release/BNDLR/1.1.2.RELEASE/updatesite</url>
     </repository>
     <repository>
-      <id>virgo-milestone</id>
+      <id>virgo-snapshots</id>
       <layout>p2</layout>
-      <url>http://download.eclipse.org/virgo/updatesite/3.6.2.RELEASE</url>
+      <url>http://download.eclipse.org/virgo/snapshots/3.7/</url>
     </repository>
   </repositories>
 
@@ -148,11 +148,13 @@
 			<optionalDependencies>ignore</optionalDependencies>
 		  </dependency-resolution>
 		  <environments>
+		  	<!-- 
 			<environment>
 			  <os>macosx</os>
 			  <ws>cocoa</ws>
 			  <arch>x86</arch>
 			</environment>
+		  	 -->
 			<environment>
 			  <os>macosx</os>
 			  <ws>cocoa</ws>
