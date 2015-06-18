@@ -503,20 +503,20 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 
 	private Section createRightSection(FormToolkit toolkit, ScrolledForm form) {
 		GridLayout layout;
-		Section leftSection = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.DESCRIPTION);
-		leftSection.setText(Messages.RepositoryBrowserEditorPage_BundlesAndLibraries);
-		leftSection.setDescription(Messages.RepositoryBrowserEditorPage_BundlesAndLibrariesMessage + getServerName()
+		Section rightSection = toolkit.createSection(form.getBody(), ExpandableComposite.TITLE_BAR | Section.DESCRIPTION);
+		rightSection.setText(Messages.RepositoryBrowserEditorPage_BundlesAndLibraries);
+		rightSection.setDescription(Messages.RepositoryBrowserEditorPage_BundlesAndLibrariesMessage + getServerName()
 				+ ". " //$NON-NLS-1$
 				+ Messages.RepositoryBrowserEditorPage_BundlesAndLibrariesProviso);
-		leftSection.setLayoutData(new GridData(GridData.FILL_BOTH));
+		rightSection.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		Composite leftComposite = toolkit.createComposite(leftSection);
+		Composite leftComposite = toolkit.createComposite(rightSection);
 		layout = new GridLayout();
 		layout.numColumns = 1;
 		leftComposite.setLayout(layout);
 		leftComposite.setLayoutData(new GridData(GridData.FILL_BOTH));
 		toolkit.paintBordersFor(leftComposite);
-		leftSection.setClient(leftComposite);
+		rightSection.setClient(leftComposite);
 
 		GridData data = new GridData(GridData.FILL_HORIZONTAL);
 
@@ -624,7 +624,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		});
 		repoLink.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP));
 
-		return leftSection;
+		return rightSection;
 	}
 
 	private void refreshBundleRepository() {
