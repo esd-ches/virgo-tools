@@ -26,34 +26,57 @@ import org.eclipse.wst.server.core.IModule;
 
 /**
  * {@link IServerCommand} to deploy a PAR or bundle.
- * 
+ *
  * @author Christian Dupuis
  * @since 1.0.1
  */
-public class JmxServerDeployCommand extends AbstractJmxServerDeployerCommand<CompositeData> implements
-		IServerCommand<DeploymentIdentity> {
+public class JmxServerDeployCommand extends AbstractJmxServerDeployerCommand<CompositeData>
+		implements IServerCommand<DeploymentIdentity> {
 
 	private static final String ITEM_SYMBOLIC_NAME = "symbolicName"; //$NON-NLS-1$
 
 	private static final String ITEM_VERSION = "version"; //$NON-NLS-1$
 
+	private final boolean checkBundleDeployed;
+
 	/**
 	 * Creates a new {@link JmxServerDeployCommand}.
 	 */
 	public JmxServerDeployCommand(IServerBehaviour serverBehaviour, IModule module) {
+		this(serverBehaviour, module, false);
+	}
+
+	/**
+	 * Creates a new {@link JmxServerDeployCommand} that checks whether the bundle to be deployed is actually already
+	 * deployed.
+	 *
+	 * @param checkBundleDeployed
+	 *            <code>true</code> to check before deploying, <code>false</code> otherwise
+	 */
+	public JmxServerDeployCommand(IServerBehaviour serverBehaviour, IModule module, boolean checkBundleDeployed) {
 		super(serverBehaviour, module);
+		this.checkBundleDeployed = checkBundleDeployed;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
 	public DeploymentIdentity execute() throws IOException, TimeoutException {
+		Map<String, DeploymentIdentity> identities = serverBehaviour.getDeploymentIdentities();
+
+		if (checkBundleDeployed) {
+			DeploymentIdentity alreadyDeployed = new JmxServerCheckBundleDeployedCommand(serverBehaviour, module)
+					.execute();
+			if (alreadyDeployed != null) {
+				identities.put(module.getId(), alreadyDeployed);
+				return alreadyDeployed;
+			}
+		}
 
 		CompositeData returnValue = doExecute();
 		if (returnValue != null) {
 			String symbolicName = (String) returnValue.get(ITEM_SYMBOLIC_NAME);
 			String version = (String) returnValue.get(ITEM_VERSION);
-			Map<String, DeploymentIdentity> identities = serverBehaviour.getDeploymentIdentities();
 			DeploymentIdentity identity = new DeploymentIdentity(symbolicName, version);
 			identities.put(module.getId(), identity);
 			return identity;

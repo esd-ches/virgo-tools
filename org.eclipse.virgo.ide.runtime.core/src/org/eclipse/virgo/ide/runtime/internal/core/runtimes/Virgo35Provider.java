@@ -27,12 +27,16 @@ import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
+import org.eclipse.virgo.ide.runtime.internal.core.DeploymentIdentity;
+import org.eclipse.virgo.ide.runtime.internal.core.command.IServerCommand;
+import org.eclipse.virgo.ide.runtime.internal.core.command.JmxServerDeployCommand;
 import org.eclipse.virgo.kernel.osgi.provisioning.tools.DependencyLocatorVirgo;
+import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IRuntime;
 
 /**
  * {@link IServerRuntimeProvider} for Virgo Server 3.5.0 and above.
- * 
+ *
  * @author Borislav Kapukaranov
  * @author Miles Parker
  * @author Leo Dos Santos
@@ -173,5 +177,13 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
 	 */
 	public URI getConnectorBundleUri() {
 		return ServerCorePlugin.getDefault().getBundleUri(GEMINI_CONNECTOR_BUNDLE_NAME);
+	}
+
+	/* (non-Javadoc)
+	 * @see org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider#getServerDeployCommand(org.eclipse.virgo.ide.runtime.core.IServerBehaviour, org.eclipse.wst.server.core.IModule)
+	 */
+	@Override
+	public IServerCommand<DeploymentIdentity> getServerDeployCommand(IServerBehaviour IServerBehaviour, IModule module) {
+		return new JmxServerDeployCommand(IServerBehaviour, module, true);
 	}
 }
