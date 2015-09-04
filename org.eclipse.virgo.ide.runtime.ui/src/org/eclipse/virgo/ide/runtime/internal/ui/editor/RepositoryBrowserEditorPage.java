@@ -100,7 +100,7 @@ import org.eclipse.wst.server.ui.editor.ServerEditorPart;
 
 /**
  * {@link ServerEditorPart} that allows to browse the local and remote bundle repository.
- * 
+ *
  * @author Christian Dupuis
  * @author Miles Parker
  * @since 1.0.0
@@ -414,7 +414,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 						ServerUiPlugin.getDefault()
 								.getPreferenceStore()
 								.setValue(ServerUiPlugin.PLUGIN_ID + ".download.message", //$NON-NLS-1$
-										new Boolean(dialog.getToggleState()));
+								new Boolean(dialog.getToggleState()));
 					}
 				}
 
@@ -507,7 +507,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		rightSection.setText(Messages.RepositoryBrowserEditorPage_BundlesAndLibraries);
 		rightSection.setDescription(Messages.RepositoryBrowserEditorPage_BundlesAndLibrariesMessage + getServerName()
 				+ ". " //$NON-NLS-1$
-				+ Messages.RepositoryBrowserEditorPage_BundlesAndLibrariesProviso);
+						+ Messages.RepositoryBrowserEditorPage_BundlesAndLibrariesProviso);
 		rightSection.setLayoutData(new GridData(GridData.FILL_BOTH));
 
 		Composite leftComposite = toolkit.createComposite(rightSection);
@@ -727,10 +727,10 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 		}
 		searchResultTable.removeAll();
 		setErrorMessage(null);
-		intializeViewers();
+		initializeViewers();
 	}
 
-	protected void intializeViewers() {
+	protected void initializeViewers() {
 		shell.getDisplay().asyncExec(new Runnable() {
 			public void run() {
 				repositoryTableViewer.setInput(getServer());
