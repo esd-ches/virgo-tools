@@ -733,10 +733,14 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 	protected void initializeViewers() {
 		shell.getDisplay().asyncExec(new Runnable() {
 			public void run() {
-				repositoryTableViewer.setInput(getServer());
-				repositoryTableViewer.expandToLevel(2);
-				searchResultTableViewer.refresh(true);
-				searchResultTableViewer.expandToLevel(2);
+				if (repositoryTableViewer.getControl() != null && !repositoryTableViewer.getControl().isDisposed()) {
+					repositoryTableViewer.setInput(getServer());
+					repositoryTableViewer.expandToLevel(2);
+				}
+				if (searchResultTableViewer.getControl() != null && !searchResultTableViewer.getControl().isDisposed()) {
+					searchResultTableViewer.refresh(true);
+					searchResultTableViewer.expandToLevel(2);
+				}
 			}
 		});
 	}
