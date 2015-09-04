@@ -24,10 +24,20 @@ import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
  */
 public class StatusUtil {
 	public static void error(String message, Exception e) {
-		StatusManager.getManager().handle(	new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID,
-												"An IO Exception occurred.", e));
+		error(message, e, StatusManager.LOG);
 	}
-
+	/**
+	 * @param message
+	 *            the message to be reported
+	 * @param e
+	 *            the cause
+	 * @param style
+	 *            a bitmask of style bits as enumerated on {@link StatusManager}
+	 */
+	public static void error(String message, Exception e, int style) {
+		StatusManager.getManager().handle(
+				new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, "An IO Exception occurred.", e), style);
+	}
 	public static void error(Exception e) {
 		if (e instanceof IOException) {
 			error("An IO Exception occurred.", e);

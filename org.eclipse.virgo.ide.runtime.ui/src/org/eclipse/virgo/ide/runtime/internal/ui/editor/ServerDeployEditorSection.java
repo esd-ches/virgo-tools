@@ -16,6 +16,7 @@ import java.beans.PropertyChangeListener;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.dialogs.IMessageProvider;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -115,11 +116,13 @@ public class ServerDeployEditorSection extends ServerEditorSection {
 				if (updating) {
 					return;
 				}
+				getManagedForm().getMessageManager().removeMessages(port);
 				int newPort = -1;
 				try {
 					newPort = Integer.valueOf(port.getText());
 				} catch (NumberFormatException nfe) {
-					setErrorMessage(port.getText() + " is not a valid port number");
+					getManagedForm().getMessageManager().addMessage("MALFORMED-PORT", "Port must be a positive number",
+							null, IMessageProvider.ERROR, port);
 					return;
 				}
 				setErrorMessage(null);
@@ -138,14 +141,20 @@ public class ServerDeployEditorSection extends ServerEditorSection {
 				if (updating) {
 					return;
 				}
-				int newTimeout = -1;
+				getManagedForm().getMessageManager().removeMessages(timeout);
+				Integer newTimeout = null;
 				try {
 					newTimeout = Integer.valueOf(timeout.getText());
 				} catch (NumberFormatException nfe) {
-					setErrorMessage(timeout.getText() + " is not a valid timeout");
+					getManagedForm().getMessageManager().addMessage("MALFORMED-TIMEOUT",
+							"Timeout must be a positive number", null, IMessageProvider.ERROR, timeout);
 					return;
 				}
-				setErrorMessage(null);
+				if (newTimeout < 5) {
+					getManagedForm().getMessageManager().addMessage("INVALID-TIMEOUT", "Timeout cannot be less than 5",
+							null, IMessageProvider.ERROR, timeout);
+					return;
+				}
 				updating = true;
 				execute(new ModifyDeployerTimeoutCommand(serverWorkingCopy, newTimeout));
 				updating = false;
@@ -217,6 +226,8 @@ public class ServerDeployEditorSection extends ServerEditorSection {
 
 	@Override
 	public IStatus[] getSaveStatus() {
+		// this errors should never happen as the port and timeout controls now prevent the user
+		// from entering invalid values.
 		try {
 			Integer.valueOf(port.getText());
 		} catch (NumberFormatException nfe) {
