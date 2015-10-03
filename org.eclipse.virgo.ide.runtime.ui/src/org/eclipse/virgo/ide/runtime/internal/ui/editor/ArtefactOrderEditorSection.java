@@ -7,7 +7,9 @@
  *
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
+ *     GianMaria Romanato - multiple selection and apply changes on save
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.ui.editor;
 
 import java.beans.PropertyChangeEvent;
@@ -15,16 +17,21 @@ import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.AbstractOperation;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.ISelectionChangedListener;
 import org.eclipse.jface.viewers.IStructuredSelection;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.SelectionChangedEvent;
 import org.eclipse.jface.viewers.TableViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
@@ -41,20 +48,66 @@ import org.eclipse.ui.forms.widgets.Section;
 import org.eclipse.virgo.ide.runtime.core.IServerWorkingCopy;
 import org.eclipse.virgo.ide.runtime.internal.core.actions.ModifyArtefactOrderCommand;
 import org.eclipse.wst.server.core.IModule;
-import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.ui.ServerUICore;
 import org.eclipse.wst.server.ui.editor.ServerEditorSection;
 
 /**
- * {@link ServerEditorSection} section that allows to configure the JMX deployer credentials
- * 
+ * {@link ServerEditorSection} section that allows to configure the JMX deployer credentials.
+ *
+ * Largely rewritten to allow multiple selection and to avoid that user actions are immediately applied to the server
+ * configuration. Changes are now applied only when the user saves the editor.
+ *
  * @author Christian Dupuis
  * @author Steffen Pingel
+ * @author GianMaria Romanato - support multiple selection and apply changes to configuration only when editor is saved
  * @since 1.0.1
  */
 public class ArtefactOrderEditorSection extends ServerEditorSection {
 
+	/**
+	 * An operation used for making ordering changes in the UI, triggering dirty state and supporting UNDO.
+	 *
+	 * Changes are applied to the server only when the editor is saved using a different operation, see
+	 * {@link ArtefactOrderEditorSection#doSave(IProgressMonitor)}
+	 */
+	private class ModifyArtefactOrderEditorCommand extends AbstractOperation {
+
+		private List<IModule> oldOrder;
+
+		private final List<IModule> newOrder;
+
+		ModifyArtefactOrderEditorCommand(List<IModule> newOrder) {
+			super("Modify artefact order in editor UI"); //$NON-NLS-1$
+			this.newOrder = newOrder;
+		}
+
+		@Override
+		public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+			this.oldOrder = ArtefactOrderEditorSection.this.orderedModules;
+			ArtefactOrderEditorSection.this.orderedModules = this.newOrder;
+			ArtefactOrderEditorSection.this.bundleTableViewer.setInput(ArtefactOrderEditorSection.this.orderedModules);
+			return Status.OK_STATUS;
+		}
+
+		@Override
+		public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+			return execute(monitor, info);
+		}
+
+		@Override
+		public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+			ArtefactOrderEditorSection.this.orderedModules = this.oldOrder;
+			this.oldOrder = null;
+			ArtefactOrderEditorSection.this.bundleTableViewer.setInput(ArtefactOrderEditorSection.this.orderedModules);
+			return Status.OK_STATUS;
+		}
+
+	}
+
 	protected IServerWorkingCopy serverWorkingCopy;
+
+	// represents the model for the table
+	private List<IModule> orderedModules;
 
 	protected boolean updating;
 
@@ -68,32 +121,33 @@ public class ArtefactOrderEditorSection extends ServerEditorSection {
 
 	private Button downButton;
 
-	private ArtefactContentProvider contentProvider;
-
 	protected void addConfigurationChangeListener() {
-		listener = new PropertyChangeListener() {
+		this.listener = new PropertyChangeListener() {
+
 			public void propertyChange(PropertyChangeEvent event) {
-				if (updating) {
+				if (ArtefactOrderEditorSection.this.updating) {
 					return;
 				}
-				updating = true;
-				if (IServerWorkingCopy.PROPERTY_ARTEFACT_ORDER.equals(event.getPropertyName())) {
-					bundleTableViewer.setInput(server);
+				ArtefactOrderEditorSection.this.updating = true;
+				if (org.eclipse.virgo.ide.runtime.core.IServer.PROPERTY_ARTEFACT_ORDER
+						.equals(event.getPropertyName())) {
+					initialize();
 				}
-				updating = false;
+				ArtefactOrderEditorSection.this.updating = false;
 			}
 		};
-		serverWorkingCopy.addConfigurationChangeListener(listener);
+		this.serverWorkingCopy.addConfigurationChangeListener(this.listener);
 	}
 
+	@Override
 	public void createSection(Composite parent) {
 		super.createSection(parent);
 		FormToolkit toolkit = getFormToolkit(parent.getDisplay());
 
 		Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED
 				| ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
-		section.setText("Artefact Deployment Order");
-		section.setDescription("Specify the deployment order of targeted bundles and PARs on server startup.");
+		section.setText(Messages.ArtefactOrderEditorSection_title);
+		section.setDescription(Messages.ArtefactOrderEditorSection_description);
 		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 
 		Composite composite = toolkit.createComposite(section);
@@ -104,23 +158,24 @@ public class ArtefactOrderEditorSection extends ServerEditorSection {
 		layout.verticalSpacing = 5;
 		layout.horizontalSpacing = 1;
 		composite.setLayout(layout);
-		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
+		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL, GridData.FILL_VERTICAL, true, true));
 		toolkit.paintBordersFor(composite);
 		section.setClient(composite);
 
-		bundleTable = toolkit.createTable(composite, SWT.SINGLE | SWT.V_SCROLL | SWT.FULL_SELECTION);
+		this.bundleTable = toolkit.createTable(composite, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);
 		GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
-		data.heightHint = 100;
-		bundleTable.setLayoutData(data);
-		bundleTableViewer = new TableViewer(bundleTable);
-		contentProvider = new ArtefactContentProvider();
-		bundleTableViewer.setContentProvider(contentProvider);
-		bundleTableViewer.setLabelProvider(ServerUICore.getLabelProvider());
+		int modulesNumber = this.server.getModules().length;
+		data.heightHint = this.bundleTable.getItemHeight() * Math.min(Math.max(5, modulesNumber), 10)
+				+ this.bundleTable.getBorderWidth() * 2;
+		this.bundleTable.setLayoutData(data);
+		this.bundleTableViewer = new TableViewer(this.bundleTable);
+		this.bundleTableViewer.setContentProvider(new ArrayContentProvider());
+		this.bundleTableViewer.setLabelProvider(ServerUICore.getLabelProvider());
 
-		bundleTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+		this.bundleTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+
 			public void selectionChanged(SelectionChangedEvent event) {
-				Object obj = ((IStructuredSelection) event.getSelection()).getFirstElement();
-				updateButtons(obj);
+				updateButtons(event.getSelection());
 			}
 
 		});
@@ -130,161 +185,135 @@ public class ArtefactOrderEditorSection extends ServerEditorSection {
 		data = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
 		buttonComposite.setLayoutData(data);
 
-		upButton = toolkit.createButton(buttonComposite, "Up", SWT.PUSH);
+		this.upButton = toolkit.createButton(buttonComposite, Messages.ArtefactOrderEditorSection_up_button, SWT.PUSH);
 		data = new GridData();
-		data.widthHint = 50;
-		upButton.setLayoutData(data);
-		upButton.addSelectionListener(new SelectionAdapter() {
+		this.upButton.setLayoutData(data);
+		this.upButton.addSelectionListener(new SelectionAdapter() {
+
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Object selectedArtefact = ((IStructuredSelection) bundleTableViewer.getSelection()).getFirstElement();
-				List<Object> modules = new ArrayList<Object>();
-				modules.addAll(Arrays.asList(contentProvider.getElements(server)));
-				int index = modules.indexOf(selectedArtefact);
-				modules.remove(selectedArtefact);
-				modules.add(index - 1, selectedArtefact);
-				List<String> artefactOrder = new ArrayList<String>();
-				for (Object module : modules) {
-					artefactOrder.add(((IModule) module).getId());
+				IStructuredSelection selection = (IStructuredSelection) ArtefactOrderEditorSection.this.bundleTableViewer
+						.getSelection();
+				List<IModule> allModules = new ArrayList<IModule>(ArtefactOrderEditorSection.this.orderedModules);
+
+				for (IModule aModule : (List<IModule>) selection.toList()) {
+					int index = allModules.indexOf(aModule);
+					allModules.remove(aModule);
+					allModules.add(index - 1, aModule);
 				}
 
-				if (updating) {
-					return;
-				}
-				updating = true;
-				execute(new ModifyArtefactOrderCommand(serverWorkingCopy, artefactOrder));
-				bundleTableViewer.setInput(server);
-				updateButtons(selectedArtefact);
-				updating = false;
+				execute(new ModifyArtefactOrderEditorCommand(allModules));
+				updateButtons(selection);
 			}
 		});
+		this.downButton = toolkit.createButton(buttonComposite, Messages.ArtefactOrderEditorSection_down_button,
+				SWT.PUSH);
+		this.downButton.setLayoutData(data);
+		this.downButton.addSelectionListener(new SelectionAdapter() {
 
-		downButton = toolkit.createButton(buttonComposite, "Down", SWT.PUSH);
-		downButton.setLayoutData(data);
-		downButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
-				Object selectedArtefact = ((IStructuredSelection) bundleTableViewer.getSelection()).getFirstElement();
-				List<Object> modules = new ArrayList<Object>();
-				modules.addAll(Arrays.asList(contentProvider.getElements(server)));
-				int index = modules.indexOf(selectedArtefact);
-				modules.remove(selectedArtefact);
-				modules.add(index + 1, selectedArtefact);
-				if (updating) {
-					return;
-				}
-				updating = true;
+				IStructuredSelection selection = (IStructuredSelection) ArtefactOrderEditorSection.this.bundleTableViewer
+						.getSelection();
+				List<IModule> allModules = new ArrayList<IModule>(ArtefactOrderEditorSection.this.orderedModules);
 
-				List<String> artefactOrder = new ArrayList<String>();
-				for (Object module : modules) {
-					artefactOrder.add(((IModule) module).getId());
+				List<IModule> reversedSelection = new ArrayList<IModule>(selection.toList());
+				Collections.reverse(reversedSelection);
+
+				for (IModule aModule : reversedSelection) {
+					int index = allModules.indexOf(aModule);
+					allModules.remove(aModule);
+					allModules.add(index + 1, aModule);
 				}
-				execute(new ModifyArtefactOrderCommand(serverWorkingCopy, artefactOrder));
-				bundleTableViewer.setInput(server);
-				updateButtons(selectedArtefact);
-				updating = false;
+
+				execute(new ModifyArtefactOrderEditorCommand(allModules));
+				updateButtons(selection);
 			}
 		});
-
 		initialize();
 	}
 
 	/**
 	 * @see ServerEditorSection#dispose()
 	 */
+	@Override
 	public void dispose() {
-		if (server != null) {
-			server.removePropertyChangeListener(listener);
+		if (this.server != null) {
+			this.server.removePropertyChangeListener(this.listener);
 		}
 	}
 
 	/**
 	 * @see ServerEditorSection#init(IEditorSite, IEditorInput)
 	 */
+	@Override
 	public void init(IEditorSite site, IEditorInput input) {
 		super.init(site, input);
-		serverWorkingCopy = (IServerWorkingCopy) server.loadAdapter(IServerWorkingCopy.class, new NullProgressMonitor());
+
+		this.serverWorkingCopy = (IServerWorkingCopy) this.server.loadAdapter(IServerWorkingCopy.class,
+				new NullProgressMonitor());
+
 		addConfigurationChangeListener();
 	}
 
 	/**
-	 * Initialize the fields in this editor.
+	 * Initialize model and view.
 	 */
 	protected void initialize() {
-		updating = true;
-		bundleTableViewer.setInput(server);
-		upButton.setEnabled(false);
-		downButton.setEnabled(false);
-		updating = false;
+		final List<String> orderedArtefacts = this.serverWorkingCopy.getConfiguration().getArtefactOrder();
+
+		this.orderedModules = new ArrayList(Arrays.asList(this.server.getModules()));
+
+		// sort the modules according the order defined in the server configuration
+		Collections.sort(this.orderedModules, new java.util.Comparator<IModule>() {
+
+			public int compare(IModule o1, IModule o2) {
+				Integer m1 = orderedArtefacts.contains(o1.getId())
+						? orderedArtefacts.indexOf(o1.getId())
+						: Integer.MAX_VALUE;
+				Integer m2 = orderedArtefacts.contains(o2.getId())
+						? orderedArtefacts.indexOf(o2.getId())
+						: Integer.MAX_VALUE;
+				return m1.compareTo(m2);
+			}
+		});
+		this.bundleTableViewer.setInput(this.orderedModules);
 	}
 
-	private void updateButtons(Object obj) {
-		upButton.setEnabled(false);
-		downButton.setEnabled(false);
-		if (obj instanceof IModule) {
-			List<Object> modules = Arrays.asList(contentProvider.getElements(server));
-			int index = modules.indexOf(obj);
-			if (index > 0) {
-				upButton.setEnabled(true);
-			}
-			if (index < modules.size() - 1) {
-				downButton.setEnabled(true);
-			}
+	private void updateButtons(ISelection selections) {
+		IStructuredSelection ss = (IStructuredSelection) selections;
+		List<IModule> selectedModules = ss.toList();
+
+		List<IModule> allModules = this.orderedModules;
+
+		final int lowerBound = allModules.size() - 1;
+		boolean initialState = !selections.isEmpty() && !allModules.isEmpty();
+		boolean canMoveUp = initialState;
+		boolean canMoveDown = initialState;
+
+		for (int i = 0; i < selectedModules.size() && initialState; i++) {
+			IModule obj = selectedModules.get(i);
+			int index = allModules.indexOf(obj);
+			canMoveUp = canMoveUp && index > 0;
+			canMoveDown = canMoveDown && index < lowerBound;
 		}
+
+		this.upButton.setEnabled(canMoveUp);
+		this.downButton.setEnabled(canMoveDown);
 	}
 
-	class ArtefactContentProvider implements ITreeContentProvider {
-
-		public void dispose() {
+	@Override
+	public void doSave(IProgressMonitor monitor) {
+		List<String> artefactOrder = new ArrayList<String>();
+		for (Object module : this.orderedModules) {
+			artefactOrder.add(((IModule) module).getId());
 		}
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-
+		if (!this.serverWorkingCopy.getArtefactOrder().equals(artefactOrder)) {
+			this.updating = true;
+			execute(new ModifyArtefactOrderCommand(this.serverWorkingCopy, artefactOrder));
+			this.updating = false;
 		}
-
-		public Object[] getElements(Object inputElement) {
-			if (inputElement instanceof IServer) {
-				IServer server = (IServer) inputElement;
-				IModule[] modules = server.getModules();
-
-				IServerWorkingCopy workingServer = (IServerWorkingCopy) server.loadAdapter(IServerWorkingCopy.class,
-						null);
-				final List<String> orderedArtefacts = workingServer.getConfiguration().getArtefactOrder();
-
-				List<IModule> orderedModules = Arrays.asList(modules);
-
-				// sort the modules according the order defined in the server configuration
-				Collections.sort(orderedModules, new Comparator<IModule>() {
-
-					public int compare(IModule o1, IModule o2) {
-						Integer m1 = (orderedArtefacts.contains(o1.getId())
-								? orderedArtefacts.indexOf(o1.getId())
-								: Integer.MAX_VALUE);
-						Integer m2 = (orderedArtefacts.contains(o2.getId())
-								? orderedArtefacts.indexOf(o2.getId())
-								: Integer.MAX_VALUE);
-						return m1.compareTo(m2);
-					}
-				});
-
-				return orderedModules.toArray();
-
-			}
-			return new Object[0];
-		}
-
-		public Object[] getChildren(Object parentElement) {
-			return getElements(parentElement);
-		}
-
-		public Object getParent(Object element) {
-			return null;
-		}
-
-		public boolean hasChildren(Object element) {
-			return getChildren(element).length > 0;
-		}
-
 	}
 
 }
