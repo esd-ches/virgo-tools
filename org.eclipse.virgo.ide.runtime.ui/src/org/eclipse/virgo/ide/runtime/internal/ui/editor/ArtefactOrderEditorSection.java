@@ -152,19 +152,22 @@ public class ArtefactOrderEditorSection extends ServerEditorSection {
         Composite composite = toolkit.createComposite(section);
         GridLayout layout = new GridLayout();
         layout.numColumns = 2;
-        layout.marginHeight = 5;
-        layout.marginWidth = 1;
-        layout.verticalSpacing = 5;
-        layout.horizontalSpacing = 1;
         composite.setLayout(layout);
         composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL, GridData.FILL_VERTICAL, true, true));
         toolkit.paintBordersFor(composite);
         section.setClient(composite);
 
         this.bundleTable = toolkit.createTable(composite, SWT.MULTI | SWT.V_SCROLL | SWT.FULL_SELECTION);
-        GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
+        GridData data = new GridData(SWT.FILL, SWT.FILL, true, false);
+
         int modulesNumber = this.server.getModules().length;
-        data.heightHint = this.bundleTable.getItemHeight() * Math.min(Math.max(5, modulesNumber), 10) + this.bundleTable.getBorderWidth() * 2;
+        int heightHint = this.bundleTable.getItemHeight() * Math.min(Math.max(5, modulesNumber), 10) + this.bundleTable.getBorderWidth() * 2;
+        /*
+         * The above calculates a hint that is based on item height and ensures the table is never less than 5 rows and
+         * never more than 10 rows. However, on Mars this does not work well with GTK_3 because the returned item height
+         * is too big. The next line ensures that the table does not get too tall.
+         */
+        data.heightHint = Math.min(200, heightHint);
         this.bundleTable.setLayoutData(data);
         this.bundleTableViewer = new TableViewer(this.bundleTable);
         this.bundleTableViewer.setContentProvider(new ArrayContentProvider());
@@ -180,7 +183,7 @@ public class ArtefactOrderEditorSection extends ServerEditorSection {
 
         Composite buttonComposite = new Composite(composite, SWT.NONE);
         buttonComposite.setLayout(new GridLayout(1, true));
-        data = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
+        data = new GridData(SWT.LEAD, SWT.TOP, false, false);
         buttonComposite.setLayoutData(data);
 
         this.upButton = toolkit.createButton(buttonComposite, Messages.ArtefactOrderEditorSection_up_button, SWT.PUSH);

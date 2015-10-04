@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2010 SpringSource, a divison of VMware, Inc.
+ * Copyright (c) 2009, 2015 SpringSource, a divison of VMware, Inc. and others
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
+ *     GianMaria Romanato - externalize strings and perform changes only on save
  *******************************************************************************/
 
 package org.eclipse.virgo.ide.runtime.internal.ui.editor;
@@ -14,10 +15,15 @@ package org.eclipse.virgo.ide.runtime.internal.ui.editor;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.commands.operations.AbstractOperation;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.dialogs.IMessageProvider;
+import org.eclipse.osgi.util.NLS;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -47,15 +53,89 @@ import org.eclipse.wst.server.ui.editor.ServerEditorSection;
  */
 public class ServerDeployEditorSection extends ServerEditorSection {
 
+    class ChangePortUICommand extends AbstractOperation {
+
+        private int oldValue;
+
+        private int newValue;
+
+        public ChangePortUICommand(int newValue) {
+            super("Change deployer port"); //$NON-NLS-1$
+            this.newValue = newValue;
+        }
+
+        @Override
+        public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+            this.oldValue = ServerDeployEditorSection.this.port;
+            ServerDeployEditorSection.this.port = this.newValue;
+            ServerDeployEditorSection.this.updating = true;
+            initialize();
+            ServerDeployEditorSection.this.updating = false;
+            return Status.OK_STATUS;
+        }
+
+        @Override
+        public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+            return execute(monitor, info);
+        }
+
+        @Override
+        public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+            this.newValue = ServerDeployEditorSection.this.port;
+            ServerDeployEditorSection.this.port = this.oldValue;
+            ServerDeployEditorSection.this.updating = true;
+            initialize();
+            ServerDeployEditorSection.this.updating = false;
+            return Status.OK_STATUS;
+        }
+    }
+
+    class ChangeDeployerTimeoutUICommand extends AbstractOperation {
+
+        private int oldValue;
+
+        private int newValue;
+
+        public ChangeDeployerTimeoutUICommand(int newValue) {
+            super("Change deployer timeout"); //$NON-NLS-1$
+            this.newValue = newValue;
+        }
+
+        @Override
+        public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+            this.oldValue = ServerDeployEditorSection.this.timeout;
+            ServerDeployEditorSection.this.timeout = this.newValue;
+            ServerDeployEditorSection.this.updating = true;
+            initialize();
+            ServerDeployEditorSection.this.updating = false;
+            return Status.OK_STATUS;
+        }
+
+        @Override
+        public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+            return execute(monitor, info);
+        }
+
+        @Override
+        public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+            this.newValue = ServerDeployEditorSection.this.timeout;
+            ServerDeployEditorSection.this.timeout = this.oldValue;
+            ServerDeployEditorSection.this.updating = true;
+            initialize();
+            ServerDeployEditorSection.this.updating = false;
+            return Status.OK_STATUS;
+        }
+    }
+
     protected IServerWorkingCopy serverWorkingCopy;
 
-    protected Text port;
+    protected int port;
 
-    protected Text timeout;
+    protected Text portText;
 
-    protected Text username;
+    protected int timeout;
 
-    protected Text password;
+    protected Text timeoutText;
 
     protected boolean updating;
 
@@ -69,14 +149,10 @@ public class ServerDeployEditorSection extends ServerEditorSection {
                     return;
                 }
                 ServerDeployEditorSection.this.updating = true;
-                if (IServer.PROPERTY_MBEAN_SERVER_PASSWORD.equals(event.getPropertyName())) {
-                    ServerDeployEditorSection.this.password.setText(event.getNewValue().toString());
-                } else if (IServer.PROPERTY_DEPLOY_TIMEOUT.equals(event.getPropertyName())) {
-                    ServerDeployEditorSection.this.timeout.setText(event.getNewValue().toString());
+                if (IServer.PROPERTY_DEPLOY_TIMEOUT.equals(event.getPropertyName())) {
+                    ServerDeployEditorSection.this.timeoutText.setText(event.getNewValue().toString());
                 } else if (IServer.PROPERTY_MBEAN_SERVER_PORT.equals(event.getPropertyName())) {
-                    ServerDeployEditorSection.this.port.setText(event.getNewValue().toString());
-                } else if (IServer.PROPERTY_MBEAN_SERVER_USERNAME.equals(event.getPropertyName())) {
-                    ServerDeployEditorSection.this.username.setText(event.getNewValue().toString());
+                    ServerDeployEditorSection.this.portText.setText(event.getNewValue().toString());
                 }
                 ServerDeployEditorSection.this.updating = false;
             }
@@ -89,111 +165,87 @@ public class ServerDeployEditorSection extends ServerEditorSection {
         super.createSection(parent);
         FormToolkit toolkit = getFormToolkit(parent.getDisplay());
 
-        Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED | ExpandableComposite.TITLE_BAR
-            | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
-        section.setText("Deployer Control");
-        section.setDescription("Configure the communication with the server Deployer Control.");
+        Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE /* | ExpandableComposite.EXPANDED */
+            | ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
+        section.setText(Messages.ServerDeployEditorSection_title);
+        section.setDescription(Messages.ServerDeployEditorSection_description);
         section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 
         Composite composite = toolkit.createComposite(section);
         GridLayout layout = new GridLayout();
         layout.numColumns = 2;
-        layout.marginHeight = 5;
-        layout.marginWidth = 10;
-        layout.verticalSpacing = 5;
-        layout.horizontalSpacing = 15;
         composite.setLayout(layout);
-        composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
+        composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL, GridData.FILL_VERTICAL, true, false));
         toolkit.paintBordersFor(composite);
         section.setClient(composite);
 
-        GridData data = new GridData(SWT.FILL, SWT.CENTER, true, false);
-
-        Label portLabel = toolkit.createLabel(composite, "Port:");
+        Label portLabel = toolkit.createLabel(composite, Messages.ServerDeployEditorSection_port_label);
         portLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-        this.port = toolkit.createText(composite, "");
-        this.port.setLayoutData(data);
-        this.port.addModifyListener(new ModifyListener() {
+        this.portText = toolkit.createText(composite, ""); //$NON-NLS-1$
+        GridData data = new GridData(SWT.FILL, SWT.CENTER, true, false);
+        this.portText.setLayoutData(data);
+
+        Label timeoutLabel = toolkit.createLabel(composite, Messages.ServerDeployEditorSection_timeout_label);
+        timeoutLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+        this.timeoutText = toolkit.createText(composite, ""); //$NON-NLS-1$
+        this.timeoutText.setLayoutData(data);
+
+        this.port = this.serverWorkingCopy.getMBeanServerPort();
+        this.timeout = this.serverWorkingCopy.getDeployTimeout();
+
+        initialize();
+        addConfigurationChangeListener();
+
+        this.portText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
                 if (ServerDeployEditorSection.this.updating) {
                     return;
                 }
-                getManagedForm().getMessageManager().removeMessages(ServerDeployEditorSection.this.port);
+                getManagedForm().getMessageManager().removeMessages(ServerDeployEditorSection.this.portText);
                 int newPort = -1;
                 try {
-                    newPort = Integer.valueOf(ServerDeployEditorSection.this.port.getText());
+                    newPort = Integer.valueOf(ServerDeployEditorSection.this.portText.getText());
                 } catch (NumberFormatException nfe) {
-                    getManagedForm().getMessageManager().addMessage("MALFORMED-PORT", "Port must be a positive number", null, IMessageProvider.ERROR,
-                        ServerDeployEditorSection.this.port);
+                    getManagedForm().getMessageManager().addMessage("MALFORMED-PORT", //$NON-NLS-1$
+                        Messages.ServerDeployEditorSection_invalid_port_form_error, null, IMessageProvider.ERROR,
+                        ServerDeployEditorSection.this.portText);
                     return;
                 }
                 setErrorMessage(null);
                 ServerDeployEditorSection.this.updating = true;
-                execute(new ModifyDeployerPortCommand(ServerDeployEditorSection.this.serverWorkingCopy, newPort));
+                execute(new ChangePortUICommand(newPort));
                 ServerDeployEditorSection.this.updating = false;
             }
         });
 
-        Label timeoutLabel = toolkit.createLabel(composite, "Timeout:");
-        timeoutLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-        this.timeout = toolkit.createText(composite, "");
-        this.timeout.setLayoutData(data);
-        this.timeout.addModifyListener(new ModifyListener() {
+        this.timeoutText.addModifyListener(new ModifyListener() {
 
             public void modifyText(ModifyEvent e) {
                 if (ServerDeployEditorSection.this.updating) {
                     return;
                 }
-                getManagedForm().getMessageManager().removeMessages(ServerDeployEditorSection.this.timeout);
+                getManagedForm().getMessageManager().removeMessages(ServerDeployEditorSection.this.timeoutText);
                 Integer newTimeout = null;
                 try {
-                    newTimeout = Integer.valueOf(ServerDeployEditorSection.this.timeout.getText());
+                    newTimeout = Integer.valueOf(ServerDeployEditorSection.this.timeoutText.getText());
                 } catch (NumberFormatException nfe) {
-                    getManagedForm().getMessageManager().addMessage("MALFORMED-TIMEOUT", "Timeout must be a positive number", null,
-                        IMessageProvider.ERROR, ServerDeployEditorSection.this.timeout);
+                    getManagedForm().getMessageManager().addMessage("MALFORMED-TIMEOUT", //$NON-NLS-1$
+                        Messages.ServerDeployEditorSection_invalid_timeout_form_error, null, IMessageProvider.ERROR,
+                        ServerDeployEditorSection.this.timeoutText);
                     return;
                 }
                 if (newTimeout < 5) {
-                    getManagedForm().getMessageManager().addMessage("INVALID-TIMEOUT", "Timeout cannot be less than 5", null, IMessageProvider.ERROR,
-                        ServerDeployEditorSection.this.timeout);
+                    getManagedForm().getMessageManager().addMessage("INVALID-TIMEOUT", //$NON-NLS-1$
+                        Messages.ServerDeployEditorSection_timeout_too_small_form_error, null, IMessageProvider.ERROR,
+                        ServerDeployEditorSection.this.timeoutText);
                     return;
                 }
                 ServerDeployEditorSection.this.updating = true;
-                execute(new ModifyDeployerTimeoutCommand(ServerDeployEditorSection.this.serverWorkingCopy, newTimeout));
+                execute(new ChangeDeployerTimeoutUICommand(newTimeout));
                 ServerDeployEditorSection.this.updating = false;
             }
         });
-
-        // Label usernameLabel = toolkit.createLabel(composite, "Username:");
-        // usernameLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-        // username = toolkit.createText(composite, "");
-        // username.setLayoutData(data);
-        // username.addModifyListener(new ModifyListener() {
-        // public void modifyText(ModifyEvent e) {
-        // if (updating)
-        // return;
-        // updating = true;
-        // execute(new ModifyDeployerUsernameCommand(serverWorkingCopy, username.getText()));
-        // updating = false;
-        // }
-        // });
-        //
-        // Label passwordLabel = toolkit.createLabel(composite, "Password:");
-        // passwordLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-        // password = toolkit.createText(composite, "", SWT.PASSWORD);
-        // password.setLayoutData(data);
-        // password.addModifyListener(new ModifyListener() {
-        // public void modifyText(ModifyEvent e) {
-        // if (updating)
-        // return;
-        // updating = true;
-        // execute(new ModifyDeployerPasswordCommand(serverWorkingCopy, password.getText()));
-        // updating = false;
-        // }
-        // });
-
-        initialize();
     }
 
     /**
@@ -213,35 +265,42 @@ public class ServerDeployEditorSection extends ServerEditorSection {
     public void init(IEditorSite site, IEditorInput input) {
         super.init(site, input);
         this.serverWorkingCopy = (IServerWorkingCopy) this.server.loadAdapter(IServerWorkingCopy.class, new NullProgressMonitor());
-        addConfigurationChangeListener();
     }
 
     /**
      * Initialize the fields in this editor.
      */
     protected void initialize() {
-        this.updating = true;
-        this.port.setText("" + this.serverWorkingCopy.getMBeanServerPort());
-        this.timeout.setText("" + this.serverWorkingCopy.getDeployTimeout());
-        // this.username.setText(serverWorkingCopy.getDeployerUsername());
-        // this.password.setText(serverWorkingCopy.getDeployerPassword());
-        this.updating = false;
+        this.portText.setText(Integer.toString(this.port));
+        this.timeoutText.setText(Integer.toString(this.timeout));
     }
 
     @Override
     public IStatus[] getSaveStatus() {
-        // this errors should never happen as the port and timeout controls now prevent the user
-        // from entering invalid values.
         try {
-            Integer.valueOf(this.port.getText());
+            Integer.valueOf(this.portText.getText());
         } catch (NumberFormatException nfe) {
-            return new IStatus[] { new Status(IStatus.ERROR, ServerUiPlugin.PLUGIN_ID, "'" + this.port.getText() + "' is not a valid port number") };
+            String errorMessage = NLS.bind(Messages.ServerDeployEditorSection_invalid_port_save_message, this.portText.getText());
+            return new IStatus[] { new Status(IStatus.ERROR, ServerUiPlugin.PLUGIN_ID, errorMessage) };
         }
         try {
-            Integer.valueOf(this.timeout.getText());
+            Integer.valueOf(this.timeoutText.getText());
         } catch (NumberFormatException nfe) {
-            return new IStatus[] { new Status(IStatus.ERROR, ServerUiPlugin.PLUGIN_ID, "'" + this.timeout.getText() + "' is not a valid timeout") };
+            String errorMessage = NLS.bind(Messages.ServerDeployEditorSection_invalid_timeout_save_message, this.timeoutText.getText());
+            return new IStatus[] { new Status(IStatus.ERROR, ServerUiPlugin.PLUGIN_ID, errorMessage) };
         }
         return super.getSaveStatus();
+    }
+
+    @Override
+    public void doSave(IProgressMonitor monitor) {
+        if (this.serverWorkingCopy.getDeployTimeout() != this.timeout) {
+            execute(new ModifyDeployerTimeoutCommand(this.serverWorkingCopy, this.timeout));
+        }
+        if (this.serverWorkingCopy.getMBeanServerPort() != this.port) {
+            execute(new ModifyDeployerPortCommand(this.serverWorkingCopy, this.port));
+        }
+        super.doSave(monitor);
+
     }
 }
