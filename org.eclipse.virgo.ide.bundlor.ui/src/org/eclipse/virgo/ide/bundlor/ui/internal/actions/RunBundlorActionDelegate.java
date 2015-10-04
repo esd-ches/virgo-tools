@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.bundlor.ui.internal.actions;
 
 import java.util.ArrayList;
@@ -35,73 +36,73 @@ import org.eclipse.virgo.ide.facet.core.FacetUtils;
 
 /**
  * Action delegate that runs Bundlor on the selected projects.
- * 
+ *
  * @author Christian Dupuis
  * @since 1.1.3
  */
 public class RunBundlorActionDelegate implements IObjectActionDelegate {
 
-	private final List<IProject> selected = new ArrayList<IProject>();
+    private final List<IProject> selected = new ArrayList<IProject>();
 
-	public void run(IAction action) {
-		Set<IJavaProject> projects = new LinkedHashSet<IJavaProject>();
-		Iterator<IProject> iter = selected.iterator();
-		while (iter.hasNext()) {
-			IProject project = iter.next();
-			if (FacetUtils.isBundleProject(project)) {
-				projects.add(JavaCore.create(project));
-			}
-		}
+    public void run(IAction action) {
+        Set<IJavaProject> projects = new LinkedHashSet<IJavaProject>();
+        Iterator<IProject> iter = this.selected.iterator();
+        while (iter.hasNext()) {
+            IProject project = iter.next();
+            if (FacetUtils.isBundleProject(project)) {
+                projects.add(JavaCore.create(project));
+            }
+        }
 
-		for (final IJavaProject javaProject : projects) {
-			BundlorUiPlugin.runBundlorOnProject(javaProject);
-		}
+        for (final IJavaProject javaProject : projects) {
+            BundlorUiPlugin.runBundlorOnProject(javaProject);
+        }
 
-	}
+    }
 
-	public void selectionChanged(IAction action, ISelection selection) {
-		selected.clear();
-		boolean enabled = true;
-		if (selection instanceof IStructuredSelection) {
-			Iterator<?> iter = ((IStructuredSelection) selection).iterator();
-			while (iter.hasNext()) {
-				Object obj = iter.next();
-				if (obj instanceof IJavaProject) {
-					obj = ((IJavaProject) obj).getProject();
-				}
-				if (obj instanceof IResource) {
-					IResource project = (IResource) obj;
-					if (!project.getProject().isOpen()) {
-						enabled = false;
-						break;
-					} else {
-						selected.add(project.getProject());
-					}
-				} else {
-					enabled = false;
-					break;
-				}
-			}
-		} else {
-			IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-			if (activePage != null) {
-				IEditorPart editor = activePage.getActiveEditor();
-				if (editor != null) {
-					IEditorInput editorInput = editor.getEditorInput();
-					if (editorInput instanceof IFileEditorInput) {
-						selected.add(((IFileEditorInput) editorInput).getFile().getProject());
-						enabled = true;
-					}
-				}
-			}
-		}
-		action.setEnabled(enabled);
-	}
+    public void selectionChanged(IAction action, ISelection selection) {
+        this.selected.clear();
+        boolean enabled = true;
+        if (selection instanceof IStructuredSelection) {
+            Iterator<?> iter = ((IStructuredSelection) selection).iterator();
+            while (iter.hasNext()) {
+                Object obj = iter.next();
+                if (obj instanceof IJavaProject) {
+                    obj = ((IJavaProject) obj).getProject();
+                }
+                if (obj instanceof IResource) {
+                    IResource project = (IResource) obj;
+                    if (!project.getProject().isOpen()) {
+                        enabled = false;
+                        break;
+                    } else {
+                        this.selected.add(project.getProject());
+                    }
+                } else {
+                    enabled = false;
+                    break;
+                }
+            }
+        } else {
+            IWorkbenchPage activePage = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
+            if (activePage != null) {
+                IEditorPart editor = activePage.getActiveEditor();
+                if (editor != null) {
+                    IEditorInput editorInput = editor.getEditorInput();
+                    if (editorInput instanceof IFileEditorInput) {
+                        this.selected.add(((IFileEditorInput) editorInput).getFile().getProject());
+                        enabled = true;
+                    }
+                }
+            }
+        }
+        action.setEnabled(enabled);
+    }
 
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-	}
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+    }
 
-	public List<IProject> getSelected() {
-		return selected;
-	}
+    public List<IProject> getSelected() {
+        return this.selected;
+    }
 }

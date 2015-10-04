@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.editors.text;
 
 import java.util.HashMap;
@@ -32,109 +33,109 @@ import org.eclipse.swt.widgets.Display;
  */
 public class BundleColorManager implements IColorManager, IPDEColorConstants, ISpringColorConstants {
 
-	private static BundleColorManager fColorManager;
+    private static BundleColorManager fColorManager;
 
-	private final Map fColorTable = new HashMap(5);
+    private final Map fColorTable = new HashMap(5);
 
-	private static int counter = 0;
+    private static int counter = 0;
 
-	public BundleColorManager() {
-		initialize();
-	}
+    public BundleColorManager() {
+        initialize();
+    }
 
-	public static IColorManager getDefault() {
-		if (fColorManager == null) {
-			fColorManager = new BundleColorManager();
-		}
+    public static IColorManager getDefault() {
+        if (fColorManager == null) {
+            fColorManager = new BundleColorManager();
+        }
 
-		counter += 1;
-		return fColorManager;
-	}
+        counter += 1;
+        return fColorManager;
+    }
 
-	public static void initializeDefaults(IPreferenceStore store) {
-		PreferenceConverter.setDefault(store, P_DEFAULT, DEFAULT);
-		PreferenceConverter.setDefault(store, P_PROC_INSTR, PROC_INSTR);
-		PreferenceConverter.setDefault(store, P_STRING, STRING);
-		PreferenceConverter.setDefault(store, P_TAG, TAG);
-		PreferenceConverter.setDefault(store, P_XML_COMMENT, XML_COMMENT);
-		PreferenceConverter.setDefault(store, P_HEADER_KEY, HEADER_KEY);
-		PreferenceConverter.setDefault(store, P_HEADER_OSGI, HEADER_OSGI);
-		store.setDefault(P_HEADER_OSGI + IPDEColorConstants.P_BOLD_SUFFIX, true);
-		PreferenceConverter.setDefault(store, P_HEADER_VALUE, HEADER_VALUE);
-		PreferenceConverter.setDefault(store, P_HEADER_ATTRIBUTES, HEADER_ATTRIBUTES);
-		store.setDefault(P_HEADER_ATTRIBUTES + IPDEColorConstants.P_ITALIC_SUFFIX, true);
-		PreferenceConverter.setDefault(store, P_HEADER_ASSIGNMENT, HEADER_ASSIGNMENT);
-		PreferenceConverter.setDefault(store, P_HEADER_SPRING, HEADER_SPRING);
-		store.setDefault(P_HEADER_SPRING + IPDEColorConstants.P_BOLD_SUFFIX, true);
-	}
+    public static void initializeDefaults(IPreferenceStore store) {
+        PreferenceConverter.setDefault(store, P_DEFAULT, DEFAULT);
+        PreferenceConverter.setDefault(store, P_PROC_INSTR, PROC_INSTR);
+        PreferenceConverter.setDefault(store, P_STRING, STRING);
+        PreferenceConverter.setDefault(store, P_TAG, TAG);
+        PreferenceConverter.setDefault(store, P_XML_COMMENT, XML_COMMENT);
+        PreferenceConverter.setDefault(store, P_HEADER_KEY, HEADER_KEY);
+        PreferenceConverter.setDefault(store, P_HEADER_OSGI, HEADER_OSGI);
+        store.setDefault(P_HEADER_OSGI + IPDEColorConstants.P_BOLD_SUFFIX, true);
+        PreferenceConverter.setDefault(store, P_HEADER_VALUE, HEADER_VALUE);
+        PreferenceConverter.setDefault(store, P_HEADER_ATTRIBUTES, HEADER_ATTRIBUTES);
+        store.setDefault(P_HEADER_ATTRIBUTES + IPDEColorConstants.P_ITALIC_SUFFIX, true);
+        PreferenceConverter.setDefault(store, P_HEADER_ASSIGNMENT, HEADER_ASSIGNMENT);
+        PreferenceConverter.setDefault(store, P_HEADER_SPRING, HEADER_SPRING);
+        store.setDefault(P_HEADER_SPRING + IPDEColorConstants.P_BOLD_SUFFIX, true);
+    }
 
-	private void initialize() {
-		IPreferenceStore pstore = PDEPlugin.getDefault().getPreferenceStore();
-		putColor(pstore, P_DEFAULT);
-		putColor(pstore, P_PROC_INSTR);
-		putColor(pstore, P_STRING);
-		putColor(pstore, P_TAG);
-		putColor(pstore, P_XML_COMMENT);
-		putColor(pstore, P_HEADER_KEY);
-		putColor(pstore, P_HEADER_OSGI);
-		putColor(pstore, P_HEADER_VALUE);
-		putColor(pstore, P_HEADER_ATTRIBUTES);
-		putColor(pstore, P_HEADER_ASSIGNMENT);
-		putColor(pstore, P_HEADER_SPRING);
-		pstore = JavaPlugin.getDefault().getCombinedPreferenceStore();
-		for (String element : IColorManager.PROPERTIES_COLORS) {
-			putColor(pstore, element);
-		}
-	}
+    private void initialize() {
+        IPreferenceStore pstore = PDEPlugin.getDefault().getPreferenceStore();
+        putColor(pstore, P_DEFAULT);
+        putColor(pstore, P_PROC_INSTR);
+        putColor(pstore, P_STRING);
+        putColor(pstore, P_TAG);
+        putColor(pstore, P_XML_COMMENT);
+        putColor(pstore, P_HEADER_KEY);
+        putColor(pstore, P_HEADER_OSGI);
+        putColor(pstore, P_HEADER_VALUE);
+        putColor(pstore, P_HEADER_ATTRIBUTES);
+        putColor(pstore, P_HEADER_ASSIGNMENT);
+        putColor(pstore, P_HEADER_SPRING);
+        pstore = JavaPlugin.getDefault().getCombinedPreferenceStore();
+        for (String element : IColorManager.PROPERTIES_COLORS) {
+            putColor(pstore, element);
+        }
+    }
 
-	public void disposeColors(boolean resetSingleton) {
-		Iterator e = fColorTable.values().iterator();
-		while (e.hasNext()) {
-			((Color) e.next()).dispose();
-		}
-		if (resetSingleton) {
-			fColorManager = null;
-		}
+    public void disposeColors(boolean resetSingleton) {
+        Iterator e = this.fColorTable.values().iterator();
+        while (e.hasNext()) {
+            ((Color) e.next()).dispose();
+        }
+        if (resetSingleton) {
+            fColorManager = null;
+        }
 
-	}
+    }
 
-	public void dispose() {
-		counter--;
-		if (counter == 0) {
-			disposeColors(true);
-		}
-	}
+    public void dispose() {
+        counter--;
+        if (counter == 0) {
+            disposeColors(true);
+        }
+    }
 
-	private void putColor(IPreferenceStore pstore, String property) {
-		putColor(property, PreferenceConverter.getColor(pstore, property));
-	}
+    private void putColor(IPreferenceStore pstore, String property) {
+        putColor(property, PreferenceConverter.getColor(pstore, property));
+    }
 
-	private void putColor(String property, RGB setting) {
-		Color oldColor = (Color) fColorTable.get(property);
-		if (oldColor != null) {
-			if (oldColor.getRGB().equals(setting)) {
-				return;
-			}
-			oldColor.dispose();
-		}
-		fColorTable.put(property, new Color(Display.getCurrent(), setting));
-	}
+    private void putColor(String property, RGB setting) {
+        Color oldColor = (Color) this.fColorTable.get(property);
+        if (oldColor != null) {
+            if (oldColor.getRGB().equals(setting)) {
+                return;
+            }
+            oldColor.dispose();
+        }
+        this.fColorTable.put(property, new Color(Display.getCurrent(), setting));
+    }
 
-	public Color getColor(String key) {
-		Color color = (Color) fColorTable.get(key);
-		if (color == null) {
-			color = Display.getCurrent().getSystemColor(SWT.COLOR_LIST_FOREGROUND);
-		}
-		return color;
-	}
+    public Color getColor(String key) {
+        Color color = (Color) this.fColorTable.get(key);
+        if (color == null) {
+            color = Display.getCurrent().getSystemColor(SWT.COLOR_LIST_FOREGROUND);
+        }
+        return color;
+    }
 
-	public void handlePropertyChangeEvent(PropertyChangeEvent event) {
-		Object color = event.getNewValue();
-		if (color instanceof RGB) {
-			putColor(event.getProperty(), (RGB) color);
-		} else {
-			putColor(event.getProperty(), StringConverter.asRGB(color.toString()));
-		}
-	}
+    public void handlePropertyChangeEvent(PropertyChangeEvent event) {
+        Object color = event.getNewValue();
+        if (color instanceof RGB) {
+            putColor(event.getProperty(), (RGB) color);
+        } else {
+            putColor(event.getProperty(), StringConverter.asRGB(color.toString()));
+        }
+    }
 
 }

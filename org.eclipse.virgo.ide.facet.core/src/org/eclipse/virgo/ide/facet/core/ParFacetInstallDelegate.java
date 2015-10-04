@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.facet.core;
 
 import java.util.ArrayList;
@@ -23,18 +24,17 @@ import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 
 /**
  * Empty install delegate for the par facet.
- * 
+ *
  * @author Christian Dupuis
  * @since 1.0.0
  */
 public class ParFacetInstallDelegate implements IDelegate {
 
-	public void execute(IProject project, IProjectFacetVersion fv, Object config, IProgressMonitor monitor)
-			throws CoreException {
-		IProjectDescription desc = project.getDescription();
-		List<String> natures = new ArrayList<String>(Arrays.asList(desc.getNatureIds()));
-		natures.add(FacetCorePlugin.PAR_NATURE_ID);
-		desc.setNatureIds(natures.toArray(new String[] {}));
-		project.setDescription(desc, monitor);
-	}
+    public void execute(IProject project, IProjectFacetVersion fv, Object config, IProgressMonitor monitor) throws CoreException {
+        IProjectDescription desc = project.getDescription();
+        List<String> natures = new ArrayList<String>(Arrays.asList(desc.getNatureIds()));
+        natures.add(FacetCorePlugin.PAR_NATURE_ID);
+        desc.setNatureIds(natures.toArray(new String[] {}));
+        project.setDescription(desc, monitor);
+    }
 }

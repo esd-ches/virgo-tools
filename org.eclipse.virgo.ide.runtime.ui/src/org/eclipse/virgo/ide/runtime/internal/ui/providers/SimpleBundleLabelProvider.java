@@ -18,11 +18,11 @@ import org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectArtefact
  */
 public class SimpleBundleLabelProvider extends RuntimeLabelProvider {
 
-	@Override
-	public String getText(Object element) {
-		if (element instanceof IServerProjectArtefact) {
-			return ((IServerProjectArtefact) element).getArtefact().getSignature();
-		}
-		return super.getText(element);
-	}
+    @Override
+    public String getText(Object element) {
+        if (element instanceof IServerProjectArtefact) {
+            return ((IServerProjectArtefact) element).getArtefact().getSignature();
+        }
+        return super.getText(element);
+    }
 }

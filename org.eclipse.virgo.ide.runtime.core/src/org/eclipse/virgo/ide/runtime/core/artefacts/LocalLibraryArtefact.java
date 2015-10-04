@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.core.artefacts;
 
 import java.io.File;
@@ -16,25 +17,22 @@ import java.net.URI;
 import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 
 /**
- * An extension to {@link BundleArtefact} to take some more information of local
- * bundles.
- * 
+ * An extension to {@link BundleArtefact} to take some more information of local bundles.
+ *
  * @author Christian Dupuis
  * @since 1.0.0
  */
 public class LocalLibraryArtefact extends LibraryArtefact implements ILocalArtefact {
 
-	private static final long serialVersionUID = 2752279714525304374L;
+    private final File file;
 
-	private final File file;
+    public LocalLibraryArtefact(String name, String symbolicName, OsgiVersion version, URI file) {
+        super(name, symbolicName, version, symbolicName, symbolicName);
+        this.file = new File(file);
+    }
 
-	public LocalLibraryArtefact(String name, String symbolicName, OsgiVersion version, URI file) {
-		super(name, symbolicName, version, symbolicName, symbolicName);
-		this.file = new File(file);
-	}
-
-	public File getFile() {
-		return file;
-	}
+    public File getFile() {
+        return this.file;
+    }
 
 }

@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.manifest.core.editor.model;
 
 import org.eclipse.jface.text.Document;
@@ -20,22 +21,22 @@ import org.eclipse.pde.internal.core.text.bundle.BundleModel;
  */
 public class SpringBundleModel extends BundleModel {
 
-	private IBundleModelFactory fFactory;
+    private IBundleModelFactory fFactory;
 
-	public SpringBundleModel(String string, boolean isReconciling) {
-		this(new Document(string), isReconciling);
-	}
+    public SpringBundleModel(String string, boolean isReconciling) {
+        this(new Document(string), isReconciling);
+    }
 
-	public SpringBundleModel(IDocument document, boolean isReconciling) {
-		super(document, isReconciling);
-	}
+    public SpringBundleModel(IDocument document, boolean isReconciling) {
+        super(document, isReconciling);
+    }
 
-	@Override
-	public IBundleModelFactory getFactory() {
-		if (fFactory == null) {
-			fFactory = new SpringBundleModelFactory(this);
-		}
-		return fFactory;
-	}
+    @Override
+    public IBundleModelFactory getFactory() {
+        if (this.fFactory == null) {
+            this.fFactory = new SpringBundleModelFactory(this);
+        }
+        return this.fFactory;
+    }
 
 }

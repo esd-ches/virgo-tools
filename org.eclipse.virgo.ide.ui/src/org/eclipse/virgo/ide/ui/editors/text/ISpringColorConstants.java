@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.editors.text;
 
 import org.eclipse.swt.graphics.RGB;
@@ -17,8 +18,8 @@ import org.eclipse.swt.graphics.RGB;
  */
 public interface ISpringColorConstants {
 
-	public RGB HEADER_SPRING = new RGB(0, 112, 60);
+    public RGB HEADER_SPRING = new RGB(0, 112, 60);
 
-	public String P_HEADER_SPRING = "editor.color.header_spring";
+    public String P_HEADER_SPRING = "editor.color.header_spring";
 
 }

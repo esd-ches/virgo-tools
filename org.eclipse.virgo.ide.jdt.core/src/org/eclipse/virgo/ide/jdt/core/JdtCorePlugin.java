@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.jdt.core;
 
 import org.eclipse.core.resources.IProject;
@@ -24,70 +25,69 @@ import org.osgi.framework.BundleContext;
 
 /**
  * Bundle {@link JdtCorePlugin} for the jdt.core plug-in.
- * 
+ *
  * @author Christian Dupuis
  * @since 1.0.0
  */
 public class JdtCorePlugin extends Plugin {
 
-	/** The bundle-symbolic name */
-	public static final String PLUGIN_ID = "org.eclipse.virgo.ide.jdt.core";
+    /** The bundle-symbolic name */
+    public static final String PLUGIN_ID = "org.eclipse.virgo.ide.jdt.core";
 
-	/**
-	 * The marker id used for creating markers that indicate un-resolved dependencies on bundle manifests
-	 */
-	public static final String DEPENDENCY_PROBLEM_MARKER_ID = PLUGIN_ID + ".dependencyproblemmarker";
+    /**
+     * The marker id used for creating markers that indicate un-resolved dependencies on bundle manifests
+     */
+    public static final String DEPENDENCY_PROBLEM_MARKER_ID = PLUGIN_ID + ".dependencyproblemmarker";
 
-	// The shared instance
-	private static JdtCorePlugin plugin;
+    // The shared instance
+    private static JdtCorePlugin plugin;
 
-	private ServerClasspathContainerBundleManifestChangeListener bundleManifestChangeListener;
+    private ServerClasspathContainerBundleManifestChangeListener bundleManifestChangeListener;
 
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
-		bundleManifestChangeListener = new ServerClasspathContainerBundleManifestChangeListener();
-		BundleManifestCorePlugin.getBundleManifestManager().addBundleManifestChangeListener(
-				bundleManifestChangeListener);
-		ServerCorePlugin.getArtefactRepositoryManager().addBundleRepositoryChangeListener(bundleManifestChangeListener);
-	}
+    @Override
+    public void start(BundleContext context) throws Exception {
+        super.start(context);
+        plugin = this;
+        this.bundleManifestChangeListener = new ServerClasspathContainerBundleManifestChangeListener();
+        BundleManifestCorePlugin.getBundleManifestManager().addBundleManifestChangeListener(this.bundleManifestChangeListener);
+        ServerCorePlugin.getArtefactRepositoryManager().addBundleRepositoryChangeListener(this.bundleManifestChangeListener);
+    }
 
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		BundleManifestCorePlugin.getBundleManifestManager().removeBundleManifestChangeListener(
-				bundleManifestChangeListener);
-		ServerCorePlugin.getArtefactRepositoryManager().removeBundleRepositoryChangeListener(
-				bundleManifestChangeListener);
-		super.stop(context);
-	}
+    @Override
+    public void stop(BundleContext context) throws Exception {
+        plugin = null;
+        BundleManifestCorePlugin.getBundleManifestManager().removeBundleManifestChangeListener(this.bundleManifestChangeListener);
+        ServerCorePlugin.getArtefactRepositoryManager().removeBundleRepositoryChangeListener(this.bundleManifestChangeListener);
+        super.stop(context);
+    }
 
-	public IEclipsePreferences getProjectPreferences(IProject project) {
-		IScopeContext context = new ProjectScope(project);
-		IEclipsePreferences node = context.getNode(PLUGIN_ID);
-		return node;
-	}
+    public IEclipsePreferences getProjectPreferences(IProject project) {
+        IScopeContext context = new ProjectScope(project);
+        IEclipsePreferences node = context.getNode(PLUGIN_ID);
+        return node;
+    }
 
-	public static JdtCorePlugin getDefault() {
-		return plugin;
-	}
+    public static JdtCorePlugin getDefault() {
+        return plugin;
+    }
 
-	public static IStatus createErrorStatus(String message, Throwable exception) {
-		if (message == null) {
-			message = "";
-		}
-		return new Status(IStatus.ERROR, PLUGIN_ID, 0, message, exception);
-	}
+    public static IStatus createErrorStatus(String message, Throwable exception) {
+        if (message == null) {
+            message = "";
+        }
+        return new Status(IStatus.ERROR, PLUGIN_ID, 0, message, exception);
+    }
 
-	public static void log(IStatus status) {
-		getDefault().getLog().log(status);
-	}
+    public static void log(IStatus status) {
+        getDefault().getLog().log(status);
+    }
 
-	public static void log(String message, Throwable exception) {
-		getDefault().getLog().log(createErrorStatus(message, exception));
-	}
+    public static void log(String message, Throwable exception) {
+        getDefault().getLog().log(createErrorStatus(message, exception));
+    }
 
-	public static void log(Throwable exception) {
-		getDefault().getLog().log(createErrorStatus(exception.getMessage(), exception));
-	}
+    public static void log(Throwable exception) {
+        getDefault().getLog().log(createErrorStatus(exception.getMessage(), exception));
+    }
 
 }

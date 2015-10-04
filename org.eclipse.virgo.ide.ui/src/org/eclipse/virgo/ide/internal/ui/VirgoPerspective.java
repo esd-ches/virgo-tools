@@ -19,19 +19,19 @@ import org.eclipse.ui.PlatformUI;
 
 public class VirgoPerspective implements IPerspectiveFactory {
 
-	public void createInitialLayout(IPageLayout layout) {
-		// Initially hide editor unless a server editor is open..
-		boolean hideEditor = true;
-		IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-		if (activeWorkbenchWindow != null && activeWorkbenchWindow.getActivePage() != null) {
-			IEditorReference[] editorReferences = activeWorkbenchWindow.getActivePage().getEditorReferences();
-			for (IEditorReference reference : editorReferences) {
-				if (reference.getId().equals("org.eclipse.wst.server.ui.editor")) {
-					hideEditor = false;
-					break;
-				}
-			}
-		}
-		layout.setEditorAreaVisible(!hideEditor);
-	}
+    public void createInitialLayout(IPageLayout layout) {
+        // Initially hide editor unless a server editor is open..
+        boolean hideEditor = true;
+        IWorkbenchWindow activeWorkbenchWindow = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+        if (activeWorkbenchWindow != null && activeWorkbenchWindow.getActivePage() != null) {
+            IEditorReference[] editorReferences = activeWorkbenchWindow.getActivePage().getEditorReferences();
+            for (IEditorReference reference : editorReferences) {
+                if (reference.getId().equals("org.eclipse.wst.server.ui.editor")) {
+                    hideEditor = false;
+                    break;
+                }
+            }
+        }
+        layout.setEditorAreaVisible(!hideEditor);
+    }
 }

@@ -24,77 +24,78 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
 import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiImages;
 
 /**
- * 
+ *
  * @author Miles Parker
- * 
+ *
  */
 public class ServerFileLabelProvider extends LabelProvider implements ILightweightLabelDecorator {
-	private static final String REMOVE_REGEXP = "org\\.eclipse\\.virgo\\.|\\.properties";
 
-	WorkbenchLabelProvider delegate = new WorkbenchLabelProvider();
+    private static final String REMOVE_REGEXP = "org\\.eclipse\\.virgo\\.|\\.properties";
 
-	/**
-	 * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
-	 */
-	@Override
-	public String getText(Object element) {
-		if (element instanceof IFile) {
-			IFile file = (IFile) element;
-			return file.getName().replaceAll(REMOVE_REGEXP, "");
-		}
-		if (element instanceof File) {
-			File file = (File) element;
-			return file.getName().replaceAll(REMOVE_REGEXP, "");
-		}
-		if (element instanceof ServerFileSelection) {
-			IFile workspaceFile = ((ServerFile) element).getFile();
-			String line = ((ServerFileSelection) element).getLine();
-			if (workspaceFile.getFileExtension() != null && workspaceFile.getFileExtension().equals("properties")) {
-				String workspaceName = workspaceFile.getName();
-				if (workspaceFile.getLocation().toPortableString().contains("repository")) {
-					line += " [User]";
-				}
-			}
-			return line;
-		}
-		if (element instanceof ServerFile) {
-			IFile workspaceFile = ((ServerFile) element).getFile();
-			String serverName = workspaceFile.getLocation().lastSegment();
-			if (workspaceFile.getFileExtension() != null && workspaceFile.getFileExtension().equals("properties")) {
-				if (workspaceFile.getLocation().toPortableString().contains("repository")) {
-					serverName += " [User]";
-				}
-			}
-			return serverName.replaceAll(REMOVE_REGEXP, "");
-		}
-		return delegate.getText(element);
-	}
+    WorkbenchLabelProvider delegate = new WorkbenchLabelProvider();
 
-	/**
-	 * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
-	 */
-	@Override
-	public Image getImage(Object element) {
-		if (element instanceof ServerFileSelection) {
-			return DebugPluginImages.getImage(IDebugUIConstants.IMG_OBJS_VARIABLE);
-		}
-		if (element instanceof ServerFile) {
-			return getImage(((ServerFile) element).getFile());
-		}
-		return delegate.getImage(element);
-	}
+    /**
+     * @see org.eclipse.jface.viewers.LabelProvider#getText(java.lang.Object)
+     */
+    @Override
+    public String getText(Object element) {
+        if (element instanceof IFile) {
+            IFile file = (IFile) element;
+            return file.getName().replaceAll(REMOVE_REGEXP, "");
+        }
+        if (element instanceof File) {
+            File file = (File) element;
+            return file.getName().replaceAll(REMOVE_REGEXP, "");
+        }
+        if (element instanceof ServerFileSelection) {
+            IFile workspaceFile = ((ServerFile) element).getFile();
+            String line = ((ServerFileSelection) element).getLine();
+            if (workspaceFile.getFileExtension() != null && workspaceFile.getFileExtension().equals("properties")) {
+                workspaceFile.getName();
+                if (workspaceFile.getLocation().toPortableString().contains("repository")) {
+                    line += " [User]";
+                }
+            }
+            return line;
+        }
+        if (element instanceof ServerFile) {
+            IFile workspaceFile = ((ServerFile) element).getFile();
+            String serverName = workspaceFile.getLocation().lastSegment();
+            if (workspaceFile.getFileExtension() != null && workspaceFile.getFileExtension().equals("properties")) {
+                if (workspaceFile.getLocation().toPortableString().contains("repository")) {
+                    serverName += " [User]";
+                }
+            }
+            return serverName.replaceAll(REMOVE_REGEXP, "");
+        }
+        return this.delegate.getText(element);
+    }
 
-	public void decorate(Object element, IDecoration decoration) {
-		if (element instanceof ServerFile) {
-			ServerFile serverFile = (ServerFile) element;
-			String suffix = " [" + serverFile.getServer() + "] - " + serverFile.getFile().getLocation();
-			if (element instanceof ServerFileSelection) {
-				suffix += " #" + ((ServerFileSelection) element).getItem();
-			}
-			decoration.addSuffix(suffix);
-			if (!(element instanceof ServerFileSelection)) {
-				decoration.addOverlay(ServerUiImages.DESC_OBJ_VIRGO_OVER, IDecoration.TOP_LEFT);
-			}
-		}
-	}
+    /**
+     * @see org.eclipse.jface.viewers.LabelProvider#getImage(java.lang.Object)
+     */
+    @Override
+    public Image getImage(Object element) {
+        if (element instanceof ServerFileSelection) {
+            return DebugPluginImages.getImage(IDebugUIConstants.IMG_OBJS_VARIABLE);
+        }
+        if (element instanceof ServerFile) {
+            return getImage(((ServerFile) element).getFile());
+        }
+        return this.delegate.getImage(element);
+    }
+
+    public void decorate(Object element, IDecoration decoration) {
+        if (element instanceof ServerFile) {
+            ServerFile serverFile = (ServerFile) element;
+            String suffix = " [" + serverFile.getServer() + "] - " + serverFile.getFile().getLocation();
+            if (element instanceof ServerFileSelection) {
+                suffix += " #" + ((ServerFileSelection) element).getItem();
+            }
+            decoration.addSuffix(suffix);
+            if (!(element instanceof ServerFileSelection)) {
+                decoration.addOverlay(ServerUiImages.DESC_OBJ_VIRGO_OVER, IDecoration.TOP_LEFT);
+            }
+        }
+    }
 }

@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.core;
 
 import java.util.ArrayList;
@@ -30,48 +31,44 @@ import org.eclipse.wst.server.core.IServer;
 import org.eclipse.wst.server.core.ServerUtil;
 
 /**
- * {@link ISourcePathComputerDelegate} that sets up the source folder of the dm
- * server runtime server.
- * 
+ * {@link ISourcePathComputerDelegate} that sets up the source folder of the dm server runtime server.
+ *
  * @author Christian Dupuis
  * @since 1.0.0
  */
 public class ServerSourcePathComputerDelegate implements ISourcePathComputerDelegate {
 
-	public ISourceContainer[] computeSourceContainers(ILaunchConfiguration configuration, IProgressMonitor monitor)
-			throws CoreException {
+    public ISourceContainer[] computeSourceContainers(ILaunchConfiguration configuration, IProgressMonitor monitor) throws CoreException {
 
-		List<IRuntimeClasspathEntry> runtimeClasspath = new ArrayList<IRuntimeClasspathEntry>();
-		IServer server = ServerUtil.getServer(configuration);
+        List<IRuntimeClasspathEntry> runtimeClasspath = new ArrayList<IRuntimeClasspathEntry>();
+        IServer server = ServerUtil.getServer(configuration);
 
-		IModule[] modules = server.getModules();
-		for (IModule module : modules) {
-			if (module.getModuleType().getId().equals(FacetCorePlugin.BUNDLE_FACET_ID)) {
-				addRuntimeClasspathForJavaProject(runtimeClasspath, module);
-			} else if (module.getModuleType().getId().equals(FacetCorePlugin.PAR_FACET_ID)) {
-				ServerModuleDelegate moduleDelegate = (ServerModuleDelegate) module
-						.loadAdapter(ServerModuleDelegate.class, null);
-				if (moduleDelegate != null) {
-					IModule[] children = moduleDelegate.getChildModules();
-					for (IModule child : children) {
-						addRuntimeClasspathForJavaProject(runtimeClasspath, child);
-					}
-				}
-			} else if (module.getModuleType().getId().equals(FacetCorePlugin.WEB_FACET_ID)) {
-				addRuntimeClasspathForJavaProject(runtimeClasspath, module);
-			}
-		}
+        IModule[] modules = server.getModules();
+        for (IModule module : modules) {
+            if (module.getModuleType().getId().equals(FacetCorePlugin.BUNDLE_FACET_ID)) {
+                addRuntimeClasspathForJavaProject(runtimeClasspath, module);
+            } else if (module.getModuleType().getId().equals(FacetCorePlugin.PAR_FACET_ID)) {
+                ServerModuleDelegate moduleDelegate = (ServerModuleDelegate) module.loadAdapter(ServerModuleDelegate.class, null);
+                if (moduleDelegate != null) {
+                    IModule[] children = moduleDelegate.getChildModules();
+                    for (IModule child : children) {
+                        addRuntimeClasspathForJavaProject(runtimeClasspath, child);
+                    }
+                }
+            } else if (module.getModuleType().getId().equals(FacetCorePlugin.WEB_FACET_ID)) {
+                addRuntimeClasspathForJavaProject(runtimeClasspath, module);
+            }
+        }
 
-		runtimeClasspath.addAll(Arrays.asList(JavaRuntime.computeUnresolvedSourceLookupPath(configuration)));
-		IRuntimeClasspathEntry[] entries = runtimeClasspath
-				.toArray(new IRuntimeClasspathEntry[runtimeClasspath.size()]);
-		IRuntimeClasspathEntry[] resolved = JavaRuntime.resolveSourceLookupPath(entries, configuration);
-		return JavaRuntime.getSourceContainers(resolved);
-	}
+        runtimeClasspath.addAll(Arrays.asList(JavaRuntime.computeUnresolvedSourceLookupPath(configuration)));
+        IRuntimeClasspathEntry[] entries = runtimeClasspath.toArray(new IRuntimeClasspathEntry[runtimeClasspath.size()]);
+        IRuntimeClasspathEntry[] resolved = JavaRuntime.resolveSourceLookupPath(entries, configuration);
+        return JavaRuntime.getSourceContainers(resolved);
+    }
 
-	private void addRuntimeClasspathForJavaProject(List<IRuntimeClasspathEntry> runtimeClasspath, IModule module) {
-		IJavaProject javaProject = JavaCore.create(module.getProject());
-		runtimeClasspath.add(JavaRuntime.newDefaultProjectClasspathEntry(javaProject));
-	}
+    private void addRuntimeClasspathForJavaProject(List<IRuntimeClasspathEntry> runtimeClasspath, IModule module) {
+        IJavaProject javaProject = JavaCore.create(module.getProject());
+        runtimeClasspath.add(JavaRuntime.newDefaultProjectClasspathEntry(javaProject));
+    }
 
 }

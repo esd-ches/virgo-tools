@@ -34,83 +34,83 @@ import org.eclipse.virgo.ide.runtime.internal.ui.actions.OpenServerProjectFileAc
 /**
  * @see org.eclipse.ui.internal.navigator.resources.actions#OpenActionProvider
  * @author Miles Parker
- * 
+ *
  */
 public class RuntimeActionProvider extends CommonActionProvider {
 
-	private OpenServerProjectFileAction openFileAction;
+    private OpenServerProjectFileAction openFileAction;
 
-	private ICommonViewerWorkbenchSite viewSite = null;
+    private ICommonViewerWorkbenchSite viewSite = null;
 
-	private boolean contribute = false;
+    private boolean contribute = false;
 
-	@Override
-	public void init(ICommonActionExtensionSite aConfig) {
-		if (aConfig.getViewSite() instanceof ICommonViewerWorkbenchSite) {
-			viewSite = (ICommonViewerWorkbenchSite) aConfig.getViewSite();
-			openFileAction = new OpenServerProjectFileAction(viewSite.getPage());
-			contribute = true;
-		}
-	}
+    @Override
+    public void init(ICommonActionExtensionSite aConfig) {
+        if (aConfig.getViewSite() instanceof ICommonViewerWorkbenchSite) {
+            this.viewSite = (ICommonViewerWorkbenchSite) aConfig.getViewSite();
+            this.openFileAction = new OpenServerProjectFileAction(this.viewSite.getPage());
+            this.contribute = true;
+        }
+    }
 
-	@Override
-	public void fillContextMenu(IMenuManager aMenu) {
-		if (!contribute || getContext().getSelection().isEmpty()) {
-			return;
-		}
+    @Override
+    public void fillContextMenu(IMenuManager aMenu) {
+        if (!this.contribute || getContext().getSelection().isEmpty()) {
+            return;
+        }
 
-		IStructuredSelection selection = (IStructuredSelection) getContext().getSelection();
+        IStructuredSelection selection = (IStructuredSelection) getContext().getSelection();
 
-		openFileAction.selectionChanged(selection);
-		if (openFileAction.isEnabled()) {
-			aMenu.insertAfter(ICommonMenuConstants.GROUP_OPEN, openFileAction);
-		}
-		addOpenWithMenu(aMenu);
-	}
+        this.openFileAction.selectionChanged(selection);
+        if (this.openFileAction.isEnabled()) {
+            aMenu.insertAfter(ICommonMenuConstants.GROUP_OPEN, this.openFileAction);
+        }
+        addOpenWithMenu(aMenu);
+    }
 
-	@Override
-	public void fillActionBars(IActionBars theActionBars) {
-		if (!contribute) {
-			return;
-		}
-		IStructuredSelection selection = (IStructuredSelection) getContext().getSelection();
-		if (selection.size() == 1 && selection.getFirstElement() instanceof IFile) {
-			openFileAction.selectionChanged(selection);
-			theActionBars.setGlobalActionHandler(ICommonActionConstants.OPEN, openFileAction);
-		}
+    @Override
+    public void fillActionBars(IActionBars theActionBars) {
+        if (!this.contribute) {
+            return;
+        }
+        IStructuredSelection selection = (IStructuredSelection) getContext().getSelection();
+        if (selection.size() == 1 && selection.getFirstElement() instanceof IFile) {
+            this.openFileAction.selectionChanged(selection);
+            theActionBars.setGlobalActionHandler(ICommonActionConstants.OPEN, this.openFileAction);
+        }
 
-	}
+    }
 
-	private void addOpenWithMenu(IMenuManager aMenu) {
-		IStructuredSelection ss = (IStructuredSelection) getContext().getSelection();
+    private void addOpenWithMenu(IMenuManager aMenu) {
+        IStructuredSelection ss = (IStructuredSelection) getContext().getSelection();
 
-		if (ss == null || ss.size() != 1) {
-			return;
-		}
+        if (ss == null || ss.size() != 1) {
+            return;
+        }
 
-		Object o = ss.getFirstElement();
+        Object o = ss.getFirstElement();
 
-		// first try IResource
-		IAdaptable openable = (IAdaptable) AdaptabilityUtility.getAdapter(o, IResource.class);
-		// otherwise try ResourceMapping
-		if (openable == null) {
-			openable = (IAdaptable) AdaptabilityUtility.getAdapter(o, ResourceMapping.class);
-		} else if (((IResource) openable).getType() != IResource.FILE) {
-			openable = null;
-		}
+        // first try IResource
+        IAdaptable openable = (IAdaptable) AdaptabilityUtility.getAdapter(o, IResource.class);
+        // otherwise try ResourceMapping
+        if (openable == null) {
+            openable = (IAdaptable) AdaptabilityUtility.getAdapter(o, ResourceMapping.class);
+        } else if (((IResource) openable).getType() != IResource.FILE) {
+            openable = null;
+        }
 
-		if (openable != null) {
-			// Create a menu flyout.
-			IMenuManager submenu = new MenuManager(WorkbenchNavigatorMessages.OpenActionProvider_OpenWithMenu_label,
-					ICommonMenuConstants.GROUP_OPEN_WITH);
-			submenu.add(new GroupMarker(ICommonMenuConstants.GROUP_TOP));
-			submenu.add(new OpenWithMenu(viewSite.getPage(), openable));
-			submenu.add(new GroupMarker(ICommonMenuConstants.GROUP_ADDITIONS));
+        if (openable != null) {
+            // Create a menu flyout.
+            IMenuManager submenu = new MenuManager(WorkbenchNavigatorMessages.OpenActionProvider_OpenWithMenu_label,
+                ICommonMenuConstants.GROUP_OPEN_WITH);
+            submenu.add(new GroupMarker(ICommonMenuConstants.GROUP_TOP));
+            submenu.add(new OpenWithMenu(this.viewSite.getPage(), openable));
+            submenu.add(new GroupMarker(ICommonMenuConstants.GROUP_ADDITIONS));
 
-			// Add the submenu.
-			if (submenu.getItems().length > 2 && submenu.isEnabled()) {
-				aMenu.appendToGroup(ICommonMenuConstants.GROUP_OPEN_WITH, submenu);
-			}
-		}
-	}
+            // Add the submenu.
+            if (submenu.getItems().length > 2 && submenu.isEnabled()) {
+                aMenu.appendToGroup(ICommonMenuConstants.GROUP_OPEN_WITH, submenu);
+            }
+        }
+    }
 }

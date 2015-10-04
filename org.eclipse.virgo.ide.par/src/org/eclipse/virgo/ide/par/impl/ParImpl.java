@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.par.impl;
 
 import java.util.Collection;
@@ -31,123 +32,124 @@ import org.eclipse.virgo.ide.par.ParPackage;
  * <li>{@link org.eclipse.virgo.ide.par.impl.ParImpl#getBundle <em>Bundle</em>}</li>
  * </ul>
  * </p>
- * 
+ *
  * @generated
  */
 public class ParImpl extends EObjectImpl implements Par {
-	/**
-	 * The cached value of the '{@link #getBundle() <em>Bundle</em>}' containment reference list. <!-- begin-user-doc
-	 * --> <!-- end-user-doc -->
-	 * 
-	 * @see #getBundle()
-	 * @generated
-	 * @ordered
-	 */
-	protected EList<Bundle> bundle;
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected ParImpl() {
-		super();
-	}
+    /**
+     * The cached value of the '{@link #getBundle() <em>Bundle</em>}' containment reference list. <!-- begin-user-doc
+     * --> <!-- end-user-doc -->
+     *
+     * @see #getBundle()
+     * @generated
+     * @ordered
+     */
+    protected EList<Bundle> bundle;
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	protected EClass eStaticClass() {
-		return ParPackage.Literals.PAR;
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated
+     */
+    protected ParImpl() {
+        super();
+    }
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public EList<Bundle> getBundle() {
-		if (bundle == null) {
-			bundle = new EObjectContainmentEList<Bundle>(Bundle.class, this, ParPackage.PAR__BUNDLE);
-		}
-		return bundle;
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated
+     */
+    @Override
+    protected EClass eStaticClass() {
+        return ParPackage.Literals.PAR;
+    }
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-		case ParPackage.PAR__BUNDLE:
-			return ((InternalEList<?>) getBundle()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated
+     */
+    public EList<Bundle> getBundle() {
+        if (this.bundle == null) {
+            this.bundle = new EObjectContainmentEList<Bundle>(Bundle.class, this, ParPackage.PAR__BUNDLE);
+        }
+        return this.bundle;
+    }
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-		case ParPackage.PAR__BUNDLE:
-			return getBundle();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated
+     */
+    @Override
+    public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
+        switch (featureID) {
+            case ParPackage.PAR__BUNDLE:
+                return ((InternalEList<?>) getBundle()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-		case ParPackage.PAR__BUNDLE:
-			getBundle().clear();
-			getBundle().addAll((Collection<? extends Bundle>) newValue);
-			return;
-		}
-		super.eSet(featureID, newValue);
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated
+     */
+    @Override
+    public Object eGet(int featureID, boolean resolve, boolean coreType) {
+        switch (featureID) {
+            case ParPackage.PAR__BUNDLE:
+                return getBundle();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public void eUnset(int featureID) {
-		switch (featureID) {
-		case ParPackage.PAR__BUNDLE:
-			getBundle().clear();
-			return;
-		}
-		super.eUnset(featureID);
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public void eSet(int featureID, Object newValue) {
+        switch (featureID) {
+            case ParPackage.PAR__BUNDLE:
+                getBundle().clear();
+                getBundle().addAll((Collection<? extends Bundle>) newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-		case ParPackage.PAR__BUNDLE:
-			return bundle != null && !bundle.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated
+     */
+    @Override
+    public void eUnset(int featureID) {
+        switch (featureID) {
+            case ParPackage.PAR__BUNDLE:
+                getBundle().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
-} //ParImpl
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated
+     */
+    @Override
+    public boolean eIsSet(int featureID) {
+        switch (featureID) {
+            case ParPackage.PAR__BUNDLE:
+                return this.bundle != null && !this.bundle.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
+
+} // ParImpl

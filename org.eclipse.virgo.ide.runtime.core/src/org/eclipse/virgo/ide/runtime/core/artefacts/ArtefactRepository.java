@@ -4,10 +4,11 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     SpringSource - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.core.artefacts;
 
 import java.util.ArrayList;
@@ -22,108 +23,109 @@ import org.eclipse.wst.server.core.IServer;
  */
 public class ArtefactRepository {
 
-	ArtefactSet bundles;
+    ArtefactSet bundles;
 
-	ArtefactSet libraries;
+    ArtefactSet libraries;
 
-	ArtefactSet allArtefacts;
+    ArtefactSet allArtefacts;
 
-	List<ArtefactSet> allSets;
+    List<ArtefactSet> allSets;
 
-	IServer server;
+    IServer server;
 
-	public ArtefactRepository() {
-		bundles = createArtefactSet(ArtefactType.BUNDLE);
-		libraries = createArtefactSet(ArtefactType.LIBRARY);
-		allArtefacts = new ArtefactSet(this, ArtefactType.COMBINED);
-		allSets = new ArrayList<ArtefactSet>();
-		allSets.add(bundles);
-		allSets.add(libraries);
-	}
+    public ArtefactRepository() {
+        this.bundles = createArtefactSet(ArtefactType.BUNDLE);
+        this.libraries = createArtefactSet(ArtefactType.LIBRARY);
+        this.allArtefacts = new ArtefactSet(this, ArtefactType.COMBINED);
+        this.allSets = new ArrayList<ArtefactSet>();
+        this.allSets.add(this.bundles);
+        this.allSets.add(this.libraries);
+    }
 
-	protected ArtefactSet createArtefactSet(ArtefactType type) {
-		return new ArtefactSet(this, type) {
-			@Override
-			public boolean add(IArtefact artefact) {
-				return super.add(artefact) && allArtefacts.add(artefact);
-			}
-		};
-	}
+    protected ArtefactSet createArtefactSet(ArtefactType type) {
+        return new ArtefactSet(this, type) {
 
-	public Iterable<IArtefact> getBundles() {
-		return bundles.getArtefacts();
-	}
+            @Override
+            public boolean add(IArtefact artefact) {
+                return super.add(artefact) && ArtefactRepository.this.allArtefacts.add(artefact);
+            }
+        };
+    }
 
-	public ArtefactSet getArtefactSet(ArtefactType artefactType) {
-		if (artefactType == ArtefactType.BUNDLE) {
-			return bundles;
-		} else if (artefactType == ArtefactType.LIBRARY) {
-			return libraries;
-		}
-		throw new RuntimeException("Internal error, bad artifact type: " + artefactType);
-	}
+    public Iterable<IArtefact> getBundles() {
+        return this.bundles.getArtefacts();
+    }
 
-	/**
-	 * Returns the appropriate set for the artefact. This set may or may not actually contain the supplied artefact.
-	 */
-	public ArtefactSet getMatchingArtefactSet(IArtefactTyped artefact) {
-		return getArtefactSet(artefact.getArtefactType());
-	}
+    public ArtefactSet getArtefactSet(ArtefactType artefactType) {
+        if (artefactType == ArtefactType.BUNDLE) {
+            return this.bundles;
+        } else if (artefactType == ArtefactType.LIBRARY) {
+            return this.libraries;
+        }
+        throw new RuntimeException("Internal error, bad artifact type: " + artefactType);
+    }
 
-	/**
-	 * Adds the artefact to the appropriate and common set.
-	 */
-	public void add(IArtefact artefact) {
-		getMatchingArtefactSet(artefact).add(artefact);
-		artefact.setRepository(this);
-	}
+    /**
+     * Returns the appropriate set for the artefact. This set may or may not actually contain the supplied artefact.
+     */
+    public ArtefactSet getMatchingArtefactSet(IArtefactTyped artefact) {
+        return getArtefactSet(artefact.getArtefactType());
+    }
 
-	public ArtefactSet getLibrarySet() {
-		return libraries;
-	}
+    /**
+     * Adds the artefact to the appropriate and common set.
+     */
+    public void add(IArtefact artefact) {
+        getMatchingArtefactSet(artefact).add(artefact);
+        artefact.setRepository(this);
+    }
 
-	public ArtefactSet getBundleSet() {
-		return bundles;
-	}
+    public ArtefactSet getLibrarySet() {
+        return this.libraries;
+    }
 
-	public void addBundle(BundleArtefact bundle) {
-		// Add to all handled through set
-		this.bundles.add(bundle);
-		bundle.setRepository(this);
-	}
+    public ArtefactSet getBundleSet() {
+        return this.bundles;
+    }
 
-	public Iterable<IArtefact> getLibraries() {
-		// Add to all handled through set
-		return libraries.getArtefacts();
-	}
+    public void addBundle(BundleArtefact bundle) {
+        // Add to all handled through set
+        this.bundles.add(bundle);
+        bundle.setRepository(this);
+    }
 
-	public void addLibrary(LibraryArtefact library) {
-		this.libraries.add(library);
-		library.setRepository(this);
-	}
+    public Iterable<IArtefact> getLibraries() {
+        // Add to all handled through set
+        return this.libraries.getArtefacts();
+    }
 
-	public ArtefactSet getAllArtefacts() {
-		return allArtefacts;
-	}
+    public void addLibrary(LibraryArtefact library) {
+        this.libraries.add(library);
+        library.setRepository(this);
+    }
 
-	public List<ArtefactSet> getAllSets() {
-		return allSets;
-	}
+    public ArtefactSet getAllArtefacts() {
+        return this.allArtefacts;
+    }
 
-	public boolean contains(IArtefact artefact) {
-		for (IArtefact repositoryArtefact : getMatchingArtefactSet(artefact).getArtefacts()) {
-			if (artefact.isMatch(repositoryArtefact)) {
-				return true;
-			}
-		}
-		return false;
-	}
+    public List<ArtefactSet> getAllSets() {
+        return this.allSets;
+    }
 
-	public void setServer(IServer server) {
-		this.server = server;
-	}
+    public boolean contains(IArtefact artefact) {
+        for (IArtefact repositoryArtefact : getMatchingArtefactSet(artefact).getArtefacts()) {
+            if (artefact.isMatch(repositoryArtefact)) {
+                return true;
+            }
+        }
+        return false;
+    }
 
-	public IServer getServer() {
-		return server;
-	}
+    public void setServer(IServer server) {
+        this.server = server;
+    }
+
+    public IServer getServer() {
+        return this.server;
+    }
 }

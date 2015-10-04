@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.manifest.core.editor.model;
 
 import org.eclipse.jface.text.TextUtilities;
@@ -39,81 +40,79 @@ import org.osgi.framework.Constants;
  */
 public class SpringBundleModelFactory implements IBundleModelFactory {
 
-	private final IBundleModel fModel;
+    private final IBundleModel fModel;
 
-	public SpringBundleModelFactory(IBundleModel model) {
-		fModel = model;
-	}
+    public SpringBundleModelFactory(IBundleModel model) {
+        this.fModel = model;
+    }
 
-	public IManifestHeader createHeader() {
-		return null;
-	}
+    public IManifestHeader createHeader() {
+        return null;
+    }
 
-	public IManifestHeader createHeader(String key, String value) {
-		ManifestHeader header = null;
-		IBundle bundle = null;
-		if (fModel != null) {
-			bundle = fModel.getBundle();
-		}
-		String newLine;
-		if (fModel instanceof BundleModel) {
-			newLine = TextUtilities.getDefaultLineDelimiter(((BundleModel) fModel).getDocument());
-		} else {
-			newLine = System.getProperty("line.separator"); //$NON-NLS-1$
-		}
+    public IManifestHeader createHeader(String key, String value) {
+        ManifestHeader header = null;
+        IBundle bundle = null;
+        if (this.fModel != null) {
+            bundle = this.fModel.getBundle();
+        }
+        String newLine;
+        if (this.fModel instanceof BundleModel) {
+            newLine = TextUtilities.getDefaultLineDelimiter(((BundleModel) this.fModel).getDocument());
+        } else {
+            newLine = System.getProperty("line.separator"); //$NON-NLS-1$
+        }
 
-		if (key.equalsIgnoreCase(Constants.BUNDLE_ACTIVATOR)) {
-			header = new BundleActivatorHeader(key, value, bundle, newLine);
-		} else if (key.equalsIgnoreCase(Constants.BUNDLE_LOCALIZATION)) {
-			header = new BundleLocalizationHeader(key, value, bundle, newLine);
-		} else if (key.equalsIgnoreCase(Constants.BUNDLE_NAME)) {
-			header = new BundleNameHeader(key, value, bundle, newLine);
-		} else if (key.equalsIgnoreCase(Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT)) {
-			header = new RequiredExecutionEnvironmentHeader(key, value, bundle, newLine);
-		} else if (key.equalsIgnoreCase(Constants.BUNDLE_SYMBOLICNAME)) {
-			header = new BundleSymbolicNameHeader(key, value, bundle, newLine);
-		} else if (key.equalsIgnoreCase(Constants.BUNDLE_VENDOR)) {
-			header = new BundleVendorHeader(key, value, bundle, newLine);
-		} else if (key.equalsIgnoreCase(Constants.BUNDLE_VERSION)) {
-			header = new BundleVersionHeader(key, value, bundle, newLine);
-		} else if (key.equalsIgnoreCase(Constants.BUNDLE_CLASSPATH)) {
-			header = new BundleClasspathHeader(key, value, bundle, newLine);
-		} else if (key.equalsIgnoreCase(ICoreConstants.ECLIPSE_LAZYSTART)
-				|| key.equalsIgnoreCase(ICoreConstants.ECLIPSE_AUTOSTART)) {
-			header = new LazyStartHeader(key, value, bundle, newLine);
-		} else if (key.equalsIgnoreCase(Constants.EXPORT_PACKAGE)
-				|| key.equalsIgnoreCase(ICoreConstants.PROVIDE_PACKAGE)) {
-			header = new ExportPackageHeader(key, value, bundle, newLine);
-		} else if (key.equalsIgnoreCase(Constants.FRAGMENT_HOST)) {
-			header = new FragmentHostHeader(key, value, bundle, newLine);
-		} else if (key.equalsIgnoreCase(Constants.IMPORT_PACKAGE)) {
-			header = new ImportPackageHeader(key, value, bundle, newLine);
-		} else if (key.equalsIgnoreCase(Constants.REQUIRE_BUNDLE)) {
-			header = new RequireBundleHeader(key, value, bundle, newLine);
-		} else if (key.equalsIgnoreCase(IHeaderConstants.IMPORT_BUNDLE)) {
-			header = new ImportBundleHeader(key, value, bundle, newLine);
-		} else if (key.equalsIgnoreCase(IHeaderConstants.IMPORT_LIBRARY)) {
-			header = new ImportLibraryHeader(key, value, bundle, newLine);
-		} else if (key.equalsIgnoreCase(IHeaderConstants.IMPORT_TEMPLATE)) {
-			header = new ImportPackageHeader(key, value, bundle, newLine);
-		} else if (key.equalsIgnoreCase(IHeaderConstants.EXPORT_TEMPLATE)) {
-			header = new ExportPackageHeader(key, value, bundle, newLine);
-		} else if (key.equalsIgnoreCase(IHeaderConstants.EXCLUDED_IMPORTS)) {
-			header = new ImportPackageHeader(key, value, bundle, newLine);
-		} else if (key.equalsIgnoreCase(IHeaderConstants.EXCLUDED_EXPORTS)) {
-			header = new ExportPackageHeader(key, value, bundle, newLine);
-		} else if (key.equalsIgnoreCase(IHeaderConstants.UNVERSIONED_IMPORTS)) {
-			header = new ImportPackageHeader(key, value, bundle, newLine);
-		} else if (key.equalsIgnoreCase(IHeaderConstants.TEST_IMPORT_BUNDLE)) {
-			header = new ImportBundleHeader(key, value, bundle, newLine);
-		} else if (key.equalsIgnoreCase(IHeaderConstants.TEST_IMPORT_LIBRARY)) {
-			header = new ImportLibraryHeader(key, value, bundle, newLine);
-		} else if (key.equalsIgnoreCase(IHeaderConstants.TEST_IMPORT_PACKAGE)) {
-			header = new ImportPackageHeader(key, value, bundle, newLine);
-		} else {
-			header = new ManifestHeader(key, value, bundle, newLine);
-		}
-		return header;
-	}
+        if (key.equalsIgnoreCase(Constants.BUNDLE_ACTIVATOR)) {
+            header = new BundleActivatorHeader(key, value, bundle, newLine);
+        } else if (key.equalsIgnoreCase(Constants.BUNDLE_LOCALIZATION)) {
+            header = new BundleLocalizationHeader(key, value, bundle, newLine);
+        } else if (key.equalsIgnoreCase(Constants.BUNDLE_NAME)) {
+            header = new BundleNameHeader(key, value, bundle, newLine);
+        } else if (key.equalsIgnoreCase(Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT)) {
+            header = new RequiredExecutionEnvironmentHeader(key, value, bundle, newLine);
+        } else if (key.equalsIgnoreCase(Constants.BUNDLE_SYMBOLICNAME)) {
+            header = new BundleSymbolicNameHeader(key, value, bundle, newLine);
+        } else if (key.equalsIgnoreCase(Constants.BUNDLE_VENDOR)) {
+            header = new BundleVendorHeader(key, value, bundle, newLine);
+        } else if (key.equalsIgnoreCase(Constants.BUNDLE_VERSION)) {
+            header = new BundleVersionHeader(key, value, bundle, newLine);
+        } else if (key.equalsIgnoreCase(Constants.BUNDLE_CLASSPATH)) {
+            header = new BundleClasspathHeader(key, value, bundle, newLine);
+        } else if (key.equalsIgnoreCase(ICoreConstants.ECLIPSE_LAZYSTART) || key.equalsIgnoreCase(ICoreConstants.ECLIPSE_AUTOSTART)) {
+            header = new LazyStartHeader(key, value, bundle, newLine);
+        } else if (key.equalsIgnoreCase(Constants.EXPORT_PACKAGE) || key.equalsIgnoreCase(ICoreConstants.PROVIDE_PACKAGE)) {
+            header = new ExportPackageHeader(key, value, bundle, newLine);
+        } else if (key.equalsIgnoreCase(Constants.FRAGMENT_HOST)) {
+            header = new FragmentHostHeader(key, value, bundle, newLine);
+        } else if (key.equalsIgnoreCase(Constants.IMPORT_PACKAGE)) {
+            header = new ImportPackageHeader(key, value, bundle, newLine);
+        } else if (key.equalsIgnoreCase(Constants.REQUIRE_BUNDLE)) {
+            header = new RequireBundleHeader(key, value, bundle, newLine);
+        } else if (key.equalsIgnoreCase(IHeaderConstants.IMPORT_BUNDLE)) {
+            header = new ImportBundleHeader(key, value, bundle, newLine);
+        } else if (key.equalsIgnoreCase(IHeaderConstants.IMPORT_LIBRARY)) {
+            header = new ImportLibraryHeader(key, value, bundle, newLine);
+        } else if (key.equalsIgnoreCase(IHeaderConstants.IMPORT_TEMPLATE)) {
+            header = new ImportPackageHeader(key, value, bundle, newLine);
+        } else if (key.equalsIgnoreCase(IHeaderConstants.EXPORT_TEMPLATE)) {
+            header = new ExportPackageHeader(key, value, bundle, newLine);
+        } else if (key.equalsIgnoreCase(IHeaderConstants.EXCLUDED_IMPORTS)) {
+            header = new ImportPackageHeader(key, value, bundle, newLine);
+        } else if (key.equalsIgnoreCase(IHeaderConstants.EXCLUDED_EXPORTS)) {
+            header = new ExportPackageHeader(key, value, bundle, newLine);
+        } else if (key.equalsIgnoreCase(IHeaderConstants.UNVERSIONED_IMPORTS)) {
+            header = new ImportPackageHeader(key, value, bundle, newLine);
+        } else if (key.equalsIgnoreCase(IHeaderConstants.TEST_IMPORT_BUNDLE)) {
+            header = new ImportBundleHeader(key, value, bundle, newLine);
+        } else if (key.equalsIgnoreCase(IHeaderConstants.TEST_IMPORT_LIBRARY)) {
+            header = new ImportLibraryHeader(key, value, bundle, newLine);
+        } else if (key.equalsIgnoreCase(IHeaderConstants.TEST_IMPORT_PACKAGE)) {
+            header = new ImportPackageHeader(key, value, bundle, newLine);
+        } else {
+            header = new ManifestHeader(key, value, bundle, newLine);
+        }
+        return header;
+    }
 
 }

@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.editors;
 
 import org.eclipse.core.resources.IProject;
@@ -17,11 +18,11 @@ import org.eclipse.core.resources.IProject;
  */
 public class ParUtils {
 
-	public static String getSymbolicName(IProject project) {
-		// For now we are going to use project names instead of
-		// Bundle-SymbolicName cause these *must*
-		// be unique within the eclipse workspace
-		return project.getName();
-	}
+    public static String getSymbolicName(IProject project) {
+        // For now we are going to use project names instead of
+        // Bundle-SymbolicName cause these *must*
+        // be unique within the eclipse workspace
+        return project.getName();
+    }
 
 }

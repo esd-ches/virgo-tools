@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.core.actions;
 
 import org.eclipse.core.commands.ExecutionException;
@@ -20,41 +21,41 @@ import org.eclipse.virgo.ide.runtime.core.IServerWorkingCopy;
 
 /**
  * {@link AbstractOperation} to modify the tail log file settings.
- * 
+ *
  * @author Christian Dupuis
  * @since 1.0.1
  */
 public class ModifyTailLogFilesCommand extends AbstractOperation {
 
-	private IServerWorkingCopy workingCopy;
+    private final IServerWorkingCopy workingCopy;
 
-	private boolean oldValue;
+    private final boolean oldValue;
 
-	private boolean newValue;
+    private final boolean newValue;
 
-	public ModifyTailLogFilesCommand(IServerWorkingCopy workingCopy, boolean newValue) {
-		super("Modify Tail Log Files");
-		this.workingCopy = workingCopy;
-		this.oldValue = workingCopy.shouldTailTraceFiles();
-		this.newValue = newValue;
-	}
+    public ModifyTailLogFilesCommand(IServerWorkingCopy workingCopy, boolean newValue) {
+        super("Modify Tail Log Files");
+        this.workingCopy = workingCopy;
+        this.oldValue = workingCopy.shouldTailTraceFiles();
+        this.newValue = newValue;
+    }
 
-	@Override
-	public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		workingCopy.shouldTailTraceFiles(newValue);
-		return Status.OK_STATUS;
-	}
+    @Override
+    public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        this.workingCopy.shouldTailTraceFiles(this.newValue);
+        return Status.OK_STATUS;
+    }
 
-	@Override
-	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		workingCopy.shouldTailTraceFiles(newValue);
-		return Status.OK_STATUS;
-	}
+    @Override
+    public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        this.workingCopy.shouldTailTraceFiles(this.newValue);
+        return Status.OK_STATUS;
+    }
 
-	@Override
-	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		workingCopy.shouldTailTraceFiles(oldValue);
-		return Status.OK_STATUS;
-	}
+    @Override
+    public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        this.workingCopy.shouldTailTraceFiles(this.oldValue);
+        return Status.OK_STATUS;
+    }
 
 }

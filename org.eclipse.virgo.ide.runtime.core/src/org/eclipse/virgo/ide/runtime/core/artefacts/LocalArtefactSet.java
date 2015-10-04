@@ -21,38 +21,38 @@ import org.eclipse.wst.server.core.IServer;
  */
 public class LocalArtefactSet extends ArtefactSet implements ILocalEntity {
 
-	final File location;
+    final File location;
 
-	public LocalArtefactSet(ArtefactRepository artefactRepository, ArtefactType artefactType, File location) {
-		super(artefactRepository, artefactType);
-		this.location = location;
-	}
+    public LocalArtefactSet(ArtefactRepository artefactRepository, ArtefactType artefactType, File location) {
+        super(artefactRepository, artefactType);
+        this.location = location;
+    }
 
-	public File getFile() {
-		return location;
-	}
+    public File getFile() {
+        return this.location;
+    }
 
-	public String getRelativePath() {
-		String fileName = getFile().toString();
-		IServer server = getRepository().getServer();
-		if (server != null && server.getRuntime() != null) {
-			String home = ServerUtils.getServerHome(server.getRuntime());
-			if (fileName.startsWith(home)) {
-				fileName = fileName.substring(home.length() + 1);
-			}
-		}
-		return fileName;
-	}
+    public String getRelativePath() {
+        String fileName = getFile().toString();
+        IServer server = getRepository().getServer();
+        if (server != null && server.getRuntime() != null) {
+            String home = ServerUtils.getServerHome(server.getRuntime());
+            if (fileName.startsWith(home)) {
+                fileName = fileName.substring(home.length() + 1);
+            }
+        }
+        return fileName;
+    }
 
-	public String getShortLabel() {
-		return getRelativePath() + " [" + getArtefactType().getPluralLabel() + "]";
-	}
+    public String getShortLabel() {
+        return getRelativePath() + " [" + getArtefactType().getPluralLabel() + "]";
+    }
 
-	/**
-	 * @see org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet#toString()
-	 */
-	@Override
-	public String toString() {
-		return location + " [" + super.toString() + "]";
-	}
+    /**
+     * @see org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet#toString()
+     */
+    @Override
+    public String toString() {
+        return this.location + " [" + super.toString() + "]";
+    }
 }

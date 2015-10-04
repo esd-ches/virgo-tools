@@ -26,61 +26,60 @@ import org.eclipse.virgo.ide.runtime.core.artefacts.LocalArtefactSet;
  */
 public class ProjectFileReference implements IServerProjectArtefact, IAdaptable {
 
-	ProjectFileContainer container;
+    ProjectFileContainer container;
 
-	ILocalArtefact library;
+    ILocalArtefact library;
 
-	private final File runtimeFile;
+    private final File runtimeFile;
 
-	private final IFile workspaceFile;
+    private final IFile workspaceFile;
 
-	public ProjectFileReference(ProjectFileContainer container, ILocalArtefact artefact) {
-		super();
-		this.container = container;
-		this.library = artefact;
+    public ProjectFileReference(ProjectFileContainer container, ILocalArtefact artefact) {
+        super();
+        this.container = container;
+        this.library = artefact;
 
-		runtimeFile = artefact.getFile();
-		String artefactRelative = runtimeFile.getAbsolutePath().replace(
-				((LocalArtefactSet) artefact.getSet()).getFile().getAbsolutePath(), "");
-		workspaceFile = container.getRootFolder().getFile(artefactRelative);
-		try {
-			runtimeFile.setReadOnly();
-			workspaceFile.createLink(new Path(runtimeFile.getAbsolutePath()), IResource.REPLACE, null);
-		} catch (CoreException e) {
-			ServerProjectManager.handleException(e);
-		}
+        this.runtimeFile = artefact.getFile();
+        String artefactRelative = this.runtimeFile.getAbsolutePath().replace(((LocalArtefactSet) artefact.getSet()).getFile().getAbsolutePath(), "");
+        this.workspaceFile = container.getRootFolder().getFile(artefactRelative);
+        try {
+            this.runtimeFile.setReadOnly();
+            this.workspaceFile.createLink(new Path(this.runtimeFile.getAbsolutePath()), IResource.REPLACE, null);
+        } catch (CoreException e) {
+            ServerProjectManager.handleException(e);
+        }
 
-	}
+    }
 
-	/**
-	 * @see org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectArtefact#getContainer()
-	 */
-	public IServerProjectContainer getContainer() {
-		return container;
-	}
+    /**
+     * @see org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectArtefact#getContainer()
+     */
+    public IServerProjectContainer getContainer() {
+        return this.container;
+    }
 
-	/**
-	 * @see org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectArtefact#getArtefact()
-	 */
-	public ILocalArtefact getArtefact() {
-		return library;
-	}
+    /**
+     * @see org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectArtefact#getArtefact()
+     */
+    public ILocalArtefact getArtefact() {
+        return this.library;
+    }
 
-	public File getRuntimeFile() {
-		return runtimeFile;
-	}
+    public File getRuntimeFile() {
+        return this.runtimeFile;
+    }
 
-	public IFile getWorkspaceFile() {
-		return workspaceFile;
-	}
+    public IFile getWorkspaceFile() {
+        return this.workspaceFile;
+    }
 
-	/**
-	 * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
-	 */
-	public Object getAdapter(Class adapter) {
-		if (adapter == IFile.class) {
-			return workspaceFile;
-		}
-		return null;
-	}
+    /**
+     * @see org.eclipse.core.runtime.IAdaptable#getAdapter(java.lang.Class)
+     */
+    public Object getAdapter(Class adapter) {
+        if (adapter == IFile.class) {
+            return this.workspaceFile;
+        }
+        return null;
+    }
 }

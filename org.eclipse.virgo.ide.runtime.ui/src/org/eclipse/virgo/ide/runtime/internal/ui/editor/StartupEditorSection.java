@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.ui.editor;
 
 import java.beans.PropertyChangeEvent;
@@ -40,152 +41,157 @@ import org.eclipse.wst.server.ui.editor.ServerEditorSection;
 
 /**
  * {@link ServerEditorSection} section that allows to configure some startup parameters
- * 
+ *
  * @author Christian Dupuis
  * @author Leo Dos Santos
  * @since 1.0.1
  */
 public class StartupEditorSection extends ServerEditorSection {
 
-	protected IServerWorkingCopy serverWorkingCopy;
+    protected IServerWorkingCopy serverWorkingCopy;
 
-	protected boolean updating;
+    protected boolean updating;
 
-	protected PropertyChangeListener listener;
+    protected PropertyChangeListener listener;
 
-	private Button tailLogFiles;
+    private Button tailLogFiles;
 
-	private Button cleanStartup;
+    private Button cleanStartup;
 
-	private Text maxPermSizeField;
+    private Text maxPermSizeField;
 
-	protected void addConfigurationChangeListener() {
-		listener = new PropertyChangeListener() {
-			public void propertyChange(PropertyChangeEvent event) {
-				if (updating) {
-					return;
-				}
-				updating = true;
-				if (IServer.PROPERTY_TAIL_LOG_FILES.equals(event.getPropertyName())) {
-					tailLogFiles.setSelection(Boolean.valueOf(event.getNewValue().toString()));
-				} else if (IServer.PROPERTY_CLEAN_STARTUP.equals(event.getPropertyName())) {
-					cleanStartup.setSelection(Boolean.valueOf(event.getNewValue().toString()));
-				} else if (IServer.PROPERTY_MAX_PERM_SIZE.equals(event.getPropertyName())) {
-					maxPermSizeField.setText(event.getNewValue().toString());
-				}
-				updating = false;
-			}
-		};
-		serverWorkingCopy.addConfigurationChangeListener(listener);
-	}
+    protected void addConfigurationChangeListener() {
+        this.listener = new PropertyChangeListener() {
 
-	@Override
-	public void createSection(Composite parent) {
-		super.createSection(parent);
-		FormToolkit toolkit = getFormToolkit(parent.getDisplay());
+            public void propertyChange(PropertyChangeEvent event) {
+                if (StartupEditorSection.this.updating) {
+                    return;
+                }
+                StartupEditorSection.this.updating = true;
+                if (IServer.PROPERTY_TAIL_LOG_FILES.equals(event.getPropertyName())) {
+                    StartupEditorSection.this.tailLogFiles.setSelection(Boolean.valueOf(event.getNewValue().toString()));
+                } else if (IServer.PROPERTY_CLEAN_STARTUP.equals(event.getPropertyName())) {
+                    StartupEditorSection.this.cleanStartup.setSelection(Boolean.valueOf(event.getNewValue().toString()));
+                } else if (IServer.PROPERTY_MAX_PERM_SIZE.equals(event.getPropertyName())) {
+                    StartupEditorSection.this.maxPermSizeField.setText(event.getNewValue().toString());
+                }
+                StartupEditorSection.this.updating = false;
+            }
+        };
+        this.serverWorkingCopy.addConfigurationChangeListener(this.listener);
+    }
 
-		Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED
-				| ExpandableComposite.TITLE_BAR | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
-		section.setText("Server Startup Configuration");
-		section.setDescription("Specify startup options. Changing a setting requires a server restart.");
-		section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
+    @Override
+    public void createSection(Composite parent) {
+        super.createSection(parent);
+        FormToolkit toolkit = getFormToolkit(parent.getDisplay());
 
-		Composite composite = toolkit.createComposite(section);
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		layout.marginHeight = 5;
-		layout.marginWidth = 10;
-		layout.verticalSpacing = 5;
-		layout.horizontalSpacing = 15;
-		composite.setLayout(layout);
-		composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
-		toolkit.paintBordersFor(composite);
-		section.setClient(composite);
+        Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED | ExpandableComposite.TITLE_BAR
+            | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
+        section.setText("Server Startup Configuration");
+        section.setDescription("Specify startup options. Changing a setting requires a server restart.");
+        section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 
-		GridData data = new GridData(SWT.FILL, SWT.TOP, true, false);
-		data.horizontalSpan = 2;
+        Composite composite = toolkit.createComposite(section);
+        GridLayout layout = new GridLayout();
+        layout.numColumns = 2;
+        layout.marginHeight = 5;
+        layout.marginWidth = 10;
+        layout.verticalSpacing = 5;
+        layout.horizontalSpacing = 15;
+        composite.setLayout(layout);
+        composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
+        toolkit.paintBordersFor(composite);
+        section.setClient(composite);
 
-		tailLogFiles = toolkit.createButton(composite, "Tail application trace files into Console view", SWT.CHECK);
-		tailLogFiles.setLayoutData(data);
-		tailLogFiles.addSelectionListener(new SelectionAdapter() {
+        GridData data = new GridData(SWT.FILL, SWT.TOP, true, false);
+        data.horizontalSpan = 2;
 
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (updating) {
-					return;
-				}
-				updating = true;
-				execute(new ModifyTailLogFilesCommand(serverWorkingCopy, tailLogFiles.getSelection()));
-				updating = false;
-			}
-		});
+        this.tailLogFiles = toolkit.createButton(composite, "Tail application trace files into Console view", SWT.CHECK);
+        this.tailLogFiles.setLayoutData(data);
+        this.tailLogFiles.addSelectionListener(new SelectionAdapter() {
 
-		cleanStartup = toolkit.createButton(composite, "Start server with -clean option", SWT.CHECK);
-		cleanStartup.setLayoutData(data);
-		cleanStartup.addSelectionListener(new SelectionAdapter() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if (StartupEditorSection.this.updating) {
+                    return;
+                }
+                StartupEditorSection.this.updating = true;
+                execute(new ModifyTailLogFilesCommand(StartupEditorSection.this.serverWorkingCopy,
+                    StartupEditorSection.this.tailLogFiles.getSelection()));
+                StartupEditorSection.this.updating = false;
+            }
+        });
 
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				if (updating) {
-					return;
-				}
-				updating = true;
-				execute(new ModifyCleanStartupCommand(serverWorkingCopy, cleanStartup.getSelection()));
-				updating = false;
-			}
-		});
+        this.cleanStartup = toolkit.createButton(composite, "Start server with -clean option", SWT.CHECK);
+        this.cleanStartup.setLayoutData(data);
+        this.cleanStartup.addSelectionListener(new SelectionAdapter() {
 
-		data = new GridData(SWT.FILL, SWT.CENTER, true, false);
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                if (StartupEditorSection.this.updating) {
+                    return;
+                }
+                StartupEditorSection.this.updating = true;
+                execute(new ModifyCleanStartupCommand(StartupEditorSection.this.serverWorkingCopy,
+                    StartupEditorSection.this.cleanStartup.getSelection()));
+                StartupEditorSection.this.updating = false;
+            }
+        });
 
-		Label maxPermSizeLabel = toolkit.createLabel(composite, "-XX:MaxPermSize=");
-		maxPermSizeLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		maxPermSizeField = toolkit.createText(composite, "");
-		maxPermSizeField.setLayoutData(data);
-		maxPermSizeField.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				if (updating) {
-					return;
-				}
-				updating = true;
-				execute(new ModifyMaxPermSizeCommand(serverWorkingCopy, maxPermSizeField.getText()));
-				updating = false;
-			}
-		});
+        data = new GridData(SWT.FILL, SWT.CENTER, true, false);
 
-		toolkit.createLabel(composite, "");
+        Label maxPermSizeLabel = toolkit.createLabel(composite, "-XX:MaxPermSize=");
+        maxPermSizeLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+        this.maxPermSizeField = toolkit.createText(composite, "");
+        this.maxPermSizeField.setLayoutData(data);
+        this.maxPermSizeField.addModifyListener(new ModifyListener() {
 
-		initialize();
-	}
+            public void modifyText(ModifyEvent e) {
+                if (StartupEditorSection.this.updating) {
+                    return;
+                }
+                StartupEditorSection.this.updating = true;
+                execute(
+                    new ModifyMaxPermSizeCommand(StartupEditorSection.this.serverWorkingCopy, StartupEditorSection.this.maxPermSizeField.getText()));
+                StartupEditorSection.this.updating = false;
+            }
+        });
 
-	/**
-	 * @see ServerEditorSection#dispose()
-	 */
-	@Override
-	public void dispose() {
-		if (server != null) {
-			server.removePropertyChangeListener(listener);
-		}
-	}
+        toolkit.createLabel(composite, "");
 
-	/**
-	 * @see ServerEditorSection#init(IEditorSite, IEditorInput)
-	 */
-	@Override
-	public void init(IEditorSite site, IEditorInput input) {
-		super.init(site, input);
-		serverWorkingCopy = (IServerWorkingCopy) server.loadAdapter(IServerWorkingCopy.class, new NullProgressMonitor());
-		addConfigurationChangeListener();
-	}
+        initialize();
+    }
 
-	/**
-	 * Initialize the fields in this editor.
-	 */
-	protected void initialize() {
-		updating = true;
-		this.tailLogFiles.setSelection(serverWorkingCopy.shouldTailTraceFiles());
-		this.cleanStartup.setSelection(serverWorkingCopy.shouldCleanStartup());
-		this.maxPermSizeField.setText(serverWorkingCopy.getMaxPermSize());
-		updating = false;
-	}
+    /**
+     * @see ServerEditorSection#dispose()
+     */
+    @Override
+    public void dispose() {
+        if (this.server != null) {
+            this.server.removePropertyChangeListener(this.listener);
+        }
+    }
+
+    /**
+     * @see ServerEditorSection#init(IEditorSite, IEditorInput)
+     */
+    @Override
+    public void init(IEditorSite site, IEditorInput input) {
+        super.init(site, input);
+        this.serverWorkingCopy = (IServerWorkingCopy) this.server.loadAdapter(IServerWorkingCopy.class, new NullProgressMonitor());
+        addConfigurationChangeListener();
+    }
+
+    /**
+     * Initialize the fields in this editor.
+     */
+    protected void initialize() {
+        this.updating = true;
+        this.tailLogFiles.setSelection(this.serverWorkingCopy.shouldTailTraceFiles());
+        this.cleanStartup.setSelection(this.serverWorkingCopy.shouldCleanStartup());
+        this.maxPermSizeField.setText(this.serverWorkingCopy.getMaxPermSize());
+        this.updating = false;
+    }
 
 }

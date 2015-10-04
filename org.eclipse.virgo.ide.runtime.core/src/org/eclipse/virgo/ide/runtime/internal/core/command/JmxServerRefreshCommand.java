@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.core.command;
 
 import java.io.IOException;
@@ -19,44 +20,46 @@ import org.eclipse.wst.server.core.IModule;
 
 /**
  * {@link IServerCommand} to update a PAR or bundle on a dm Server.
- * 
+ *
  * @author Christian Dupuis
  * @since 1.0.1
  */
-public class JmxServerRefreshCommand extends AbstractJmxServerDeployerCommand<Object> implements IServerCommand<Void> {
+public class JmxServerRefreshCommand extends AbstractJmxServerDeployerCommand<Object>implements IServerCommand<Void> {
 
-	/** Symbolic name of the bundle to update */
-	private final String bundleSymbolicName;
+    /** Symbolic name of the bundle to update */
+    private final String bundleSymbolicName;
 
-	/**
-	 * Creates a new {@link JmxServerRefreshCommand}.
-	 */
-	public JmxServerRefreshCommand(IServerBehaviour serverBehaviour, IModule module, String bundleSymbolicName) {
-		super(serverBehaviour, module);
-		this.bundleSymbolicName = bundleSymbolicName;
-	}
+    /**
+     * Creates a new {@link JmxServerRefreshCommand}.
+     */
+    public JmxServerRefreshCommand(IServerBehaviour serverBehaviour, IModule module, String bundleSymbolicName) {
+        super(serverBehaviour, module);
+        this.bundleSymbolicName = bundleSymbolicName;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public Void execute() throws IOException, TimeoutException {
-		doExecute();
-		return null;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public Void execute() throws IOException, TimeoutException {
+        doExecute();
+        return null;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	protected Object[] getOperationArguments() {
-		URI uri = getUri(serverBehaviour.getModuleDeployUri(module));
-		return new Object[] { uri.toString(), bundleSymbolicName };
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected Object[] getOperationArguments() {
+        URI uri = getUri(this.serverBehaviour.getModuleDeployUri(this.module));
+        return new Object[] { uri.toString(), this.bundleSymbolicName };
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	protected String getOperationName() {
-		return "refresh";
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getOperationName() {
+        return "refresh";
+    }
 
 }

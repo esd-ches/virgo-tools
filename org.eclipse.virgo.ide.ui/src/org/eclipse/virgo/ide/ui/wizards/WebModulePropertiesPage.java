@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.wizards;
 
 import java.util.HashMap;
@@ -28,44 +29,40 @@ import org.eclipse.swt.widgets.Text;
  */
 public class WebModulePropertiesPage extends AbstractPropertiesPage {
 
-	protected static String ID_PAGE = "web.properties";
+    protected static String ID_PAGE = "web.properties";
 
-	private Label contextPathLabel;
+    private Label contextPathLabel;
 
-	private Text contextPathText;
+    private Text contextPathText;
 
-	public WebModulePropertiesPage() {
-		super(ID_PAGE);
-	}
+    public WebModulePropertiesPage() {
+        super(ID_PAGE);
+    }
 
-	@Override
-	protected void createPropertiesGroup(Composite container) {
-		Group propertiesGroup = new Group(container, SWT.NONE);
-		propertiesGroup.setLayout(new GridLayout(3, false));
-		propertiesGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		propertiesGroup.setText("Web Module Properties");
+    @Override
+    protected void createPropertiesGroup(Composite container) {
+        Group propertiesGroup = new Group(container, SWT.NONE);
+        propertiesGroup.setLayout(new GridLayout(3, false));
+        propertiesGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        propertiesGroup.setText("Web Module Properties");
 
-		contextPathLabel = new Label(propertiesGroup, SWT.NONE);
-		contextPathLabel.setText("Web-ContextPath");
+        this.contextPathLabel = new Label(propertiesGroup, SWT.NONE);
+        this.contextPathLabel.setText("Web-ContextPath");
 
-		contextPathText = new Text(propertiesGroup, SWT.BORDER | SWT.SINGLE);
-		GridDataFactory.fillDefaults()
-				.align(SWT.FILL, SWT.CENTER)
-				.grab(true, false)
-				.span(2, 1)
-				.applyTo(contextPathText);
-	}
+        this.contextPathText = new Text(propertiesGroup, SWT.BORDER | SWT.SINGLE);
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).span(2, 1).applyTo(this.contextPathText);
+    }
 
-	@Override
-	public Map<String, String> getProperties() {
-		Map<String, String> properties = new HashMap<String, String>();
-		properties.put(contextPathLabel.getText(), contextPathText.getText());
-		return properties;
-	}
+    @Override
+    public Map<String, String> getProperties() {
+        Map<String, String> properties = new HashMap<String, String>();
+        properties.put(this.contextPathLabel.getText(), this.contextPathText.getText());
+        return properties;
+    }
 
-	@Override
-	public String getModuleType() {
-		return "Web";
-	}
+    @Override
+    public String getModuleType() {
+        return "Web";
+    }
 
 }

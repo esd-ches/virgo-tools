@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 
 import org.eclipse.jface.viewers.ITreeContentProvider;
@@ -21,37 +22,37 @@ import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet;
  */
 public class RepositorySearchResultContentProvider implements ITreeContentProvider {
 
-	public void dispose() {
-	}
+    public void dispose() {
+    }
 
-	public Object[] getChildren(Object parentElement) {
-		if (parentElement instanceof ArtefactSet) {
-			ArtefactSet artefacts = (ArtefactSet) parentElement;
-			return artefacts.toArray();
-		}
-		return new Object[0];
-	}
+    public Object[] getChildren(Object parentElement) {
+        if (parentElement instanceof ArtefactSet) {
+            ArtefactSet artefacts = (ArtefactSet) parentElement;
+            return artefacts.toArray();
+        }
+        return new Object[0];
+    }
 
-	public Object[] getElements(Object inputElement) {
-		if (inputElement instanceof ArtefactRepository) {
-			ArtefactRepository artefactRepository = (ArtefactRepository) inputElement;
-			return new Object[] { artefactRepository.getBundleSet(), artefactRepository.getLibrarySet() };
-		}
-		return new Object[0];
-	}
+    public Object[] getElements(Object inputElement) {
+        if (inputElement instanceof ArtefactRepository) {
+            ArtefactRepository artefactRepository = (ArtefactRepository) inputElement;
+            return new Object[] { artefactRepository.getBundleSet(), artefactRepository.getLibrarySet() };
+        }
+        return new Object[0];
+    }
 
-	public Object getParent(Object element) {
-		if (element instanceof ArtefactSet) {
-			return ((ArtefactSet) element).getRepository();
-		}
-		return null;
-	}
+    public Object getParent(Object element) {
+        if (element instanceof ArtefactSet) {
+            return ((ArtefactSet) element).getRepository();
+        }
+        return null;
+    }
 
-	public boolean hasChildren(Object element) {
-		return getChildren(element).length > 0;
-	}
+    public boolean hasChildren(Object element) {
+        return getChildren(element).length > 0;
+    }
 
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-	}
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    }
 
 }

@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.manifest.core;
 
 import java.util.Set;
@@ -16,15 +17,15 @@ import org.eclipse.jdt.core.IJavaProject;
 
 /**
  * Extension interface for {@link IBundleManifestManager} that allows write access for certain managed resources.
- * 
+ *
  * @author Christian Dupuis
  * @since 1.0.0
  */
 public interface IBundleManifestMangerWorkingCopy extends IBundleManifestManager {
 
-	/**
-	 * Sets the resolved package imports for the given <code>javaProject</code>.
-	 */
-	void updateResolvedPackageImports(IJavaProject javaProject, Set<String> resolvedPackageImports);
+    /**
+     * Sets the resolved package imports for the given <code>javaProject</code>.
+     */
+    void updateResolvedPackageImports(IJavaProject javaProject, Set<String> resolvedPackageImports);
 
 }

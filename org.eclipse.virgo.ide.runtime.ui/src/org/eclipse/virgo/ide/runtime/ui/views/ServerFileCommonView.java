@@ -33,118 +33,120 @@ import org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFileSelection;
 import org.eclipse.wst.server.core.IServer;
 
 /**
- * 
+ *
  * @see org.eclipse.pde.internal.ui.views.dependencies.DependenciesView
  * @author Miles Parker
- * 
+ *
  */
 @SuppressWarnings("restriction")
 public abstract class ServerFileCommonView extends CommonView implements ISelectionListener {
 
-	private Collection<IFile> currentFiles;
+    private Collection<IFile> currentFiles;
 
-	protected IResourceChangeListener resourceListener;
+    protected IResourceChangeListener resourceListener;
 
-	private final class DeltaVisitor implements IResourceDeltaVisitor {
-		boolean change;
+    private final class DeltaVisitor implements IResourceDeltaVisitor {
 
-		public boolean visit(IResourceDelta delta) {
-			if (change) {
-				return false;
-			}
-			//only interested in changed resources (not added or removed)
-			if (delta.getKind() != IResourceDelta.CHANGED) {
-				return true;
-			}
-			//only interested in content changes
-			if ((delta.getFlags() & IResourceDelta.CONTENT) == 0) {
-				return true;
-			}
-			IResource resource = delta.getResource();
-			if (currentFiles.contains(resource)) {
-				change = true;
-			}
-			return true;
-		}
-	}
+        boolean change;
 
-	/**
-	 * @see org.eclipse.ui.navigator.CommonNavigator#createPartControl(org.eclipse.swt.widgets.Composite)
-	 */
-	@Override
-	public void createPartControl(Composite aParent) {
-		super.createPartControl(aParent);
-		resourceListener = new IResourceChangeListener() {
-			public void resourceChanged(IResourceChangeEvent event) {
-				//we are only interested in POST_CHANGE events
-				if (getServers().size() > 0) {
-					if (event.getType() != IResourceChangeEvent.POST_CHANGE) {
-						return;
-					}
-					IResourceDelta rootDelta = event.getDelta();
-					boolean refresh = false;
-					//get the delta, if any, for the documentation directory
-					for (IServer server : getServers()) {
-						ServerProject project = ServerProjectManager.getInstance().getProject(server);
-						if (project != null) {
-							for (String dir : getManagedDirs()) {
-								if (project.getWorkspaceProject() != null) {
-									IFolder folder = project.getWorkspaceProject().getFolder(dir);
-									IResourceDelta docDelta = rootDelta.findMember(folder.getFullPath());
-									if (docDelta == null) {
-										return;
-									}
-									DeltaVisitor visitor = new DeltaVisitor();
-									try {
-										docDelta.accept(visitor);
-									} catch (CoreException e) {
-									}
-									if (visitor.change) {
-										refresh = true;
-										break;
-									}
-								}
-							}
-						}
-					}
-					if (refresh) {
-						refreshView();
-					}
-				}
-			}
-		};
-		ResourcesPlugin.getWorkspace().addResourceChangeListener(resourceListener);
-		currentFiles = new HashSet<IFile>();
-	}
+        public boolean visit(IResourceDelta delta) {
+            if (this.change) {
+                return false;
+            }
+            // only interested in changed resources (not added or removed)
+            if (delta.getKind() != IResourceDelta.CHANGED) {
+                return true;
+            }
+            // only interested in content changes
+            if ((delta.getFlags() & IResourceDelta.CONTENT) == 0) {
+                return true;
+            }
+            IResource resource = delta.getResource();
+            if (ServerFileCommonView.this.currentFiles.contains(resource)) {
+                this.change = true;
+            }
+            return true;
+        }
+    }
 
-	/**
-	 * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#update()
-	 */
-	@Override
-	protected void update() {
-		currentFiles = new HashSet<IFile>();
-		for (IServer server : getServers()) {
-			Object[] elements = ((ITreeContentProvider) getCommonViewer().getContentProvider()).getElements(server);
-			for (Object object : elements) {
-				if (object instanceof ServerFileSelection) {
-					currentFiles.add(((ServerFileSelection) object).getFile());
-				}
-				if (object instanceof IFile) {
-					currentFiles.add((IFile) object);
-				}
-			}
-		}
-		super.update();
-	}
+    /**
+     * @see org.eclipse.ui.navigator.CommonNavigator#createPartControl(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    public void createPartControl(Composite aParent) {
+        super.createPartControl(aParent);
+        this.resourceListener = new IResourceChangeListener() {
 
-	/**
-	 * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#dispose()
-	 */
-	@Override
-	public void dispose() {
-		super.dispose();
-		ResourcesPlugin.getWorkspace().removeResourceChangeListener(resourceListener);
-	}
+            public void resourceChanged(IResourceChangeEvent event) {
+                // we are only interested in POST_CHANGE events
+                if (getServers().size() > 0) {
+                    if (event.getType() != IResourceChangeEvent.POST_CHANGE) {
+                        return;
+                    }
+                    IResourceDelta rootDelta = event.getDelta();
+                    boolean refresh = false;
+                    // get the delta, if any, for the documentation directory
+                    for (IServer server : getServers()) {
+                        ServerProject project = ServerProjectManager.getInstance().getProject(server);
+                        if (project != null) {
+                            for (String dir : getManagedDirs()) {
+                                if (project.getWorkspaceProject() != null) {
+                                    IFolder folder = project.getWorkspaceProject().getFolder(dir);
+                                    IResourceDelta docDelta = rootDelta.findMember(folder.getFullPath());
+                                    if (docDelta == null) {
+                                        return;
+                                    }
+                                    DeltaVisitor visitor = new DeltaVisitor();
+                                    try {
+                                        docDelta.accept(visitor);
+                                    } catch (CoreException e) {
+                                    }
+                                    if (visitor.change) {
+                                        refresh = true;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (refresh) {
+                        refreshView();
+                    }
+                }
+            }
+        };
+        ResourcesPlugin.getWorkspace().addResourceChangeListener(this.resourceListener);
+        this.currentFiles = new HashSet<IFile>();
+    }
 
-	public abstract String[] getManagedDirs();
+    /**
+     * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#update()
+     */
+    @Override
+    protected void update() {
+        this.currentFiles = new HashSet<IFile>();
+        for (IServer server : getServers()) {
+            Object[] elements = ((ITreeContentProvider) getCommonViewer().getContentProvider()).getElements(server);
+            for (Object object : elements) {
+                if (object instanceof ServerFileSelection) {
+                    this.currentFiles.add(((ServerFileSelection) object).getFile());
+                }
+                if (object instanceof IFile) {
+                    this.currentFiles.add((IFile) object);
+                }
+            }
+        }
+        super.update();
+    }
+
+    /**
+     * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#dispose()
+     */
+    @Override
+    public void dispose() {
+        super.dispose();
+        ResourcesPlugin.getWorkspace().removeResourceChangeListener(this.resourceListener);
+    }
+
+    public abstract String[] getManagedDirs();
 }

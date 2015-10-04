@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.facet.core;
 
 import java.util.ArrayList;
@@ -28,32 +29,30 @@ import org.eclipse.wst.common.project.facet.core.IProjectFacetVersion;
 
 /**
  * Uninstall delegate to remove the class path container.
- * 
+ *
  * @author Christian Dupuis
  * @author Miles Parker
  * @since 1.0.0
  */
 public class BundleFacetUninstallDelegate implements IDelegate {
 
-	public void execute(IProject project, IProjectFacetVersion fv, Object config, IProgressMonitor monitor)
-			throws CoreException {
-		IJavaProject jproj = JavaCore.create(project);
-		removeFromClasspath(jproj, JavaCore.newContainerEntry(FacetCorePlugin.CLASSPATH_CONTAINER_PATH), monitor);
-		IProjectDescription desc = project.getDescription();
-		List<String> natures = new ArrayList<String>(Arrays.asList(desc.getNatureIds()));
-		natures.remove(FacetCorePlugin.BUNDLE_NATURE_ID);
-		desc.setNatureIds(natures.toArray(new String[] {}));
-		project.setDescription(desc, monitor);
-	}
+    public void execute(IProject project, IProjectFacetVersion fv, Object config, IProgressMonitor monitor) throws CoreException {
+        IJavaProject jproj = JavaCore.create(project);
+        removeFromClasspath(jproj, JavaCore.newContainerEntry(FacetCorePlugin.CLASSPATH_CONTAINER_PATH), monitor);
+        IProjectDescription desc = project.getDescription();
+        List<String> natures = new ArrayList<String>(Arrays.asList(desc.getNatureIds()));
+        natures.remove(FacetCorePlugin.BUNDLE_NATURE_ID);
+        desc.setNatureIds(natures.toArray(new String[] {}));
+        project.setDescription(desc, monitor);
+    }
 
-	protected void removeFromClasspath(IJavaProject javaProject, IClasspathEntry entry, IProgressMonitor monitor)
-			throws CoreException {
-		Set<IClasspathEntry> entries = new LinkedHashSet<IClasspathEntry>();
-		for (IClasspathEntry existingEntry : javaProject.getRawClasspath()) {
-			if (!existingEntry.equals(entry)) {
-				entries.add(existingEntry);
-			}
-		}
-		javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]), monitor);
-	}
+    protected void removeFromClasspath(IJavaProject javaProject, IClasspathEntry entry, IProgressMonitor monitor) throws CoreException {
+        Set<IClasspathEntry> entries = new LinkedHashSet<IClasspathEntry>();
+        for (IClasspathEntry existingEntry : javaProject.getRawClasspath()) {
+            if (!existingEntry.equals(entry)) {
+                entries.add(existingEntry);
+            }
+        }
+        javaProject.setRawClasspath(entries.toArray(new IClasspathEntry[entries.size()]), monitor);
+    }
 }

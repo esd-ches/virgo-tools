@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.ui.actions;
 
 import java.util.Arrays;
@@ -30,77 +31,77 @@ import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
 
 /**
  * Action implementation that redeploys the selected module or bundle
- * 
+ *
  * @author Christian Dupuis
  * @since 1.0.0
  */
 @SuppressWarnings("restriction")
 public class RedeployBundleAction implements IObjectActionDelegate {
 
-	private IModule selectedModule;
+    private IModule selectedModule;
 
-	private IServer server;
+    private IServer server;
 
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		// nothing to do here
-	}
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+        // nothing to do here
+    }
 
-	public void run(IAction action) {
+    public void run(IAction action) {
 
-		if (server.getServerState() != IServer.STATE_STARTED) {
-			return;
-		}
+        if (this.server.getServerState() != IServer.STATE_STARTED) {
+            return;
+        }
 
-		Job publishJob = new Job("Redeploy of module '" + selectedModule.getName() + "'") {
+        Job publishJob = new Job("Redeploy of module '" + this.selectedModule.getName() + "'") {
 
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				IServerBehaviour behaviour = (IServerBehaviour) server.loadAdapter(IServerBehaviour.class, null);
-				// PAR selected
-				if (FacetCorePlugin.PAR_FACET_ID.equals(selectedModule.getModuleType().getId())) {
-					behaviour.getServerDeployer().redeploy(selectedModule);
-				}
-				// Bundle selected
-				else if (FacetCorePlugin.BUNDLE_FACET_ID.equals(selectedModule.getModuleType().getId())) {
-					List<IModule> modules = Arrays.asList(server.getModules());
-					if (modules.contains(selectedModule)) {
-						// Single deployed module
-						behaviour.getServerDeployer().redeploy(selectedModule);
-					} else {
-						for (IModule module : modules) {
-							List<IModule> childModules = Arrays.asList(server.getChildModules(new IModule[] { module },
-									null));
-							if (childModules.contains(selectedModule)
-									&& FacetCorePlugin.PAR_FACET_ID.equals(module.getModuleType().getId())) {
-								behaviour.getServerDeployer().refresh(module, selectedModule);
-							}
-						}
-					}
-				}
-				// Web module selected
-				else if (FacetCorePlugin.WEB_FACET_ID.equals(selectedModule.getModuleType().getId())) {
-					behaviour.getServerDeployer().redeploy(selectedModule);
-				}
-				return Status.OK_STATUS;
-			}
-		};
-		publishJob.setPriority(Job.INTERACTIVE);
-		publishJob.schedule();
+            @Override
+            protected IStatus run(IProgressMonitor monitor) {
+                IServerBehaviour behaviour = (IServerBehaviour) RedeployBundleAction.this.server.loadAdapter(IServerBehaviour.class, null);
+                // PAR selected
+                if (FacetCorePlugin.PAR_FACET_ID.equals(RedeployBundleAction.this.selectedModule.getModuleType().getId())) {
+                    behaviour.getServerDeployer().redeploy(RedeployBundleAction.this.selectedModule);
+                }
+                // Bundle selected
+                else if (FacetCorePlugin.BUNDLE_FACET_ID.equals(RedeployBundleAction.this.selectedModule.getModuleType().getId())) {
+                    List<IModule> modules = Arrays.asList(RedeployBundleAction.this.server.getModules());
+                    if (modules.contains(RedeployBundleAction.this.selectedModule)) {
+                        // Single deployed module
+                        behaviour.getServerDeployer().redeploy(RedeployBundleAction.this.selectedModule);
+                    } else {
+                        for (IModule module : modules) {
+                            List<IModule> childModules = Arrays.asList(
+                                RedeployBundleAction.this.server.getChildModules(new IModule[] { module }, null));
+                            if (childModules.contains(RedeployBundleAction.this.selectedModule)
+                                && FacetCorePlugin.PAR_FACET_ID.equals(module.getModuleType().getId())) {
+                                behaviour.getServerDeployer().refresh(module, RedeployBundleAction.this.selectedModule);
+                            }
+                        }
+                    }
+                }
+                // Web module selected
+                else if (FacetCorePlugin.WEB_FACET_ID.equals(RedeployBundleAction.this.selectedModule.getModuleType().getId())) {
+                    behaviour.getServerDeployer().redeploy(RedeployBundleAction.this.selectedModule);
+                }
+                return Status.OK_STATUS;
+            }
+        };
+        publishJob.setPriority(Job.INTERACTIVE);
+        publishJob.schedule();
 
-	}
+    }
 
-	public void selectionChanged(IAction action, ISelection selection) {
-		selectedModule = null;
-		if (!selection.isEmpty()) {
-			if (selection instanceof IStructuredSelection) {
-				Object obj = ((IStructuredSelection) selection).getFirstElement();
-				if (obj instanceof ModuleServer) {
-					ModuleServer ms = (ModuleServer) obj;
-					this.server = ms.server;
-					this.selectedModule = ms.module[ms.module.length - 1];
-				}
-			}
-		}
-	}
+    public void selectionChanged(IAction action, ISelection selection) {
+        this.selectedModule = null;
+        if (!selection.isEmpty()) {
+            if (selection instanceof IStructuredSelection) {
+                Object obj = ((IStructuredSelection) selection).getFirstElement();
+                if (obj instanceof ModuleServer) {
+                    ModuleServer ms = (ModuleServer) obj;
+                    this.server = ms.server;
+                    this.selectedModule = ms.module[ms.module.length - 1];
+                }
+            }
+        }
+    }
 
 }

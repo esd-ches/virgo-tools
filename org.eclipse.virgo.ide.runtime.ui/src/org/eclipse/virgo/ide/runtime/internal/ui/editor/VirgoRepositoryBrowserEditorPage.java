@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.ui.editor;
 
 import org.eclipse.swt.graphics.Image;
@@ -16,21 +17,21 @@ import org.eclipse.wst.server.ui.editor.ServerEditorPart;
 
 /**
  * {@link ServerEditorPart} that allows to browse the local and remote bundle repository.
- * 
+ *
  * @author Terry Hon
  * @author Christian Dupuis
  * @since 1.0.0
  */
 public class VirgoRepositoryBrowserEditorPage extends RepositoryBrowserEditorPage {
 
-	@Override
-	protected Image getFormImage() {
-		return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_VIRGO);
-	}
+    @Override
+    protected Image getFormImage() {
+        return ServerUiImages.getImage(ServerUiImages.IMG_OBJ_VIRGO);
+    }
 
-	@Override
-	protected String getServerName() {
-		return Messages.VirgoServerName;
-	}
+    @Override
+    protected String getServerName() {
+        return Messages.VirgoServerName;
+    }
 
 }

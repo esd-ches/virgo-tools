@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.editors;
 
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
@@ -24,31 +25,31 @@ import org.eclipse.virgo.ide.ui.ServerIdeUiPlugin;
  */
 public class ParXmlEditorPage extends AbstractParXmlEditorPage {
 
-	public static String ID_EDITOR = "org.eclipse.virgo.ide.ui.editor.par.dependencies";
+    public static String ID_EDITOR = "org.eclipse.virgo.ide.ui.editor.par.dependencies";
 
-	public ParXmlEditorPage(ParManifestEditor editor, String id, String title) {
-		super(editor, id, title);
-	}
+    public ParXmlEditorPage(ParManifestEditor editor, String id, String title) {
+        super(editor, id, title);
+    }
 
-	@Override
-	protected IFormPart getFormPart(Composite parent, String[] labels) {
-		return new ParDependenciesSection(this, parent, labels);
-	}
+    @Override
+    protected IFormPart getFormPart(Composite parent, String[] labels) {
+        return new ParDependenciesSection(this, parent, labels);
+    }
 
-	@Override
-	protected void createFormContent(IManagedForm managedForm) {
-		super.createFormContent(managedForm);
-		ScrolledForm form = managedForm.getForm();
-		form.setImage(ServerIdeUiPlugin.getImage("full/obj16/par_obj.gif"));
-		form.setText("PAR Editor");
-	}
+    @Override
+    protected void createFormContent(IManagedForm managedForm) {
+        super.createFormContent(managedForm);
+        ScrolledForm form = managedForm.getForm();
+        form.setImage(ServerIdeUiPlugin.getImage("full/obj16/par_obj.gif"));
+        form.setText("PAR Editor");
+    }
 
-	protected AdapterFactoryEditingDomain getModel() {
-		return ((ParManifestEditor) getEditor()).getEditingDomain();
-	}
+    protected AdapterFactoryEditingDomain getModel() {
+        return ((ParManifestEditor) getEditor()).getEditingDomain();
+    }
 
-	public Par getPar() {
-		return ((ParManifestEditor) getEditor()).getPar();
-	}
+    public Par getPar() {
+        return ((ParManifestEditor) getEditor()).getPar();
+    }
 
 }

@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.editors;
 
 import java.io.File;
@@ -25,47 +26,45 @@ import org.eclipse.virgo.ide.ui.ServerIdeUiPlugin;
  */
 class PdeCompatibilityUtil {
 
-	private static boolean isEclipse34 = true;
+    private static boolean isEclipse34 = true;
 
-	public static boolean isSystemFileEditorInput(IEditorInput input) {
-		if (isEclipse34) {
-			Class<?> systemFileEditorInputClass;
-			try {
-				systemFileEditorInputClass = Class.forName("org.eclipse.pde.internal.ui.editor.SystemFileEditorInput");
-				return systemFileEditorInputClass.isInstance(input);
-			} catch (ClassNotFoundException e) {
-				isEclipse34 = false;
-			} catch (Throwable e) {
-				StatusManager.getManager().handle(
-						new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID,
-								"Failed to check for instance of SystemFileEditorInput"));
-				isEclipse34 = false;
-			}
-		}
-		return false;
-	}
+    public static boolean isSystemFileEditorInput(IEditorInput input) {
+        if (isEclipse34) {
+            Class<?> systemFileEditorInputClass;
+            try {
+                systemFileEditorInputClass = Class.forName("org.eclipse.pde.internal.ui.editor.SystemFileEditorInput");
+                return systemFileEditorInputClass.isInstance(input);
+            } catch (ClassNotFoundException e) {
+                isEclipse34 = false;
+            } catch (Throwable e) {
+                StatusManager.getManager().handle(
+                    new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Failed to check for instance of SystemFileEditorInput"));
+                isEclipse34 = false;
+            }
+        }
+        return false;
+    }
 
-	public static IEditorInput createSystemFileEditorInput(IURIEditorInput input) {
-		return createSystemFileEditorInput(new File(input.getURI()));
-	}
+    public static IEditorInput createSystemFileEditorInput(IURIEditorInput input) {
+        return createSystemFileEditorInput(new File(input.getURI()));
+    }
 
-	public static IEditorInput createSystemFileEditorInput(File file) {
-		if (isEclipse34) {
-			Class<?> systemFileEditorInputClass;
-			try {
-				systemFileEditorInputClass = Class.forName("org.eclipse.pde.internal.ui.editor.SystemFileEditorInput");
-				Constructor<?> constructor = systemFileEditorInputClass.getConstructor(File.class);
-				return (IEditorInput) constructor.newInstance(file);
-			} catch (ClassNotFoundException e) {
-				isEclipse34 = false;
-			} catch (Throwable e) {
-				StatusManager.getManager().handle(
-						new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID,
-								"Failed to create instance of SystemFileEditorInput"));
-				isEclipse34 = false;
-			}
-		}
-		return null;
-	}
+    public static IEditorInput createSystemFileEditorInput(File file) {
+        if (isEclipse34) {
+            Class<?> systemFileEditorInputClass;
+            try {
+                systemFileEditorInputClass = Class.forName("org.eclipse.pde.internal.ui.editor.SystemFileEditorInput");
+                Constructor<?> constructor = systemFileEditorInputClass.getConstructor(File.class);
+                return (IEditorInput) constructor.newInstance(file);
+            } catch (ClassNotFoundException e) {
+                isEclipse34 = false;
+            } catch (Throwable e) {
+                StatusManager.getManager().handle(
+                    new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Failed to create instance of SystemFileEditorInput"));
+                isEclipse34 = false;
+            }
+        }
+        return null;
+    }
 
 }

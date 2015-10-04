@@ -16,35 +16,35 @@ import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProject;
 
 /**
- * 
+ *
  * @see org.eclipse.pde.internal.ui.views.dependencies.DependenciesView
  * @author Miles Parker
- * 
+ *
  */
 @SuppressWarnings("restriction")
 public class LogFileCommonView extends ServerFileCommonView {
 
-	/**
-	 * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#getContentId()
-	 */
-	@Override
-	protected String getTreeContentId() {
-		return ServerUiPlugin.LOG_CONTENT_ID;
-	}
+    /**
+     * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#getContentId()
+     */
+    @Override
+    protected String getTreeContentId() {
+        return ServerUiPlugin.LOG_CONTENT_ID;
+    }
 
-	/**
-	 * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#getViewId()
-	 */
-	@Override
-	protected String getViewId() {
-		return ServerUiPlugin.LOG_VIEW_ID;
-	}
+    /**
+     * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#getViewId()
+     */
+    @Override
+    protected String getViewId() {
+        return ServerUiPlugin.LOG_VIEW_ID;
+    }
 
-	/**
-	 * @see org.eclipse.virgo.ide.runtime.ui.views.ServerFileCommonView#getManagedDirs()
-	 */
-	@Override
-	public String[] getManagedDirs() {
-		return new String[] { ServerProject.LOG_WORKSPACE_DIR };
-	}
+    /**
+     * @see org.eclipse.virgo.ide.runtime.ui.views.ServerFileCommonView#getManagedDirs()
+     */
+    @Override
+    public String[] getManagedDirs() {
+        return new String[] { ServerProject.LOG_WORKSPACE_DIR };
+    }
 }

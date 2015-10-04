@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.manifest.internal.core.model;
 
 import java.util.ArrayList;
@@ -29,96 +30,90 @@ import org.osgi.framework.BundleException;
  */
 public class BundleManifestHeader extends AbstractManifestElement {
 
-	private static final int BUNDLE_MANIFEST_HEADER_TYPE = 1;
+    private static final int BUNDLE_MANIFEST_HEADER_TYPE = 1;
 
-	private int lineNumber;
+    private final int lineNumber;
 
-	private int lines;
+    private int lines;
 
-	private BundleManifestHeaderElement[] manifestElements;
+    private BundleManifestHeaderElement[] manifestElements;
 
-	private String value;
+    private String value;
 
-	protected BundleManifestHeader(BundleManifest parent, String name, String value, int lineNumber) {
-		super(parent, name);
-		this.value = value;
-		this.lineNumber = lineNumber;
-		this.lines = 1;
-	}
+    protected BundleManifestHeader(BundleManifest parent, String name, String value, int lineNumber) {
+        super(parent, name);
+        this.value = value;
+        this.lineNumber = lineNumber;
+        this.lines = 1;
+    }
 
-	public void append(String value) {
-		this.value += value;
-		lines++;
-	}
+    public void append(String value) {
+        this.value += value;
+        this.lines++;
+    }
 
-	public BundleManifestHeaderElement[] getBundleManifestHeaderElements() {
-		if (this.manifestElements == null) {
-			init();
-		}
-		return this.manifestElements;
-	}
+    public BundleManifestHeaderElement[] getBundleManifestHeaderElements() {
+        if (this.manifestElements == null) {
+            init();
+        }
+        return this.manifestElements;
+    }
 
-	@Override
-	public AbstractManifestElement[] getChildren() {
-		return getBundleManifestHeaderElements();
-	}
+    @Override
+    public AbstractManifestElement[] getChildren() {
+        return getBundleManifestHeaderElements();
+    }
 
-	public int getElementType() {
-		return BUNDLE_MANIFEST_HEADER_TYPE;
-	}
+    public int getElementType() {
+        return BUNDLE_MANIFEST_HEADER_TYPE;
+    }
 
-	public int getLineNumber() {
-		return lineNumber;
-	}
+    public int getLineNumber() {
+        return this.lineNumber;
+    }
 
-	public int getLinesSpan() {
-		return lines;
-	}
+    public int getLinesSpan() {
+        return this.lines;
+    }
 
-	public String getValue() {
-		return value;
-	}
+    public String getValue() {
+        return this.value;
+    }
 
-	public void init() {
-		if (this.manifestElements == null) {
-			if (getValue().trim().length() > 0) {
-				try {
+    public void init() {
+        if (this.manifestElements == null) {
+            if (getValue().trim().length() > 0) {
+                try {
 
-					// Make sure the every " is closed
-					if (StringUtils.countMatches(getValue(), "\"") % 2 != 0) {
-						throw new BundleException("");
-					}
+                    // Make sure the every " is closed
+                    if (StringUtils.countMatches(getValue(), "\"") % 2 != 0) {
+                        throw new BundleException("");
+                    }
 
-					List<BundleManifestHeaderElement> headerElements = new ArrayList<BundleManifestHeaderElement>();
-					ManifestElement[] elements = ManifestElement.parseHeader(getName(), getValue());
-					for (ManifestElement element : elements) {
-						headerElements.add(new BundleManifestHeaderElement(this, element));
-					}
-					this.manifestElements = headerElements.toArray(new BundleManifestHeaderElement[headerElements.size()]);
-				} catch (BundleException be) {
-					String message = NLS.bind(BundleManifestCoreMessages.BundleErrorReporter_parseHeader, getName());
-					((BundleManifest) getParent()).error(IMarker.SEVERITY_ERROR, message, getLineNumber() + 1);
-					this.manifestElements = new BundleManifestHeaderElement[0];
-				}
-			} else {
-				this.manifestElements = new BundleManifestHeaderElement[0];
-			}
-		}
-	}
+                    List<BundleManifestHeaderElement> headerElements = new ArrayList<BundleManifestHeaderElement>();
+                    ManifestElement[] elements = ManifestElement.parseHeader(getName(), getValue());
+                    for (ManifestElement element : elements) {
+                        headerElements.add(new BundleManifestHeaderElement(this, element));
+                    }
+                    this.manifestElements = headerElements.toArray(new BundleManifestHeaderElement[headerElements.size()]);
+                } catch (BundleException be) {
+                    String message = NLS.bind(BundleManifestCoreMessages.BundleErrorReporter_parseHeader, getName());
+                    ((BundleManifest) getParent()).error(IMarker.SEVERITY_ERROR, message, getLineNumber() + 1);
+                    this.manifestElements = new BundleManifestHeaderElement[0];
+                }
+            } else {
+                this.manifestElements = new BundleManifestHeaderElement[0];
+            }
+        }
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("[")
-				.append(lineNumber)
-				.append("] ")
-				.append(getName())
-				.append(" <")
-				.append(lines)
-				.append("> :\n");
-		for (AbstractManifestElement element : getChildren()) {
-			builder.append("   ").append(element.toString());
-		}
-		return builder.toString();
-	}
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("[").append(this.lineNumber).append("] ").append(getName()).append(" <").append(this.lines).append("> :\n");
+        for (AbstractManifestElement element : getChildren()) {
+            builder.append("   ").append(element.toString());
+        }
+        return builder.toString();
+    }
 }

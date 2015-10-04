@@ -18,22 +18,22 @@ import org.eclipse.virgo.ide.runtime.core.artefacts.ILocalArtefact;
 
 public class ProjectBundleRoot extends JarPackageFragmentRoot implements IServerProjectArtefact {
 
-	private final ILocalArtefact artefact;
+    private final ILocalArtefact artefact;
 
-	private final ProjectBundleContainer container;
+    private final ProjectBundleContainer container;
 
-	//Override to allow constructor access for jar package
-	public ProjectBundleRoot(ProjectBundleContainer container, ILocalArtefact artefact) {
-		super(new Path(artefact.getFile().getAbsolutePath()), (JavaProject) container.getJavaProject());
-		this.container = container;
-		this.artefact = artefact;
-	}
+    // Override to allow constructor access for jar package
+    public ProjectBundleRoot(ProjectBundleContainer container, ILocalArtefact artefact) {
+        super(new Path(artefact.getFile().getAbsolutePath()), (JavaProject) container.getJavaProject());
+        this.container = container;
+        this.artefact = artefact;
+    }
 
-	public IServerProjectContainer getContainer() {
-		return container;
-	}
+    public IServerProjectContainer getContainer() {
+        return this.container;
+    }
 
-	public ILocalArtefact getArtefact() {
-		return artefact;
-	}
+    public ILocalArtefact getArtefact() {
+        return this.artefact;
+    }
 }

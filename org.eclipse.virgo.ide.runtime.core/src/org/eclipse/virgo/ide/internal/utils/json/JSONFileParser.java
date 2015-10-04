@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.internal.utils.json;
 
 import java.io.File;
@@ -24,36 +25,33 @@ import org.json.JSONTokener;
 
 /**
  * Safely reads a JSON file.
- * 
- * Usage: Just implement {@link #parse(JSONObject)} with the processing you need
- * and pass in a file.
- * 
+ *
+ * Usage: Just implement {@link #parse(JSONObject)} with the processing you need and pass in a file.
+ *
  * @author Miles Parker
- * 
+ *
  */
 public abstract class JSONFileParser implements SimpleJSONParser {
 
-	File file;
+    File file;
 
-	public JSONFileParser(File file) {
-		this.file = file;
-		// (perhaps we shouldn't do this as side effect of construction, but I'm
-		// growing tired of verbosity for its own sake.)
-		apply();
-	}
+    public JSONFileParser(File file) {
+        this.file = file;
+        // (perhaps we shouldn't do this as side effect of construction, but I'm
+        // growing tired of verbosity for its own sake.)
+        apply();
+    }
 
-	public void apply() {
-		try {
-			FileReader reader = new FileReader(file);
-			JSONTokener parser = new JSONTokener(reader);
-			JSONObject rootObject = new JSONObject(parser);
-			parse(rootObject);
-		} catch (FileNotFoundException e) {
-			StatusManager.getManager().handle(	new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID,
-													"Error while reading file: " + file, e));
-		} catch (JSONException e) {
-			StatusManager.getManager().handle(	new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID,
-													"Error while parsing file: " + file, e));
-		}
-	}
+    public void apply() {
+        try {
+            FileReader reader = new FileReader(this.file);
+            JSONTokener parser = new JSONTokener(reader);
+            JSONObject rootObject = new JSONObject(parser);
+            parse(rootObject);
+        } catch (FileNotFoundException e) {
+            StatusManager.getManager().handle(new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, "Error while reading file: " + this.file, e));
+        } catch (JSONException e) {
+            StatusManager.getManager().handle(new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, "Error while parsing file: " + this.file, e));
+        }
+    }
 }

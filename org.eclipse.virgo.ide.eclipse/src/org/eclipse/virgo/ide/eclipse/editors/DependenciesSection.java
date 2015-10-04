@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.eclipse.editors;
 
 import org.eclipse.jface.action.IMenuListener;
@@ -54,295 +55,298 @@ import org.eclipse.ui.forms.widgets.Section;
 @SuppressWarnings("restriction")
 public abstract class DependenciesSection extends SectionPart {
 
-	/**
-	 * @see TableSection
-	 */
-	class PartAdapter extends EditableTablePart {
-		private Label fCount;
+    /**
+     * @see TableSection
+     */
+    class PartAdapter extends EditableTablePart {
 
-		public PartAdapter(String[] buttonLabels) {
-			super(buttonLabels);
-		}
+        private Label fCount;
 
-		@Override
-		public void buttonSelected(Button button, int index) {
-			DependenciesSection.this.buttonSelected(index);
-			if (fHandleDefaultButton) {
-				button.getShell().setDefaultButton(null);
-			}
-		}
+        public PartAdapter(String[] buttonLabels) {
+            super(buttonLabels);
+        }
 
-		@Override
-		protected void createButtons(Composite parent, FormToolkit toolkit) {
-			super.createButtons(parent, toolkit);
-			enableButtons();
-			if (createCount()) {
-				Composite comp = toolkit.createComposite(fButtonContainer);
-				comp.setLayout(createButtonsLayout());
-				comp.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_END | GridData.FILL_BOTH));
-				fCount = toolkit.createLabel(comp, ""); //$NON-NLS-1$
-				fCount.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-				fCount.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-				getTablePart().getTableViewer().getTable().addPaintListener(new PaintListener() {
-					public void paintControl(PaintEvent e) {
-						updateLabel();
-					}
-				});
-			}
-		}
+        @Override
+        public void buttonSelected(Button button, int index) {
+            DependenciesSection.this.buttonSelected(index);
+            if (DependenciesSection.this.fHandleDefaultButton) {
+                button.getShell().setDefaultButton(null);
+            }
+        }
 
-		@Override
-		public void entryModified(Object entry, String value) {
-			DependenciesSection.this.entryModified(entry, value);
-		}
+        @Override
+        protected void createButtons(Composite parent, FormToolkit toolkit) {
+            super.createButtons(parent, toolkit);
+            enableButtons();
+            if (createCount()) {
+                Composite comp = toolkit.createComposite(this.fButtonContainer);
+                comp.setLayout(createButtonsLayout());
+                comp.setLayoutData(new GridData(GridData.VERTICAL_ALIGN_END | GridData.FILL_BOTH));
+                this.fCount = toolkit.createLabel(comp, ""); //$NON-NLS-1$
+                this.fCount.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+                this.fCount.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+                getTablePart().getTableViewer().getTable().addPaintListener(new PaintListener() {
 
-		@Override
-		public void handleDoubleClick(IStructuredSelection selection) {
-			DependenciesSection.this.handleDoubleClick(selection);
-		}
+                    public void paintControl(PaintEvent e) {
+                        updateLabel();
+                    }
+                });
+            }
+        }
 
-		@Override
-		public void selectionChanged(IStructuredSelection selection) {
-			getManagedForm().fireSelectionChanged(DependenciesSection.this, selection);
-			DependenciesSection.this.selectionChanged(selection);
-		}
+        @Override
+        public void entryModified(Object entry, String value) {
+            DependenciesSection.this.entryModified(entry, value);
+        }
 
-		protected void updateLabel() {
-			if (fCount != null && !fCount.isDisposed()) {
-				fCount.setText(NLS.bind(PDEUIMessages.TableSection_itemCount,
-						Integer.toString(getTableViewer().getTable().getItemCount())));
-			}
-		}
-	}
+        @Override
+        public void handleDoubleClick(IStructuredSelection selection) {
+            DependenciesSection.this.handleDoubleClick(selection);
+        }
 
-	// RequiresSection
-	private static final int ADD_INDEX = 0;
+        @Override
+        public void selectionChanged(IStructuredSelection selection) {
+            getManagedForm().fireSelectionChanged(DependenciesSection.this, selection);
+            DependenciesSection.this.selectionChanged(selection);
+        }
 
-	private static final int REMOVE_INDEX = 1;
+        protected void updateLabel() {
+            if (this.fCount != null && !this.fCount.isDisposed()) {
+                this.fCount.setText(NLS.bind(PDEUIMessages.TableSection_itemCount, Integer.toString(getTableViewer().getTable().getItemCount())));
+            }
+        }
+    }
 
-	private static final int UP_INDEX = 2;
+    // RequiresSection
+    private static final int ADD_INDEX = 0;
 
-	private static final int DOWN_INDEX = 3;
+    private static final int REMOVE_INDEX = 1;
 
-	private static final int PROPERTIES_INDEX = 4;
+    private static final int UP_INDEX = 2;
 
-	private TableViewer fImportViewer;
+    private static final int DOWN_INDEX = 3;
 
-	// TableSection
-	protected boolean fHandleDefaultButton = true;
+    private static final int PROPERTIES_INDEX = 4;
 
-	// StructuredViewerSection
-	private final StructuredViewerPart fViewerPart;
+    private TableViewer fImportViewer;
 
-	public DependenciesSection(FormPage page, Composite parent, String[] buttonLabels) {
-		super(parent, page.getManagedForm().getToolkit(), Section.DESCRIPTION | ExpandableComposite.TITLE_BAR);
+    // TableSection
+    protected boolean fHandleDefaultButton = true;
 
-		// PDESection
-		initialize(page.getManagedForm());
-		getSection().clientVerticalSpacing = FormLayoutFactory.SECTION_HEADER_VERTICAL_SPACING;
-		getSection().setData("part", this); //$NON-NLS-1$
+    // StructuredViewerSection
+    private final StructuredViewerPart fViewerPart;
 
-		// StructuredViewerSection
-		fViewerPart = createViewerPart(buttonLabels);
-		fViewerPart.setMinimumSize(50, 50);
-		createClient(getSection(), page.getManagedForm().getToolkit());
+    public DependenciesSection(FormPage page, Composite parent, String[] buttonLabels) {
+        super(parent, page.getManagedForm().getToolkit(), Section.DESCRIPTION | ExpandableComposite.TITLE_BAR);
 
-		// RequiresSection
-		getSection().setText(PDEUIMessages.RequiresSection_title);
-		getTablePart().setEditable(false);
-	}
+        // PDESection
+        initialize(page.getManagedForm());
+        getSection().clientVerticalSpacing = FormLayoutFactory.SECTION_HEADER_VERTICAL_SPACING;
+        getSection().setData("part", this); //$NON-NLS-1$
 
-	/**
-	 * @see RequiresSection
-	 */
-	private void buttonSelected(int index) {
-		switch (index) {
-		case ADD_INDEX:
-			handleAdd();
-			break;
-		case REMOVE_INDEX:
-			handleRemove();
-			break;
-		case UP_INDEX:
-			handleUp();
-			break;
-		case DOWN_INDEX:
-			handleDown();
-			break;
-		case PROPERTIES_INDEX:
-			handleOpenProperties();
-			break;
-		}
-	}
+        // StructuredViewerSection
+        this.fViewerPart = createViewerPart(buttonLabels);
+        this.fViewerPart.setMinimumSize(50, 50);
+        createClient(getSection(), page.getManagedForm().getToolkit());
 
-	/**
-	 * @see RequiresSection
-	 */
-	private void createClient(Section section, FormToolkit toolkit) {
-		Composite container = createClientContainer(section, 2, toolkit);
-		createViewerPartControl(container, SWT.MULTI, 2, toolkit);
-		TablePart tablePart = getTablePart();
-		fImportViewer = tablePart.getTableViewer();
+        // RequiresSection
+        getSection().setText(PDEUIMessages.RequiresSection_title);
+        getTablePart().setEditable(false);
+    }
 
-		toolkit.paintBordersFor(container);
-		// makeActions();
-		section.setClient(container);
-		GridData gd = new GridData(GridData.FILL_BOTH);
-		gd.minimumWidth = 250;
-		gd.grabExcessVerticalSpace = true;
-		section.setLayout(FormLayoutFactory.createClearGridLayout(false, 1));
-		section.setLayoutData(gd);
-		section.setText(PDEUIMessages.RequiresSection_title);
-		createSectionToolbar(section, toolkit);
-		enableButtons();
-	}
+    /**
+     * @see RequiresSection
+     */
+    private void buttonSelected(int index) {
+        switch (index) {
+            case ADD_INDEX:
+                handleAdd();
+                break;
+            case REMOVE_INDEX:
+                handleRemove();
+                break;
+            case UP_INDEX:
+                handleUp();
+                break;
+            case DOWN_INDEX:
+                handleDown();
+                break;
+            case PROPERTIES_INDEX:
+                handleOpenProperties();
+                break;
+        }
+    }
 
-	/**
-	 * @see StructuredViewerSection
-	 */
-	private Composite createClientContainer(Composite parent, int span, FormToolkit toolkit) {
-		Composite container = toolkit.createComposite(parent);
-		container.setLayout(FormLayoutFactory.createSectionClientGridLayout(false, span));
-		return container;
-	}
+    /**
+     * @see RequiresSection
+     */
+    private void createClient(Section section, FormToolkit toolkit) {
+        Composite container = createClientContainer(section, 2, toolkit);
+        createViewerPartControl(container, SWT.MULTI, 2, toolkit);
+        TablePart tablePart = getTablePart();
+        this.fImportViewer = tablePart.getTableViewer();
 
-	/**
-	 * @see RequiresSection
-	 */
-	private boolean createCount() {
-		return true;
-	}
+        toolkit.paintBordersFor(container);
+        // makeActions();
+        section.setClient(container);
+        GridData gd = new GridData(GridData.FILL_BOTH);
+        gd.minimumWidth = 250;
+        gd.grabExcessVerticalSpace = true;
+        section.setLayout(FormLayoutFactory.createClearGridLayout(false, 1));
+        section.setLayoutData(gd);
+        section.setText(PDEUIMessages.RequiresSection_title);
+        createSectionToolbar(section, toolkit);
+        enableButtons();
+    }
 
-	/**
-	 * @see RequiresSection
-	 */
-	private void createSectionToolbar(Section section, FormToolkit toolkit) {
-		ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
-		ToolBar toolbar = toolBarManager.createControl(section);
-		final Cursor handCursor = new Cursor(Display.getCurrent(), SWT.CURSOR_HAND);
-		toolbar.setCursor(handCursor);
-		// Cursor needs to be explicitly disposed
-		toolbar.addDisposeListener(new DisposeListener() {
-			public void widgetDisposed(DisposeEvent e) {
-				if ((handCursor != null) && (handCursor.isDisposed() == false)) {
-					handCursor.dispose();
-				}
-			}
-		});
+    /**
+     * @see StructuredViewerSection
+     */
+    private Composite createClientContainer(Composite parent, int span, FormToolkit toolkit) {
+        Composite container = toolkit.createComposite(parent);
+        container.setLayout(FormLayoutFactory.createSectionClientGridLayout(false, span));
+        return container;
+    }
 
-		// Add sort action to the tool bar
-		// fSortAction = new SortAction(fImportViewer,
-		// PDEUIMessages.RequiresSection_sortAlpha, null, null, this);
-		// toolBarManager.add(fSortAction);
+    /**
+     * @see RequiresSection
+     */
+    private boolean createCount() {
+        return true;
+    }
 
-		toolBarManager.update(true);
-		section.setTextClient(toolbar);
-	}
+    /**
+     * @see RequiresSection
+     */
+    private void createSectionToolbar(Section section, FormToolkit toolkit) {
+        ToolBarManager toolBarManager = new ToolBarManager(SWT.FLAT);
+        ToolBar toolbar = toolBarManager.createControl(section);
+        final Cursor handCursor = new Cursor(Display.getCurrent(), SWT.CURSOR_HAND);
+        toolbar.setCursor(handCursor);
+        // Cursor needs to be explicitly disposed
+        toolbar.addDisposeListener(new DisposeListener() {
 
-	/**
-	 * @see TableSection
-	 */
-	private StructuredViewerPart createViewerPart(String[] buttonLabels) {
-		return new PartAdapter(buttonLabels);
-	}
+            public void widgetDisposed(DisposeEvent e) {
+                if (handCursor != null && handCursor.isDisposed() == false) {
+                    handCursor.dispose();
+                }
+            }
+        });
 
-	/**
-	 * @see StructuredViewerSection
-	 */
-	private void createViewerPartControl(Composite parent, int style, int span, FormToolkit toolkit) {
-		fViewerPart.createControl(parent, style, span, toolkit);
-		MenuManager popupMenuManager = new MenuManager();
-		IMenuListener listener = new IMenuListener() {
-			public void menuAboutToShow(IMenuManager mng) {
-				// fillContextMenu(mng);
-			}
-		};
-		popupMenuManager.addMenuListener(listener);
-		popupMenuManager.setRemoveAllWhenShown(true);
-		Control control = fViewerPart.getControl();
-		Menu menu = popupMenuManager.createContextMenu(control);
-		control.setMenu(menu);
-	}
+        // Add sort action to the tool bar
+        // fSortAction = new SortAction(fImportViewer,
+        // PDEUIMessages.RequiresSection_sortAlpha, null, null, this);
+        // toolBarManager.add(fSortAction);
 
-	/**
-	 * @see TableSection
-	 */
-	protected abstract void enableButtons();
+        toolBarManager.update(true);
+        section.setTextClient(toolbar);
+    }
 
-	/**
-	 * @see TableSection
-	 */
-	protected abstract void entryModified(Object entry, String value);
+    /**
+     * @see TableSection
+     */
+    private StructuredViewerPart createViewerPart(String[] buttonLabels) {
+        return new PartAdapter(buttonLabels);
+    }
 
-	protected int getAddIndex() {
-		return ADD_INDEX;
-	}
+    /**
+     * @see StructuredViewerSection
+     */
+    private void createViewerPartControl(Composite parent, int style, int span, FormToolkit toolkit) {
+        this.fViewerPart.createControl(parent, style, span, toolkit);
+        MenuManager popupMenuManager = new MenuManager();
+        IMenuListener listener = new IMenuListener() {
 
-	protected int getDownIndex() {
-		return DOWN_INDEX;
-	}
+            public void menuAboutToShow(IMenuManager mng) {
+                // fillContextMenu(mng);
+            }
+        };
+        popupMenuManager.addMenuListener(listener);
+        popupMenuManager.setRemoveAllWhenShown(true);
+        Control control = this.fViewerPart.getControl();
+        Menu menu = popupMenuManager.createContextMenu(control);
+        control.setMenu(menu);
+    }
 
-	protected int getPropertiesIndex() {
-		return PROPERTIES_INDEX;
-	}
+    /**
+     * @see TableSection
+     */
+    protected abstract void enableButtons();
 
-	protected int getRemoveIndex() {
-		return REMOVE_INDEX;
-	}
+    /**
+     * @see TableSection
+     */
+    protected abstract void entryModified(Object entry, String value);
 
-	/**
-	 * @see TableSection
-	 */
-	protected EditableTablePart getTablePart() {
-		return (EditableTablePart) fViewerPart;
-	}
+    protected int getAddIndex() {
+        return ADD_INDEX;
+    }
 
-	protected TableViewer getTableViewer() {
-		return fImportViewer;
-	}
+    protected int getDownIndex() {
+        return DOWN_INDEX;
+    }
 
-	protected int getUpIndex() {
-		return UP_INDEX;
-	}
+    protected int getPropertiesIndex() {
+        return PROPERTIES_INDEX;
+    }
 
-	/**
-	 * @see RequiresSection
-	 */
-	protected abstract void handleAdd();
+    protected int getRemoveIndex() {
+        return REMOVE_INDEX;
+    }
 
-	/**
-	 * @see TableSection
-	 */
-	protected abstract void handleDoubleClick(IStructuredSelection selection);
+    /**
+     * @see TableSection
+     */
+    protected EditableTablePart getTablePart() {
+        return (EditableTablePart) this.fViewerPart;
+    }
 
-	/**
-	 * @see RequiresSection
-	 */
-	protected abstract void handleDown();
+    protected TableViewer getTableViewer() {
+        return this.fImportViewer;
+    }
 
-	/**
-	 * @see RequiresSection
-	 */
-	protected abstract void handleOpenProperties();
+    protected int getUpIndex() {
+        return UP_INDEX;
+    }
 
-	/**
-	 * @see RequiresSection
-	 */
-	protected abstract void handleRemove();
+    /**
+     * @see RequiresSection
+     */
+    protected abstract void handleAdd();
 
-	/**
-	 * @see RequiresSection
-	 */
-	protected abstract void handleUp();
+    /**
+     * @see TableSection
+     */
+    protected abstract void handleDoubleClick(IStructuredSelection selection);
 
-	/**
-	 * @see RequiresSection
-	 */
-	protected abstract void initialize();
+    /**
+     * @see RequiresSection
+     */
+    protected abstract void handleDown();
 
-	/**
-	 * @see TableSection
-	 */
-	protected abstract void selectionChanged(IStructuredSelection selection);
+    /**
+     * @see RequiresSection
+     */
+    protected abstract void handleOpenProperties();
+
+    /**
+     * @see RequiresSection
+     */
+    protected abstract void handleRemove();
+
+    /**
+     * @see RequiresSection
+     */
+    protected abstract void handleUp();
+
+    /**
+     * @see RequiresSection
+     */
+    protected abstract void initialize();
+
+    /**
+     * @see TableSection
+     */
+    protected abstract void selectionChanged(IStructuredSelection selection);
 
 }

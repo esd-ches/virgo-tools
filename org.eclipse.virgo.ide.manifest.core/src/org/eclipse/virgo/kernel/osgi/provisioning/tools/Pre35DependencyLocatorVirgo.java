@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.kernel.osgi.provisioning.tools;
 
 import java.io.File;
@@ -27,36 +28,35 @@ import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
  */
 public class Pre35DependencyLocatorVirgo implements IDependencyLocator {
 
-	private final Pre35DependencyLocator dependencyLocator;
+    private final Pre35DependencyLocator dependencyLocator;
 
-	public Pre35DependencyLocatorVirgo(String serverHomePath, String[] additionalSearchPaths,
-			String indexDirectoryPath, JavaVersion javaVersion) throws IOException {
-		// Some platform dependent string matching
-		if (Platform.getOS().equals(Platform.OS_WIN32)) {
-			serverHomePath = serverHomePath.replace('/', '\\');
-			indexDirectoryPath = indexDirectoryPath.replace('/', '\\');
-			for (int i = 0; i < additionalSearchPaths.length; i++) {
-				additionalSearchPaths[i] = additionalSearchPaths[i].replace('/', '\\');
-			}
-		}
-		dependencyLocator = new Pre35DependencyLocator(serverHomePath, additionalSearchPaths, indexDirectoryPath,
-				new NoOpEventLogger());
-	}
+    public Pre35DependencyLocatorVirgo(String serverHomePath, String[] additionalSearchPaths, String indexDirectoryPath, JavaVersion javaVersion)
+        throws IOException {
+        // Some platform dependent string matching
+        if (Platform.getOS().equals(Platform.OS_WIN32)) {
+            serverHomePath = serverHomePath.replace('/', '\\');
+            indexDirectoryPath = indexDirectoryPath.replace('/', '\\');
+            for (int i = 0; i < additionalSearchPaths.length; i++) {
+                additionalSearchPaths[i] = additionalSearchPaths[i].replace('/', '\\');
+            }
+        }
+        this.dependencyLocator = new Pre35DependencyLocator(serverHomePath, additionalSearchPaths, indexDirectoryPath, new NoOpEventLogger());
+    }
 
-	public Map<File, List<String>> locateDependencies(BundleManifest manifest) throws DependencyLocationException {
-		return dependencyLocator.locateDependencies(manifest);
-	}
+    public Map<File, List<String>> locateDependencies(BundleManifest manifest) throws DependencyLocationException {
+        return this.dependencyLocator.locateDependencies(manifest);
+    }
 
-	public Set<? extends BundleDefinition> getBundles() {
-		return dependencyLocator.getBundles();
-	}
+    public Set<? extends BundleDefinition> getBundles() {
+        return this.dependencyLocator.getBundles();
+    }
 
-	public Set<? extends LibraryDefinition> getLibraries() {
-		return dependencyLocator.getLibraries();
-	}
+    public Set<? extends LibraryDefinition> getLibraries() {
+        return this.dependencyLocator.getLibraries();
+    }
 
-	public void shutdown() {
-		dependencyLocator.shutdown();
-	}
+    public void shutdown() {
+        this.dependencyLocator.shutdown();
+    }
 
 }

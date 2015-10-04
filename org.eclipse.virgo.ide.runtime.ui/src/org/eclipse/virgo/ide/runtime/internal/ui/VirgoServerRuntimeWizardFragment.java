@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.ui;
 
 import org.eclipse.core.runtime.IPath;
@@ -25,47 +26,46 @@ import org.eclipse.wst.server.ui.wizard.WizardFragment;
  */
 public class VirgoServerRuntimeWizardFragment extends WizardFragment {
 
-	protected ServerRuntimeComposite comp;
+    protected ServerRuntimeComposite comp;
 
-	@Override
-	public boolean hasComposite() {
-		return true;
-	}
+    @Override
+    public boolean hasComposite() {
+        return true;
+    }
 
-	@Override
-	public boolean isComplete() {
-		IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
+    @Override
+    public boolean isComplete() {
+        IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
 
-		if (runtime == null) {
-			return false;
-		}
-		IStatus status = runtime.validate(null);
-		return (status == null || status.getSeverity() != IStatus.ERROR);
-	}
+        if (runtime == null) {
+            return false;
+        }
+        IStatus status = runtime.validate(null);
+        return status == null || status.getSeverity() != IStatus.ERROR;
+    }
 
-	@Override
-	public Composite createComposite(Composite parent, IWizardHandle wizard) {
-		String wizardTitle = ServerUiPlugin.getResourceString("virgoWizardTitle");
-		String wizardDescription = ServerUiPlugin.getResourceString("virgoWizardDescription");
-		comp = new ServerRuntimeComposite(parent, wizard, wizardTitle, wizardDescription,
-				ServerUiImages.DESC_WIZB_VIRGO_SERVER);
-		return comp;
-	}
+    @Override
+    public Composite createComposite(Composite parent, IWizardHandle wizard) {
+        String wizardTitle = ServerUiPlugin.getResourceString("virgoWizardTitle");
+        String wizardDescription = ServerUiPlugin.getResourceString("virgoWizardDescription");
+        this.comp = new ServerRuntimeComposite(parent, wizard, wizardTitle, wizardDescription, ServerUiImages.DESC_WIZB_VIRGO_SERVER);
+        return this.comp;
+    }
 
-	@Override
-	public void enter() {
-		if (comp != null) {
-			IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
-			comp.setRuntime(runtime);
-		}
-	}
+    @Override
+    public void enter() {
+        if (this.comp != null) {
+            IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
+            this.comp.setRuntime(runtime);
+        }
+    }
 
-	@Override
-	public void exit() {
-		IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
-		IPath path = runtime.getLocation();
-		if (runtime.validate(null).getSeverity() != IStatus.ERROR) {
-			ServerCorePlugin.setPreference("location" + runtime.getRuntimeType().getId(), path.toString());
-		}
-	}
+    @Override
+    public void exit() {
+        IRuntimeWorkingCopy runtime = (IRuntimeWorkingCopy) getTaskModel().getObject(TaskModel.TASK_RUNTIME);
+        IPath path = runtime.getLocation();
+        if (runtime.validate(null).getSeverity() != IStatus.ERROR) {
+            ServerCorePlugin.setPreference("location" + runtime.getRuntimeType().getId(), path.toString());
+        }
+    }
 }

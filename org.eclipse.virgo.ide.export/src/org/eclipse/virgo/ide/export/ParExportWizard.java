@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.export;
 
 import java.util.ArrayList;
@@ -26,7 +27,6 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
@@ -55,175 +55,168 @@ import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 
 /**
  * Export wizard for exporting par project
- * 
+ *
  * @author Christian Dupuis
  * @author Terry Hon
  */
 public class ParExportWizard extends Wizard implements IExportWizard {
 
-	private ParExportWizardPage wizardPage;
+    private ParExportWizardPage wizardPage;
 
-	private IStructuredSelection selection;
+    private IStructuredSelection selection;
 
-	private static final String TITLE = "Par Export Wizard";
+    private static final String TITLE = "Par Export Wizard";
 
-	private static final String PAR_FILE_NAME = ".settings/org.eclipse.virgo.ide.runtime.core.par.xml";
+    private static final String PAR_FILE_NAME = ".settings/org.eclipse.virgo.ide.runtime.core.par.xml";
 
-	@Override
-	public void addPages() {
-		wizardPage = new ParExportWizardPage(selection);
-		addPage(wizardPage);
-	}
+    @Override
+    public void addPages() {
+        this.wizardPage = new ParExportWizardPage(this.selection);
+        addPage(this.wizardPage);
+    }
 
-	@Override
-	public boolean performFinish() {
-		IProject project = wizardPage.getSelectedProject();
-		IPath jarLocation = wizardPage.getJarLocation();
+    @Override
+    public boolean performFinish() {
+        IProject project = this.wizardPage.getSelectedProject();
+        IPath jarLocation = this.wizardPage.getJarLocation();
 
-		if (jarLocation.toFile().exists() && !wizardPage.getOverwrite()) {
-			boolean overwrite = MessageDialog.openQuestion(getShell(), "Overwrite File",
-					"The file " + jarLocation.toOSString()
-							+ " already exists. Do you want to overwrite the existing file?");
-			if (!overwrite) {
-				return false;
-			}
-		}
+        if (jarLocation.toFile().exists() && !this.wizardPage.getOverwrite()) {
+            boolean overwrite = MessageDialog.openQuestion(getShell(), "Overwrite File",
+                "The file " + jarLocation.toOSString() + " already exists. Do you want to overwrite the existing file?");
+            if (!overwrite) {
+                return false;
+            }
+        }
 
-		return exportPar(project, jarLocation, getContainer(), getShell());
-	}
+        return exportPar(project, jarLocation, getContainer(), getShell());
+    }
 
-	// public for testing
-	static public boolean exportPar(IProject project, IPath parLocation, IRunnableContext context, Shell shell) {
-		IFile parFile = project.getFile(PAR_FILE_NAME);
-		IFolder settingsFolder = project.getFolder(".settings");
-		IPath settingsPath = settingsFolder.getLocation();
+    // public for testing
+    static public boolean exportPar(IProject project, IPath parLocation, IRunnableContext context, Shell shell) {
+        IFile parFile = project.getFile(PAR_FILE_NAME);
+        IFolder settingsFolder = project.getFolder(".settings");
+        IPath settingsPath = settingsFolder.getLocation();
 
-		List<IStatus> warnings = new ArrayList<IStatus>();
+        List<IStatus> warnings = new ArrayList<IStatus>();
 
-		URI fileURI = URI.createPlatformResourceURI(parFile.getFullPath().toString(), true);
-		ResourceSet resourceSet = new ResourceSetImpl();
-		Resource resource = resourceSet.getResource(fileURI, true);
-		EList<EObject> contents = resource.getContents();
-		Set<IResource> parElements = new HashSet<IResource>();
-		for (EObject content : contents) {
-			if (content instanceof Par) {
-				Par par = (Par) content;
-				EList<Bundle> bundles = par.getBundle();
-				for (Bundle bundle : bundles) {
-					String bundleName = bundle.getSymbolicName();
-					IProject bundleProject = ResourcesPlugin.getWorkspace().getRoot().getProject(bundleName);
-					BundleManifest manifest = BundleManifestCorePlugin.getBundleManifestManager().getBundleManifest(
-							JavaCore.create(bundleProject));
-					String jarName = null;
-					if (manifest != null && manifest.getBundleVersion() != null
-							&& manifest.getBundleSymbolicName() != null) {
-						String version = manifest.getBundleVersion().toString();
-						String name = (manifest.getBundleSymbolicName() != null
-								&& manifest.getBundleSymbolicName().getSymbolicName() != null
-								? manifest.getBundleSymbolicName().getSymbolicName()
-								: bundleProject.getName());
-						jarName = name + "-" + version;
-					} else {
-						jarName = bundleProject.getProject().toString();
-					}
+        URI fileURI = URI.createPlatformResourceURI(parFile.getFullPath().toString(), true);
+        ResourceSet resourceSet = new ResourceSetImpl();
+        Resource resource = resourceSet.getResource(fileURI, true);
+        EList<EObject> contents = resource.getContents();
+        Set<IResource> parElements = new HashSet<IResource>();
+        for (EObject content : contents) {
+            if (content instanceof Par) {
+                Par par = (Par) content;
+                EList<Bundle> bundles = par.getBundle();
+                for (Bundle bundle : bundles) {
+                    String bundleName = bundle.getSymbolicName();
+                    IProject bundleProject = ResourcesPlugin.getWorkspace().getRoot().getProject(bundleName);
+                    BundleManifest manifest = BundleManifestCorePlugin.getBundleManifestManager().getBundleManifest(JavaCore.create(bundleProject));
+                    String jarName = null;
+                    if (manifest != null && manifest.getBundleVersion() != null && manifest.getBundleSymbolicName() != null) {
+                        String version = manifest.getBundleVersion().toString();
+                        String name = manifest.getBundleSymbolicName() != null && manifest.getBundleSymbolicName().getSymbolicName() != null
+                            ? manifest.getBundleSymbolicName().getSymbolicName() : bundleProject.getName();
+                        jarName = name + "-" + version;
+                    } else {
+                        jarName = bundleProject.getProject().toString();
+                    }
 
-					// Support for nested wars
-					if (FacetUtils.hasProjectFacet(bundleProject, FacetCorePlugin.WEB_FACET_ID)) {
-						jarName = jarName + ".war";
-						if (BundleExportUtils.executeWarExportOperation(bundleProject, jarName, settingsFolder)) {
-							IResource bundleJar = settingsFolder.getFile(jarName);
-							if (bundleJar.exists()) {
-								parElements.add(bundleJar);
-							}
-						}
-					} else {
-						IJavaProject javaBundleProject = JavaCore.create(bundleProject);
-						jarName = jarName + ".jar";
-						IPath jarPath = settingsPath.append(jarName);
+                    // Support for nested wars
+                    if (FacetUtils.hasProjectFacet(bundleProject, FacetCorePlugin.WEB_FACET_ID)) {
+                        jarName = jarName + ".war";
+                        if (BundleExportUtils.executeWarExportOperation(bundleProject, jarName, settingsFolder)) {
+                            IResource bundleJar = settingsFolder.getFile(jarName);
+                            if (bundleJar.exists()) {
+                                parElements.add(bundleJar);
+                            }
+                        }
+                    } else {
+                        IJavaProject javaBundleProject = JavaCore.create(bundleProject);
+                        jarName = jarName + ".jar";
+                        IPath jarPath = settingsPath.append(jarName);
 
-						IJarExportRunnable op = BundleExportUtils.createExportOperation(javaBundleProject, jarPath,
-								shell, warnings);
-						if (BundleExportUtils.executeExportOperation(op, false, context, shell, warnings)) {
-							IResource bundleJar = settingsFolder.getFile(jarName);
-							parElements.add(bundleJar);
-						}
-					}
-				}
-			}
-		}
+                        IJarExportRunnable op = BundleExportUtils.createExportOperation(javaBundleProject, jarPath, shell, warnings);
+                        if (BundleExportUtils.executeExportOperation(op, false, context, shell, warnings)) {
+                            IResource bundleJar = settingsFolder.getFile(jarName);
+                            parElements.add(bundleJar);
+                        }
+                    }
+                }
+            }
+        }
 
-		Set<IResource> jarElements = new HashSet<IResource>();
-		jarElements.addAll(parElements);
-		try {
-			IResource[] rootMembers = project.members();
-			for (IResource rootMember : rootMembers) {
-				String fileExtension = rootMember.getFileExtension();
-				if (fileExtension != null && fileExtension.equals("jar")) {
-					jarElements.add(rootMember);
-				}
-			}
-		} catch (CoreException e1) {
-		}
+        Set<IResource> jarElements = new HashSet<IResource>();
+        jarElements.addAll(parElements);
+        try {
+            IResource[] rootMembers = project.members();
+            for (IResource rootMember : rootMembers) {
+                String fileExtension = rootMember.getFileExtension();
+                if (fileExtension != null && fileExtension.equals("jar")) {
+                    jarElements.add(rootMember);
+                }
+            }
+        } catch (CoreException e1) {
+        }
 
-		JarPackageData parPackage = new JarPackageData();
-		parPackage.setJarLocation(parLocation);
-		parPackage.setExportClassFiles(true);
-		parPackage.setExportOutputFolders(false);
-		parPackage.setExportJavaFiles(false);
-		parPackage.setElements(jarElements.toArray());
-		parPackage.setOverwrite(true);
+        JarPackageData parPackage = new JarPackageData();
+        parPackage.setJarLocation(parLocation);
+        parPackage.setExportClassFiles(true);
+        parPackage.setExportOutputFolders(false);
+        parPackage.setExportJavaFiles(false);
+        parPackage.setElements(jarElements.toArray());
+        parPackage.setOverwrite(true);
 
-		IPath manifestPath = locateManifestFile(project);
-		if (manifestPath != null) {
-			parPackage.setGenerateManifest(false);
-			parPackage.setManifestLocation(manifestPath);
-		} else {
-			parPackage.setGenerateManifest(true);
-		}
+        IPath manifestPath = locateManifestFile(project);
+        if (manifestPath != null) {
+            parPackage.setGenerateManifest(false);
+            parPackage.setManifestLocation(manifestPath);
+        } else {
+            parPackage.setGenerateManifest(true);
+        }
 
-		IJarBuilder builder = parPackage.getJarBuilder();
-		try {
-			builder.open(parPackage, shell, null);
-			for (IResource elem : jarElements) {
-				if (elem instanceof IFile) {
-					try {
-						builder.writeFile((IFile) elem, new Path(elem.getName()));
-					} catch (CoreException e) {
-					}
-				}
-			}
-			builder.close();
-		} catch (CoreException e1) {
-		}
+        IJarBuilder builder = parPackage.getJarBuilder();
+        try {
+            builder.open(parPackage, shell, null);
+            for (IResource elem : jarElements) {
+                if (elem instanceof IFile) {
+                    try {
+                        builder.writeFile((IFile) elem, new Path(elem.getName()));
+                    } catch (CoreException e) {
+                    }
+                }
+            }
+            builder.close();
+        } catch (CoreException e1) {
+        }
 
-		for (IResource parElement : parElements) {
-			try {
-				parElement.delete(true, new NullProgressMonitor());
-			} catch (CoreException e) {
-			}
-		}
+        for (IResource parElement : parElements) {
+            try {
+                parElement.delete(true, new NullProgressMonitor());
+            } catch (CoreException e) {
+            }
+        }
 
-		if (warnings.size() > 0) {
-			ErrorDialog.openError(shell, "PAR export warnings", null, new MultiStatus(ServerExportPlugin.PLUGIN_ID,
-					Status.WARNING, warnings.toArray(new IStatus[0]),
-					"There were warnings while export the PAR project. Click Details to see more...", null));
-		}
-		return true;
-	}
+        if (warnings.size() > 0) {
+            ErrorDialog.openError(shell, "PAR export warnings", null, new MultiStatus(ServerExportPlugin.PLUGIN_ID, IStatus.WARNING,
+                warnings.toArray(new IStatus[0]), "There were warnings while export the PAR project. Click Details to see more...", null));
+        }
+        return true;
+    }
 
-	private static IPath locateManifestFile(IProject project) {
-		Path path = new Path("META-INF/MANIFEST.MF");
-		IResource manifestFile = project.findMember(path);
-		if (manifestFile != null) {
-			return new Path(project.getName()).append(path);
-		}
-		return null;
-	}
+    private static IPath locateManifestFile(IProject project) {
+        Path path = new Path("META-INF/MANIFEST.MF");
+        IResource manifestFile = project.findMember(path);
+        if (manifestFile != null) {
+            return new Path(project.getName()).append(path);
+        }
+        return null;
+    }
 
-	public void init(IWorkbench workbench, IStructuredSelection selection) {
-		this.selection = selection;
-		setWindowTitle(TITLE);
-		setDefaultPageImageDescriptor(ServerExportPlugin.getImageDescriptor("full/wizban/wizban-par.png"));
-	}
+    public void init(IWorkbench workbench, IStructuredSelection selection) {
+        this.selection = selection;
+        setWindowTitle(TITLE);
+        setDefaultPageImageDescriptor(ServerExportPlugin.getImageDescriptor("full/wizban/wizban-par.png"));
+    }
 
 }

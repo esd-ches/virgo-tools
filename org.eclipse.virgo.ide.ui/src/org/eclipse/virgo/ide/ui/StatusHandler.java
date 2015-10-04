@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui;
 
 import org.eclipse.core.runtime.IStatus;
@@ -17,8 +18,8 @@ import org.eclipse.core.runtime.IStatus;
  */
 public class StatusHandler {
 
-	public static void log(IStatus status) {
-		ServerIdeUiPlugin.getDefault().getLog().log(status);
-	}
+    public static void log(IStatus status) {
+        ServerIdeUiPlugin.getDefault().getLog().log(status);
+    }
 
 }

@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.bundlor.ui.internal.properties;
 
 import org.eclipse.jface.dialogs.Dialog;
@@ -27,62 +28,59 @@ import org.eclipse.swt.widgets.Text;
  */
 public class BundlorPropertiesPathDialog extends Dialog {
 
-	private String propertiesPath;
+    private String propertiesPath;
 
-	public BundlorPropertiesPathDialog(Shell parentShell) {
-		super(parentShell);
-	}
+    public BundlorPropertiesPathDialog(Shell parentShell) {
+        super(parentShell);
+    }
 
-	@Override
-	protected Control createButtonBar(Composite parent) {
-		Control buttonBar = super.createButtonBar(parent);
-		getButton(OK).setEnabled(false);
-		return buttonBar;
-	}
+    @Override
+    protected Control createButtonBar(Composite parent) {
+        Control buttonBar = super.createButtonBar(parent);
+        getButton(OK).setEnabled(false);
+        return buttonBar;
+    }
 
-	@Override
-	protected Control createDialogArea(Composite parent) {
-		getShell().setText("Add properties file");
-		Composite control = (Composite) super.createDialogArea(parent);
+    @Override
+    protected Control createDialogArea(Composite parent) {
+        getShell().setText("Add properties file");
+        Composite control = (Composite) super.createDialogArea(parent);
 
-		Composite composite = new Composite(control, SWT.NONE);
-		GridDataFactory.fillDefaults().applyTo(composite);
-		GridLayoutFactory.fillDefaults().numColumns(2).applyTo(composite);
+        Composite composite = new Composite(control, SWT.NONE);
+        GridDataFactory.fillDefaults().applyTo(composite);
+        GridLayoutFactory.fillDefaults().numColumns(2).applyTo(composite);
 
-		Label description = new Label(composite, SWT.NONE);
-		description.setText("Enter the path to a properties file that should be used for variable substitution.");
-		GridDataFactory.fillDefaults().span(2, 1).applyTo(description);
+        Label description = new Label(composite, SWT.NONE);
+        description.setText("Enter the path to a properties file that should be used for variable substitution.");
+        GridDataFactory.fillDefaults().span(2, 1).applyTo(description);
 
-		Label pathLabel = new Label(composite, SWT.NONE);
-		pathLabel.setText("Path:");
-		GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).applyTo(pathLabel);
+        Label pathLabel = new Label(composite, SWT.NONE);
+        pathLabel.setText("Path:");
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).applyTo(pathLabel);
 
-		final Text pathText = new Text(composite, SWT.BORDER);
-		GridDataFactory.fillDefaults()
-				.align(SWT.FILL, SWT.CENTER)
-				.grab(true, false)
-				.hint(350, SWT.DEFAULT)
-				.applyTo(pathText);
-		pathText.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				propertiesPath = pathText.getText();
-				update();
-			}
-		});
+        final Text pathText = new Text(composite, SWT.BORDER);
+        GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).hint(350, SWT.DEFAULT).applyTo(pathText);
+        pathText.addModifyListener(new ModifyListener() {
 
-		return control;
-	}
+            public void modifyText(ModifyEvent e) {
+                BundlorPropertiesPathDialog.this.propertiesPath = pathText.getText();
+                update();
+            }
+        });
 
-	public String getPropertiesPath() {
-		return propertiesPath;
-	}
+        return control;
+    }
 
-	private void update() {
-		if (propertiesPath == null || propertiesPath.length() == 0) {
-			getButton(OK).setEnabled(false);
-		} else {
-			getButton(OK).setEnabled(true);
-		}
-	}
+    public String getPropertiesPath() {
+        return this.propertiesPath;
+    }
+
+    private void update() {
+        if (this.propertiesPath == null || this.propertiesPath.length() == 0) {
+            getButton(OK).setEnabled(false);
+        } else {
+            getButton(OK).setEnabled(true);
+        }
+    }
 
 }

@@ -9,6 +9,7 @@
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *     SAP AG - moving to Eclipse Libra project and enhancements
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.core.command;
 
 import java.io.IOException;
@@ -29,36 +30,36 @@ import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
  */
 public class JmxBundleAdminServerCommand extends AbstractJmxServerCommand implements IServerCommand<Map<Long, IBundle>> {
 
-	public JmxBundleAdminServerCommand(IServerBehaviour serverBehaviour) {
-		super(serverBehaviour);
-	}
+    public JmxBundleAdminServerCommand(IServerBehaviour serverBehaviour) {
+        super(serverBehaviour);
+    }
 
-	@SuppressWarnings("unchecked")
-	public Map<Long, IBundle> execute() throws IOException, TimeoutException {
+    @SuppressWarnings("unchecked")
+    public Map<Long, IBundle> execute() throws IOException, TimeoutException {
 
-		return (Map<Long, IBundle>) execute(new JmxServerCommandTemplate() {
+        return (Map<Long, IBundle>) execute(new JmxServerCommandTemplate() {
 
-			public Object invokeOperation(MBeanServerConnection connection) throws Exception {
-				ObjectName name = ObjectName.getInstance("org.eclipse.virgo.kernel:type=BundleAdmin");
+            public Object invokeOperation(MBeanServerConnection connection) throws Exception {
+                ObjectName name = ObjectName.getInstance("org.eclipse.virgo.kernel:type=BundleAdmin");
 
-				// Verify that the BundleAdmin exists and runs
-				checkBundleAdminAndInstall(serverBehaviour, connection, name);
+                // Verify that the BundleAdmin exists and runs
+                checkBundleAdminAndInstall(JmxBundleAdminServerCommand.this.serverBehaviour, connection, name);
 
-				return connection.invoke(name, "retrieveBundles", null, null);
-			}
+                return connection.invoke(name, "retrieveBundles", null, null);
+            }
 
-		});
-	}
+        });
+    }
 
-	private static void checkBundleAdminAndInstall(IServerBehaviour behaviour, MBeanServerConnection connection,
-			ObjectName name) throws IOException, TimeoutException, URISyntaxException {
-		try {
-			// Check if BundleAdmin MBean is registered
-			connection.getObjectInstance(name);
-		} catch (InstanceNotFoundException e) {
-			// Install the BundleAdmin bundle
-			behaviour.getVersionHandler().getServerDeployCommand(behaviour).execute();
-		}
-	}
+    private static void checkBundleAdminAndInstall(IServerBehaviour behaviour, MBeanServerConnection connection, ObjectName name)
+        throws IOException, TimeoutException, URISyntaxException {
+        try {
+            // Check if BundleAdmin MBean is registered
+            connection.getObjectInstance(name);
+        } catch (InstanceNotFoundException e) {
+            // Install the BundleAdmin bundle
+            behaviour.getVersionHandler().getServerDeployCommand(behaviour).execute();
+        }
+    }
 
 }

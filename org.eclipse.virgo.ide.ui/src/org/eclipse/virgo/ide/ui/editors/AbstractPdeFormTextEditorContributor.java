@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.editors;
 
 import java.util.Iterator;
@@ -47,267 +48,266 @@ import org.eclipse.virgo.ide.ui.internal.actions.ManifestFormatAction;
  */
 public class AbstractPdeFormTextEditorContributor extends PDEFormEditorContributor {
 
-	protected RetargetTextEditorAction fCorrectionAssist;
+    protected RetargetTextEditorAction fCorrectionAssist;
 
-	protected HyperlinkAction fHyperlinkAction;
+    protected HyperlinkAction fHyperlinkAction;
 
-	protected ManifestFormatAction fFormatAction;
+    protected ManifestFormatAction fFormatAction;
 
-	protected RetargetTextEditorAction fContentAssist;
+    protected RetargetTextEditorAction fContentAssist;
 
-	protected final TextEditorActionContributor fSourceContributor;
+    protected final TextEditorActionContributor fSourceContributor;
 
-	protected SubActionBars fSourceActionBars;
+    protected SubActionBars fSourceActionBars;
 
-	protected class PDETextEditorActionContributor extends TextEditorActionContributor {
-		@Override
-		public void contributeToMenu(IMenuManager mm) {
-			super.contributeToMenu(mm);
-			IMenuManager editMenu = mm.findMenuUsingPath(IWorkbenchActionConstants.M_EDIT);
-			if (editMenu != null) {
-				editMenu.add(new Separator(IContextMenuConstants.GROUP_OPEN));
-				editMenu.add(new Separator(IContextMenuConstants.GROUP_GENERATE));
-				editMenu.add(new Separator(IContextMenuConstants.GROUP_ADDITIONS));
-				if (fCorrectionAssist != null) {
-					editMenu.appendToGroup(IContextMenuConstants.GROUP_GENERATE, fCorrectionAssist);
-				}
-				if (fContentAssist != null) {
-					editMenu.appendToGroup(IContextMenuConstants.GROUP_GENERATE, fContentAssist);
-				}
-			}
-		}
+    protected class PDETextEditorActionContributor extends TextEditorActionContributor {
 
-		@Override
-		public void contributeToToolBar(IToolBarManager toolBarManager) {
-			super.contributeToToolBar(toolBarManager);
-			if (fHyperlinkAction != null) {
-				toolBarManager.add(fHyperlinkAction);
-			}
-		}
+        @Override
+        public void contributeToMenu(IMenuManager mm) {
+            super.contributeToMenu(mm);
+            IMenuManager editMenu = mm.findMenuUsingPath(IWorkbenchActionConstants.M_EDIT);
+            if (editMenu != null) {
+                editMenu.add(new Separator(IContextMenuConstants.GROUP_OPEN));
+                editMenu.add(new Separator(IContextMenuConstants.GROUP_GENERATE));
+                editMenu.add(new Separator(IContextMenuConstants.GROUP_ADDITIONS));
+                if (AbstractPdeFormTextEditorContributor.this.fCorrectionAssist != null) {
+                    editMenu.appendToGroup(IContextMenuConstants.GROUP_GENERATE, AbstractPdeFormTextEditorContributor.this.fCorrectionAssist);
+                }
+                if (AbstractPdeFormTextEditorContributor.this.fContentAssist != null) {
+                    editMenu.appendToGroup(IContextMenuConstants.GROUP_GENERATE, AbstractPdeFormTextEditorContributor.this.fContentAssist);
+                }
+            }
+        }
 
-		@Override
-		public void setActiveEditor(IEditorPart part) {
-			super.setActiveEditor(part);
-			IActionBars actionBars = getActionBars();
-			IStatusLineManager manager = actionBars.getStatusLineManager();
-			manager.setMessage(null);
-			manager.setErrorMessage(null);
+        @Override
+        public void contributeToToolBar(IToolBarManager toolBarManager) {
+            super.contributeToToolBar(toolBarManager);
+            if (AbstractPdeFormTextEditorContributor.this.fHyperlinkAction != null) {
+                toolBarManager.add(AbstractPdeFormTextEditorContributor.this.fHyperlinkAction);
+            }
+        }
 
-			ITextEditor textEditor = (part instanceof ITextEditor) ? (ITextEditor) part : null;
-			if (fCorrectionAssist != null) {
-				fCorrectionAssist.setAction(getAction(textEditor, ITextEditorActionConstants.QUICK_ASSIST));
-			}
-			if (fHyperlinkAction != null) {
-				fHyperlinkAction.setTextEditor(textEditor);
-			}
-			if (fFormatAction != null) {
-				fFormatAction.setTextEditor(textEditor);
-			}
-			if (fContentAssist != null) {
-				fContentAssist.setAction(getAction(textEditor, "ContentAssist")); //$NON-NLS-1$
-			}
-		}
-	}
+        @Override
+        public void setActiveEditor(IEditorPart part) {
+            super.setActiveEditor(part);
+            IActionBars actionBars = getActionBars();
+            IStatusLineManager manager = actionBars.getStatusLineManager();
+            manager.setMessage(null);
+            manager.setErrorMessage(null);
 
-	public AbstractPdeFormTextEditorContributor(String menuName) {
-		super(menuName);
-		fSourceContributor = createSourceContributor();
-		if (supportsCorrectionAssist()) {
-			fCorrectionAssist = new RetargetTextEditorAction(PDESourcePage.getBundleForConstructedKeys(),
-					"CorrectionAssistProposal."); //$NON-NLS-1$
-			fCorrectionAssist.setActionDefinitionId(ITextEditorActionDefinitionIds.QUICK_ASSIST);
-		}
-		if (supportsHyperlinking()) {
-			fHyperlinkAction = new SpringHyperlinkAction();
-			fHyperlinkAction.setActionDefinitionId(IJavaEditorActionDefinitionIds.OPEN_EDITOR);
-		}
-		if (supportsFormatAction()) {
-			fFormatAction = new ManifestFormatAction();
-			fFormatAction.setActionDefinitionId(PDEActionConstants.DEFN_FORMAT);
-		}
-		if (supportsContentAssist()) {
-			fContentAssist = new RetargetTextEditorAction(PDESourcePage.getBundleForConstructedKeys(),
-					"ContentAssistProposal."); //$NON-NLS-1$
-			fContentAssist.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
-		}
-	}
+            ITextEditor textEditor = part instanceof ITextEditor ? (ITextEditor) part : null;
+            if (AbstractPdeFormTextEditorContributor.this.fCorrectionAssist != null) {
+                AbstractPdeFormTextEditorContributor.this.fCorrectionAssist.setAction(getAction(textEditor, ITextEditorActionConstants.QUICK_ASSIST));
+            }
+            if (AbstractPdeFormTextEditorContributor.this.fHyperlinkAction != null) {
+                AbstractPdeFormTextEditorContributor.this.fHyperlinkAction.setTextEditor(textEditor);
+            }
+            if (AbstractPdeFormTextEditorContributor.this.fFormatAction != null) {
+                AbstractPdeFormTextEditorContributor.this.fFormatAction.setTextEditor(textEditor);
+            }
+            if (AbstractPdeFormTextEditorContributor.this.fContentAssist != null) {
+                AbstractPdeFormTextEditorContributor.this.fContentAssist.setAction(getAction(textEditor, "ContentAssist")); //$NON-NLS-1$
+            }
+        }
+    }
 
-	public boolean supportsCorrectionAssist() {
-		return false;
-	}
+    public AbstractPdeFormTextEditorContributor(String menuName) {
+        super(menuName);
+        this.fSourceContributor = createSourceContributor();
+        if (supportsCorrectionAssist()) {
+            this.fCorrectionAssist = new RetargetTextEditorAction(PDESourcePage.getBundleForConstructedKeys(), "CorrectionAssistProposal."); //$NON-NLS-1$
+            this.fCorrectionAssist.setActionDefinitionId(ITextEditorActionDefinitionIds.QUICK_ASSIST);
+        }
+        if (supportsHyperlinking()) {
+            this.fHyperlinkAction = new SpringHyperlinkAction();
+            this.fHyperlinkAction.setActionDefinitionId(IJavaEditorActionDefinitionIds.OPEN_EDITOR);
+        }
+        if (supportsFormatAction()) {
+            this.fFormatAction = new ManifestFormatAction();
+            this.fFormatAction.setActionDefinitionId(PDEActionConstants.DEFN_FORMAT);
+        }
+        if (supportsContentAssist()) {
+            this.fContentAssist = new RetargetTextEditorAction(PDESourcePage.getBundleForConstructedKeys(), "ContentAssistProposal."); //$NON-NLS-1$
+            this.fContentAssist.setActionDefinitionId(ITextEditorActionDefinitionIds.CONTENT_ASSIST_PROPOSALS);
+        }
+    }
 
-	public boolean supportsContentAssist() {
-		return false;
-	}
+    public boolean supportsCorrectionAssist() {
+        return false;
+    }
 
-	public boolean supportsFormatAction() {
-		return false;
-	}
+    public boolean supportsContentAssist() {
+        return false;
+    }
 
-	public boolean supportsHyperlinking() {
-		return false;
-	}
+    public boolean supportsFormatAction() {
+        return false;
+    }
 
-	@Override
-	public IEditorActionBarContributor getSourceContributor() {
-		return fSourceContributor;
-	}
+    public boolean supportsHyperlinking() {
+        return false;
+    }
 
-	@Override
-	public void init(IActionBars bars) {
-		super.init(bars);
-		fSourceActionBars = new SubActionBars(bars);
-		fSourceContributor.init(fSourceActionBars);
-	}
+    @Override
+    public IEditorActionBarContributor getSourceContributor() {
+        return this.fSourceContributor;
+    }
 
-	@Override
-	public void dispose() {
-		fSourceActionBars.dispose();
-		fSourceContributor.dispose();
-		super.dispose();
-	}
+    @Override
+    public void init(IActionBars bars) {
+        super.init(bars);
+        this.fSourceActionBars = new SubActionBars(bars);
+        this.fSourceContributor.init(this.fSourceActionBars);
+    }
 
-	protected void setSourceActionBarsActive(boolean active) {
-		IActionBars rootBars = getActionBars();
-		rootBars.clearGlobalActionHandlers();
-		rootBars.updateActionBars();
-		if (active) {
-			fSourceActionBars.activate();
-			Map handlers = fSourceActionBars.getGlobalActionHandlers();
-			if (handlers != null) {
-				Set keys = handlers.keySet();
-				for (Iterator iter = keys.iterator(); iter.hasNext();) {
-					String id = (String) iter.next();
-					rootBars.setGlobalActionHandler(id, (IAction) handlers.get(id));
-				}
-			}
-		} else {
-			fSourceActionBars.deactivate();
-			registerGlobalActionHandlers();
-		}
-		rootBars.setGlobalActionHandler(PDEActionConstants.OPEN, active ? fHyperlinkAction : null);
-		rootBars.setGlobalActionHandler(PDEActionConstants.FORMAT, active ? fFormatAction : null);
-		// Register the revert action
-		rootBars.setGlobalActionHandler(ActionFactory.REVERT.getId(), getRevertAction());
+    @Override
+    public void dispose() {
+        this.fSourceActionBars.dispose();
+        this.fSourceContributor.dispose();
+        super.dispose();
+    }
 
-		rootBars.updateActionBars();
-	}
+    protected void setSourceActionBarsActive(boolean active) {
+        IActionBars rootBars = getActionBars();
+        rootBars.clearGlobalActionHandlers();
+        rootBars.updateActionBars();
+        if (active) {
+            this.fSourceActionBars.activate();
+            Map handlers = this.fSourceActionBars.getGlobalActionHandlers();
+            if (handlers != null) {
+                Set keys = handlers.keySet();
+                for (Iterator iter = keys.iterator(); iter.hasNext();) {
+                    String id = (String) iter.next();
+                    rootBars.setGlobalActionHandler(id, (IAction) handlers.get(id));
+                }
+            }
+        } else {
+            this.fSourceActionBars.deactivate();
+            registerGlobalActionHandlers();
+        }
+        rootBars.setGlobalActionHandler(PDEActionConstants.OPEN, active ? this.fHyperlinkAction : null);
+        rootBars.setGlobalActionHandler(PDEActionConstants.FORMAT, active ? this.fFormatAction : null);
+        // Register the revert action
+        rootBars.setGlobalActionHandler(ActionFactory.REVERT.getId(), getRevertAction());
 
-	protected void registerGlobalActionHandlers() {
-		registerGlobalAction(ActionFactory.DELETE.getId());
-		registerGlobalAction(ActionFactory.UNDO.getId());
-		registerGlobalAction(ActionFactory.REDO.getId());
-		registerGlobalAction(ActionFactory.CUT.getId());
-		registerGlobalAction(ActionFactory.COPY.getId());
-		registerGlobalAction(ActionFactory.PASTE.getId());
-		registerGlobalAction(ActionFactory.SELECT_ALL.getId());
-		registerGlobalAction(ActionFactory.FIND.getId());
-	}
+        rootBars.updateActionBars();
+    }
 
-	protected void registerGlobalAction(String id) {
-		IAction action = getGlobalAction(id);
-		getActionBars().setGlobalActionHandler(id, action);
-	}
+    protected void registerGlobalActionHandlers() {
+        registerGlobalAction(ActionFactory.DELETE.getId());
+        registerGlobalAction(ActionFactory.UNDO.getId());
+        registerGlobalAction(ActionFactory.REDO.getId());
+        registerGlobalAction(ActionFactory.CUT.getId());
+        registerGlobalAction(ActionFactory.COPY.getId());
+        registerGlobalAction(ActionFactory.PASTE.getId());
+        registerGlobalAction(ActionFactory.SELECT_ALL.getId());
+        registerGlobalAction(ActionFactory.FIND.getId());
+    }
 
-	@Override
-	public void setActivePage(IEditorPart newEditor) {
-		if (fEditor == null) {
-			return;
-		}
+    protected void registerGlobalAction(String id) {
+        IAction action = getGlobalAction(id);
+        getActionBars().setGlobalActionHandler(id, action);
+    }
 
-		IFormPage oldPage = fPage;
-		fPage = fEditor.getActivePageInstance();
-		if (fPage == null) {
-			return;
-		}
-		// Update the quick outline action to the navigate menu
-		updateQuickOutlineMenuEntry();
+    @Override
+    public void setActivePage(IEditorPart newEditor) {
+        if (this.fEditor == null) {
+            return;
+        }
 
-		updateActions();
-		if (oldPage != null && !oldPage.isEditor() && !fPage.isEditor()) {
-			getActionBars().updateActionBars();
-			return;
-		}
+        IFormPage oldPage = this.fPage;
+        this.fPage = this.fEditor.getActivePageInstance();
+        if (this.fPage == null) {
+            return;
+        }
+        // Update the quick outline action to the navigate menu
+        updateQuickOutlineMenuEntry();
 
-		boolean isSourcePage = fPage instanceof PDESourcePage;
-		if (isSourcePage && fPage.equals(oldPage)) {
-			return;
-		}
-		fSourceContributor.setActiveEditor(fPage);
-		setSourceActionBarsActive(isSourcePage);
-	}
+        updateActions();
+        if (oldPage != null && !oldPage.isEditor() && !this.fPage.isEditor()) {
+            getActionBars().updateActionBars();
+            return;
+        }
 
-	/**
-	 * 
-	 */
-	protected void updateQuickOutlineMenuEntry() {
-		// Get the main action bar
-		IActionBars actionBars = getActionBars();
-		IMenuManager menuManager = actionBars.getMenuManager();
-		// Get the navigate menu
-		IMenuManager navigateMenu = menuManager.findMenuUsingPath(IWorkbenchActionConstants.M_NAVIGATE);
-		// Ensure there is a navigate menu
-		if (navigateMenu == null) {
-			return;
-		}
-		// Remove the previous version of the quick outline menu entry - if
-		// one exists
-		// Prevent duplicate menu entries
-		// Prevent wrong quick outline menu from being brought up for the wrong
-		// page
-		navigateMenu.remove(PDEActionConstants.COMMAND_ID_QUICK_OUTLINE);
-		// Ensure the active page is a source page
-		// Only add the quick outline menu to the source pages
-		if ((fPage instanceof PDEProjectionSourcePage) == false) {
-			return;
-		}
-		PDEProjectionSourcePage page = (PDEProjectionSourcePage) fPage;
-		// Only add the action if the source page supports it
-		if (page.isQuickOutlineEnabled() == false) {
-			return;
-		}
-		// Get the appropriate quick outline action associated with the active
-		// source page
-		IAction quickOutlineAction = page.getAction(PDEActionConstants.COMMAND_ID_QUICK_OUTLINE);
-		// Ensure it is defined
-		if (quickOutlineAction == null) {
-			return;
-		}
-		// Add the quick outline action after the "Show In" menu contributed
-		// by JDT
-		// This could break if JDT changes the "Show In" menu ID
-		try {
-			navigateMenu.insertAfter("showIn", quickOutlineAction); //$NON-NLS-1$
-		} catch (IllegalArgumentException e) {
-			// Ignore
-		}
-	}
+        boolean isSourcePage = this.fPage instanceof PDESourcePage;
+        if (isSourcePage && this.fPage.equals(oldPage)) {
+            return;
+        }
+        this.fSourceContributor.setActiveEditor(this.fPage);
+        setSourceActionBarsActive(isSourcePage);
+    }
 
-	protected TextEditorActionContributor createSourceContributor() {
-		return new PDETextEditorActionContributor();
-	}
+    /**
+     *
+     */
+    protected void updateQuickOutlineMenuEntry() {
+        // Get the main action bar
+        IActionBars actionBars = getActionBars();
+        IMenuManager menuManager = actionBars.getMenuManager();
+        // Get the navigate menu
+        IMenuManager navigateMenu = menuManager.findMenuUsingPath(IWorkbenchActionConstants.M_NAVIGATE);
+        // Ensure there is a navigate menu
+        if (navigateMenu == null) {
+            return;
+        }
+        // Remove the previous version of the quick outline menu entry - if
+        // one exists
+        // Prevent duplicate menu entries
+        // Prevent wrong quick outline menu from being brought up for the wrong
+        // page
+        navigateMenu.remove(PDEActionConstants.COMMAND_ID_QUICK_OUTLINE);
+        // Ensure the active page is a source page
+        // Only add the quick outline menu to the source pages
+        if (this.fPage instanceof PDEProjectionSourcePage == false) {
+            return;
+        }
+        PDEProjectionSourcePage page = (PDEProjectionSourcePage) this.fPage;
+        // Only add the action if the source page supports it
+        if (page.isQuickOutlineEnabled() == false) {
+            return;
+        }
+        // Get the appropriate quick outline action associated with the active
+        // source page
+        IAction quickOutlineAction = page.getAction(PDEActionConstants.COMMAND_ID_QUICK_OUTLINE);
+        // Ensure it is defined
+        if (quickOutlineAction == null) {
+            return;
+        }
+        // Add the quick outline action after the "Show In" menu contributed
+        // by JDT
+        // This could break if JDT changes the "Show In" menu ID
+        try {
+            navigateMenu.insertAfter("showIn", quickOutlineAction); //$NON-NLS-1$
+        } catch (IllegalArgumentException e) {
+            // Ignore
+        }
+    }
 
-	protected HyperlinkAction getHyperlinkAction() {
-		return fHyperlinkAction;
-	}
+    protected TextEditorActionContributor createSourceContributor() {
+        return new PDETextEditorActionContributor();
+    }
 
-	protected ManifestFormatAction getFormatAction() {
-		return fFormatAction;
-	}
+    protected HyperlinkAction getHyperlinkAction() {
+        return this.fHyperlinkAction;
+    }
 
-	class SpringHyperlinkAction extends HyperlinkAction {
+    protected ManifestFormatAction getFormatAction() {
+        return this.fFormatAction;
+    }
 
-		@Override
-		public void generateActionText() {
-			String text = PDEUIMessages.HyperlinkActionNoLinksAvailable;
-			if (fLink instanceof BundleHyperlink) {
-				text = PDEUIMessages.HyperlinkActionOpenPackage;
-				setText(text);
-				setToolTipText(text);
-			} else {
-				super.generateActionText();
-			}
-		}
-	}
+    class SpringHyperlinkAction extends HyperlinkAction {
+
+        @Override
+        public void generateActionText() {
+            String text = PDEUIMessages.HyperlinkActionNoLinksAvailable;
+            if (this.fLink instanceof BundleHyperlink) {
+                text = PDEUIMessages.HyperlinkActionOpenPackage;
+                setText(text);
+                setToolTipText(text);
+            } else {
+                super.generateActionText();
+            }
+        }
+    }
 
 }

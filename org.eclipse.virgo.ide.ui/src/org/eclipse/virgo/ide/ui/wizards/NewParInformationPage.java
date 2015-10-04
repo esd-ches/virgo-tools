@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.wizards;
 
 import org.eclipse.jface.dialogs.IDialogSettings;
@@ -24,63 +25,63 @@ import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
  */
 public class NewParInformationPage extends RuntimeConfigurationPage {
 
-	protected NewParInformationPage(String pageName, IProjectProvider provider, AbstractFieldData data, IDataModel model) {
-		super(pageName, provider, data, model);
-	}
+    protected NewParInformationPage(String pageName, IProjectProvider provider, AbstractFieldData data, IDataModel model) {
+        super(pageName, provider, data, model);
+    }
 
-	@Override
-	protected void createAdditionalPropertiesGroup(Composite container) {
-		// TODO Auto-generated method stub
+    @Override
+    protected void createAdditionalPropertiesGroup(Composite container) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	protected String getContentPageDescription() {
-		return ProjectContentPageStrings.Par_ContentPage_desc;
-	}
+    @Override
+    protected String getContentPageDescription() {
+        return ProjectContentPageStrings.Par_ContentPage_desc;
+    }
 
-	@Override
-	protected String getContentPageGroupLabel() {
-		return ProjectContentPageStrings.Par_ContentPage_pGroup;
-	}
+    @Override
+    protected String getContentPageGroupLabel() {
+        return ProjectContentPageStrings.Par_ContentPage_pGroup;
+    }
 
-	@Override
-	protected String getContentPageIdLabel() {
-		return ProjectContentPageStrings.Par_ContentPage_pid;
-	}
+    @Override
+    protected String getContentPageIdLabel() {
+        return ProjectContentPageStrings.Par_ContentPage_pid;
+    }
 
-	@Override
-	protected String getContentPageNameLabel() {
-		return ProjectContentPageStrings.Par_ContentPage_pname;
-	}
+    @Override
+    protected String getContentPageNameLabel() {
+        return ProjectContentPageStrings.Par_ContentPage_pname;
+    }
 
-	@Override
-	protected String getContentPagePluginLabel() {
-		return ProjectContentPageStrings.Par_ContentPage_plugin;
-	}
+    @Override
+    protected String getContentPagePluginLabel() {
+        return ProjectContentPageStrings.Par_ContentPage_plugin;
+    }
 
-	@Override
-	protected String getContentPageProviderLabel() {
-		return ProjectContentPageStrings.Par_ContentPage_pprovider;
-	}
+    @Override
+    protected String getContentPageProviderLabel() {
+        return ProjectContentPageStrings.Par_ContentPage_pprovider;
+    }
 
-	@Override
-	protected String getContentPageTitle() {
-		return ProjectContentPageStrings.Par_ContentPage_title;
-	}
+    @Override
+    protected String getContentPageTitle() {
+        return ProjectContentPageStrings.Par_ContentPage_title;
+    }
 
-	@Override
-	protected String getContentPageVersionLabel() {
-		return ProjectContentPageStrings.Par_ContentPage_pversion;
-	}
+    @Override
+    protected String getContentPageVersionLabel() {
+        return ProjectContentPageStrings.Par_ContentPage_pversion;
+    }
 
-	@Override
-	protected IDialogSettings getDialogSettings() {
-		return ServerIdeUiPlugin.getDefault().getDialogSettings();
-	}
+    @Override
+    protected IDialogSettings getDialogSettings() {
+        return ServerIdeUiPlugin.getDefault().getDialogSettings();
+    }
 
-	@Override
-	protected String getModuleTypeID() {
-		return FacetCorePlugin.PAR_FACET_ID;
-	}
+    @Override
+    protected String getModuleTypeID() {
+        return FacetCorePlugin.PAR_FACET_ID;
+    }
 }

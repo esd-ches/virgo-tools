@@ -16,60 +16,61 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.wst.server.core.IServer;
 
 /**
- * 
+ *
  * @author Miles Parker
- * 
+ *
  */
 public class ServerFileSelection extends ServerFile {
-	private final String line;
 
-	private final int offset;
+    private final String line;
 
-	private final int length;
+    private final int offset;
 
-	private final int item;
+    private final int length;
 
-	public ServerFileSelection(IServer server, IFile file, String line, int start, int end, int item) {
-		super(server, file);
-		this.line = line;
-		this.offset = start;
-		this.length = end;
-		this.item = item;
-	}
+    private final int item;
 
-	public String getLine() {
-		return line;
-	}
+    public ServerFileSelection(IServer server, IFile file, String line, int start, int end, int item) {
+        super(server, file);
+        this.line = line;
+        this.offset = start;
+        this.length = end;
+        this.item = item;
+    }
 
-	public int getOffset() {
-		return offset;
-	}
+    public String getLine() {
+        return this.line;
+    }
 
-	public int getLength() {
-		return length;
-	}
+    public int getOffset() {
+        return this.offset;
+    }
 
-	public int getItem() {
-		return item;
-	}
+    public int getLength() {
+        return this.length;
+    }
 
-	/**
-	 * @see java.lang.Object#hashCode()
-	 */
-	@Override
-	public int hashCode() {
-		return file.hashCode() + offset + 27103 * length;
-	}
+    public int getItem() {
+        return this.item;
+    }
 
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object arg) {
-		if (arg instanceof ServerFileSelection) {
-			ServerFileSelection other = (ServerFileSelection) arg;
-			return ObjectUtils.equals(file, other.file) && item == other.item;
-		}
-		return false;
-	}
+    /**
+     * @see java.lang.Object#hashCode()
+     */
+    @Override
+    public int hashCode() {
+        return this.file.hashCode() + this.offset + 27103 * this.length;
+    }
+
+    /**
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object arg) {
+        if (arg instanceof ServerFileSelection) {
+            ServerFileSelection other = (ServerFileSelection) arg;
+            return ObjectUtils.equals(this.file, other.file) && this.item == other.item;
+        }
+        return false;
+    }
 }

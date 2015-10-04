@@ -31,30 +31,30 @@ import org.eclipse.wst.server.core.IRuntime;
  * @author Leo Dos Santos
  */
 public class RefreshBundleJob implements IRunnableWithProgress {
-	private final IRuntime runtime;
 
-	RefreshBundleJob(IRuntime runtime) {
-		this.runtime = runtime;
-	}
+    private final IRuntime runtime;
 
-	public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-		monitor.subTask(Messages.RepositoryBrowserEditorPage_RefreshingBundlesMessage);
-		if (RepositoryUtils.doesRuntimeSupportRepositories(runtime)) {
-			ServerCorePlugin.getArtefactRepositoryManager().refreshBundleRepository(runtime);
-		}
-		monitor.done();
-	}
+    RefreshBundleJob(IRuntime runtime) {
+        this.runtime = runtime;
+    }
 
-	public static void execute(Shell shell, IRuntime runtime) {
-		RefreshBundleJob job = new RefreshBundleJob(runtime);
-		try {
-			IRunnableContext context = new ProgressMonitorDialog(shell);
-			context.run(true, true, job);
-		} catch (InvocationTargetException e1) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID,
-							"Åproblem occurred while updating repository", e1));
-		} catch (InterruptedException e) {
-		}
-	}
+    public void run(final IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+        monitor.subTask(Messages.RepositoryBrowserEditorPage_RefreshingBundlesMessage);
+        if (RepositoryUtils.doesRuntimeSupportRepositories(this.runtime)) {
+            ServerCorePlugin.getArtefactRepositoryManager().refreshBundleRepository(this.runtime);
+        }
+        monitor.done();
+    }
+
+    public static void execute(Shell shell, IRuntime runtime) {
+        RefreshBundleJob job = new RefreshBundleJob(runtime);
+        try {
+            IRunnableContext context = new ProgressMonitorDialog(shell);
+            context.run(true, true, job);
+        } catch (InvocationTargetException e1) {
+            StatusManager.getManager().handle(
+                new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, "ï¿½problem occurred while updating repository", e1));
+        } catch (InterruptedException e) {
+        }
+    }
 }

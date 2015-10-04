@@ -8,37 +8,38 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.core;
 
 /**
  * Simple data holder for a deployed par or bundle.
- * 
+ *
  * @author Christian Dupuis
  * @since 1.0.0
  */
 public class DeploymentIdentity {
 
-	private String symbolicName;
+    private final String symbolicName;
 
-	private String version;
+    private final String version;
 
-	public DeploymentIdentity(String symbolicName, String version) {
-		this.symbolicName = symbolicName;
-		this.version = version;
-	}
+    public DeploymentIdentity(String symbolicName, String version) {
+        this.symbolicName = symbolicName;
+        this.version = version;
+    }
 
-	public DeploymentIdentity(String output) {
-		int ix = output.lastIndexOf('#');
-		this.symbolicName = output.substring(0, ix);
-		this.version = output.substring(ix + 1);
-	}
+    public DeploymentIdentity(String output) {
+        int ix = output.lastIndexOf('#');
+        this.symbolicName = output.substring(0, ix);
+        this.version = output.substring(ix + 1);
+    }
 
-	public String getSymbolicName() {
-		return symbolicName;
-	}
+    public String getSymbolicName() {
+        return this.symbolicName;
+    }
 
-	public String getVersion() {
-		return version;
-	}
+    public String getVersion() {
+        return this.version;
+    }
 
 }

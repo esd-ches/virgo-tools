@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.core.command;
 
 import java.io.IOException;
@@ -20,35 +21,35 @@ import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 
 /**
  * {@link IServerCommand} to shutdown a dm Server.
- * 
+ *
  * @author Christian Dupuis
  * @since 1.0.1
  */
 public class JmxServerShutdownCommand extends AbstractJmxServerCommand implements IServerCommand<Void> {
 
-	/**
-	 * Creates a new {@link JmxServerShutdownCommand}.
-	 */
-	public JmxServerShutdownCommand(IServerBehaviour serverBehaviour) {
-		super(serverBehaviour);
-	}
+    /**
+     * Creates a new {@link JmxServerShutdownCommand}.
+     */
+    public JmxServerShutdownCommand(IServerBehaviour serverBehaviour) {
+        super(serverBehaviour);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public Void execute() throws IOException, TimeoutException {
+    /**
+     * {@inheritDoc}
+     */
+    public Void execute() throws IOException, TimeoutException {
 
-		JmxServerCommandTemplate template = new JmxServerCommandTemplate() {
+        JmxServerCommandTemplate template = new JmxServerCommandTemplate() {
 
-			public Object invokeOperation(MBeanServerConnection connection) throws Exception {
-				ObjectName name = ObjectName.getInstance(serverBehaviour.getVersionHandler().getShutdownMBeanName());
-				return connection.invoke(name, "shutdown", null, null);
-			}
+            public Object invokeOperation(MBeanServerConnection connection) throws Exception {
+                ObjectName name = ObjectName.getInstance(JmxServerShutdownCommand.this.serverBehaviour.getVersionHandler().getShutdownMBeanName());
+                return connection.invoke(name, "shutdown", null, null);
+            }
 
-		};
+        };
 
-		execute(template);
-		return null;
-	}
+        execute(template);
+        return null;
+    }
 
 }

@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.core.provisioning;
 
 import java.io.File;
@@ -20,6 +21,6 @@ import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepository;
  */
 public interface IArtefactRepositoryLoader {
 
-	ArtefactRepository loadArtefactRepository(File rootFolder);
+    ArtefactRepository loadArtefactRepository(File rootFolder);
 
 }

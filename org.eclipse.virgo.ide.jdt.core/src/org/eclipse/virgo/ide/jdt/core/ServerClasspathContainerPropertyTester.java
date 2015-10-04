@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.jdt.core;
 
 import org.eclipse.core.expressions.PropertyTester;
@@ -24,14 +25,14 @@ import org.eclipse.virgo.ide.jdt.internal.core.util.ClasspathUtils;
  */
 public class ServerClasspathContainerPropertyTester extends PropertyTester {
 
-	public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
-		if (receiver instanceof IResource && "isEnabled".equals(property)) { //$NON-NLS-1$
-			IProject project = ((IResource) receiver).getProject();
-			IJavaProject javaProject = JavaCore.create(project);
-			if (FacetUtils.hasNature(project, JavaCore.NATURE_ID)) {
-				return ClasspathUtils.hasClasspathContainer(javaProject);
-			}
-		}
-		return false;
-	}
+    public boolean test(Object receiver, String property, Object[] args, Object expectedValue) {
+        if (receiver instanceof IResource && "isEnabled".equals(property)) { //$NON-NLS-1$
+            IProject project = ((IResource) receiver).getProject();
+            IJavaProject javaProject = JavaCore.create(project);
+            if (FacetUtils.hasNature(project, JavaCore.NATURE_ID)) {
+                return ClasspathUtils.hasClasspathContainer(javaProject);
+            }
+        }
+        return false;
+    }
 }

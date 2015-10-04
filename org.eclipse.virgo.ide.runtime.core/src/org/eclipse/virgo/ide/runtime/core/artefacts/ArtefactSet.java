@@ -19,67 +19,66 @@ import org.eclipse.core.runtime.Assert;
 
 /**
  * Safely encapsulates artefact interactions.
- * 
+ *
  * @author Miles Parker
  */
 public class ArtefactSet implements IArtefactTyped {
 
-	private final ArtefactType artefactType;
+    private final ArtefactType artefactType;
 
-	private final Set<IArtefact> artefacts = new HashSet<IArtefact>();
+    private final Set<IArtefact> artefacts = new HashSet<IArtefact>();
 
-	private final ArtefactRepository repository;
+    private final ArtefactRepository repository;
 
-	public ArtefactSet(ArtefactRepository repository, ArtefactType artefactType) {
-		this.repository = repository;
-		this.artefactType = artefactType;
-	}
+    public ArtefactSet(ArtefactRepository repository, ArtefactType artefactType) {
+        this.repository = repository;
+        this.artefactType = artefactType;
+    }
 
-	public Iterable<IArtefact> getArtefacts() {
-		return artefacts;
-	}
+    public Iterable<IArtefact> getArtefacts() {
+        return this.artefacts;
+    }
 
-	public IArtefact[] toArray() {
-		return artefacts.toArray(new IArtefact[] {});
-	}
+    public IArtefact[] toArray() {
+        return this.artefacts.toArray(new IArtefact[] {});
+    }
 
-	public boolean add(IArtefact artefact) {
-		Assert.isNotNull(artefact, "Tried to add null artefact.");
-		if (artefact.getArtefactType() == artefactType || artefactType == ArtefactType.COMBINED) {
-			artefact.setSet(this);
-			return artefacts.add(artefact);
-		}
-		throw new RuntimeException("Tried to add non-matching artefact to " + artefactType.name() + ": " + artefact);
-	}
+    public boolean add(IArtefact artefact) {
+        Assert.isNotNull(artefact, "Tried to add null artefact.");
+        if (artefact.getArtefactType() == this.artefactType || this.artefactType == ArtefactType.COMBINED) {
+            artefact.setSet(this);
+            return this.artefacts.add(artefact);
+        }
+        throw new RuntimeException("Tried to add non-matching artefact to " + this.artefactType.name() + ": " + artefact);
+    }
 
-	public ArtefactType getArtefactType() {
-		return artefactType;
-	}
+    public ArtefactType getArtefactType() {
+        return this.artefactType;
+    }
 
-	public ArtefactRepository getRepository() {
-		return repository;
-	}
+    public ArtefactRepository getRepository() {
+        return this.repository;
+    }
 
-	/**
-	 * @see java.lang.Object#toString()
-	 */
-	@Override
-	public String toString() {
-		return artefactType.getPluralLabel();
-	}
+    /**
+     * @see java.lang.Object#toString()
+     */
+    @Override
+    public String toString() {
+        return this.artefactType.getPluralLabel();
+    }
 
-	/**
-	 * Assumes that there is one and only one artefact set of a given type for each set.
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof ArtefactSet) {
-			ArtefactSet set = (ArtefactSet) obj;
-			return (getArtefactType() == set.getArtefactType() && ObjectUtils.equals(getRepository(),
-					set.getRepository()));
-		}
-		return super.equals(obj);
-	}
+    /**
+     * Assumes that there is one and only one artefact set of a given type for each set.
+     *
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof ArtefactSet) {
+            ArtefactSet set = (ArtefactSet) obj;
+            return getArtefactType() == set.getArtefactType() && ObjectUtils.equals(getRepository(), set.getRepository());
+        }
+        return super.equals(obj);
+    }
 }

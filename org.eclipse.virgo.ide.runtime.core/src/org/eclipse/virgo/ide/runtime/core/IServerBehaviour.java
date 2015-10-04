@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.core;
 
 import java.util.Map;
@@ -21,41 +22,40 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.model.IURLProvider;
 
 /**
- * Implementations of this interface are intended to provide extra knowledge
- * about the runtime behavior or a dm Server instance.
- * 
+ * Implementations of this interface are intended to provide extra knowledge about the runtime behavior or a dm Server
+ * instance.
+ *
  * @author Christian Dupuis
  * @since 1.0.0
  */
 public interface IServerBehaviour extends IURLProvider {
 
-	/** Property indicating the ip of the deployer JMX control */
-	String PROPERTY_MBEAN_SERVER_IP = ServerCorePlugin.PLUGIN_ID + "deployer.ip";
+    /** Property indicating the ip of the deployer JMX control */
+    String PROPERTY_MBEAN_SERVER_IP = ServerCorePlugin.PLUGIN_ID + "deployer.ip";
 
-	/**
-	 * Configure the given {@link ILaunch} and add all runtime settings like
-	 * class path and command line options.
-	 */
-	void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor) throws CoreException;
+    /**
+     * Configure the given {@link ILaunch} and add all runtime settings like class path and command line options.
+     */
+    void setupLaunch(ILaunch launch, String launchMode, IProgressMonitor monitor) throws CoreException;
 
-	/**
-	 * Returns the ip address of the controlled server
-	 */
-	String getMBeanServerIp();
+    /**
+     * Returns the ip address of the controlled server
+     */
+    String getMBeanServerIp();
 
-	/**
-	 * Returns the deployer control
-	 */
-	IServerDeployer getServerDeployer();
+    /**
+     * Returns the deployer control
+     */
+    IServerDeployer getServerDeployer();
 
-	IServerRuntimeProvider getVersionHandler();
+    IServerRuntimeProvider getVersionHandler();
 
-	Map<String, DeploymentIdentity> getDeploymentIdentities();
+    Map<String, DeploymentIdentity> getDeploymentIdentities();
 
-	IPath getModuleDeployUri(IModule module);
+    IPath getModuleDeployUri(IModule module);
 
-	void onModuleStateChange(IModule[] modules, int stateStopped);
+    void onModuleStateChange(IModule[] modules, int stateStopped);
 
-	void onModulePublishStateChange(IModule[] modules, int publishStateNone);
+    void onModulePublishStateChange(IModule[] modules, int publishStateNone);
 
 }

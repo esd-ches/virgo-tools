@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.wizards;
 
 import org.eclipse.jdt.ui.wizards.NewJavaProjectWizardPageOne;
@@ -18,14 +19,14 @@ import org.eclipse.jdt.ui.wizards.NewJavaProjectWizardPageOne;
  */
 public class NewBundleProjectSettingsPage extends NewJavaProjectWizardPageOne {
 
-	private static String NEW_PROJECT_SETTINGS_TITLE = "Create a Bundle project";
+    private static String NEW_PROJECT_SETTINGS_TITLE = "Create a Bundle project";
 
-	private static String NEW_PROJECT_SETTINGS_DESCRIPTION = "Create a Bundle project in the workspace or in an external location.";
+    private static String NEW_PROJECT_SETTINGS_DESCRIPTION = "Create a Bundle project in the workspace or in an external location.";
 
-	public NewBundleProjectSettingsPage() {
-		super();
-		setTitle(NEW_PROJECT_SETTINGS_TITLE);
-		setDescription(NEW_PROJECT_SETTINGS_DESCRIPTION);
-	}
+    public NewBundleProjectSettingsPage() {
+        super();
+        setTitle(NEW_PROJECT_SETTINGS_TITLE);
+        setDescription(NEW_PROJECT_SETTINGS_DESCRIPTION);
+    }
 
 }

@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.editors;
 
 import org.eclipse.jface.dialogs.StatusDialog;
@@ -29,129 +30,131 @@ import org.eclipse.swt.widgets.Group;
 
 /**
  * Based on <code>DependencyPropertiesDialog</code> from PDE for Eclipse 3.4. Used for compatibility with Eclipse 3.4.
- * 
+ *
  * @author Christian Dupuis
  */
 public class BundleDependencyPropertiesDialog extends StatusDialog {
 
-	private Button fReexportButton;
+    private Button fReexportButton;
 
-	private Button fOptionalButton;
+    private Button fOptionalButton;
 
-	private final boolean fEditable;
+    private final boolean fEditable;
 
-	private final boolean fShowReexport;
+    private final boolean fShowReexport;
 
-	private boolean fExported;
+    private boolean fExported;
 
-	private boolean fOptional;
+    private boolean fOptional;
 
-	private PluginVersionPart fVersionPart;
+    private PluginVersionPart fVersionPart;
 
-	private final boolean fShowOptional;
+    private final boolean fShowOptional;
 
-	private String fVersion;
+    private String fVersion;
 
-	public BundleDependencyPropertiesDialog(boolean editable, IPluginImport plugin) {
-		this(editable, true, plugin.isReexported(), plugin.isOptional(), plugin.getVersion(), true, true);
-	}
+    public BundleDependencyPropertiesDialog(boolean editable, IPluginImport plugin) {
+        this(editable, true, plugin.isReexported(), plugin.isOptional(), plugin.getVersion(), true, true);
+    }
 
-	public BundleDependencyPropertiesDialog(boolean editable, ImportPackageObject object) {
-		this(editable, false, false, object.isOptional(), object.getVersion(), true, true);
-	}
+    public BundleDependencyPropertiesDialog(boolean editable, ImportPackageObject object) {
+        this(editable, false, false, object.isOptional(), object.getVersion(), true, true);
+    }
 
-	public BundleDependencyPropertiesDialog(boolean editable, ExportPackageObject object) {
-		this(editable, false, false, false, object.getVersion(), false, false);
-	}
+    public BundleDependencyPropertiesDialog(boolean editable, ExportPackageObject object) {
+        this(editable, false, false, false, object.getVersion(), false, false);
+    }
 
-	public BundleDependencyPropertiesDialog(boolean editable, boolean showReexport, boolean export, boolean optional,
-			String version, boolean showOptional, boolean isImport) {
-		super(PDEPlugin.getActiveWorkbenchShell());
-		fEditable = editable;
-		fShowReexport = showReexport;
-		fExported = export;
-		fOptional = optional;
-		fShowOptional = showOptional;
+    public BundleDependencyPropertiesDialog(boolean editable, boolean showReexport, boolean export, boolean optional, String version,
+        boolean showOptional, boolean isImport) {
+        super(PDEPlugin.getActiveWorkbenchShell());
+        this.fEditable = editable;
+        this.fShowReexport = showReexport;
+        this.fExported = export;
+        this.fOptional = optional;
+        this.fShowOptional = showOptional;
 
-		if (isImport) {
-			fVersionPart = new PluginVersionPart(true);
-		} else {
-			fVersionPart = new PluginVersionPart(false) {
-				@Override
-				protected String getGroupText() {
-					return PDEUIMessages.DependencyPropertiesDialog_exportGroupText;
-				}
-			};
-		}
-		fVersionPart.setVersion(version);
-	}
+        if (isImport) {
+            this.fVersionPart = new PluginVersionPart(true);
+        } else {
+            this.fVersionPart = new PluginVersionPart(false) {
 
-	@Override
-	protected void createButtonsForButtonBar(Composite parent) {
-		super.createButtonsForButtonBar(parent);
-	}
+                @Override
+                protected String getGroupText() {
+                    return PDEUIMessages.DependencyPropertiesDialog_exportGroupText;
+                }
+            };
+        }
+        this.fVersionPart.setVersion(version);
+    }
 
-	@Override
-	protected Control createDialogArea(Composite parent) {
-		Composite comp = (Composite) super.createDialogArea(parent);
+    @Override
+    protected void createButtonsForButtonBar(Composite parent) {
+        super.createButtonsForButtonBar(parent);
+    }
 
-		if (fShowOptional || fShowReexport) {
-			Group container = new Group(comp, SWT.NONE);
-			container.setText(PDEUIMessages.DependencyPropertiesDialog_properties);
-			container.setLayout(new GridLayout());
-			container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+    @Override
+    protected Control createDialogArea(Composite parent) {
+        Composite comp = (Composite) super.createDialogArea(parent);
 
-			if (fShowOptional) {
-				fOptionalButton = new Button(container, SWT.CHECK);
-				fOptionalButton.setText(PDEUIMessages.DependencyPropertiesDialog_optional);
-				GridData gd = new GridData();
-				gd.horizontalSpan = 2;
-				fOptionalButton.setLayoutData(gd);
-				fOptionalButton.setEnabled(fEditable);
-				fOptionalButton.setSelection(fOptional);
-			}
+        if (this.fShowOptional || this.fShowReexport) {
+            Group container = new Group(comp, SWT.NONE);
+            container.setText(PDEUIMessages.DependencyPropertiesDialog_properties);
+            container.setLayout(new GridLayout());
+            container.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
-			if (fShowReexport) {
-				fReexportButton = new Button(container, SWT.CHECK);
-				fReexportButton.setText(PDEUIMessages.DependencyPropertiesDialog_reexport);
-				GridData gd = new GridData();
-				gd.horizontalSpan = 2;
-				fReexportButton.setLayoutData(gd);
-				fReexportButton.setEnabled(fEditable);
-				fReexportButton.setSelection(fExported);
-			}
-		}
+            if (this.fShowOptional) {
+                this.fOptionalButton = new Button(container, SWT.CHECK);
+                this.fOptionalButton.setText(PDEUIMessages.DependencyPropertiesDialog_optional);
+                GridData gd = new GridData();
+                gd.horizontalSpan = 2;
+                this.fOptionalButton.setLayoutData(gd);
+                this.fOptionalButton.setEnabled(this.fEditable);
+                this.fOptionalButton.setSelection(this.fOptional);
+            }
 
-		fVersionPart.createVersionFields(comp, true, fEditable);
-		ModifyListener ml = new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				updateStatus(fVersionPart.validateFullVersionRangeText(true));
-			}
-		};
-		fVersionPart.addListeners(ml, ml);
+            if (this.fShowReexport) {
+                this.fReexportButton = new Button(container, SWT.CHECK);
+                this.fReexportButton.setText(PDEUIMessages.DependencyPropertiesDialog_reexport);
+                GridData gd = new GridData();
+                gd.horizontalSpan = 2;
+                this.fReexportButton.setLayoutData(gd);
+                this.fReexportButton.setEnabled(this.fEditable);
+                this.fReexportButton.setSelection(this.fExported);
+            }
+        }
 
-		return comp;
-	}
+        this.fVersionPart.createVersionFields(comp, true, this.fEditable);
+        ModifyListener ml = new ModifyListener() {
 
-	public boolean isReexported() {
-		return fExported;
-	}
+            public void modifyText(ModifyEvent e) {
+                updateStatus(BundleDependencyPropertiesDialog.this.fVersionPart.validateFullVersionRangeText(true));
+            }
+        };
+        this.fVersionPart.addListeners(ml, ml);
 
-	public boolean isOptional() {
-		return fOptional;
-	}
+        return comp;
+    }
 
-	public String getVersion() {
-		return fVersion;
-	}
+    public boolean isReexported() {
+        return this.fExported;
+    }
 
-	@Override
-	protected void okPressed() {
-		fOptional = (fOptionalButton == null) ? false : fOptionalButton.getSelection();
-		fExported = (fReexportButton == null) ? false : fReexportButton.getSelection();
+    public boolean isOptional() {
+        return this.fOptional;
+    }
 
-		fVersion = fVersionPart.getVersion();
+    public String getVersion() {
+        return this.fVersion;
+    }
 
-		super.okPressed();
-	}
+    @Override
+    protected void okPressed() {
+        this.fOptional = this.fOptionalButton == null ? false : this.fOptionalButton.getSelection();
+        this.fExported = this.fReexportButton == null ? false : this.fReexportButton.getSelection();
+
+        this.fVersion = this.fVersionPart.getVersion();
+
+        super.okPressed();
+    }
 }

@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.export;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -18,10 +19,10 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
  */
 public class ServerExportPlugin extends AbstractUIPlugin {
 
-	public static final String PLUGIN_ID = "org.eclipse.virgo.ide.export";
+    public static final String PLUGIN_ID = "org.eclipse.virgo.ide.export";
 
-	public static ImageDescriptor getImageDescriptor(String path) {
-		return imageDescriptorFromPlugin(PLUGIN_ID, "icons/" + path);
-	}
+    public static ImageDescriptor getImageDescriptor(String path) {
+        return imageDescriptorFromPlugin(PLUGIN_ID, "icons/" + path);
+    }
 
 }

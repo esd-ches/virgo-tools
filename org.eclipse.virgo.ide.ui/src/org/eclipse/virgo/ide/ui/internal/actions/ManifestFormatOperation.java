@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.internal.actions;
 
 import java.lang.reflect.InvocationTargetException;
@@ -38,64 +39,64 @@ import org.eclipse.virgo.ide.ui.editors.model.BundleModelUtility;
  */
 public class ManifestFormatOperation implements IRunnableWithProgress {
 
-	private final Object[] fObjects;
+    private final Object[] fObjects;
 
-	public ManifestFormatOperation(Object[] objects) {
-		fObjects = objects;
-	}
+    public ManifestFormatOperation(Object[] objects) {
+        this.fObjects = objects;
+    }
 
-	public void run(IProgressMonitor mon) throws InvocationTargetException, InterruptedException {
-		mon.beginTask(PDEUIMessages.FormatManifestOperation_task, fObjects.length);
-		for (int i = 0; !mon.isCanceled() && i < fObjects.length; i++) {
-			Object obj = fObjects[i];
-			if (obj instanceof IFileEditorInput) {
-				obj = ((IFileEditorInput) obj).getFile();
-			}
-			if (obj instanceof IFile) {
-				mon.subTask(NLS.bind(PDEUIMessages.FormatManifestOperation_subtask, ((IFile) obj).getFullPath()
-						.toString()));
-				format((IFile) obj, mon);
-			}
-			mon.worked(1);
-		}
-	}
+    public void run(IProgressMonitor mon) throws InvocationTargetException, InterruptedException {
+        mon.beginTask(PDEUIMessages.FormatManifestOperation_task, this.fObjects.length);
+        for (int i = 0; !mon.isCanceled() && i < this.fObjects.length; i++) {
+            Object obj = this.fObjects[i];
+            if (obj instanceof IFileEditorInput) {
+                obj = ((IFileEditorInput) obj).getFile();
+            }
+            if (obj instanceof IFile) {
+                mon.subTask(NLS.bind(PDEUIMessages.FormatManifestOperation_subtask, ((IFile) obj).getFullPath().toString()));
+                format((IFile) obj, mon);
+            }
+            mon.worked(1);
+        }
+    }
 
-	public static void format(IFile file, IProgressMonitor mon) {
-		BundleModelUtility.modifyModel(new BundleModelModification(file) {
-			@Override
-			protected void modifyModel(IBaseModel model, IProgressMonitor monitor) throws CoreException {
-				if (model instanceof IBundlePluginModelBase) {
-					IBundleModel bundleModel = ((IBundlePluginModelBase) model).getBundleModel();
-					if (bundleModel.getBundle() instanceof Bundle) {
-						formatBundle((Bundle) bundleModel.getBundle());
-					}
-				} else if (model instanceof IPluginModelBase) {
-					IPluginBase pluginModel = ((IPluginModelBase) model).getPluginBase();
-					if (pluginModel instanceof PluginBaseNode) {
-						formatXML((PluginBaseNode) pluginModel);
-					}
-				}
-			}
+    public static void format(IFile file, IProgressMonitor mon) {
+        BundleModelUtility.modifyModel(new BundleModelModification(file) {
 
-			@Override
-			public boolean saveOpenEditor() {
-				return false;
-			}
-		}, mon);
-	}
+            @Override
+            protected void modifyModel(IBaseModel model, IProgressMonitor monitor) throws CoreException {
+                if (model instanceof IBundlePluginModelBase) {
+                    IBundleModel bundleModel = ((IBundlePluginModelBase) model).getBundleModel();
+                    if (bundleModel.getBundle() instanceof Bundle) {
+                        formatBundle((Bundle) bundleModel.getBundle());
+                    }
+                } else if (model instanceof IPluginModelBase) {
+                    IPluginBase pluginModel = ((IPluginModelBase) model).getPluginBase();
+                    if (pluginModel instanceof PluginBaseNode) {
+                        formatXML((PluginBaseNode) pluginModel);
+                    }
+                }
+            }
 
-	private static void formatBundle(Bundle bundle) {
-		Iterator headers = bundle.getHeaders().values().iterator();
-		while (headers.hasNext()) {
-			((IManifestHeader) headers.next()).update(true);
-		}
-		BundleModel model = (BundleModel) bundle.getModel();
-		model.adjustOffsets(model.getDocument());
-	}
+            @Override
+            public boolean saveOpenEditor() {
+                return false;
+            }
+        }, mon);
+    }
 
-	private static void formatXML(PluginBaseNode node) {
-		// TODO Auto-generated method stub
+    private static void formatBundle(Bundle bundle) {
+        Iterator headers = bundle.getHeaders().values().iterator();
+        while (headers.hasNext()) {
+            ((IManifestHeader) headers.next()).update(true);
+        }
+        BundleModel model = (BundleModel) bundle.getModel();
+        model.adjustOffsets(model.getDocument());
+    }
 
-	}
+    private static void formatXML(PluginBaseNode node) {
+        // TODO Auto-generated method stub
+
+    }
 
 }

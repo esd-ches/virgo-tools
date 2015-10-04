@@ -68,7 +68,6 @@ import org.eclipse.virgo.ide.par.Par;
 import org.eclipse.virgo.ide.par.provider.ParItemProviderAdapterFactory;
 import org.eclipse.virgo.ide.ui.ServerIdeUiPlugin;
 import org.eclipse.virgo.ide.ui.StatusHandler;
-import org.eclipse.virgo.ide.ui.editors.model.BundleModelUtility;
 
 /**
  * @author Christian Dupuis
@@ -76,317 +75,321 @@ import org.eclipse.virgo.ide.ui.editors.model.BundleModelUtility;
  */
 public class ParManifestEditor extends BundleManifestEditor {
 
-	public static String ID_EDITOR = "org.eclipse.virgo.ide.ui.parmanifest";
+    public static String ID_EDITOR = "org.eclipse.virgo.ide.ui.parmanifest";
 
-	protected ComposedAdapterFactory adapterFactory;
+    protected ComposedAdapterFactory adapterFactory;
 
-	protected Viewer currentViewer;
+    protected Viewer currentViewer;
 
-	protected AdapterFactoryEditingDomain editingDomain;
+    protected AdapterFactoryEditingDomain editingDomain;
 
-	protected Collection<Resource> savedResources = new ArrayList<Resource>();
+    protected Collection<Resource> savedResources = new ArrayList<Resource>();
 
-	private Resource parResource;
+    private Resource parResource;
 
-	private Par par;
+    private Par par;
 
-	private IEditorInput parInput;
+    private IEditorInput parInput;
 
-	public AdapterFactoryEditingDomain getEditingDomain() {
-		return editingDomain;
-	}
+    public AdapterFactoryEditingDomain getEditingDomain() {
+        return this.editingDomain;
+    }
 
-	public Par getPar() {
-		return par;
-	}
+    public Par getPar() {
+        return this.par;
+    }
 
-	@Override
-	protected void addEditorPages() {
-		try {
-			addPage(new ParOverviewPage(this));
-			if (parInput != null) {
-				initializeEditingDomain();
-				createParPages();
-			}
-		} catch (PartInitException e) {
-			StatusHandler.log(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Failed to create editor pages", e));
-		}
-		addSourcePage(BundleInputContext.CONTEXT_ID);
-	}
+    @Override
+    protected void addEditorPages() {
+        try {
+            addPage(new ParOverviewPage(this));
+            if (this.parInput != null) {
+                initializeEditingDomain();
+                createParPages();
+            }
+        } catch (PartInitException e) {
+            StatusHandler.log(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Failed to create editor pages", e));
+        }
+        addSourcePage(BundleInputContext.CONTEXT_ID);
+    }
 
-	@Override
-	protected void createResourceContexts(InputContextManager manager, IFileEditorInput input) {
-		IFile file = input.getFile();
-		IContainer container = file.getParent();
-		org.eclipse.core.resources.IProject project = file.getProject();
+    @Override
+    protected void createResourceContexts(InputContextManager manager, IFileEditorInput input) {
+        IFile file = input.getFile();
+        IContainer container = file.getParent();
+        org.eclipse.core.resources.IProject project = file.getProject();
 
-		IFile manifestFile = null;
-		IFile parFile = null;
+        IFile manifestFile = null;
+        IFile parFile = null;
 
-		String name = file.getName().toLowerCase(Locale.ENGLISH);
-		if (name.equals("manifest.mf")) { //$NON-NLS-1$
-			if (container instanceof IFolder) {
-				container = container.getParent();
-			}
-			manifestFile = file;
-			parFile = FacetUtils.getParFile(project);
-		} else if (name.equalsIgnoreCase("org.eclipse.virgo.ide.runtime.core.par.xml")) {
-			parFile = file;
-			manifestFile = container.getProject().getFile(new Path("META-INF/MANIFEST.MF")); //$NON-NLS-1$
-		}
-		if (manifestFile != null && manifestFile.exists()) {
-			IEditorInput in = new FileEditorInput(manifestFile);
-			manager.putContext(in, new SpringBundleInputContext(this, in, file == manifestFile));
-		}
-		if (parFile != null && parFile.exists()) {
-			parInput = new FileEditorInput(parFile);
-		}
-		manager.monitorFile(manifestFile);
-		manager.monitorFile(parFile);
+        String name = file.getName().toLowerCase(Locale.ENGLISH);
+        if (name.equals("manifest.mf")) { //$NON-NLS-1$
+            if (container instanceof IFolder) {
+                container = container.getParent();
+            }
+            manifestFile = file;
+            parFile = FacetUtils.getParFile(project);
+        } else if (name.equalsIgnoreCase("org.eclipse.virgo.ide.runtime.core.par.xml")) {
+            parFile = file;
+            manifestFile = container.getProject().getFile(new Path("META-INF/MANIFEST.MF")); //$NON-NLS-1$
+        }
+        if (manifestFile != null && manifestFile.exists()) {
+            IEditorInput in = new FileEditorInput(manifestFile);
+            manager.putContext(in, new SpringBundleInputContext(this, in, file == manifestFile));
+        }
+        if (parFile != null && parFile.exists()) {
+            this.parInput = new FileEditorInput(parFile);
+        }
+        manager.monitorFile(manifestFile);
+        manager.monitorFile(parFile);
 
-		fPrefs = new ProjectScope(container.getProject()).getNode(PDECore.PLUGIN_ID);
-		if (fPrefs != null) {
-			fShowExtensions = fPrefs.getBoolean(ICoreConstants.EXTENSIONS_PROPERTY, true);
-			fEquinox = fPrefs.getBoolean(ICoreConstants.EQUINOX_PROPERTY, true);
-		}
-	}
+        this.fPrefs = new ProjectScope(container.getProject()).getNode(PDECore.PLUGIN_ID);
+        if (this.fPrefs != null) {
+            this.fShowExtensions = this.fPrefs.getBoolean(ICoreConstants.EXTENSIONS_PROPERTY, true);
+            this.fEquinox = this.fPrefs.getBoolean(ICoreConstants.EQUINOX_PROPERTY, true);
+        }
+    }
 
-	@Override
-	protected void createSystemFileContexts(InputContextManager manager, IEditorInput input) {
-		File file = (File) input.getAdapter(File.class);
-		if (file == null && input instanceof FileStoreEditorInput) {
-			file = new File(((IURIEditorInput) input).getURI());
-		}
-		if (file == null) {
-			return;
-		}
-		File manifestFile = null;
-		File parFile = null;
-		String name = file.getName().toLowerCase(Locale.ENGLISH);
-		if (name.equals("manifest.mf")) { //$NON-NLS-1$
-			manifestFile = file;
-			File dir = file.getParentFile().getParentFile();
-			parFile = new File(dir, "org.eclipse.virgo.ide.runtime.core.par.xml");
-		} else if (name.equals("org.eclipse.virgo.ide.runtime.core.par.xml")) {
-			parFile = file;
-			File dir = file.getParentFile();
-			manifestFile = new File(dir.getParentFile(), "META-INF/MANIFEST.MF"); //$NON-NLS-1$
-		}
-		try {
-			if (manifestFile != null && manifestFile.exists()) {
-				IEditorInput in = PdeCompatibilityUtil.createSystemFileEditorInput(manifestFile);
-				if (in == null) {
-					// Eclipse 3.5 or later
-					IFileStore store = EFS.getStore(manifestFile.toURI());
-					in = new FileStoreEditorInput(store);
-				}
-				manager.putContext(in, new SpringBundleInputContext(this, in, file == manifestFile));
-			}
-			if (parFile != null && parFile.exists()) {
-				parInput = PdeCompatibilityUtil.createSystemFileEditorInput(parFile);
-				if (parInput == null) {
-					// Eclipse 3.5 or later
-					IFileStore store = EFS.getStore(parFile.toURI());
-					parInput = new FileStoreEditorInput(store);
-				}
-			}
-		} catch (CoreException e) {
-			PDEPlugin.logException(e);
-		}
-	}
+    @Override
+    protected void createSystemFileContexts(InputContextManager manager, IEditorInput input) {
+        File file = input.getAdapter(File.class);
+        if (file == null && input instanceof FileStoreEditorInput) {
+            file = new File(((IURIEditorInput) input).getURI());
+        }
+        if (file == null) {
+            return;
+        }
+        File manifestFile = null;
+        File parFile = null;
+        String name = file.getName().toLowerCase(Locale.ENGLISH);
+        if (name.equals("manifest.mf")) { //$NON-NLS-1$
+            manifestFile = file;
+            File dir = file.getParentFile().getParentFile();
+            parFile = new File(dir, "org.eclipse.virgo.ide.runtime.core.par.xml");
+        } else if (name.equals("org.eclipse.virgo.ide.runtime.core.par.xml")) {
+            parFile = file;
+            File dir = file.getParentFile();
+            manifestFile = new File(dir.getParentFile(), "META-INF/MANIFEST.MF"); //$NON-NLS-1$
+        }
+        try {
+            if (manifestFile != null && manifestFile.exists()) {
+                IEditorInput in = PdeCompatibilityUtil.createSystemFileEditorInput(manifestFile);
+                if (in == null) {
+                    // Eclipse 3.5 or later
+                    IFileStore store = EFS.getStore(manifestFile.toURI());
+                    in = new FileStoreEditorInput(store);
+                }
+                manager.putContext(in, new SpringBundleInputContext(this, in, file == manifestFile));
+            }
+            if (parFile != null && parFile.exists()) {
+                this.parInput = PdeCompatibilityUtil.createSystemFileEditorInput(parFile);
+                if (this.parInput == null) {
+                    // Eclipse 3.5 or later
+                    IFileStore store = EFS.getStore(parFile.toURI());
+                    this.parInput = new FileStoreEditorInput(store);
+                }
+            }
+        } catch (CoreException e) {
+            PDEPlugin.logException(e);
+        }
+    }
 
-	protected void initializeEditingDomain() {
-		// Create an adapter factory that yields item providers.
-		//
-		adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
+    protected void initializeEditingDomain() {
+        // Create an adapter factory that yields item providers.
+        //
+        this.adapterFactory = new ComposedAdapterFactory(ComposedAdapterFactory.Descriptor.Registry.INSTANCE);
 
-		adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new ParItemProviderAdapterFactory());
-		adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
+        this.adapterFactory.addAdapterFactory(new ResourceItemProviderAdapterFactory());
+        this.adapterFactory.addAdapterFactory(new ParItemProviderAdapterFactory());
+        this.adapterFactory.addAdapterFactory(new ReflectiveItemProviderAdapterFactory());
 
-		// Create the command stack that will notify this editor as commands are
-		// executed.
-		//
-		BasicCommandStack commandStack = new BasicCommandStack();
+        // Create the command stack that will notify this editor as commands are
+        // executed.
+        //
+        BasicCommandStack commandStack = new BasicCommandStack();
 
-		// Add a listener to set the most recent command's affected objects to
-		// be the selection of the viewer with focus.
-		//
-		commandStack.addCommandStackListener(new CommandStackListener() {
-			public void commandStackChanged(final EventObject event) {
-				getContainer().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						firePropertyChange(IEditorPart.PROP_DIRTY);
+        // Add a listener to set the most recent command's affected objects to
+        // be the selection of the viewer with focus.
+        //
+        commandStack.addCommandStackListener(new CommandStackListener() {
 
-						// Try to select the affected objects.
-						//
-						Command mostRecentCommand = ((CommandStack) event.getSource()).getMostRecentCommand();
-						if (mostRecentCommand != null) {
-							setSelectionToViewer(mostRecentCommand.getAffectedObjects());
-						}
-					}
-				});
-			}
-		});
+            public void commandStackChanged(final EventObject event) {
+                getContainer().getDisplay().asyncExec(new Runnable() {
 
-		// Create the editing domain with a special command stack.
-		//
-		editingDomain = new AdapterFactoryEditingDomain(adapterFactory, commandStack, new HashMap<Resource, Boolean>());
-	}
+                    public void run() {
+                        firePropertyChange(IEditorPart.PROP_DIRTY);
 
-	public void setSelectionToViewer(Collection<?> collection) {
-		final Collection<?> theSelection = collection;
-		// Make sure it's okay.
-		//
-		if (theSelection != null && !theSelection.isEmpty()) {
-			// I don't know if this should be run this deferred
-			// because we might have to give the editor a chance to process the
-			// viewer update events
-			// and hence to update the views first.
-			//
-			//
-			Runnable runnable = new Runnable() {
-				public void run() {
-					// Try to select the items in the current content viewer
-					// of the editor.
-					//
-					if (currentViewer != null) {
-						currentViewer.setSelection(new StructuredSelection(theSelection.toArray()), true);
-					}
-				}
-			};
-			runnable.run();
-		}
-	}
+                        // Try to select the affected objects.
+                        //
+                        Command mostRecentCommand = ((CommandStack) event.getSource()).getMostRecentCommand();
+                        if (mostRecentCommand != null) {
+                            setSelectionToViewer(mostRecentCommand.getAffectedObjects());
+                        }
+                    }
+                });
+            }
+        });
 
-	public void createModel() {
-		URI resourceURI = EditUIUtil.getURI(parInput);
-		try {
-			// Load the resource through the editing domain.
-			//
-			parResource = editingDomain.getResourceSet().getResource(resourceURI, true);
-		} catch (Exception e) {
-			ServerIdeUiPlugin.getDefault().log(e);
-			parResource = editingDomain.getResourceSet().getResource(resourceURI, false);
-		}
+        // Create the editing domain with a special command stack.
+        //
+        this.editingDomain = new AdapterFactoryEditingDomain(this.adapterFactory, commandStack, new HashMap<Resource, Boolean>());
+    }
 
-		par = (Par) parResource.getContents().iterator().next();
-	}
+    public void setSelectionToViewer(Collection<?> collection) {
+        final Collection<?> theSelection = collection;
+        // Make sure it's okay.
+        //
+        if (theSelection != null && !theSelection.isEmpty()) {
+            // I don't know if this should be run this deferred
+            // because we might have to give the editor a chance to process the
+            // viewer update events
+            // and hence to update the views first.
+            //
+            //
+            Runnable runnable = new Runnable() {
 
-	public void createParPages() {
-		createModel();
-		addParPages();
-	}
+                public void run() {
+                    // Try to select the items in the current content viewer
+                    // of the editor.
+                    //
+                    if (ParManifestEditor.this.currentViewer != null) {
+                        ParManifestEditor.this.currentViewer.setSelection(new StructuredSelection(theSelection.toArray()), true);
+                    }
+                }
+            };
+            runnable.run();
+        }
+    }
 
-	protected void addParPages() {
-		try {
-			addPage(new ParXmlEditorPage(this, "org.eclipse.virgo.ide.ui.editor.par.dependencies", "Dependencies"));
-		} catch (PartInitException e) {
-			ServerIdeUiPlugin.getDefault().log(e);
-		}
-	}
+    public void createModel() {
+        URI resourceURI = EditUIUtil.getURI(this.parInput);
+        try {
+            // Load the resource through the editing domain.
+            //
+            this.parResource = this.editingDomain.getResourceSet().getResource(resourceURI, true);
+        } catch (Exception e) {
+            ServerIdeUiPlugin.getDefault().log(e);
+            this.parResource = this.editingDomain.getResourceSet().getResource(resourceURI, false);
+        }
 
-	@Override
-	public void doSave(IProgressMonitor progressMonitor) {
-		// Save only resources that have actually changed.
-		//
-		final Map<Object, Object> saveOptions = new HashMap<Object, Object>();
-		saveOptions.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED, Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER);
+        this.par = (Par) this.parResource.getContents().iterator().next();
+    }
 
-		// Do the work within an operation because this is a long running
-		// activity that modifies the workbench.
-		//
-		WorkspaceModifyOperation operation = new WorkspaceModifyOperation() {
-			// This is the method that gets invoked when the operation runs.
-			//
-			@Override
-			public void execute(IProgressMonitor monitor) {
-				// Save the resources to the file system.
-				//
-				boolean first = true;
-				for (Resource resource : editingDomain.getResourceSet().getResources()) {
-					if ((first || !resource.getContents().isEmpty() || isPersisted(resource))
-							&& !editingDomain.isReadOnly(resource)) {
-						try {
-							savedResources.add(resource);
-							resource.save(saveOptions);
-						} catch (IOException exception) {
-							handleError(exception);
-						}
-						first = false;
-					}
-				}
-			}
-		};
+    public void createParPages() {
+        createModel();
+        addParPages();
+    }
 
-		try {
-			// This runs the options, and shows progress.
-			//
-			new ProgressMonitorDialog(getSite().getShell()).run(true, false, operation);
+    protected void addParPages() {
+        try {
+            addPage(new ParXmlEditorPage(this, "org.eclipse.virgo.ide.ui.editor.par.dependencies", "Dependencies"));
+        } catch (PartInitException e) {
+            ServerIdeUiPlugin.getDefault().log(e);
+        }
+    }
 
-			// Refresh the necessary state.
-			//
-			((BasicCommandStack) editingDomain.getCommandStack()).saveIsDone();
-			firePropertyChange(IEditorPart.PROP_DIRTY);
-		} catch (Exception exception) {
-			// Something went wrong that shouldn't.
-			//
-			ServerIdeUiPlugin.getDefault().log(exception);
-		}
-		super.doSave(progressMonitor);
-	}
+    @Override
+    public void doSave(IProgressMonitor progressMonitor) {
+        // Save only resources that have actually changed.
+        //
+        final Map<Object, Object> saveOptions = new HashMap<Object, Object>();
+        saveOptions.put(Resource.OPTION_SAVE_ONLY_IF_CHANGED, Resource.OPTION_SAVE_ONLY_IF_CHANGED_MEMORY_BUFFER);
 
-	protected boolean isPersisted(Resource resource) {
-		boolean result = false;
-		try {
-			InputStream stream = editingDomain.getResourceSet().getURIConverter().createInputStream(resource.getURI());
-			if (stream != null) {
-				result = true;
-				stream.close();
-			}
-		} catch (IOException e) {
-			// Ignore
-		}
-		return result;
-	}
+        // Do the work within an operation because this is a long running
+        // activity that modifies the workbench.
+        //
+        WorkspaceModifyOperation operation = new WorkspaceModifyOperation() {
 
-	private void handleError(IOException exception) {
-		// TODO Auto-generated method stub
+            // This is the method that gets invoked when the operation runs.
+            //
+            @Override
+            public void execute(IProgressMonitor monitor) {
+                // Save the resources to the file system.
+                //
+                boolean first = true;
+                for (Resource resource : ParManifestEditor.this.editingDomain.getResourceSet().getResources()) {
+                    if ((first || !resource.getContents().isEmpty() || isPersisted(resource))
+                        && !ParManifestEditor.this.editingDomain.isReadOnly(resource)) {
+                        try {
+                            ParManifestEditor.this.savedResources.add(resource);
+                            resource.save(saveOptions);
+                        } catch (IOException exception) {
+                            handleError(exception);
+                        }
+                        first = false;
+                    }
+                }
+            }
+        };
 
-	}
+        try {
+            // This runs the options, and shows progress.
+            //
+            new ProgressMonitorDialog(getSite().getShell()).run(true, false, operation);
 
-	@Override
-	public void doSaveAs() {
-		SaveAsDialog saveAsDialog = new SaveAsDialog(getSite().getShell());
-		saveAsDialog.open();
-		IPath path = saveAsDialog.getResult();
-		if (path != null) {
-			IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
-			if (file != null) {
-				doSaveAs(URI.createPlatformResourceURI(file.getFullPath().toString(), true), new FileEditorInput(file));
-			}
-		}
-		super.doSaveAs();
-	}
+            // Refresh the necessary state.
+            //
+            ((BasicCommandStack) this.editingDomain.getCommandStack()).saveIsDone();
+            firePropertyChange(IEditorPart.PROP_DIRTY);
+        } catch (Exception exception) {
+            // Something went wrong that shouldn't.
+            //
+            ServerIdeUiPlugin.getDefault().log(exception);
+        }
+        super.doSave(progressMonitor);
+    }
 
-	protected void doSaveAs(URI uri, IEditorInput editorInput) {
-		(editingDomain.getResourceSet().getResources().get(0)).setURI(uri);
-		setInputWithNotify(editorInput);
-		setPartName(editorInput.getName());
-		IProgressMonitor progressMonitor = new NullProgressMonitor();
-		// getActionBars().getStatusLineManager() != null ? getActionBars()
-		// .getStatusLineManager().getProgressMonitor() : new
-		// NullProgressMonitor();
-		doSave(progressMonitor);
-	}
+    protected boolean isPersisted(Resource resource) {
+        boolean result = false;
+        try {
+            InputStream stream = this.editingDomain.getResourceSet().getURIConverter().createInputStream(resource.getURI());
+            if (stream != null) {
+                result = true;
+                stream.close();
+            }
+        } catch (IOException e) {
+            // Ignore
+        }
+        return result;
+    }
 
-	@Override
-	public boolean isDirty() {
-		if (editingDomain != null && editingDomain.getCommandStack() != null) {
-			boolean dirty = ((BasicCommandStack) editingDomain.getCommandStack()).isSaveNeeded();
-			return dirty || super.isDirty();
-		}
-		return super.isDirty();
-	}
+    private void handleError(IOException exception) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void doSaveAs() {
+        SaveAsDialog saveAsDialog = new SaveAsDialog(getSite().getShell());
+        saveAsDialog.open();
+        IPath path = saveAsDialog.getResult();
+        if (path != null) {
+            IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(path);
+            if (file != null) {
+                doSaveAs(URI.createPlatformResourceURI(file.getFullPath().toString(), true), new FileEditorInput(file));
+            }
+        }
+        super.doSaveAs();
+    }
+
+    protected void doSaveAs(URI uri, IEditorInput editorInput) {
+        this.editingDomain.getResourceSet().getResources().get(0).setURI(uri);
+        setInputWithNotify(editorInput);
+        setPartName(editorInput.getName());
+        IProgressMonitor progressMonitor = new NullProgressMonitor();
+        // getActionBars().getStatusLineManager() != null ? getActionBars()
+        // .getStatusLineManager().getProgressMonitor() : new
+        // NullProgressMonitor();
+        doSave(progressMonitor);
+    }
+
+    @Override
+    public boolean isDirty() {
+        if (this.editingDomain != null && this.editingDomain.getCommandStack() != null) {
+            boolean dirty = ((BasicCommandStack) this.editingDomain.getCommandStack()).isSaveNeeded();
+            return dirty || super.isDirty();
+        }
+        return super.isDirty();
+    }
 
 }

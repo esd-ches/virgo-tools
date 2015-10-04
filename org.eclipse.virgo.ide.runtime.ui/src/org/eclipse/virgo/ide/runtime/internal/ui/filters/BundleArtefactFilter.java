@@ -17,18 +17,18 @@ import org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectBundleContainer
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectBundleRoot;
 
 /**
- * 
+ *
  * @author Miles Parker
- * 
+ *
  */
 public class BundleArtefactFilter extends ViewerFilter {
 
-	/**
-	 * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-	 *      java.lang.Object)
-	 */
-	@Override
-	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		return (!(element instanceof ProjectBundleContainer) && !(element instanceof ProjectBundleRoot));
-	}
+    /**
+     * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+     *      java.lang.Object)
+     */
+    @Override
+    public boolean select(Viewer viewer, Object parentElement, Object element) {
+        return !(element instanceof ProjectBundleContainer) && !(element instanceof ProjectBundleRoot);
+    }
 }

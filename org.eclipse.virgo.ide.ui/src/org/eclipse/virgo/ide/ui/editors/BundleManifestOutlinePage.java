@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.editors;
 
 import java.util.ArrayList;
@@ -43,106 +44,109 @@ import org.osgi.framework.Constants;
  */
 public class BundleManifestOutlinePage extends ManifestOutlinePage {
 
-	public BundleManifestOutlinePage(PDEFormEditor editor) {
-		super(editor);
-	}
+    public BundleManifestOutlinePage(PDEFormEditor editor) {
+        super(editor);
+    }
 
-	@Override
-	protected Object[] getChildren(Object parent) {
-		if (parent instanceof PDEFormPage) {
-			PDEFormPage page = (PDEFormPage) parent;
-			IBundleModel model = getBundleModel(page);
-			if (model != null && model.isValid()) {
-				IBundle bundle = model.getBundle();
-				if (page.getId().equals(BundleDependenciesPage.PAGE_ID)) {
-					ArrayList<Object> list = new ArrayList<Object>();
-					ImportPackageHeader packageHeader = (ImportPackageHeader) bundle.getManifestHeader(Constants.IMPORT_PACKAGE);
-					ImportBundleHeader bundleHeader = (ImportBundleHeader) bundle.getManifestHeader(IHeaderConstants.IMPORT_BUNDLE);
-					ImportLibraryHeader libraryHeader = (ImportLibraryHeader) bundle.getManifestHeader(IHeaderConstants.IMPORT_LIBRARY);
+    @Override
+    protected Object[] getChildren(Object parent) {
+        if (parent instanceof PDEFormPage) {
+            PDEFormPage page = (PDEFormPage) parent;
+            IBundleModel model = getBundleModel(page);
+            if (model != null && model.isValid()) {
+                IBundle bundle = model.getBundle();
+                if (page.getId().equals(BundleDependenciesPage.PAGE_ID)) {
+                    ArrayList<Object> list = new ArrayList<Object>();
+                    ImportPackageHeader packageHeader = (ImportPackageHeader) bundle.getManifestHeader(Constants.IMPORT_PACKAGE);
+                    ImportBundleHeader bundleHeader = (ImportBundleHeader) bundle.getManifestHeader(IHeaderConstants.IMPORT_BUNDLE);
+                    ImportLibraryHeader libraryHeader = (ImportLibraryHeader) bundle.getManifestHeader(IHeaderConstants.IMPORT_LIBRARY);
 
-					if (packageHeader != null && !packageHeader.isEmpty()) {
-						list.addAll(Arrays.asList(packageHeader.getPackages()));
-					}
-					if (bundleHeader != null && !bundleHeader.isEmpty()) {
-						list.addAll(Arrays.asList(bundleHeader.getImportedBundles()));
-					}
-					if (libraryHeader != null && !libraryHeader.isEmpty()) {
-						list.addAll(Arrays.asList(libraryHeader.getImportedLibraries()));
-					}
-					return list.toArray();
-				}
-			}
-		}
-		return super.getChildren(parent);
-	}
+                    if (packageHeader != null && !packageHeader.isEmpty()) {
+                        list.addAll(Arrays.asList(packageHeader.getPackages()));
+                    }
+                    if (bundleHeader != null && !bundleHeader.isEmpty()) {
+                        list.addAll(Arrays.asList(bundleHeader.getImportedBundles()));
+                    }
+                    if (libraryHeader != null && !libraryHeader.isEmpty()) {
+                        list.addAll(Arrays.asList(libraryHeader.getImportedLibraries()));
+                    }
+                    return list.toArray();
+                }
+            }
+        }
+        return super.getChildren(parent);
+    }
 
-	@Override
-	protected String getParentPageId(Object item) {
-		String pageId = null;
-		if (item instanceof ImportPackageObject || item instanceof ImportBundleObject
-				|| item instanceof ImportLibraryObject) {
-			pageId = BundleDependenciesPage.PAGE_ID;
-		}
-		if (pageId != null) {
-			return pageId;
-		}
-		return super.getParentPageId(item);
-	}
+    @Override
+    protected String getParentPageId(Object item) {
+        String pageId = null;
+        if (item instanceof ImportPackageObject || item instanceof ImportBundleObject || item instanceof ImportLibraryObject) {
+            pageId = BundleDependenciesPage.PAGE_ID;
+        }
+        if (pageId != null) {
+            return pageId;
+        }
+        return super.getParentPageId(item);
+    }
 
-	private IBundleModel getBundleModel(PDEFormPage page) {
-		InputContextManager manager = page.getPDEEditor().getContextManager();
-		if (manager != null) {
-			BundleInputContext context = (BundleInputContext) manager.findContext(BundleInputContext.CONTEXT_ID);
-			if (context != null) {
-				return (IBundleModel) context.getModel();
-			}
-		}
-		return null;
-	}
+    private IBundleModel getBundleModel(PDEFormPage page) {
+        InputContextManager manager = page.getPDEEditor().getContextManager();
+        if (manager != null) {
+            BundleInputContext context = (BundleInputContext) manager.findContext(BundleInputContext.CONTEXT_ID);
+            if (context != null) {
+                return (IBundleModel) context.getModel();
+            }
+        }
+        return null;
+    }
 
-	@Override
-	public ILabelProvider createLabelProvider() {
-		return new BasicLabelProvider() {
-			@Override
-			public String getText(Object obj) {
-				if (obj instanceof ImportLibraryObject) {
-					return ((ImportLibraryObject) obj).getId();
-				} else if (obj instanceof ImportBundleObject) {
-					return ((ImportBundleObject) obj).getId();
-				} else {
-					return super.getText(obj);
-				}
-			}
+    @Override
+    public ILabelProvider createLabelProvider() {
+        return new BasicLabelProvider() {
 
-			@Override
-			public Image getImage(Object obj) {
-				PDELabelProvider labelProvider = PDEPlugin.getDefault().getLabelProvider();
-				if (obj instanceof ImportLibraryObject) {
-					return labelProvider.get(PDEPluginImages.DESC_JAR_LIB_OBJ);
-				} else if (obj instanceof ImportBundleObject) {
-					return labelProvider.get(PDEPluginImages.DESC_BUNDLE_OBJ);
-				} else {
-					return super.getImage(obj);
-				}
-			}
+            @Override
+            public String getText(Object obj) {
+                if (obj instanceof ImportLibraryObject) {
+                    return ((ImportLibraryObject) obj).getId();
+                } else if (obj instanceof ImportBundleObject) {
+                    return ((ImportBundleObject) obj).getId();
+                } else {
+                    return super.getText(obj);
+                }
+            }
 
-		};
-	}
+            @Override
+            public Image getImage(Object obj) {
+                PDELabelProvider labelProvider = PDEPlugin.getDefault().getLabelProvider();
+                if (obj instanceof ImportLibraryObject) {
+                    return labelProvider.get(PDEPluginImages.DESC_JAR_LIB_OBJ);
+                } else if (obj instanceof ImportBundleObject) {
+                    return labelProvider.get(PDEPluginImages.DESC_BUNDLE_OBJ);
+                } else {
+                    return super.getImage(obj);
+                }
+            }
 
-	public class BasicLabelProvider extends LabelProvider {
-		public String getText(Object obj) {
-			if (obj instanceof IFormPage) {
-				return ((IFormPage) obj).getTitle();
-			}
-			return PDEPlugin.getDefault().getLabelProvider().getText(obj);
-		}
+        };
+    }
 
-		public Image getImage(Object obj) {
-			if (obj instanceof IFormPage) {
-				return PDEPlugin.getDefault().getLabelProvider().get(PDEPluginImages.DESC_PAGE_OBJ);
-			}
-			return PDEPlugin.getDefault().getLabelProvider().getImage(obj);
-		}
-	}
+    public class BasicLabelProvider extends LabelProvider {
+
+        @Override
+        public String getText(Object obj) {
+            if (obj instanceof IFormPage) {
+                return ((IFormPage) obj).getTitle();
+            }
+            return PDEPlugin.getDefault().getLabelProvider().getText(obj);
+        }
+
+        @Override
+        public Image getImage(Object obj) {
+            if (obj instanceof IFormPage) {
+                return PDEPlugin.getDefault().getLabelProvider().get(PDEPluginImages.DESC_PAGE_OBJ);
+            }
+            return PDEPlugin.getDefault().getLabelProvider().getImage(obj);
+        }
+    }
 
 }

@@ -53,353 +53,354 @@ import org.eclipse.wst.server.ui.internal.cnf.ServersView2;
 import org.eclipse.wst.server.ui.internal.editor.ServerEditor;
 
 /**
- * 
+ *
  * @author Miles Parker
- * 
+ *
  */
 public abstract class CommonView extends CommonNavigator implements ISelectionListener {
 
-	public static final String SHOW_VIEW_LIST = "showViewList";
+    public static final String SHOW_VIEW_LIST = "showViewList";
 
-	private static final String TREE_ACTION_GROUP = "tree";
+    private static final String TREE_ACTION_GROUP = "tree";
 
-	protected IWorkbenchPart currentPart;
+    protected IWorkbenchPart currentPart;
 
-	protected final ILabelProvider titleLabelProvider = new RuntimeFullLabelProvider();
+    protected final ILabelProvider titleLabelProvider = new RuntimeFullLabelProvider();
 
-	RuntimeContainersContentProvider containerProvider = new RuntimeContainersContentProvider();
+    RuntimeContainersContentProvider containerProvider = new RuntimeContainersContentProvider();
 
-	private List<IServer> servers = Collections.EMPTY_LIST;
+    private List<IServer> servers = Collections.EMPTY_LIST;
 
-	private static final String REFRESH_ACTION_GROUP = "refresh";
+    private static final String REFRESH_ACTION_GROUP = "refresh";
 
-	private RefreshArtefactsAction refreshAction;
+    private RefreshArtefactsAction refreshAction;
 
-	private boolean showList;
+    private boolean showList;
 
-	/**
-	 * This is a bit of a hack to determine the last view that was activated by the user in order to determine a
-	 * sensible input for any newly activated views.
-	 */
-	private IWorkbenchPart lastPartHint;
+    /**
+     * This is a bit of a hack to determine the last view that was activated by the user in order to determine a
+     * sensible input for any newly activated views.
+     */
+    private IWorkbenchPart lastPartHint;
 
-	class ShowListAction extends Action {
-		public ShowListAction() {
-			super("", AS_RADIO_BUTTON); //$NON-NLS-1$
-			setText(PDEUIMessages.DependenciesView_ShowListAction_label);
-			setDescription(PDEUIMessages.DependenciesView_ShowListAction_description);
-			setToolTipText(PDEUIMessages.DependenciesView_ShowListAction_tooltip);
-			setImageDescriptor(PDEPluginImages.DESC_FLAT_LAYOUT);
-			setDisabledImageDescriptor(PDEPluginImages.DESC_FLAT_LAYOUT_DISABLED);
-		}
+    class ShowListAction extends Action {
 
-		/*
-		 * @see Action#actionPerformed
-		 */
-		@Override
-		public void run() {
-			if (isChecked()) {
-				if (memento != null) {
-					memento.putBoolean(SHOW_VIEW_LIST, true);
-				}
-				showList = true;
-				updateActivations();
-			}
-		}
-	}
+        public ShowListAction() {
+            super("", AS_RADIO_BUTTON); //$NON-NLS-1$
+            setText(PDEUIMessages.DependenciesView_ShowListAction_label);
+            setDescription(PDEUIMessages.DependenciesView_ShowListAction_description);
+            setToolTipText(PDEUIMessages.DependenciesView_ShowListAction_tooltip);
+            setImageDescriptor(PDEPluginImages.DESC_FLAT_LAYOUT);
+            setDisabledImageDescriptor(PDEPluginImages.DESC_FLAT_LAYOUT_DISABLED);
+        }
 
-	class ShowTreeAction extends Action {
+        /*
+         * @see Action#actionPerformed
+         */
+        @Override
+        public void run() {
+            if (isChecked()) {
+                if (CommonView.this.memento != null) {
+                    CommonView.this.memento.putBoolean(SHOW_VIEW_LIST, true);
+                }
+                CommonView.this.showList = true;
+                updateActivations();
+            }
+        }
+    }
 
-		public ShowTreeAction() {
-			super("", AS_RADIO_BUTTON); //$NON-NLS-1$
-			setText(PDEUIMessages.DependenciesView_ShowTreeAction_label);
-			setDescription(PDEUIMessages.DependenciesView_ShowTreeAction_description);
-			setToolTipText(PDEUIMessages.DependenciesView_ShowTreeAction_tooltip);
-			setImageDescriptor(PDEPluginImages.DESC_HIERARCHICAL_LAYOUT);
-			setDisabledImageDescriptor(PDEPluginImages.DESC_HIERARCHICAL_LAYOUT_DISABLED);
-		}
+    class ShowTreeAction extends Action {
 
-		/*
-		 * @see Action#actionPerformed
-		 */
-		@Override
-		public void run() {
-			if (isChecked()) {
-				if (memento != null) {
-					memento.putBoolean(SHOW_VIEW_LIST, false);
-				}
-				showList = false;
-				updateActivations();
-			}
-		}
-	}
+        public ShowTreeAction() {
+            super("", AS_RADIO_BUTTON); //$NON-NLS-1$
+            setText(PDEUIMessages.DependenciesView_ShowTreeAction_label);
+            setDescription(PDEUIMessages.DependenciesView_ShowTreeAction_description);
+            setToolTipText(PDEUIMessages.DependenciesView_ShowTreeAction_tooltip);
+            setImageDescriptor(PDEPluginImages.DESC_HIERARCHICAL_LAYOUT);
+            setDisabledImageDescriptor(PDEPluginImages.DESC_HIERARCHICAL_LAYOUT_DISABLED);
+        }
 
-	class RefreshArtefactsAction extends Action {
+        /*
+         * @see Action#actionPerformed
+         */
+        @Override
+        public void run() {
+            if (isChecked()) {
+                if (CommonView.this.memento != null) {
+                    CommonView.this.memento.putBoolean(SHOW_VIEW_LIST, false);
+                }
+                CommonView.this.showList = false;
+                updateActivations();
+            }
+        }
+    }
 
-		public RefreshArtefactsAction() {
-			super("", AS_PUSH_BUTTON); //$NON-NLS-1$
-			setText(Messages.RepositoryBrowserEditorPage_Refresh);
-			setDescription(Messages.RepositoryBrowserEditorPage_RefreshMessage);
-			setToolTipText(Messages.RepositoryBrowserEditorPage_RefreshMessage);
-			setImageDescriptor(PDEPluginImages.DESC_REFRESH);
-			setDisabledImageDescriptor(PDEPluginImages.DESC_REFRESH_DISABLED);
-		}
+    class RefreshArtefactsAction extends Action {
 
-		/*
-		 * @see Action#actionPerformed
-		 */
-		@Override
-		public void run() {
-			refreshAll();
-		}
-	}
+        public RefreshArtefactsAction() {
+            super("", AS_PUSH_BUTTON); //$NON-NLS-1$
+            setText(Messages.RepositoryBrowserEditorPage_Refresh);
+            setDescription(Messages.RepositoryBrowserEditorPage_RefreshMessage);
+            setToolTipText(Messages.RepositoryBrowserEditorPage_RefreshMessage);
+            setImageDescriptor(PDEPluginImages.DESC_REFRESH);
+            setDisabledImageDescriptor(PDEPluginImages.DESC_REFRESH_DISABLED);
+        }
 
-	@Override
-	protected CommonViewer createCommonViewerObject(Composite aParent) {
-		return new CommonViewer(getViewId(), aParent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
-	}
+        /*
+         * @see Action#actionPerformed
+         */
+        @Override
+        public void run() {
+            refreshAll();
+        }
+    }
 
-	protected void refreshView() {
-		Display.getDefault().asyncExec(new Runnable() {
-			public void run() {
-				ISelection selection = getCommonViewer().getSelection();
-				getCommonViewer().setInput(getCommonViewer().getInput());
-				getCommonViewer().setSelection(selection, true);
-			}
-		});
-	}
+    @Override
+    protected CommonViewer createCommonViewerObject(Composite aParent) {
+        return new CommonViewer(getViewId(), aParent, SWT.MULTI | SWT.H_SCROLL | SWT.V_SCROLL);
+    }
 
-	/**
-	 * @see org.eclipse.ui.navigator.CommonNavigator#createPartControl(org.eclipse.swt.widgets.Composite)
-	 */
-	@Override
-	public void createPartControl(Composite aParent) {
-		for (IViewReference viewReference : getViewSite().getPage().getViewReferences()) {
-			IWorkbenchPart part = viewReference.getPart(false);
-			if (part instanceof ServersView2 && part != this) {
-				lastPartHint = part;
-				break;
-			}
-		}
-		if (lastPartHint == null) {
-			IEditorPart editor = getViewSite().getPage().getActiveEditor();
-			if (editor instanceof ServerEditor) {
-				lastPartHint = editor;
-			}
-		}
+    protected void refreshView() {
+        Display.getDefault().asyncExec(new Runnable() {
 
-		IActionBars actionBars = getViewSite().getActionBars();
-		IToolBarManager manager = actionBars.getToolBarManager();
+            public void run() {
+                ISelection selection = getCommonViewer().getSelection();
+                getCommonViewer().setInput(getCommonViewer().getInput());
+                getCommonViewer().setSelection(selection, true);
+            }
+        });
+    }
 
-		if (isSupportsListTree()) {
-			showList = false;
-			if (getMemento() != null) {
-				Boolean value = getMemento().getBoolean(SHOW_VIEW_LIST);
-				if (value != null) {
-					showList = value;
-				}
-			}
-			ShowTreeAction showTreeAction = new ShowTreeAction();
-			showTreeAction.setChecked(!showList);
-			ShowListAction showListAction = new ShowListAction();
-			showListAction.setChecked(showList);
-			manager.add(new Separator(TREE_ACTION_GROUP));
-			manager.add(new Separator("presentation")); //$NON-NLS-1$
-			manager.appendToGroup("presentation", showTreeAction); //$NON-NLS-1$
-			manager.appendToGroup("presentation", showListAction); //$NON-NLS-1$
-		}
+    /**
+     * @see org.eclipse.ui.navigator.CommonNavigator#createPartControl(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    public void createPartControl(Composite aParent) {
+        for (IViewReference viewReference : getViewSite().getPage().getViewReferences()) {
+            IWorkbenchPart part = viewReference.getPart(false);
+            if (part instanceof ServersView2 && part != this) {
+                this.lastPartHint = part;
+                break;
+            }
+        }
+        if (this.lastPartHint == null) {
+            IEditorPart editor = getViewSite().getPage().getActiveEditor();
+            if (editor instanceof ServerEditor) {
+                this.lastPartHint = editor;
+            }
+        }
 
-		super.createPartControl(aParent);
+        IActionBars actionBars = getViewSite().getActionBars();
+        IToolBarManager manager = actionBars.getToolBarManager();
 
-		manager.add(new Separator(REFRESH_ACTION_GROUP));
-		refreshAction = new RefreshArtefactsAction();
-		refreshAction.setEnabled(false);
-		manager.appendToGroup(REFRESH_ACTION_GROUP, refreshAction);
+        if (isSupportsListTree()) {
+            this.showList = false;
+            if (getMemento() != null) {
+                Boolean value = getMemento().getBoolean(SHOW_VIEW_LIST);
+                if (value != null) {
+                    this.showList = value;
+                }
+            }
+            ShowTreeAction showTreeAction = new ShowTreeAction();
+            showTreeAction.setChecked(!this.showList);
+            ShowListAction showListAction = new ShowListAction();
+            showListAction.setChecked(this.showList);
+            manager.add(new Separator(TREE_ACTION_GROUP));
+            manager.add(new Separator("presentation")); //$NON-NLS-1$
+            manager.appendToGroup("presentation", showTreeAction); //$NON-NLS-1$
+            manager.appendToGroup("presentation", showListAction); //$NON-NLS-1$
+        }
 
-		getCommonViewer().addDoubleClickListener(new IDoubleClickListener() {
+        super.createPartControl(aParent);
 
-			public void doubleClick(DoubleClickEvent event) {
-				if (event.getSelection() instanceof StructuredSelection) {
-					final StructuredSelection sel = (StructuredSelection) event.getSelection();
-					OpenServerProjectFileAction fileAction = new OpenServerProjectFileAction(getSite().getPage()) {
-						@Override
-						public org.eclipse.jface.viewers.IStructuredSelection getStructuredSelection() {
-							return sel;
-						}
-					};
-					if (fileAction.updateSelection(sel)) {
-						fileAction.run();
-					}
-				}
-			}
-		});
-		updateActivations();
+        manager.add(new Separator(REFRESH_ACTION_GROUP));
+        this.refreshAction = new RefreshArtefactsAction();
+        this.refreshAction.setEnabled(false);
+        manager.appendToGroup(REFRESH_ACTION_GROUP, this.refreshAction);
 
-		getViewSite().getPage().addPartListener(new IPartListener() {
+        getCommonViewer().addDoubleClickListener(new IDoubleClickListener() {
 
-			public void partOpened(IWorkbenchPart part) {
-			}
+            public void doubleClick(DoubleClickEvent event) {
+                if (event.getSelection() instanceof StructuredSelection) {
+                    final StructuredSelection sel = (StructuredSelection) event.getSelection();
+                    OpenServerProjectFileAction fileAction = new OpenServerProjectFileAction(getSite().getPage()) {
 
-			public void partDeactivated(IWorkbenchPart part) {
-			}
+                        @Override
+                        public org.eclipse.jface.viewers.IStructuredSelection getStructuredSelection() {
+                            return sel;
+                        }
+                    };
+                    if (fileAction.updateSelection(sel)) {
+                        fileAction.run();
+                    }
+                }
+            }
+        });
+        updateActivations();
 
-			public void partClosed(IWorkbenchPart part) {
-			}
+        getViewSite().getPage().addPartListener(new IPartListener() {
 
-			public void partBroughtToTop(IWorkbenchPart part) {
-			}
+            public void partOpened(IWorkbenchPart part) {
+            }
 
-			public void partActivated(IWorkbenchPart part) {
-				if (part == CommonView.this) {
-					activated();
-				}
-			}
-		});
+            public void partDeactivated(IWorkbenchPart part) {
+            }
 
-		activated();
-	}
+            public void partClosed(IWorkbenchPart part) {
+            }
 
-	protected void updateContentDescription() {
-		String title = "(No Selection)";
-		Object input = getCommonViewer().getInput();
-		if (input != null && !servers.isEmpty()) {
-			title = titleLabelProvider.getText(input);
-		}
-		setContentDescription(title);
-	}
+            public void partBroughtToTop(IWorkbenchPart part) {
+            }
 
-	/* (non-Javadoc)
-	 * Method declared on ISelectionListener.
-	 * Notify the current page that the selection has changed.
-	 */
-	public void selectionChanged(IWorkbenchPart part, ISelection sel) {
-		List<IServer> lastServers = servers;
-		if (part instanceof ServersView2 && part != this) {
-			if (sel instanceof StructuredSelection) {
-				lastPartHint = part;
-				Iterator<Object> items = ((StructuredSelection) sel).iterator();
-				servers = new ArrayList<IServer>();
-				while (items.hasNext()) {
-					Object next = items.next();
-					if (next instanceof IServer) {
-						IServer server = (IServer) next;
-						if (ServerProject.isVirgo(server)) {
-							servers.add(server);
-						}
-					}
-				}
-				if (!servers.equals(lastServers)) {
-					update();
-				}
-			}
-		} else if (part instanceof IEditorPart) {
-			IServer virgoServer = VirgoEditorAdapterFactory.getVirgoServer((IEditorPart) part);
-			if (virgoServer != null) {
-				servers = Collections.singletonList(virgoServer);
-				lastPartHint = part;
-				if (!servers.equals(lastServers)) {
-					update();
-				}
-			}
-		}
-		updateContentDescription();
-		refreshAction.setEnabled(!servers.isEmpty());
-	}
+            public void partActivated(IWorkbenchPart part) {
+                if (part == CommonView.this) {
+                    activated();
+                }
+            }
+        });
 
-	protected void update() {
-		getCommonViewer().setInput(servers);
-		refreshAction.setEnabled(!getServers().isEmpty());
-		getCommonViewer().refresh();
-	}
+        activated();
+    }
 
-	/**
-	 * @see org.eclipse.ui.navigator.CommonNavigator#saveState(org.eclipse.ui.IMemento)
-	 */
-	@Override
-	public void saveState(IMemento aMemento) {
-		super.saveState(aMemento);
-		if (isSupportsListTree()) {
-			aMemento.putBoolean(SHOW_VIEW_LIST, showList);
-		}
-	}
+    protected void updateContentDescription() {
+        String title = "(No Selection)";
+        Object input = getCommonViewer().getInput();
+        if (input != null && !this.servers.isEmpty()) {
+            title = this.titleLabelProvider.getText(input);
+        }
+        setContentDescription(title);
+    }
 
-	/**
-	 * @see org.eclipse.ui.navigator.CommonNavigator#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
-	 */
-	@Override
-	public void init(IViewSite site, IMemento memento) throws PartInitException {
-		site.getPage().addPostSelectionListener(this);
-		super.init(site, memento);
-	}
+    /*
+     * (non-Javadoc) Method declared on ISelectionListener. Notify the current page that the selection has changed.
+     */
+    public void selectionChanged(IWorkbenchPart part, ISelection sel) {
+        List<IServer> lastServers = this.servers;
+        if (part instanceof ServersView2 && part != this) {
+            if (sel instanceof StructuredSelection) {
+                this.lastPartHint = part;
+                Iterator<Object> items = ((StructuredSelection) sel).iterator();
+                this.servers = new ArrayList<IServer>();
+                while (items.hasNext()) {
+                    Object next = items.next();
+                    if (next instanceof IServer) {
+                        IServer server = (IServer) next;
+                        if (ServerProject.isVirgo(server)) {
+                            this.servers.add(server);
+                        }
+                    }
+                }
+                if (!this.servers.equals(lastServers)) {
+                    update();
+                }
+            }
+        } else if (part instanceof IEditorPart) {
+            IServer virgoServer = VirgoEditorAdapterFactory.getVirgoServer((IEditorPart) part);
+            if (virgoServer != null) {
+                this.servers = Collections.singletonList(virgoServer);
+                this.lastPartHint = part;
+                if (!this.servers.equals(lastServers)) {
+                    update();
+                }
+            }
+        }
+        updateContentDescription();
+        this.refreshAction.setEnabled(!this.servers.isEmpty());
+    }
 
-	/* (non-Javadoc)
-	 * Method declared on IWorkbenchPart.
-	 */
-	@Override
-	public void dispose() {
-		super.dispose();
-		getSite().getPage().removePostSelectionListener(this);
-		currentPart = null;
-		lastPartHint = null;
-	}
+    protected void update() {
+        getCommonViewer().setInput(this.servers);
+        this.refreshAction.setEnabled(!getServers().isEmpty());
+        getCommonViewer().refresh();
+    }
 
-	public List<IServer> getServers() {
-		return servers;
-	}
+    /**
+     * @see org.eclipse.ui.navigator.CommonNavigator#saveState(org.eclipse.ui.IMemento)
+     */
+    @Override
+    public void saveState(IMemento aMemento) {
+        super.saveState(aMemento);
+        if (isSupportsListTree()) {
+            aMemento.putBoolean(SHOW_VIEW_LIST, this.showList);
+        }
+    }
 
-	protected void refreshAll() {
-		for (IServer server : getServers()) {
-			ServerProject project = ServerProjectManager.getInstance().getProject(server);
-			if (project != null) {
-				project.refreshDirectories();
-			}
-		}
-		refreshView();
-	}
+    /**
+     * @see org.eclipse.ui.navigator.CommonNavigator#init(org.eclipse.ui.IViewSite, org.eclipse.ui.IMemento)
+     */
+    @Override
+    public void init(IViewSite site, IMemento memento) throws PartInitException {
+        site.getPage().addPostSelectionListener(this);
+        super.init(site, memento);
+    }
 
-	public boolean isShowList() {
-		return isSupportsListTree() && showList;
-	}
+    /*
+     * (non-Javadoc) Method declared on IWorkbenchPart.
+     */
+    @Override
+    public void dispose() {
+        super.dispose();
+        getSite().getPage().removePostSelectionListener(this);
+        this.currentPart = null;
+        this.lastPartHint = null;
+    }
 
-	protected abstract String getTreeContentId();
+    public List<IServer> getServers() {
+        return this.servers;
+    }
 
-	/**
-	 * May return null in which case we won't show list.
-	 */
-	protected String getListContentId() {
-		return null;
-	}
+    protected void refreshAll() {
+        for (IServer server : getServers()) {
+            ServerProject project = ServerProjectManager.getInstance().getProject(server);
+            if (project != null) {
+                project.refreshDirectories();
+            }
+        }
+        refreshView();
+    }
 
-	protected abstract String getViewId();
+    public boolean isShowList() {
+        return isSupportsListTree() && this.showList;
+    }
 
-	protected final boolean isSupportsListTree() {
-		return getListContentId() != null;
-	}
+    protected abstract String getTreeContentId();
 
-	protected void updateActivations() {
-		INavigatorActivationService activationService = getCommonViewer().getNavigatorContentService()
-				.getActivationService();
-		if (!isSupportsListTree()) {
-			activationService.activateExtensions(new String[] { getTreeContentId() }, false);
-		} else {
-			if (isShowList()) {
-				activationService.deactivateExtensions(new String[] { getTreeContentId() }, false);
-				activationService.activateExtensions(new String[] { getListContentId() }, false);
-			} else {
-				activationService.deactivateExtensions(new String[] { getListContentId() }, false);
-				activationService.activateExtensions(new String[] { getTreeContentId() }, false);
-			}
-		}
-	}
+    /**
+     * May return null in which case we won't show list.
+     */
+    protected String getListContentId() {
+        return null;
+    }
 
-	protected void activated() {
-		if (lastPartHint instanceof ServersView2) {
-			selectionChanged(lastPartHint, ((ServersView2) lastPartHint).getCommonViewer().getSelection());
-		} else if (lastPartHint instanceof IEditorPart) {
-			IServer virgoServer = VirgoEditorAdapterFactory.getVirgoServer((IEditorPart) lastPartHint);
-			if (virgoServer != null) {
-				selectionChanged(lastPartHint, StructuredSelection.EMPTY);
-			}
-		}
-	}
+    protected abstract String getViewId();
+
+    protected final boolean isSupportsListTree() {
+        return getListContentId() != null;
+    }
+
+    protected void updateActivations() {
+        INavigatorActivationService activationService = getCommonViewer().getNavigatorContentService().getActivationService();
+        if (!isSupportsListTree()) {
+            activationService.activateExtensions(new String[] { getTreeContentId() }, false);
+        } else {
+            if (isShowList()) {
+                activationService.deactivateExtensions(new String[] { getTreeContentId() }, false);
+                activationService.activateExtensions(new String[] { getListContentId() }, false);
+            } else {
+                activationService.deactivateExtensions(new String[] { getListContentId() }, false);
+                activationService.activateExtensions(new String[] { getTreeContentId() }, false);
+            }
+        }
+    }
+
+    protected void activated() {
+        if (this.lastPartHint instanceof ServersView2) {
+            selectionChanged(this.lastPartHint, ((ServersView2) this.lastPartHint).getCommonViewer().getSelection());
+        } else if (this.lastPartHint instanceof IEditorPart) {
+            IServer virgoServer = VirgoEditorAdapterFactory.getVirgoServer((IEditorPart) this.lastPartHint);
+            if (virgoServer != null) {
+                selectionChanged(this.lastPartHint, StructuredSelection.EMPTY);
+            }
+        }
+    }
 }

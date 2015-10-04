@@ -25,56 +25,55 @@ import org.eclipse.wst.server.core.IServer;
  */
 public abstract class ProjectFileContainer implements IServerProjectContainer {
 
-	private final ServerProject serverProject;
+    private final ServerProject serverProject;
 
-	protected ProjectFileReference[] fileReferences;
+    protected ProjectFileReference[] fileReferences;
 
-	protected ProjectFileContainer(ServerProject serverProject) {
-		this.serverProject = serverProject;
-	}
+    protected ProjectFileContainer(ServerProject serverProject) {
+        this.serverProject = serverProject;
+    }
 
-	public static void createFolder(IFolder folder) {
-		IContainer parent = folder.getParent();
-		if (parent instanceof IFolder) {
-			createFolder((IFolder) parent);
-		}
-		if (!folder.exists()) {
-			try {
-				folder.create(true, true, null);
-			} catch (CoreException e) {
-				StatusManager.getManager().handle(
-						new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID,
-								"Problem occurred while managing server project.", e));
-			}
-		}
-	}
+    public static void createFolder(IFolder folder) {
+        IContainer parent = folder.getParent();
+        if (parent instanceof IFolder) {
+            createFolder((IFolder) parent);
+        }
+        if (!folder.exists()) {
+            try {
+                folder.create(true, true, null);
+            } catch (CoreException e) {
+                StatusManager.getManager().handle(
+                    new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, "Problem occurred while managing server project.", e));
+            }
+        }
+    }
 
-	/**
-	 * @see org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer#getMembers()
-	 */
-	public Object[] getMembers() {
-		return getFileReferences();
-	}
+    /**
+     * @see org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer#getMembers()
+     */
+    public Object[] getMembers() {
+        return getFileReferences();
+    }
 
-	/**
-	 * @see org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer#getServer()
-	 */
-	public IServer getServer() {
-		return getServerProject().getServer();
-	}
+    /**
+     * @see org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer#getServer()
+     */
+    public IServer getServer() {
+        return getServerProject().getServer();
+    }
 
-	public ProjectFileReference[] getFileReferences() {
-		if (fileReferences == null) {
-			fileReferences = createFileReferences();
-		}
-		return fileReferences;
-	}
+    public ProjectFileReference[] getFileReferences() {
+        if (this.fileReferences == null) {
+            this.fileReferences = createFileReferences();
+        }
+        return this.fileReferences;
+    }
 
-	protected abstract ProjectFileReference[] createFileReferences();
+    protected abstract ProjectFileReference[] createFileReferences();
 
-	protected abstract IFolder getRootFolder();
+    protected abstract IFolder getRootFolder();
 
-	public ServerProject getServerProject() {
-		return serverProject;
-	}
+    public ServerProject getServerProject() {
+        return this.serverProject;
+    }
 }

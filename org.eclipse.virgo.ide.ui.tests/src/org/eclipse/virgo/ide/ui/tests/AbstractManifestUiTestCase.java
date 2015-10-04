@@ -8,21 +8,18 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.tests;
 
 import java.io.IOException;
 import java.util.List;
 
+import javax.xml.transform.Result;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.pde.internal.ui.editor.plugin.ManifestEditor;
-import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
-import org.eclipse.swtbot.swt.finder.SWTBotTestCase;
-import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
-import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
-import org.eclipse.swtbot.swt.finder.results.Result;
-import org.eclipse.swtbot.swt.finder.utils.SWTUtils;
 import org.eclipse.ui.IEditorPart;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -40,75 +37,76 @@ import org.eclipse.virgo.ide.ui.tests.util.VirgoIdeTestBot;
  */
 public class AbstractManifestUiTestCase extends SWTBotTestCase {
 
-	public VirgoIdeTestBot bot;
+    public VirgoIdeTestBot bot;
 
-	protected IProject createPredefinedProject(String projectName) throws CoreException, IOException {
-		return VirgoIdeTestUtil.createPredefinedProject(projectName, getBundleName());
-	}
+    protected IProject createPredefinedProject(String projectName) throws CoreException, IOException {
+        return VirgoIdeTestUtil.createPredefinedProject(projectName, getBundleName());
+    }
 
-	protected String getBundleName() {
-		return "org.eclipse.virgo.ide.ui.tests";
-	}
+    protected String getBundleName() {
+        return "org.eclipse.virgo.ide.ui.tests";
+    }
 
-	protected BundleManifestEditor openBundleManifestFile(String path) throws CoreException, IOException {
-		IProject project = createPredefinedProject("SimpleBundleProject");
-		BundleManifestEditor manifest = (BundleManifestEditor) openManifestEditor(project, path);
-		return manifest;
-	}
+    protected BundleManifestEditor openBundleManifestFile(String path) throws CoreException, IOException {
+        IProject project = createPredefinedProject("SimpleBundleProject");
+        BundleManifestEditor manifest = (BundleManifestEditor) openManifestEditor(project, path);
+        return manifest;
+    }
 
-	private ManifestEditor openManifestEditor(IProject project, String path) {
-		final IFile file = project.getFile(path);
-		assertTrue(file.exists());
+    private ManifestEditor openManifestEditor(IProject project, String path) {
+        final IFile file = project.getFile(path);
+        assertTrue(file.exists());
 
-		return UIThreadRunnable.syncExec(new Result<ManifestEditor>() {
-			public ManifestEditor run() {
-				IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
-				assertNotNull("Expected active workbench window", window);
-				IWorkbenchPage page = window.getActivePage();
-				assertNotNull("Expected active workbench page", page);
+        return UIThreadRunnable.syncExec(new Result<ManifestEditor>() {
 
-				try {
-					IEditorPart editor = IDE.openEditor(page, file);
-					if (editor instanceof ManifestEditor) {
-						return ((ManifestEditor) editor);
-					}
-				} catch (PartInitException e) {
-					fail("Could not open a manifest editor.");
-				}
-				return null;
-			}
-		});
-	}
+            public ManifestEditor run() {
+                IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+                assertNotNull("Expected active workbench window", window);
+                IWorkbenchPage page = window.getActivePage();
+                assertNotNull("Expected active workbench page", page);
 
-	protected ParManifestEditor openParManifestFile(String path) throws CoreException, IOException {
-		IProject project = createPredefinedProject("SimpleParProject");
-		ParManifestEditor manifest = (ParManifestEditor) openManifestEditor(project, path);
-		return manifest;
-	}
+                try {
+                    IEditorPart editor = IDE.openEditor(page, file);
+                    if (editor instanceof ManifestEditor) {
+                        return (ManifestEditor) editor;
+                    }
+                } catch (PartInitException e) {
+                    fail("Could not open a manifest editor.");
+                }
+                return null;
+            }
+        });
+    }
 
-	@Override
-	protected void setUp() throws Exception {
-		bot = new VirgoIdeTestBot();
-		try {
-			bot.viewByTitle("Welcome").close();
-		} catch (WidgetNotFoundException e) {
-			// ignore
-		}
-		assertFalse("SWTBot tests can not run in the UI thread.", SWTUtils.isUIThread());
+    protected ParManifestEditor openParManifestFile(String path) throws CoreException, IOException {
+        IProject project = createPredefinedProject("SimpleParProject");
+        ParManifestEditor manifest = (ParManifestEditor) openManifestEditor(project, path);
+        return manifest;
+    }
 
-		// trigger artefact repo initialization
-		ServerCorePlugin.getArtefactRepositoryManager().getArtefactRepository();
-		while (!ServerCorePlugin.getArtefactRepositoryManager().isArtefactRepositoryInitialized()) {
-			Thread.sleep(500);
-		}
-	}
+    @Override
+    protected void setUp() throws Exception {
+        this.bot = new VirgoIdeTestBot();
+        try {
+            this.bot.viewByTitle("Welcome").close();
+        } catch (WidgetNotFoundException e) {
+            // ignore
+        }
+        assertFalse("SWTBot tests can not run in the UI thread.", SWTUtils.isUIThread());
 
-	@Override
-	protected void tearDown() throws Exception {
-		List<? extends SWTBotEditor> editors = bot.editors();
-		for (SWTBotEditor editor : editors) {
-			editor.close();
-		}
-		VirgoIdeTestUtil.deleteAllProjects();
-	}
+        // trigger artefact repo initialization
+        ServerCorePlugin.getArtefactRepositoryManager().getArtefactRepository();
+        while (!ServerCorePlugin.getArtefactRepositoryManager().isArtefactRepositoryInitialized()) {
+            Thread.sleep(500);
+        }
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        List<? extends SWTBotEditor> editors = this.bot.editors();
+        for (SWTBotEditor editor : editors) {
+            editor.close();
+        }
+        VirgoIdeTestUtil.deleteAllProjects();
+    }
 }

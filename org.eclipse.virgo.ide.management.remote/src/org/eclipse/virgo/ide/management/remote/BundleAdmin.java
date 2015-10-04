@@ -4,10 +4,11 @@
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
- * 
+ *
  * Contributors:
  *     SpringSource, a divison of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.management.remote;
 
 import java.util.Map;
@@ -17,8 +18,8 @@ import java.util.Map;
  */
 public interface BundleAdmin {
 
-	Map<Long, Bundle> retrieveBundles();
+    Map<Long, Bundle> retrieveBundles();
 
-	String execute(String cmdLine);
+    String execute(String cmdLine);
 
 }

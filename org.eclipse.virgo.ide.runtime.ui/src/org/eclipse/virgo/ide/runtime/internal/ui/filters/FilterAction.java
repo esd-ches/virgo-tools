@@ -23,74 +23,70 @@ import org.eclipse.virgo.ide.runtime.internal.ui.ServerUiImages;
 import org.eclipse.virgo.ide.runtime.ui.views.ArtefactCommonView;
 
 /**
- * 
+ *
  * @author Miles Parker
- * 
+ *
  */
 public class FilterAction extends Action {
 
-	ArtefactCommonView navigator;
+    ArtefactCommonView navigator;
 
-	String id;
+    String id;
 
-	/*
-	 * @see Action#actionPerformed
-	 */
-	@Override
-	public void run() {
-		INavigatorFilterService activationService = navigator.getNavigatorContentService().getFilterService();
-		ICommonFilterDescriptor[] visibleFilterDescriptors = activationService.getVisibleFilterDescriptors();
-		Collection<String> activeIDs = new HashSet<String>();
-		for (ICommonFilterDescriptor filterDescriptor : visibleFilterDescriptors) {
-			String filterID = filterDescriptor.getId();
-			boolean active = activationService.isActive(filterID);
-			if (active) {
-				activeIDs.add(filterID);
-			}
-		}
-		if (isChecked()) {
-			activeIDs.remove(id);
-		} else {
-			activeIDs.add(id);
-		}
-		String[] ids = activeIDs.toArray(new String[activeIDs.size()]);
-		activationService.activateFilterIdsAndUpdateViewer(ids);
-	}
+    /*
+     * @see Action#actionPerformed
+     */
+    @Override
+    public void run() {
+        INavigatorFilterService activationService = this.navigator.getNavigatorContentService().getFilterService();
+        ICommonFilterDescriptor[] visibleFilterDescriptors = activationService.getVisibleFilterDescriptors();
+        Collection<String> activeIDs = new HashSet<String>();
+        for (ICommonFilterDescriptor filterDescriptor : visibleFilterDescriptors) {
+            String filterID = filterDescriptor.getId();
+            boolean active = activationService.isActive(filterID);
+            if (active) {
+                activeIDs.add(filterID);
+            }
+        }
+        if (isChecked()) {
+            activeIDs.remove(this.id);
+        } else {
+            activeIDs.add(this.id);
+        }
+        String[] ids = activeIDs.toArray(new String[activeIDs.size()]);
+        activationService.activateFilterIdsAndUpdateViewer(ids);
+    }
 
-	private FilterAction(ArtefactCommonView viewer, String id, ImageDescriptor image) {
-		super("", AS_CHECK_BOX); //$NON-NLS-1$
-		this.navigator = viewer;
-		this.id = id;
-		ICommonFilterDescriptor[] descriptors = viewer.getNavigatorContentService()
-				.getFilterService()
-				.getVisibleFilterDescriptors();
-		for (ICommonFilterDescriptor descriptor : descriptors) {
-			if (descriptor.getId().equals(id)) {
-				setText("Show " + descriptor.getName());
-				setDescription("Show " + descriptor.getDescription());
-				setToolTipText("Show " + descriptor.getName() + " in the list of artifacts.");
-				break;
-			}
-		}
-		setImageDescriptor(image);
-		setDisabledImageDescriptor(image);
+    private FilterAction(ArtefactCommonView viewer, String id, ImageDescriptor image) {
+        super("", AS_CHECK_BOX); //$NON-NLS-1$
+        this.navigator = viewer;
+        this.id = id;
+        ICommonFilterDescriptor[] descriptors = viewer.getNavigatorContentService().getFilterService().getVisibleFilterDescriptors();
+        for (ICommonFilterDescriptor descriptor : descriptors) {
+            if (descriptor.getId().equals(id)) {
+                setText("Show " + descriptor.getName());
+                setDescription("Show " + descriptor.getDescription());
+                setToolTipText("Show " + descriptor.getName() + " in the list of artifacts.");
+                break;
+            }
+        }
+        setImageDescriptor(image);
+        setDisabledImageDescriptor(image);
 
-		INavigatorFilterService activationService = navigator.getNavigatorContentService().getFilterService();
-		boolean active = activationService.isActive(id);
-		setChecked(!active);
-	}
+        INavigatorFilterService activationService = this.navigator.getNavigatorContentService().getFilterService();
+        boolean active = activationService.isActive(id);
+        setChecked(!active);
+    }
 
-	public static FilterAction[] createSet(ArtefactCommonView viewer) {
-		return new FilterAction[] { createBundleFilter(viewer), createLibraryFilter(viewer) };
-	}
+    public static FilterAction[] createSet(ArtefactCommonView viewer) {
+        return new FilterAction[] { createBundleFilter(viewer), createLibraryFilter(viewer) };
+    }
 
-	public static FilterAction createBundleFilter(ArtefactCommonView viewer) {
-		return new FilterAction(viewer, "org.eclipse.virgo.ide.runtime.ui.filterBundles",
-				JavaPluginImages.DESC_OBJS_EXTJAR);
-	}
+    public static FilterAction createBundleFilter(ArtefactCommonView viewer) {
+        return new FilterAction(viewer, "org.eclipse.virgo.ide.runtime.ui.filterBundles", JavaPluginImages.DESC_OBJS_EXTJAR);
+    }
 
-	public static FilterAction createLibraryFilter(ArtefactCommonView viewer) {
-		return new FilterAction(viewer, "org.eclipse.virgo.ide.runtime.ui.filterLibraries",
-				ServerUiImages.DESC_OBJ_VIRGO_LIB);
-	}
+    public static FilterAction createLibraryFilter(ArtefactCommonView viewer) {
+        return new FilterAction(viewer, "org.eclipse.virgo.ide.runtime.ui.filterLibraries", ServerUiImages.DESC_OBJ_VIRGO_LIB);
+    }
 }

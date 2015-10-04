@@ -25,66 +25,68 @@ import org.eclipse.virgo.bundlor.support.ArtifactAnalyzer;
 import org.eclipse.virgo.bundlor.support.partialmanifest.PartialManifest;
 
 /**
- * {@link ArtefactAnalyser} that is delegates to JDT AST scanning </p> <strong>Concurrent Semantics</strong><br />
+ * {@link ArtefactAnalyser} that is delegates to JDT AST scanning
+ * </p>
+ * <strong>Concurrent Semantics</strong><br />
  * Not threadsafe.
- * 
+ *
  * @author Christian Dupuis
  */
 public class AstTypeArtifactAnalyser implements ArtifactAnalyzer {
 
-	private static final String JAVA_EXT = ".java"; //$NON-NLS-1$
+    private static final String JAVA_EXT = ".java"; //$NON-NLS-1$
 
-	private final IJavaProject javaProject;
+    private final IJavaProject javaProject;
 
-	public AstTypeArtifactAnalyser(IJavaProject javaProject) {
-		this.javaProject = javaProject;
-	}
+    public AstTypeArtifactAnalyser(IJavaProject javaProject) {
+        this.javaProject = javaProject;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void analyse(InputStream is, String name, PartialManifest model) throws Exception {
-		ASTParser parser = ASTParser.newParser(AST.JLS3);
-		parser.setProject(javaProject);
-		parser.setSource(convertStreamToString(is).toCharArray());
-		parser.setUnitName(name);
-		parser.setResolveBindings(true);
-		parser.setBindingsRecovery(true);
-		parser.setStatementsRecovery(true);
-		ASTNode node = parser.createAST(new NullProgressMonitor());
-		node.accept(new ArtifactAnalyserTypeVisitor(model));
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public void analyse(InputStream is, String name, PartialManifest model) throws Exception {
+        ASTParser parser = ASTParser.newParser(AST.JLS3);
+        parser.setProject(this.javaProject);
+        parser.setSource(convertStreamToString(is).toCharArray());
+        parser.setUnitName(name);
+        parser.setResolveBindings(true);
+        parser.setBindingsRecovery(true);
+        parser.setStatementsRecovery(true);
+        ASTNode node = parser.createAST(new NullProgressMonitor());
+        node.accept(new ArtifactAnalyserTypeVisitor(model));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean canAnalyse(String name) {
-		// For now only accept source files
-		// TODO does it work with .class files as well?
-		return name.endsWith(JAVA_EXT);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    public boolean canAnalyse(String name) {
+        // For now only accept source files
+        // TODO does it work with .class files as well?
+        return name.endsWith(JAVA_EXT);
+    }
 
-	/**
-	 * Converts an {@link InputStream} into a {@link String} instance.
-	 */
-	public String convertStreamToString(InputStream is) {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
-		StringBuilder sb = new StringBuilder();
+    /**
+     * Converts an {@link InputStream} into a {@link String} instance.
+     */
+    public String convertStreamToString(InputStream is) {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(is));
+        StringBuilder sb = new StringBuilder();
 
-		String line = null;
-		try {
-			while ((line = reader.readLine()) != null) {
-				sb.append(line).append("\n");
-			}
-		} catch (IOException e) {
-		} finally {
-			try {
-				is.close();
-			} catch (IOException e) {
-			}
-		}
+        String line = null;
+        try {
+            while ((line = reader.readLine()) != null) {
+                sb.append(line).append("\n");
+            }
+        } catch (IOException e) {
+        } finally {
+            try {
+                is.close();
+            } catch (IOException e) {
+            }
+        }
 
-		return sb.toString();
-	}
+        return sb.toString();
+    }
 
 }

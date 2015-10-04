@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.wizards;
 
 import java.util.Map;
@@ -23,37 +24,36 @@ import org.eclipse.swt.widgets.Composite;
  */
 public abstract class AbstractPropertiesPage extends WizardPage {
 
-	public AbstractPropertiesPage(String name) {
-		super(name);
-		setTitle("Bundle Properties");
-		setDescription("Set the additional properties of the bundle. "
-				+ "You can modify the properties at any time in the MANIFEST.MF file.");
-	}
+    public AbstractPropertiesPage(String name) {
+        super(name);
+        setTitle("Bundle Properties");
+        setDescription("Set the additional properties of the bundle. " + "You can modify the properties at any time in the MANIFEST.MF file.");
+    }
 
-	public void createControl(Composite parent) {
-		Composite container = new Composite(parent, SWT.NONE);
-		container.setLayout(new GridLayout());
+    public void createControl(Composite parent) {
+        Composite container = new Composite(parent, SWT.NONE);
+        container.setLayout(new GridLayout());
 
-		createPropertiesGroup(container);
-		setControl(container);
-	}
+        createPropertiesGroup(container);
+        setControl(container);
+    }
 
-	protected abstract void createPropertiesGroup(Composite container);
+    protected abstract void createPropertiesGroup(Composite container);
 
-	public abstract String getModuleType();
+    public abstract String getModuleType();
 
-	public abstract Map<String, String> getProperties();
+    public abstract Map<String, String> getProperties();
 
-	@Override
-	public IWizardPage getNextPage() {
-		NewBundleProjectWizard wizard = (NewBundleProjectWizard) getWizard();
-		return wizard.getFinalPage();
-	}
+    @Override
+    public IWizardPage getNextPage() {
+        NewBundleProjectWizard wizard = (NewBundleProjectWizard) getWizard();
+        return wizard.getFinalPage();
+    }
 
-	@Override
-	public IWizardPage getPreviousPage() {
-		NewBundleProjectWizard wizard = (NewBundleProjectWizard) getWizard();
-		return wizard.getInformationPage();
-	}
+    @Override
+    public IWizardPage getPreviousPage() {
+        NewBundleProjectWizard wizard = (NewBundleProjectWizard) getWizard();
+        return wizard.getInformationPage();
+    }
 
 }
