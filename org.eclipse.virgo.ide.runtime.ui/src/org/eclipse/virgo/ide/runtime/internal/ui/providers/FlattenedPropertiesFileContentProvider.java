@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -15,22 +16,22 @@ import org.eclipse.wst.server.core.IServer;
 
 /**
  * Common content provider for views on server content.
- * 
+ *
  * @author Miles Parker
  */
 public class FlattenedPropertiesFileContentProvider extends PropertiesFileContentProvider {
 
-	@Override
-	public Object[] getElements(Object inputElement) {
-		if (inputElement instanceof IServer) {
-			Object[] elements = super.getElements(inputElement);
-			Object[] returned = new Object[0];
-			for (Object object : elements) {
-				Object[] fileSelection = super.getElements(object);
-				returned = ArrayUtils.addAll(returned, fileSelection);
-			}
-			return returned;
-		}
-		return super.getElements(inputElement);
-	}
+    @Override
+    public Object[] getElements(Object inputElement) {
+        if (inputElement instanceof IServer) {
+            Object[] elements = super.getElements(inputElement);
+            Object[] returned = new Object[0];
+            for (Object object : elements) {
+                Object[] fileSelection = super.getElements(object);
+                returned = ArrayUtils.addAll(returned, fileSelection);
+            }
+            return returned;
+        }
+        return super.getElements(inputElement);
+    }
 }

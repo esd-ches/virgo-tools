@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.core.actions;
 
 import org.eclipse.core.commands.ExecutionException;
@@ -20,41 +21,41 @@ import org.eclipse.virgo.ide.runtime.core.IServerWorkingCopy;
 
 /**
  * {@link AbstractOperation} to modify the jmx deployer port.
- * 
+ *
  * @author Christian Dupuis
  * @since 1.0.1
  */
 public class ModifyDeployerPortCommand extends AbstractOperation {
 
-	private IServerWorkingCopy workingCopy;
+    private final IServerWorkingCopy workingCopy;
 
-	private int oldPort;
+    private final int oldPort;
 
-	private int newPort;
+    private final int newPort;
 
-	public ModifyDeployerPortCommand(IServerWorkingCopy workingCopy, int portNumber) {
-		super("Modify JMX server port");
-		this.workingCopy = workingCopy;
-		this.oldPort = workingCopy.getMBeanServerPort();
-		this.newPort = portNumber;
-	}
+    public ModifyDeployerPortCommand(IServerWorkingCopy workingCopy, int portNumber) {
+        super("Modify JMX server port");
+        this.workingCopy = workingCopy;
+        this.oldPort = workingCopy.getMBeanServerPort();
+        this.newPort = portNumber;
+    }
 
-	@Override
-	public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		workingCopy.setMBeanServerPort(newPort);
-		return Status.OK_STATUS;
-	}
+    @Override
+    public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        this.workingCopy.setMBeanServerPort(this.newPort);
+        return Status.OK_STATUS;
+    }
 
-	@Override
-	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		workingCopy.setMBeanServerPort(newPort);
-		return Status.OK_STATUS;
-	}
+    @Override
+    public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        this.workingCopy.setMBeanServerPort(this.newPort);
+        return Status.OK_STATUS;
+    }
 
-	@Override
-	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		workingCopy.setMBeanServerPort(oldPort);
-		return Status.OK_STATUS;
-	}
+    @Override
+    public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        this.workingCopy.setMBeanServerPort(this.oldPort);
+        return Status.OK_STATUS;
+    }
 
 }

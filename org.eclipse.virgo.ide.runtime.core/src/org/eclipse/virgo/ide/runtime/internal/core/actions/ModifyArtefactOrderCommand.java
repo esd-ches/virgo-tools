@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.core.actions;
 
 import java.util.List;
@@ -22,41 +23,41 @@ import org.eclipse.virgo.ide.runtime.core.IServerWorkingCopy;
 
 /**
  * {@link AbstractOperation} to modify the artefact deployment order.
- * 
+ *
  * @author Christian Dupuis
  * @since 1.0.2
  */
 public class ModifyArtefactOrderCommand extends AbstractOperation {
 
-	private IServerWorkingCopy workingCopy;
+    private final IServerWorkingCopy workingCopy;
 
-	private List<String> oldOrder;
+    private final List<String> oldOrder;
 
-	private List<String> newOrder;
+    private final List<String> newOrder;
 
-	public ModifyArtefactOrderCommand(IServerWorkingCopy workingCopy, List<String> newOrder) {
-		super("Modify Artefact deployment order");
-		this.workingCopy = workingCopy;
-		this.oldOrder = workingCopy.getArtefactOrder();
-		this.newOrder = newOrder;
-	}
+    public ModifyArtefactOrderCommand(IServerWorkingCopy workingCopy, List<String> newOrder) {
+        super("Modify Artefact deployment order");
+        this.workingCopy = workingCopy;
+        this.oldOrder = workingCopy.getArtefactOrder();
+        this.newOrder = newOrder;
+    }
 
-	@Override
-	public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		workingCopy.setArtefactOrder(newOrder);
-		return Status.OK_STATUS;
-	}
+    @Override
+    public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        this.workingCopy.setArtefactOrder(this.newOrder);
+        return Status.OK_STATUS;
+    }
 
-	@Override
-	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		workingCopy.setArtefactOrder(newOrder);
-		return Status.OK_STATUS;
-	}
+    @Override
+    public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        this.workingCopy.setArtefactOrder(this.newOrder);
+        return Status.OK_STATUS;
+    }
 
-	@Override
-	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		workingCopy.setArtefactOrder(oldOrder);
-		return Status.OK_STATUS;
-	}
+    @Override
+    public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        this.workingCopy.setArtefactOrder(this.oldOrder);
+        return Status.OK_STATUS;
+    }
 
 }

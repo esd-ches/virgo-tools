@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.editors;
 
 import java.io.File;
@@ -35,38 +36,38 @@ import org.eclipse.virgo.ide.manifest.core.editor.model.SpringBundleModel;
  */
 public class SpringBundleInputContext extends BundleInputContext {
 
-	public SpringBundleInputContext(PDEFormEditor editor, IEditorInput input, boolean primary) {
-		super(editor, input, primary);
-	}
+    public SpringBundleInputContext(PDEFormEditor editor, IEditorInput input, boolean primary) {
+        super(editor, input, primary);
+    }
 
-	@Override
-	protected IBaseModel createModel(IEditorInput input) throws CoreException {
-		SpringBundleModel model = null;
-		boolean isReconciling = input instanceof IFileEditorInput;
-		IDocument document = getDocumentProvider().getDocument(input);
-		model = new SpringBundleModel(document, isReconciling);
-		if (input instanceof IFileEditorInput) {
-			IFile file = ((IFileEditorInput) input).getFile();
-			model.setUnderlyingResource(file);
-			model.setCharset(file.getCharset());
-		} else if (PdeCompatibilityUtil.isSystemFileEditorInput(input)) {
-			File file = (File) (input).getAdapter(File.class);
-			IPath path = new Path(file.getAbsolutePath()).removeLastSegments(2);
-			model.setInstallLocation(path.addTrailingSeparator().toString());
-			model.setCharset(getDefaultCharset());
-		} else if (input instanceof IURIEditorInput) {
-			IFileStore store = EFS.getStore(((IURIEditorInput) input).getURI());
-			model.setInstallLocation(store.getParent().getParent().toString());
-			model.setCharset(getDefaultCharset());
-		} else if (input instanceof JarEntryEditorInput) {
-			File file = (File) ((JarEntryEditorInput) input).getAdapter(File.class);
-			model.setInstallLocation(file.toString());
-			model.setCharset(getDefaultCharset());
-		} else {
-			model.setCharset(getDefaultCharset());
-		}
-		model.load();
-		return model;
-	}
+    @Override
+    protected IBaseModel createModel(IEditorInput input) throws CoreException {
+        SpringBundleModel model = null;
+        boolean isReconciling = input instanceof IFileEditorInput;
+        IDocument document = getDocumentProvider().getDocument(input);
+        model = new SpringBundleModel(document, isReconciling);
+        if (input instanceof IFileEditorInput) {
+            IFile file = ((IFileEditorInput) input).getFile();
+            model.setUnderlyingResource(file);
+            model.setCharset(file.getCharset());
+        } else if (PdeCompatibilityUtil.isSystemFileEditorInput(input)) {
+            File file = input.getAdapter(File.class);
+            IPath path = new Path(file.getAbsolutePath()).removeLastSegments(2);
+            model.setInstallLocation(path.addTrailingSeparator().toString());
+            model.setCharset(getDefaultCharset());
+        } else if (input instanceof IURIEditorInput) {
+            IFileStore store = EFS.getStore(((IURIEditorInput) input).getURI());
+            model.setInstallLocation(store.getParent().getParent().toString());
+            model.setCharset(getDefaultCharset());
+        } else if (input instanceof JarEntryEditorInput) {
+            File file = ((JarEntryEditorInput) input).getAdapter(File.class);
+            model.setInstallLocation(file.toString());
+            model.setCharset(getDefaultCharset());
+        } else {
+            model.setCharset(getDefaultCharset());
+        }
+        model.load();
+        return model;
+    }
 
 }

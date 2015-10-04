@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.wizards;
 
 import java.util.HashMap;
@@ -20,25 +21,25 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class NullPropertiesPage extends AbstractPropertiesPage {
 
-	protected static String ID_PAGE = "null.properties";
+    protected static String ID_PAGE = "null.properties";
 
-	public NullPropertiesPage() {
-		super(ID_PAGE);
-	}
+    public NullPropertiesPage() {
+        super(ID_PAGE);
+    }
 
-	@Override
-	protected void createPropertiesGroup(Composite container) {
-		// ignore
-	}
+    @Override
+    protected void createPropertiesGroup(Composite container) {
+        // ignore
+    }
 
-	@Override
-	public String getModuleType() {
-		return "";
-	}
+    @Override
+    public String getModuleType() {
+        return "";
+    }
 
-	@Override
-	public Map<String, String> getProperties() {
-		return new HashMap<String, String>();
-	}
+    @Override
+    public Map<String, String> getProperties() {
+        return new HashMap<String, String>();
+    }
 
 }

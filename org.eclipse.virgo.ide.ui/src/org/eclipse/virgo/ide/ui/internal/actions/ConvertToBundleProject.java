@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.internal.actions;
 
 import java.util.ArrayList;
@@ -33,83 +34,85 @@ import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
 
 /**
  * Menu action to add or remove the SpringSource AP bundle project nature/facet from a given project.
- * 
+ *
  * @author Christian Dupuis
  * @since 1.0.0
  */
 public class ConvertToBundleProject implements IObjectActionDelegate {
 
-	private final List<IProject> selected = new ArrayList<IProject>();
+    private final List<IProject> selected = new ArrayList<IProject>();
 
-	public void run(IAction action) {
-		Iterator<IProject> iter = selected.iterator();
-		while (iter.hasNext()) {
-			IProject project = iter.next();
-			if (FacetUtils.isBundleProject(project)) {
-				removeFacetsFromProject(project);
-			} else {
-				addFacetsToProject(project);
-			}
-		}
-	}
+    public void run(IAction action) {
+        Iterator<IProject> iter = this.selected.iterator();
+        while (iter.hasNext()) {
+            IProject project = iter.next();
+            if (FacetUtils.isBundleProject(project)) {
+                removeFacetsFromProject(project);
+            } else {
+                addFacetsToProject(project);
+            }
+        }
+    }
 
-	public void selectionChanged(IAction action, ISelection selection) {
-		selected.clear();
-		if (selection instanceof IStructuredSelection) {
-			boolean enabled = true;
-			Iterator<?> iter = ((IStructuredSelection) selection).iterator();
-			while (iter.hasNext()) {
-				Object obj = iter.next();
-				if (obj instanceof IJavaProject) {
-					obj = ((IJavaProject) obj).getProject();
-				}
-				if (obj instanceof IProject) {
-					IProject project = (IProject) obj;
-					if (!project.isOpen()) {
-						enabled = false;
-						break;
-					} else {
-						selected.add(project);
-					}
-				} else {
-					enabled = false;
-					break;
-				}
-			}
-			action.setEnabled(enabled);
-		}
-	}
+    public void selectionChanged(IAction action, ISelection selection) {
+        this.selected.clear();
+        if (selection instanceof IStructuredSelection) {
+            boolean enabled = true;
+            Iterator<?> iter = ((IStructuredSelection) selection).iterator();
+            while (iter.hasNext()) {
+                Object obj = iter.next();
+                if (obj instanceof IJavaProject) {
+                    obj = ((IJavaProject) obj).getProject();
+                }
+                if (obj instanceof IProject) {
+                    IProject project = (IProject) obj;
+                    if (!project.isOpen()) {
+                        enabled = false;
+                        break;
+                    } else {
+                        this.selected.add(project);
+                    }
+                } else {
+                    enabled = false;
+                    break;
+                }
+            }
+            action.setEnabled(enabled);
+        }
+    }
 
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-	}
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+    }
 
-	private void addFacetsToProject(final IProject project) {
-		IWorkspaceRunnable oper = new IWorkspaceRunnable() {
-			public void run(IProgressMonitor monitor) throws CoreException {
-				IFacetedProject fProject = ProjectFacetsManager.create(project, true, monitor);
-				fProject.installProjectFacet(ProjectFacetsManager.getProjectFacet(FacetCorePlugin.BUNDLE_FACET_ID)
-						.getDefaultVersion(), null, monitor);
-			}
-		};
+    private void addFacetsToProject(final IProject project) {
+        IWorkspaceRunnable oper = new IWorkspaceRunnable() {
 
-		try {
-			ResourcesPlugin.getWorkspace().run(oper, new NullProgressMonitor());
-		} catch (CoreException e) {
-		}
-	}
+            public void run(IProgressMonitor monitor) throws CoreException {
+                IFacetedProject fProject = ProjectFacetsManager.create(project, true, monitor);
+                fProject.installProjectFacet(ProjectFacetsManager.getProjectFacet(FacetCorePlugin.BUNDLE_FACET_ID).getDefaultVersion(), null,
+                    monitor);
+            }
+        };
 
-	private void removeFacetsFromProject(final IProject project) {
-		IWorkspaceRunnable oper = new IWorkspaceRunnable() {
-			public void run(IProgressMonitor monitor) throws CoreException {
-				IFacetedProject fProject = ProjectFacetsManager.create(project, true, monitor);
-				fProject.uninstallProjectFacet(ProjectFacetsManager.getProjectFacet(FacetCorePlugin.BUNDLE_FACET_ID)
-						.getDefaultVersion(), null, monitor);
-			}
-		};
+        try {
+            ResourcesPlugin.getWorkspace().run(oper, new NullProgressMonitor());
+        } catch (CoreException e) {
+        }
+    }
 
-		try {
-			ResourcesPlugin.getWorkspace().run(oper, new NullProgressMonitor());
-		} catch (CoreException e) {
-		}
-	}
+    private void removeFacetsFromProject(final IProject project) {
+        IWorkspaceRunnable oper = new IWorkspaceRunnable() {
+
+            public void run(IProgressMonitor monitor) throws CoreException {
+                IFacetedProject fProject = ProjectFacetsManager.create(project, true, monitor);
+                fProject.uninstallProjectFacet(ProjectFacetsManager.getProjectFacet(FacetCorePlugin.BUNDLE_FACET_ID).getDefaultVersion(), null,
+                    monitor);
+            }
+        };
+
+        try {
+            ResourcesPlugin.getWorkspace().run(oper, new NullProgressMonitor());
+        } catch (CoreException e) {
+        }
+    }
 }

@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.tests;
 
 /**
@@ -15,6 +16,6 @@ package org.eclipse.virgo.ide.ui.tests;
  */
 public class ServerIdeUiTestPlugin {
 
-	public static String PLUGIN_ID = "org.eclipse.virgo.ide.ui.tests";
+    public static String PLUGIN_ID = "org.eclipse.virgo.ide.ui.tests";
 
 }

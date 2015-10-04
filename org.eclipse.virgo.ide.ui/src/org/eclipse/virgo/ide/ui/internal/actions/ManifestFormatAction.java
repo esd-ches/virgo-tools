@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.internal.actions;
 
 import java.lang.reflect.InvocationTargetException;
@@ -22,21 +23,20 @@ import org.eclipse.ui.PlatformUI;
  */
 public class ManifestFormatAction extends FormatAction {
 
-	@Override
-	public void run() {
-		if (fTextEditor == null || fTextEditor.getEditorInput() == null) {
-			return;
-		}
+    @Override
+    public void run() {
+        if (this.fTextEditor == null || this.fTextEditor.getEditorInput() == null) {
+            return;
+        }
 
-		try {
-			PlatformUI.getWorkbench()
-					.getProgressService()
-					.busyCursorWhile(new ManifestFormatOperation(new Object[] { fTextEditor.getEditorInput() }));
-		} catch (InvocationTargetException e) {
-			PDEPlugin.log(e);
-		} catch (InterruptedException e) {
-			PDEPlugin.log(e);
-		}
-	}
+        try {
+            PlatformUI.getWorkbench().getProgressService().busyCursorWhile(
+                new ManifestFormatOperation(new Object[] { this.fTextEditor.getEditorInput() }));
+        } catch (InvocationTargetException e) {
+            PDEPlugin.log(e);
+        } catch (InterruptedException e) {
+            PDEPlugin.log(e);
+        }
+    }
 
 }

@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.editors;
 
 /**
@@ -15,27 +16,27 @@ package org.eclipse.virgo.ide.ui.editors;
  */
 public class BundleManifestEditorContributor extends AbstractPdeFormTextEditorContributor {
 
-	public BundleManifestEditorContributor() {
-		super("&Plugin"); //$NON-NLS-1$
-	}
+    public BundleManifestEditorContributor() {
+        super("&Plugin"); //$NON-NLS-1$
+    }
 
-	@Override
-	public boolean supportsContentAssist() {
-		return true;
-	}
+    @Override
+    public boolean supportsContentAssist() {
+        return true;
+    }
 
-	@Override
-	public boolean supportsFormatAction() {
-		return true;
-	}
+    @Override
+    public boolean supportsFormatAction() {
+        return true;
+    }
 
-	@Override
-	public boolean supportsCorrectionAssist() {
-		return true;
-	}
+    @Override
+    public boolean supportsCorrectionAssist() {
+        return true;
+    }
 
-	@Override
-	public boolean supportsHyperlinking() {
-		return true;
-	}
+    @Override
+    public boolean supportsHyperlinking() {
+        return true;
+    }
 }

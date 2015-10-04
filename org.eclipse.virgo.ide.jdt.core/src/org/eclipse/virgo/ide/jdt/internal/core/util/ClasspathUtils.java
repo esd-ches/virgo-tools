@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.jdt.internal.core.util;
 
 import java.io.File;
@@ -41,214 +42,202 @@ import org.eclipse.virgo.util.osgi.manifest.RequiredBundle;
 
 /**
  * Helper methods to be used to within the class path container infrastructure.
- * 
+ *
  * @author Christian Dupuis
  * @since 1.0.0
  */
 public class ClasspathUtils {
 
-	/**
-	 * Adjusts the last modified timestamp on the source root and META-INF directory to reflect the same date as the
-	 * MANIFEST.MF.
-	 * <p>
-	 * Note: this is a requirement for the dependency resolution.
-	 */
-	public static void adjustLastModifiedDate(IJavaProject javaProject, boolean testBundle) {
-		File manifest = BundleManifestUtils.locateManifestFile(javaProject, testBundle);
-		if (manifest != null && manifest.canRead()) {
-			long lastmodified = manifest.lastModified();
-			File metaInfFolder = manifest.getParentFile();
-			if (metaInfFolder != null && metaInfFolder.getName().equals(BundleManifestCorePlugin.MANIFEST_FOLDER_NAME)
-					&& metaInfFolder.canWrite()) {
-				metaInfFolder.setLastModified(lastmodified);
-				File srcFolder = metaInfFolder.getParentFile();
-				if (srcFolder != null && srcFolder.canWrite()) {
-					srcFolder.setLastModified(lastmodified);
-				}
-			}
-		}
-	}
+    /**
+     * Adjusts the last modified timestamp on the source root and META-INF directory to reflect the same date as the
+     * MANIFEST.MF.
+     * <p>
+     * Note: this is a requirement for the dependency resolution.
+     */
+    public static void adjustLastModifiedDate(IJavaProject javaProject, boolean testBundle) {
+        File manifest = BundleManifestUtils.locateManifestFile(javaProject, testBundle);
+        if (manifest != null && manifest.canRead()) {
+            long lastmodified = manifest.lastModified();
+            File metaInfFolder = manifest.getParentFile();
+            if (metaInfFolder != null && metaInfFolder.getName().equals(BundleManifestCorePlugin.MANIFEST_FOLDER_NAME) && metaInfFolder.canWrite()) {
+                metaInfFolder.setLastModified(lastmodified);
+                File srcFolder = metaInfFolder.getParentFile();
+                if (srcFolder != null && srcFolder.canWrite()) {
+                    srcFolder.setLastModified(lastmodified);
+                }
+            }
+        }
+    }
 
-	/**
-	 * Returns <code>true</code> if the given project has the bundle dependency classpath container installed.
-	 */
-	public static boolean hasClasspathContainer(IJavaProject javaProject) {
-		boolean hasContainer = false;
-		try {
-			for (IClasspathEntry entry : javaProject.getRawClasspath()) {
-				if (entry.getPath().equals(ServerClasspathContainer.CLASSPATH_CONTAINER_PATH)) {
-					hasContainer = true;
-					break;
-				}
-			}
-		} catch (JavaModelException e) {
-			JdtCorePlugin.log(e);
-		}
-		return hasContainer;
-	}
+    /**
+     * Returns <code>true</code> if the given project has the bundle dependency classpath container installed.
+     */
+    public static boolean hasClasspathContainer(IJavaProject javaProject) {
+        boolean hasContainer = false;
+        try {
+            for (IClasspathEntry entry : javaProject.getRawClasspath()) {
+                if (entry.getPath().equals(ServerClasspathContainer.CLASSPATH_CONTAINER_PATH)) {
+                    hasContainer = true;
+                    break;
+                }
+            }
+        } catch (JavaModelException e) {
+            JdtCorePlugin.log(e);
+        }
+        return hasContainer;
+    }
 
-	/**
-	 * Returns the {@link ServerClasspathContainer} for the given <code>javaProject</code>.
-	 * <p>
-	 * This method returns <code>null</code> if no appropriate class path container could be found on the given project.
-	 */
-	public static ServerClasspathContainer getClasspathContainer(IJavaProject javaProject) {
-		try {
-			if (hasClasspathContainer(javaProject)) {
-				IClasspathContainer container = JavaCore.getClasspathContainer(
-						ServerClasspathContainer.CLASSPATH_CONTAINER_PATH, javaProject);
-				if (container instanceof ServerClasspathContainer) {
-					return (ServerClasspathContainer) container;
-				}
-			}
-		} catch (JavaModelException e) {
-			JdtCorePlugin.log(e);
-		}
-		return null;
-	}
+    /**
+     * Returns the {@link ServerClasspathContainer} for the given <code>javaProject</code>.
+     * <p>
+     * This method returns <code>null</code> if no appropriate class path container could be found on the given project.
+     */
+    public static ServerClasspathContainer getClasspathContainer(IJavaProject javaProject) {
+        try {
+            if (hasClasspathContainer(javaProject)) {
+                IClasspathContainer container = JavaCore.getClasspathContainer(ServerClasspathContainer.CLASSPATH_CONTAINER_PATH, javaProject);
+                if (container instanceof ServerClasspathContainer) {
+                    return (ServerClasspathContainer) container;
+                }
+            }
+        } catch (JavaModelException e) {
+            JdtCorePlugin.log(e);
+        }
+        return null;
+    }
 
-	/**
-	 * Returns configured source attachment paths for a given jar resource path.
-	 * 
-	 * @param project
-	 *            the java project which preferences needs to be checked.
-	 * @param file
-	 *            the jar that needs a source attachment
-	 */
-	public static IPath getSourceAttachment(IJavaProject project, File file) {
-		IEclipsePreferences preferences = JdtCorePlugin.getDefault().getProjectPreferences(project.getProject());
-		String value = preferences.get("source.attachment-" + file.getName(), null);
-		if (value != null) {
-			return new Path(value);
-		}
-		return null;
-	}
+    /**
+     * Returns configured source attachment paths for a given jar resource path.
+     *
+     * @param project the java project which preferences needs to be checked.
+     * @param file the jar that needs a source attachment
+     */
+    public static IPath getSourceAttachment(IJavaProject project, File file) {
+        IEclipsePreferences preferences = JdtCorePlugin.getDefault().getProjectPreferences(project.getProject());
+        String value = preferences.get("source.attachment-" + file.getName(), null);
+        if (value != null) {
+            return new Path(value);
+        }
+        return null;
+    }
 
-	/**
-	 * Stores the configured source attachments paths in the projects settings area.
-	 * 
-	 * @param project
-	 *            the java project to store the preferences for
-	 * @param containerSuggestion
-	 *            the configured classpath container entries
-	 */
-	public static void storeSourceAttachments(IJavaProject project, IClasspathContainer containerSuggestion) {
-		IEclipsePreferences preferences = JdtCorePlugin.getDefault().getProjectPreferences(project.getProject());
-		for (IClasspathEntry entry : containerSuggestion.getClasspathEntries()) {
-			IPath path = entry.getPath();
-			IPath sourcePath = entry.getSourceAttachmentPath();
-			if (sourcePath != null) {
-				preferences.put("source.attachment-" + path.lastSegment().toString(), sourcePath.toString());
-			}
-		}
-	}
+    /**
+     * Stores the configured source attachments paths in the projects settings area.
+     *
+     * @param project the java project to store the preferences for
+     * @param containerSuggestion the configured classpath container entries
+     */
+    public static void storeSourceAttachments(IJavaProject project, IClasspathContainer containerSuggestion) {
+        IEclipsePreferences preferences = JdtCorePlugin.getDefault().getProjectPreferences(project.getProject());
+        for (IClasspathEntry entry : containerSuggestion.getClasspathEntries()) {
+            IPath path = entry.getPath();
+            IPath sourcePath = entry.getSourceAttachmentPath();
+            if (sourcePath != null) {
+                preferences.put("source.attachment-" + path.lastSegment().toString(), sourcePath.toString());
+            }
+        }
+    }
 
-	/**
-	 * Updates the class path container on the given <code>javaProject</code>.
-	 */
-	public static IStatus updateClasspathContainer(IJavaProject javaProject,
-			Set<IBundleManifestChangeListener.Type> types, IProgressMonitor monitor) {
-		try {
+    /**
+     * Updates the class path container on the given <code>javaProject</code>.
+     */
+    public static IStatus updateClasspathContainer(IJavaProject javaProject, Set<IBundleManifestChangeListener.Type> types,
+        IProgressMonitor monitor) {
+        try {
 
-			if (monitor.isCanceled()) {
-				return Status.CANCEL_STATUS;
-			}
+            if (monitor.isCanceled()) {
+                return Status.CANCEL_STATUS;
+            }
 
-			// only update if something relevant happened
-			if (types.contains(IBundleManifestChangeListener.Type.IMPORT_BUNDLE)
-					|| types.contains(IBundleManifestChangeListener.Type.IMPORT_LIBRARY)
-					|| types.contains(IBundleManifestChangeListener.Type.IMPORT_PACKAGE)
-					|| types.contains(IBundleManifestChangeListener.Type.REQUIRE_BUNDLE)) {
+            // only update if something relevant happened
+            if (types.contains(IBundleManifestChangeListener.Type.IMPORT_BUNDLE) || types.contains(IBundleManifestChangeListener.Type.IMPORT_LIBRARY)
+                || types.contains(IBundleManifestChangeListener.Type.IMPORT_PACKAGE)
+                || types.contains(IBundleManifestChangeListener.Type.REQUIRE_BUNDLE)) {
 
-				IClasspathContainer oldContainer = ClasspathUtils.getClasspathContainer(javaProject);
-				if (oldContainer != null) {
-					ServerClasspathContainer container = new ServerClasspathContainer(javaProject);
+                IClasspathContainer oldContainer = ClasspathUtils.getClasspathContainer(javaProject);
+                if (oldContainer != null) {
+                    ServerClasspathContainer container = new ServerClasspathContainer(javaProject);
 
-					container.refreshClasspathEntries();
-					if (!Arrays.deepEquals(oldContainer.getClasspathEntries(), container.getClasspathEntries())) {
-						JavaCore.setClasspathContainer(ServerClasspathContainer.CLASSPATH_CONTAINER_PATH,
-								new IJavaProject[] { javaProject }, new IClasspathContainer[] { container }, monitor);
-					}
-				}
-			}
+                    container.refreshClasspathEntries();
+                    if (!Arrays.deepEquals(oldContainer.getClasspathEntries(), container.getClasspathEntries())) {
+                        JavaCore.setClasspathContainer(ServerClasspathContainer.CLASSPATH_CONTAINER_PATH, new IJavaProject[] { javaProject },
+                            new IClasspathContainer[] { container }, monitor);
+                    }
+                }
+            }
 
-			if (types.contains(IBundleManifestChangeListener.Type.EXPORT_PACKAGE)) {
-				// Always try to update the depending projects because MANIFEST might have changed
-				// without changes to the project's own class path
-				updateClasspathContainerForDependingBundles(javaProject);
-			}
+            if (types.contains(IBundleManifestChangeListener.Type.EXPORT_PACKAGE)) {
+                // Always try to update the depending projects because MANIFEST might have changed
+                // without changes to the project's own class path
+                updateClasspathContainerForDependingBundles(javaProject);
+            }
 
-		} catch (JavaModelException e) {
-			JdtCorePlugin.log(e);
-		}
-		return Status.OK_STATUS;
-	}
+        } catch (JavaModelException e) {
+            JdtCorePlugin.log(e);
+        }
+        return Status.OK_STATUS;
+    }
 
-	/**
-	 * Triggers an class path container update on depending {@link IJavaProject}s.
-	 */
-	private static void updateClasspathContainerForDependingBundles(IJavaProject javaProject) {
+    /**
+     * Triggers an class path container update on depending {@link IJavaProject}s.
+     */
+    private static void updateClasspathContainerForDependingBundles(IJavaProject javaProject) {
 
-		BundleManifest updatedBundleManifest = BundleManifestCorePlugin.getBundleManifestManager().getBundleManifest(
-				javaProject);
-		Set<String> updatedPackageExports = BundleManifestCorePlugin.getBundleManifestManager().getPackageExports(
-				javaProject);
+        BundleManifest updatedBundleManifest = BundleManifestCorePlugin.getBundleManifestManager().getBundleManifest(javaProject);
+        Set<String> updatedPackageExports = BundleManifestCorePlugin.getBundleManifestManager().getPackageExports(javaProject);
 
-		if (updatedBundleManifest != null && updatedBundleManifest.getBundleSymbolicName() != null) {
-			String bundleSymbolicName = updatedBundleManifest.getBundleSymbolicName().getSymbolicName();
-			for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-				try {
+        if (updatedBundleManifest != null && updatedBundleManifest.getBundleSymbolicName() != null) {
+            String bundleSymbolicName = updatedBundleManifest.getBundleSymbolicName().getSymbolicName();
+            for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+                try {
 
-					// Only dm server bundle projects are of interest
-					if (!javaProject.getProject().equals(project) && FacetUtils.isBundleProject(project)) {
+                    // Only dm server bundle projects are of interest
+                    if (!javaProject.getProject().equals(project) && FacetUtils.isBundleProject(project)) {
 
-						IJavaProject jp = JavaCore.create(project);
-						BundleManifest manifest = BundleManifestCorePlugin.getBundleManifestManager()
-								.getBundleManifest(jp);
+                        IJavaProject jp = JavaCore.create(project);
+                        BundleManifest manifest = BundleManifestCorePlugin.getBundleManifestManager().getBundleManifest(jp);
 
-						boolean refreshClasspath = false;
-						if (manifest != null) {
+                        boolean refreshClasspath = false;
+                        if (manifest != null) {
 
-							// Check for Require-Bundle dependency
-							if (manifest.getRequireBundle() != null) {
-								for (RequiredBundle requiredBundle : manifest.getRequireBundle().getRequiredBundles()) {
-									if (bundleSymbolicName != null
-											&& bundleSymbolicName.equals(requiredBundle.getBundleSymbolicName())) {
-										refreshClasspath = true;
-										break;
-									}
-								}
-							}
+                            // Check for Require-Bundle dependency
+                            if (manifest.getRequireBundle() != null) {
+                                for (RequiredBundle requiredBundle : manifest.getRequireBundle().getRequiredBundles()) {
+                                    if (bundleSymbolicName != null && bundleSymbolicName.equals(requiredBundle.getBundleSymbolicName())) {
+                                        refreshClasspath = true;
+                                        break;
+                                    }
+                                }
+                            }
 
-							// Check for export -> import package dependency
-							if (manifest.getImportPackage() != null) {
-								for (ImportedPackage packageImport : manifest.getImportPackage().getImportedPackages()) {
-									if (updatedPackageExports.contains(packageImport.getPackageName())) {
-										refreshClasspath = true;
-										break;
-									}
-								}
-							}
+                            // Check for export -> import package dependency
+                            if (manifest.getImportPackage() != null) {
+                                for (ImportedPackage packageImport : manifest.getImportPackage().getImportedPackages()) {
+                                    if (updatedPackageExports.contains(packageImport.getPackageName())) {
+                                        refreshClasspath = true;
+                                        break;
+                                    }
+                                }
+                            }
 
-							// Check for explicit project dependencies
-							for (String requiredProjectName : jp.getRequiredProjectNames()) {
-								if (requiredProjectName.equals(javaProject.getElementName())) {
-									refreshClasspath = true;
-									break;
-								}
-							}
+                            // Check for explicit project dependencies
+                            for (String requiredProjectName : jp.getRequiredProjectNames()) {
+                                if (requiredProjectName.equals(javaProject.getElementName())) {
+                                    refreshClasspath = true;
+                                    break;
+                                }
+                            }
 
-							// Schedule class path container update
-							if (refreshClasspath) {
-								ServerClasspathContainerUpdateJob.scheduleClasspathContainerUpdateJob(jp,
-										BundleManifestManager.IMPORTS_CHANGED);
-							}
-						}
-					}
-				} catch (Exception e) {
-					JdtCorePlugin.log(e);
-				}
-			}
-		}
-	}
+                            // Schedule class path container update
+                            if (refreshClasspath) {
+                                ServerClasspathContainerUpdateJob.scheduleClasspathContainerUpdateJob(jp, BundleManifestManager.IMPORTS_CHANGED);
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    JdtCorePlugin.log(e);
+                }
+            }
+        }
+    }
 }

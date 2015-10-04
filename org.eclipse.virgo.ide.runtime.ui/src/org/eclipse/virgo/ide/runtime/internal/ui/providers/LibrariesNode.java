@@ -16,27 +16,28 @@ import org.eclipse.wst.server.core.IServer;
 /**
  * Represents a node (may or may not be expressed directly in tree) to represent all libraries (e.g. not on a
  * per-repository basis) within a given server installation.
- * 
+ *
  * @author Miles Parker
- * 
+ *
  */
 public class LibrariesNode {
-	private final IServer server;
 
-	public LibrariesNode(IServer server) {
-		super();
-		this.server = server;
-	}
+    private final IServer server;
 
-	public IServer getServer() {
-		return server;
-	}
+    public LibrariesNode(IServer server) {
+        super();
+        this.server = server;
+    }
 
-	/**
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-	public boolean equals(Object other) {
-		return other instanceof LibrariesNode && ((LibrariesNode) other).server.equals(server);
-	}
+    public IServer getServer() {
+        return this.server;
+    }
+
+    /**
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object other) {
+        return other instanceof LibrariesNode && ((LibrariesNode) other).server.equals(this.server);
+    }
 }

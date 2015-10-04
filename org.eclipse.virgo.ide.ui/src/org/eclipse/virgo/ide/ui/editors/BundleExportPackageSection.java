@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.editors;
 
 import org.eclipse.pde.internal.ui.editor.PDEFormPage;
@@ -19,11 +20,11 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class BundleExportPackageSection extends ExportPackageSection {
 
-	private static final String DESCRIPTION = "Enumerate all the packages that this bundle exposes to clients. All other packages will be hidden from clients at all times.";
+    private static final String DESCRIPTION = "Enumerate all the packages that this bundle exposes to clients. All other packages will be hidden from clients at all times.";
 
-	public BundleExportPackageSection(PDEFormPage page, Composite parent) {
-		super(page, parent);
-		getSection().setDescription(DESCRIPTION);
-	}
+    public BundleExportPackageSection(PDEFormPage page, Composite parent) {
+        super(page, parent);
+        getSection().setDescription(DESCRIPTION);
+    }
 
 }

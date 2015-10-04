@@ -1,3 +1,4 @@
+
 package org.eclipse.virgo.ide.runtime.internal.core.actions;
 
 import org.eclipse.core.commands.ExecutionException;
@@ -15,35 +16,35 @@ import org.eclipse.virgo.ide.runtime.core.IServerWorkingCopy;
  */
 public class ModifyDeployerTimeoutCommand extends AbstractOperation {
 
-	private final IServerWorkingCopy workingCopy;
+    private final IServerWorkingCopy workingCopy;
 
-	private final int oldTimeout;
+    private final int oldTimeout;
 
-	private final int newTimeout;
+    private final int newTimeout;
 
-	public ModifyDeployerTimeoutCommand(IServerWorkingCopy workingCopy, int timeout) {
-		super("Modify JMX deployer timeout");
-		this.workingCopy = workingCopy;
-		this.oldTimeout = workingCopy.getDeployTimeout();
-		this.newTimeout = timeout;
-	}
+    public ModifyDeployerTimeoutCommand(IServerWorkingCopy workingCopy, int timeout) {
+        super("Modify JMX deployer timeout");
+        this.workingCopy = workingCopy;
+        this.oldTimeout = workingCopy.getDeployTimeout();
+        this.newTimeout = timeout;
+    }
 
-	@Override
-	public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		workingCopy.setDeployTimeout(newTimeout);
-		return Status.OK_STATUS;
-	}
+    @Override
+    public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        this.workingCopy.setDeployTimeout(this.newTimeout);
+        return Status.OK_STATUS;
+    }
 
-	@Override
-	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		workingCopy.setDeployTimeout(newTimeout);
-		return Status.OK_STATUS;
-	}
+    @Override
+    public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        this.workingCopy.setDeployTimeout(this.newTimeout);
+        return Status.OK_STATUS;
+    }
 
-	@Override
-	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		workingCopy.setDeployTimeout(oldTimeout);
-		return Status.OK_STATUS;
-	}
+    @Override
+    public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        this.workingCopy.setDeployTimeout(this.oldTimeout);
+        return Status.OK_STATUS;
+    }
 
 }

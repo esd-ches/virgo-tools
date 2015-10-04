@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.manifest.internal.core.model;
 
 import org.eclipse.osgi.util.ManifestElement;
@@ -21,26 +22,26 @@ import org.eclipse.osgi.util.ManifestElement;
  */
 public class BundleManifestHeaderElement extends AbstractManifestElement {
 
-	private static final int BUNDLE_MANIFEST_HEADER_ELEMENT_TYPE = 2;
+    private static final int BUNDLE_MANIFEST_HEADER_ELEMENT_TYPE = 2;
 
-	private ManifestElement manifestElement;
+    private final ManifestElement manifestElement;
 
-	public BundleManifestHeaderElement(BundleManifestHeader parent, ManifestElement manifestElement) {
-		super(parent, manifestElement.toString());
-		this.manifestElement = manifestElement;
-	}
+    public BundleManifestHeaderElement(BundleManifestHeader parent, ManifestElement manifestElement) {
+        super(parent, manifestElement.toString());
+        this.manifestElement = manifestElement;
+    }
 
-	public int getElementType() {
-		return BUNDLE_MANIFEST_HEADER_ELEMENT_TYPE;
-	}
+    public int getElementType() {
+        return BUNDLE_MANIFEST_HEADER_ELEMENT_TYPE;
+    }
 
-	public ManifestElement getManifestElement() {
-		return manifestElement;
-	}
+    public ManifestElement getManifestElement() {
+        return this.manifestElement;
+    }
 
-	@Override
-	public String toString() {
-		return new StringBuilder().append(manifestElement.getValue()).toString();
-	}
+    @Override
+    public String toString() {
+        return new StringBuilder().append(this.manifestElement.getValue()).toString();
+    }
 
 }

@@ -23,42 +23,42 @@ import org.eclipse.ui.IEditorPart;
  */
 public class ServerEditorPageLabelProvider implements ILabelProvider {
 
-	public String getText(Object element) {
-		if (element instanceof IEditorPart) {
-			return ((IEditorPart) element).getTitle();
-		}
-		return null;
-	}
+    public String getText(Object element) {
+        if (element instanceof IEditorPart) {
+            return ((IEditorPart) element).getTitle();
+        }
+        return null;
+    }
 
-	public Image getImage(Object element) {
-		if (element instanceof IEditorPart) {
-			return PDEPlugin.getDefault().getLabelProvider().get(PDEPluginImages.DESC_PAGE_OBJ);
-		}
-		return null;
-	}
+    public Image getImage(Object element) {
+        if (element instanceof IEditorPart) {
+            return PDEPlugin.getDefault().getLabelProvider().get(PDEPluginImages.DESC_PAGE_OBJ);
+        }
+        return null;
+    }
 
-	/**
-	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
-	 */
-	public void addListener(ILabelProviderListener listener) {
-	}
+    /**
+     * @see org.eclipse.jface.viewers.IBaseLabelProvider#addListener(org.eclipse.jface.viewers.ILabelProviderListener)
+     */
+    public void addListener(ILabelProviderListener listener) {
+    }
 
-	/**
-	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
-	 */
-	public void dispose() {
-	}
+    /**
+     * @see org.eclipse.jface.viewers.IBaseLabelProvider#dispose()
+     */
+    public void dispose() {
+    }
 
-	/**
-	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
-	 */
-	public boolean isLabelProperty(Object element, String property) {
-		return false;
-	}
+    /**
+     * @see org.eclipse.jface.viewers.IBaseLabelProvider#isLabelProperty(java.lang.Object, java.lang.String)
+     */
+    public boolean isLabelProperty(Object element, String property) {
+        return false;
+    }
 
-	/**
-	 * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
-	 */
-	public void removeListener(ILabelProviderListener listener) {
-	}
+    /**
+     * @see org.eclipse.jface.viewers.IBaseLabelProvider#removeListener(org.eclipse.jface.viewers.ILabelProviderListener)
+     */
+    public void removeListener(ILabelProviderListener listener) {
+    }
 }

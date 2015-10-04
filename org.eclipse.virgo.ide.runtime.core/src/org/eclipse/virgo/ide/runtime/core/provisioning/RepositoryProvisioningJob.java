@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.core.provisioning;
 
 import java.io.File;
@@ -31,143 +32,136 @@ import org.eclipse.virgo.util.io.FileCopyUtils;
 import org.eclipse.wst.server.core.IRuntime;
 
 /**
- * Eclipse background job that downloads selected bundles and libraries from the
- * remote enterprise bundle repository.
- * 
+ * Eclipse background job that downloads selected bundles and libraries from the remote enterprise bundle repository.
+ *
  * @author Christian Dupuis
  * @since 1.0.0
  */
 public class RepositoryProvisioningJob extends Job {
 
-	private static final Object CONTENT_FAMILY = new Object();
+    private static final Object CONTENT_FAMILY = new Object();
 
-	private Set<Artefact> artifactsToDownload;
+    private final Set<Artefact> artifactsToDownload;
 
-	private boolean downloadSources = false;
+    private boolean downloadSources = false;
 
-	private boolean downloadBinary = true;
+    private boolean downloadBinary = true;
 
-	protected Set<IRuntime> runtimes;
+    protected Set<IRuntime> runtimes;
 
-	public RepositoryProvisioningJob(Set<IRuntime> runtimes, Set<Artefact> artifactsToDownload, boolean downloadSources) {
-		this(runtimes, artifactsToDownload, true, downloadSources);
-	}
+    public RepositoryProvisioningJob(Set<IRuntime> runtimes, Set<Artefact> artifactsToDownload, boolean downloadSources) {
+        this(runtimes, artifactsToDownload, true, downloadSources);
+    }
 
-	public RepositoryProvisioningJob(Set<IRuntime> runtimes, Set<Artefact> artifactsToDownload, boolean downloadBinary,
-		boolean downloadSources) {
-		super("Downloading bundles and libraries from Enterprise Bundle Repository");
-		this.runtimes = runtimes;
-		this.artifactsToDownload = artifactsToDownload;
-		this.downloadSources = downloadSources;
-		this.downloadBinary = downloadBinary;
-		setPriority(Job.LONG);
-	}
+    public RepositoryProvisioningJob(Set<IRuntime> runtimes, Set<Artefact> artifactsToDownload, boolean downloadBinary, boolean downloadSources) {
+        super("Downloading bundles and libraries from Enterprise Bundle Repository");
+        this.runtimes = runtimes;
+        this.artifactsToDownload = artifactsToDownload;
+        this.downloadSources = downloadSources;
+        this.downloadBinary = downloadBinary;
+        setPriority(Job.LONG);
+    }
 
-	public Set<IRuntime> getRuntimes() {
-		return runtimes;
-	}
+    public Set<IRuntime> getRuntimes() {
+        return this.runtimes;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean belongsTo(Object family) {
-		return CONTENT_FAMILY == family;
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean belongsTo(Object family) {
+        return CONTENT_FAMILY == family;
+    }
 
-	protected void copyDirectoryContent(File from, File to) {
-		for (File file : from.listFiles()) {
-			if (file.isFile()) {
-				String fileName = file.getName();
-				File newFile = new File(to, fileName);
-				try {
-					newFile.createNewFile();
-					FileCopyUtils.copy(file, newFile);
-				} catch (IOException e) {
-				}
-			}
-		}
-	}
+    protected void copyDirectoryContent(File from, File to) {
+        for (File file : from.listFiles()) {
+            if (file.isFile()) {
+                String fileName = file.getName();
+                File newFile = new File(to, fileName);
+                try {
+                    newFile.createNewFile();
+                    FileCopyUtils.copy(file, newFile);
+                } catch (IOException e) {
+                }
+            }
+        }
+    }
 
-	protected void copyDownloadedArtifactsIntoServer(File bundlesFile, File libraryFile) {
-		for (IRuntime runtime : runtimes) {
-			VirgoServerRuntime serverRuntime = (VirgoServerRuntime) runtime.loadAdapter(VirgoServerRuntime.class,
-																						new NullProgressMonitor());
-			copyDirectoryContent(bundlesFile, new File(serverRuntime.getUserLevelBundleRepositoryPath()));
-			copyDirectoryContent(libraryFile, new File(serverRuntime.getUserLevelLibraryRepositoryPath()));
-		}
+    protected void copyDownloadedArtifactsIntoServer(File bundlesFile, File libraryFile) {
+        for (IRuntime runtime : this.runtimes) {
+            VirgoServerRuntime serverRuntime = (VirgoServerRuntime) runtime.loadAdapter(VirgoServerRuntime.class, new NullProgressMonitor());
+            copyDirectoryContent(bundlesFile, new File(serverRuntime.getUserLevelBundleRepositoryPath()));
+            copyDirectoryContent(libraryFile, new File(serverRuntime.getUserLevelLibraryRepositoryPath()));
+        }
 
-	}
+    }
 
-	@Override
-	protected IStatus run(IProgressMonitor monitor) {
+    @Override
+    protected IStatus run(IProgressMonitor monitor) {
 
-		if (downloadSources) {
-			monitor.beginTask("Downloading selected bundles and libraries", (artifactsToDownload.size() * 2));
-		} else {
-			monitor.beginTask("Downloading selected bundles and libraries", artifactsToDownload.size());
-		}
+        if (this.downloadSources) {
+            monitor.beginTask("Downloading selected bundles and libraries", this.artifactsToDownload.size() * 2);
+        } else {
+            monitor.beginTask("Downloading selected bundles and libraries", this.artifactsToDownload.size());
+        }
 
-		IPath outputPath = ServerCorePlugin.getDefault().getStateLocation()
-				.append("repository-downloads-" + System.currentTimeMillis());
-		File bundlesFile = outputPath.append("bundles").toFile();
-		if (!bundlesFile.exists()) {
-			bundlesFile.mkdirs();
-		}
-		File libraryFile = outputPath.append("libraries").toFile();
-		if (!libraryFile.exists()) {
-			libraryFile.mkdirs();
-		}
+        IPath outputPath = ServerCorePlugin.getDefault().getStateLocation().append("repository-downloads-" + System.currentTimeMillis());
+        File bundlesFile = outputPath.append("bundles").toFile();
+        if (!bundlesFile.exists()) {
+            bundlesFile.mkdirs();
+        }
+        File libraryFile = outputPath.append("libraries").toFile();
+        if (!libraryFile.exists()) {
+            libraryFile.mkdirs();
+        }
 
-		for (Artefact artifact : this.artifactsToDownload) {
-			if (monitor.isCanceled()) {
-				continue;
-			}
-			if (downloadBinary) {
-				downloadBinary(monitor, bundlesFile, libraryFile, artifact);
-			}
-			monitor.worked(1);
-			if (downloadSources) {
-				if (monitor.isCanceled()) {
-					continue;
-				}
+        for (Artefact artifact : this.artifactsToDownload) {
+            if (monitor.isCanceled()) {
+                continue;
+            }
+            if (this.downloadBinary) {
+                downloadBinary(monitor, bundlesFile, libraryFile, artifact);
+            }
+            monitor.worked(1);
+            if (this.downloadSources) {
+                if (monitor.isCanceled()) {
+                    continue;
+                }
 
-				downloadSource(monitor, bundlesFile, artifact);
-				monitor.worked(1);
-			}
-		}
+                downloadSource(monitor, bundlesFile, artifact);
+                monitor.worked(1);
+            }
+        }
 
-		if (monitor.isCanceled()) {
-			return Status.OK_STATUS;
-		}
-		copyDownloadedArtifactsIntoServer(bundlesFile, libraryFile);
+        if (monitor.isCanceled()) {
+            return Status.OK_STATUS;
+        }
+        copyDownloadedArtifactsIntoServer(bundlesFile, libraryFile);
 
-		// refresh the local file system cache of bundles and libraries
-		for (IRuntime runtime : runtimes) {
-			ServerCorePlugin.getArtefactRepositoryManager().refreshBundleRepository(runtime);
-		}
+        // refresh the local file system cache of bundles and libraries
+        for (IRuntime runtime : this.runtimes) {
+            ServerCorePlugin.getArtefactRepositoryManager().refreshBundleRepository(runtime);
+        }
 
-		monitor.done();
-		return Status.OK_STATUS;
-	}
+        monitor.done();
+        return Status.OK_STATUS;
+    }
 
-	protected void downloadBinary(IProgressMonitor monitor, File bundlesFile, File libraryFile, IArtefactTyped artifact) {
-		if (artifact instanceof BundleArtefact) {
-			WebDownloadUtils.downloadFile(	RepositoryUtils.getResourceUrl(	(BundleArtefact) artifact,
-																			RepositoryUtils.DOWNLOAD_TYPE_BINARY),
-											bundlesFile, monitor);
-		} else {
-			WebDownloadUtils.downloadFile(	RepositoryUtils.getResourceUrl(	(LibraryArtefact) artifact,
-																			RepositoryUtils.DOWNLOAD_TYPE_LIBRARY),
-											libraryFile, monitor);
-		}
-	}
+    protected void downloadBinary(IProgressMonitor monitor, File bundlesFile, File libraryFile, IArtefactTyped artifact) {
+        if (artifact instanceof BundleArtefact) {
+            WebDownloadUtils.downloadFile(RepositoryUtils.getResourceUrl((BundleArtefact) artifact, RepositoryUtils.DOWNLOAD_TYPE_BINARY),
+                bundlesFile, monitor);
+        } else {
+            WebDownloadUtils.downloadFile(RepositoryUtils.getResourceUrl((LibraryArtefact) artifact, RepositoryUtils.DOWNLOAD_TYPE_LIBRARY),
+                libraryFile, monitor);
+        }
+    }
 
-	protected void downloadSource(IProgressMonitor monitor, File bundlesFile, Artefact artifact) {
-		if (artifact instanceof BundleArtefact && artifact.isSourceAvailable()) {
-			WebDownloadUtils.downloadFile(	RepositoryUtils.getResourceUrl(	(BundleArtefact) artifact,
-																			RepositoryUtils.DOWNLOAD_TYPE_SOURCE),
-											bundlesFile, monitor);
-		}
-	}
+    protected void downloadSource(IProgressMonitor monitor, File bundlesFile, Artefact artifact) {
+        if (artifact instanceof BundleArtefact && artifact.isSourceAvailable()) {
+            WebDownloadUtils.downloadFile(RepositoryUtils.getResourceUrl((BundleArtefact) artifact, RepositoryUtils.DOWNLOAD_TYPE_SOURCE),
+                bundlesFile, monitor);
+        }
+    }
 }

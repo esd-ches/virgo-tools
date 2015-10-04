@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.ui;
 
 import java.net.MalformedURLException;
@@ -29,165 +30,163 @@ import org.eclipse.swt.graphics.Image;
  * PROD_ Misc images MISC_ Where are the images? The images (typically gifs) are found in the same location as this
  * plugin class. This may mean the same package directory as the package holding this class. The images are declared
  * using <code>this.getClass()</code> to ensure they are looked up via this plugin class.
- * 
+ *
  * @author Christian Dupuis
  * @author Miles Parker
  * @see org.eclipse.jface.resource.ImageRegistry
  */
 public class ServerUiImages {
 
-	private static final String ICON_PATH_PREFIX = "icons/full/";
+    private static final String ICON_PATH_PREFIX = "icons/full/";
 
-	private static final String NAME_PREFIX = ServerUiPlugin.PLUGIN_ID + '.';
+    private static final String NAME_PREFIX = ServerUiPlugin.PLUGIN_ID + '.';
 
-	private static final int NAME_PREFIX_LENGTH = NAME_PREFIX.length();
+    private static final int NAME_PREFIX_LENGTH = NAME_PREFIX.length();
 
-	/* Declare Common paths */
-	private static URL ICON_BASE_URL = null;
+    /* Declare Common paths */
+    private static URL ICON_BASE_URL = null;
 
-	static {
-		try {
-			ICON_BASE_URL = new URL(ServerUiPlugin.getDefault().getBundle().getEntry("/"), ICON_PATH_PREFIX);
-		} catch (MalformedURLException e) {
-			ServerUiPlugin.log(e);
-		}
-	}
+    static {
+        try {
+            ICON_BASE_URL = new URL(ServerUiPlugin.getDefault().getBundle().getEntry("/"), ICON_PATH_PREFIX);
+        } catch (MalformedURLException e) {
+            ServerUiPlugin.log(e);
+        }
+    }
 
-	/** A table of all the <code>ImageDescriptor</code>s. */
-	private static Map<String, ImageDescriptor> imageDescriptors;
+    /** A table of all the <code>ImageDescriptor</code>s. */
+    private static Map<String, ImageDescriptor> imageDescriptors;
 
-	public static final String IMG_WIZB_SERVER = NAME_PREFIX + "springsource_wiz.png";
+    public static final String IMG_WIZB_SERVER = NAME_PREFIX + "springsource_wiz.png";
 
-	public static final String IMG_WIZB_VIRGO_SERVER = NAME_PREFIX + "virgo_wiz.png";
+    public static final String IMG_WIZB_VIRGO_SERVER = NAME_PREFIX + "virgo_wiz.png";
 
-	public static final String IMG_OBJ_PORT = NAME_PREFIX + "port_obj.gif";
+    public static final String IMG_OBJ_PORT = NAME_PREFIX + "port_obj.gif";
 
-	public static final String IMG_OBJ_VIRGO = NAME_PREFIX + "virgo_obj.png";
+    public static final String IMG_OBJ_VIRGO = NAME_PREFIX + "virgo_obj.png";
 
-	public static final String IMG_OBJ_VIRGO_LIB = NAME_PREFIX + "virgo_obj_lib.png";
+    public static final String IMG_OBJ_VIRGO_LIB = NAME_PREFIX + "virgo_obj_lib.png";
 
-	public static final String IMG_OBJ_VIRGO_FILE = NAME_PREFIX + "virgo_obj_file.png";
+    public static final String IMG_OBJ_VIRGO_FILE = NAME_PREFIX + "virgo_obj_file.png";
 
-	public static final String IMG_VIRGO_OVER = NAME_PREFIX + "virgo_over.png";
+    public static final String IMG_VIRGO_OVER = NAME_PREFIX + "virgo_over.png";
 
-	public static final String IMG_OBJ_BUNDLE = NAME_PREFIX + "bundle_obj.gif";
+    public static final String IMG_OBJ_BUNDLE = NAME_PREFIX + "bundle_obj.gif";
 
-	public static final String IMG_OBJ_BUNDLE_SRC = NAME_PREFIX + "bundle_src_obj.gif";
+    public static final String IMG_OBJ_BUNDLE_SRC = NAME_PREFIX + "bundle_src_obj.gif";
 
-	public static final String IMG_OBJ_LIB = NAME_PREFIX + "lib_obj.gif";
+    public static final String IMG_OBJ_LIB = NAME_PREFIX + "lib_obj.gif";
 
-	public static final String IMG_OBJ_FILE = NAME_PREFIX + "file_obj.gif";
+    public static final String IMG_OBJ_FILE = NAME_PREFIX + "file_obj.gif";
 
-	// Use IPath and toOSString to build the names to ensure they have the slashes correct
-	private final static String OBJECT = "obj16/"; //basic colors - size 16x16
+    // Use IPath and toOSString to build the names to ensure they have the slashes correct
+    private final static String OBJECT = "obj16/"; // basic colors - size 16x16
 
-	// Use IPath and toOSString to build the names to ensure they have the slashes correct
-	private final static String OVER = "over08/"; //basic colors - size 16x16
+    // Use IPath and toOSString to build the names to ensure they have the slashes correct
+    private final static String OVER = "over08/"; // basic colors - size 16x16
 
-	private final static String WIZBAN = "wizban/"; //basic colors - size 16x16
+    private final static String WIZBAN = "wizban/"; // basic colors - size 16x16
 
-	//private final static String OVR = "ovr16/"; //basic colors - size 7x8
+    // private final static String OVR = "ovr16/"; //basic colors - size 7x8
 
-	public static final ImageDescriptor DESC_WIZB_SERVER = createManaged(WIZBAN, IMG_WIZB_SERVER);
+    public static final ImageDescriptor DESC_WIZB_SERVER = createManaged(WIZBAN, IMG_WIZB_SERVER);
 
-	public static final ImageDescriptor DESC_WIZB_VIRGO_SERVER = createManaged(WIZBAN, IMG_WIZB_VIRGO_SERVER);
+    public static final ImageDescriptor DESC_WIZB_VIRGO_SERVER = createManaged(WIZBAN, IMG_WIZB_VIRGO_SERVER);
 
-	public static final ImageDescriptor DESC_OBJ_VIRGO_LIB = createManaged(OBJECT, IMG_OBJ_VIRGO_LIB);
+    public static final ImageDescriptor DESC_OBJ_VIRGO_LIB = createManaged(OBJECT, IMG_OBJ_VIRGO_LIB);
 
-	public static final ImageDescriptor DESC_OBJ_VIRGO_FILE = createManaged(OBJECT, IMG_OBJ_VIRGO_FILE);
+    public static final ImageDescriptor DESC_OBJ_VIRGO_FILE = createManaged(OBJECT, IMG_OBJ_VIRGO_FILE);
 
-	public static final ImageDescriptor DESC_OBJ_VIRGO_OVER = createManaged(OVER, IMG_OBJ_VIRGO);
+    public static final ImageDescriptor DESC_OBJ_VIRGO_OVER = createManaged(OVER, IMG_OBJ_VIRGO);
 
-	public static final ImageDescriptor DESC_OBJ_PORT = createManaged(OBJECT, IMG_OBJ_PORT);
+    public static final ImageDescriptor DESC_OBJ_PORT = createManaged(OBJECT, IMG_OBJ_PORT);
 
-	public static final ImageDescriptor DESC_OBJ_VIRGO = createManaged(OBJECT, IMG_OBJ_VIRGO);
+    public static final ImageDescriptor DESC_OBJ_VIRGO = createManaged(OBJECT, IMG_OBJ_VIRGO);
 
-	public static final ImageDescriptor DESC_OBJ_BUNDLE = createManaged(OBJECT, IMG_OBJ_BUNDLE);
+    public static final ImageDescriptor DESC_OBJ_BUNDLE = createManaged(OBJECT, IMG_OBJ_BUNDLE);
 
-	public static final ImageDescriptor DESC_OBJ_BUNDLE_SRC = createManaged(OBJECT, IMG_OBJ_BUNDLE_SRC);
+    public static final ImageDescriptor DESC_OBJ_BUNDLE_SRC = createManaged(OBJECT, IMG_OBJ_BUNDLE_SRC);
 
-	public static final ImageDescriptor DESC_OBJ_LIB = createManaged(OBJECT, IMG_OBJ_LIB);
+    public static final ImageDescriptor DESC_OBJ_LIB = createManaged(OBJECT, IMG_OBJ_LIB);
 
-	public static final ImageDescriptor DESC_OBJ_FILE = createManaged(OBJECT, IMG_OBJ_FILE);
+    public static final ImageDescriptor DESC_OBJ_FILE = createManaged(OBJECT, IMG_OBJ_FILE);
 
-	/*
-	 * Helper method to initialize the image registry from the BeansUIPlugin
-	 * class.
-	 */
-	/* package */static void initializeImageRegistry(ImageRegistry registry) {
-		for (String key : imageDescriptors.keySet()) {
-			registry.put(key, imageDescriptors.get(key));
-		}
-	}
+    /*
+     * Helper method to initialize the image registry from the BeansUIPlugin class.
+     */
+    /* package */static void initializeImageRegistry(ImageRegistry registry) {
+        for (String key : imageDescriptors.keySet()) {
+            registry.put(key, imageDescriptors.get(key));
+        }
+    }
 
-	/**
-	 * Returns the {@link Image} identified by the given key, or <code>null</code> if it does not exist.
-	 */
-	public static Image getImage(String key) {
-		return ServerUiPlugin.getDefault().getImageRegistry().get(key);
-	}
+    /**
+     * Returns the {@link Image} identified by the given key, or <code>null</code> if it does not exist.
+     */
+    public static Image getImage(String key) {
+        return ServerUiPlugin.getDefault().getImageRegistry().get(key);
+    }
 
-	/**
-	 * Sets the three image descriptors for enabled, disabled, and hovered to an action. The actions are retrieved from
-	 * the *tool16 folders.
-	 */
-	public static void setToolImageDescriptors(IAction action, String iconName) {
-		setImageDescriptors(action, "tool16", iconName);
-	}
+    /**
+     * Sets the three image descriptors for enabled, disabled, and hovered to an action. The actions are retrieved from
+     * the *tool16 folders.
+     */
+    public static void setToolImageDescriptors(IAction action, String iconName) {
+        setImageDescriptors(action, "tool16", iconName);
+    }
 
-	/**
-	 * Sets the three image descriptors for enabled, disabled, and hovered to an action. The actions are retrieved from
-	 * the *lcl16 folders.
-	 */
-	public static void setLocalImageDescriptors(IAction action, String iconName) {
-		setImageDescriptors(action, "lcl16", iconName);
-	}
+    /**
+     * Sets the three image descriptors for enabled, disabled, and hovered to an action. The actions are retrieved from
+     * the *lcl16 folders.
+     */
+    public static void setLocalImageDescriptors(IAction action, String iconName) {
+        setImageDescriptors(action, "lcl16", iconName);
+    }
 
-	//---- Helper methods to access icons on the file system -------------------
+    // ---- Helper methods to access icons on the file system -------------------
 
-	private static void setImageDescriptors(IAction action, String type, String relPath) {
-		action.setImageDescriptor(create("e" + type, relPath));
-		try {
-			ImageDescriptor id = ImageDescriptor.createFromURL(makeIconFileURL("d" + type, relPath));
-			if (id != null) {
-				action.setDisabledImageDescriptor(id);
-			}
-		} catch (MalformedURLException e) {
-			ServerUiPlugin.log(e);
-		}
-	}
+    private static void setImageDescriptors(IAction action, String type, String relPath) {
+        action.setImageDescriptor(create("e" + type, relPath));
+        try {
+            ImageDescriptor id = ImageDescriptor.createFromURL(makeIconFileURL("d" + type, relPath));
+            if (id != null) {
+                action.setDisabledImageDescriptor(id);
+            }
+        } catch (MalformedURLException e) {
+            ServerUiPlugin.log(e);
+        }
+    }
 
-	private static ImageDescriptor createManaged(String prefix, String name) {
-		try {
-			ImageDescriptor result = ImageDescriptor.createFromURL(makeIconFileURL(prefix,
-					name.substring(NAME_PREFIX_LENGTH)));
-			if (imageDescriptors == null) {
-				imageDescriptors = new HashMap<String, ImageDescriptor>();
-			}
-			imageDescriptors.put(name, result);
-			return result;
-		} catch (MalformedURLException e) {
-			ServerUiPlugin.log(e);
-			return ImageDescriptor.getMissingImageDescriptor();
-		}
-	}
+    private static ImageDescriptor createManaged(String prefix, String name) {
+        try {
+            ImageDescriptor result = ImageDescriptor.createFromURL(makeIconFileURL(prefix, name.substring(NAME_PREFIX_LENGTH)));
+            if (imageDescriptors == null) {
+                imageDescriptors = new HashMap<String, ImageDescriptor>();
+            }
+            imageDescriptors.put(name, result);
+            return result;
+        } catch (MalformedURLException e) {
+            ServerUiPlugin.log(e);
+            return ImageDescriptor.getMissingImageDescriptor();
+        }
+    }
 
-	private static ImageDescriptor create(String prefix, String name) {
-		try {
-			return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));
-		} catch (MalformedURLException e) {
-			ServerUiPlugin.log(e);
-			return ImageDescriptor.getMissingImageDescriptor();
-		}
-	}
+    private static ImageDescriptor create(String prefix, String name) {
+        try {
+            return ImageDescriptor.createFromURL(makeIconFileURL(prefix, name));
+        } catch (MalformedURLException e) {
+            ServerUiPlugin.log(e);
+            return ImageDescriptor.getMissingImageDescriptor();
+        }
+    }
 
-	private static URL makeIconFileURL(String prefix, String name) throws MalformedURLException {
-		if (ICON_BASE_URL == null) {
-			throw new MalformedURLException();
-		}
+    private static URL makeIconFileURL(String prefix, String name) throws MalformedURLException {
+        if (ICON_BASE_URL == null) {
+            throw new MalformedURLException();
+        }
 
-		StringBuffer buffer = new StringBuffer(prefix);
-		buffer.append('/').append(name);
-		return new URL(ICON_BASE_URL, buffer.toString());
-	}
+        StringBuffer buffer = new StringBuffer(prefix);
+        buffer.append('/').append(name);
+        return new URL(ICON_BASE_URL, buffer.toString());
+    }
 }

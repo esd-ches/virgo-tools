@@ -8,13 +8,9 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.editors;
 
-import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
-import org.eclipse.swtbot.swt.finder.results.VoidResult;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.virgo.ide.ui.tests.AbstractManifestUiTestCase;
 
 /**
@@ -22,84 +18,88 @@ import org.eclipse.virgo.ide.ui.tests.AbstractManifestUiTestCase;
  */
 public class BundleImportPackageSectionUiTest extends AbstractManifestUiTestCase {
 
-	private static String SECTION_LABEL = "Import Package";
+    private static String SECTION_LABEL = "Import Package";
 
-	public void testAddButton() throws Exception {
-		final BundleManifestEditor manifest = openBundleManifestFile("src/META-INF/MANIFEST.MF");
-		UIThreadRunnable.syncExec(new VoidResult() {
-			public void run() {
-				manifest.setActivePage(BundleDependenciesPage.PAGE_ID);
-			}
-		});
-		bot.flatButtonInSection("Add...", SECTION_LABEL).click();
+    public void testAddButton() throws Exception {
+        final BundleManifestEditor manifest = openBundleManifestFile("src/META-INF/MANIFEST.MF");
+        UIThreadRunnable.syncExec(new VoidResult() {
 
-		SWTBotShell addDialog = bot.shell("Package Selection");
-		assertTrue(addDialog.isOpen());
-		addDialog.close();
-	}
+            public void run() {
+                manifest.setActivePage(BundleDependenciesPage.PAGE_ID);
+            }
+        });
+        this.bot.flatButtonInSection("Add...", SECTION_LABEL).click();
 
-	public void testDownloadButton() throws Exception {
-		final BundleManifestEditor manifest = openBundleManifestFile("src/META-INF/MANIFEST.MF");
-		UIThreadRunnable.syncExec(new VoidResult() {
-			public void run() {
-				manifest.setActivePage(BundleDependenciesPage.PAGE_ID);
-			}
-		});
+        SWTBotShell addDialog = this.bot.shell("Package Selection");
+        assertTrue(addDialog.isOpen());
+        addDialog.close();
+    }
 
-		SWTBotTable table = bot.tableInSection(SECTION_LABEL);
-		int count = table.rowCount();
-		bot.flatButtonInSection("Download...", SECTION_LABEL).click();
+    public void testDownloadButton() throws Exception {
+        final BundleManifestEditor manifest = openBundleManifestFile("src/META-INF/MANIFEST.MF");
+        UIThreadRunnable.syncExec(new VoidResult() {
 
-		SWTBotShell downloadDialog = bot.shell("Package Selection");
-		assertTrue(downloadDialog.isOpen());
+            public void run() {
+                manifest.setActivePage(BundleDependenciesPage.PAGE_ID);
+            }
+        });
 
-		bot.table().select(0);
-		bot.button("OK").click();
-		assertEquals(count + 1, table.rowCount());
-	}
+        SWTBotTable table = this.bot.tableInSection(SECTION_LABEL);
+        int count = table.rowCount();
+        this.bot.flatButtonInSection("Download...", SECTION_LABEL).click();
 
-	public void testRemoveButton() throws Exception {
-		final BundleManifestEditor manifest = openBundleManifestFile("src/META-INF/MANIFEST.MF");
-		UIThreadRunnable.syncExec(new VoidResult() {
-			public void run() {
-				manifest.setActivePage(BundleDependenciesPage.PAGE_ID);
-			}
-		});
+        SWTBotShell downloadDialog = this.bot.shell("Package Selection");
+        assertTrue(downloadDialog.isOpen());
 
-		SWTBotButton button = bot.flatButtonInSection("Remove", SECTION_LABEL);
-		assertFalse(button.isEnabled());
+        this.bot.table().select(0);
+        this.bot.button("OK").click();
+        assertEquals(count + 1, table.rowCount());
+    }
 
-		SWTBotTable table = bot.tableInSection(SECTION_LABEL);
-		int count = table.rowCount();
-		assertTrue(count > 0);
+    public void testRemoveButton() throws Exception {
+        final BundleManifestEditor manifest = openBundleManifestFile("src/META-INF/MANIFEST.MF");
+        UIThreadRunnable.syncExec(new VoidResult() {
 
-		table.select(0);
-		assertTrue(button.isEnabled());
+            public void run() {
+                manifest.setActivePage(BundleDependenciesPage.PAGE_ID);
+            }
+        });
 
-		button.click();
-		assertEquals(count - 1, table.rowCount());
-	}
+        SWTBotButton button = this.bot.flatButtonInSection("Remove", SECTION_LABEL);
+        assertFalse(button.isEnabled());
 
-	public void testPropertiesButton() throws Exception {
-		final BundleManifestEditor manifest = openBundleManifestFile("src/META-INF/MANIFEST.MF");
-		UIThreadRunnable.syncExec(new VoidResult() {
-			public void run() {
-				manifest.setActivePage(BundleDependenciesPage.PAGE_ID);
-			}
-		});
+        SWTBotTable table = this.bot.tableInSection(SECTION_LABEL);
+        int count = table.rowCount();
+        assertTrue(count > 0);
 
-		SWTBotButton button = bot.flatButtonInSection("Properties...", SECTION_LABEL);
-		assertFalse(button.isEnabled());
+        table.select(0);
+        assertTrue(button.isEnabled());
 
-		SWTBotTable table = bot.tableInSection(SECTION_LABEL);
-		String text = table.getTableItem(0).getText();
-		table.select(0);
-		assertTrue(button.isEnabled());
-		button.click();
+        button.click();
+        assertEquals(count - 1, table.rowCount());
+    }
 
-		SWTBotShell propertiesDialog = bot.shell(text);
-		assertTrue(propertiesDialog.isOpen());
-		propertiesDialog.close();
-	}
+    public void testPropertiesButton() throws Exception {
+        final BundleManifestEditor manifest = openBundleManifestFile("src/META-INF/MANIFEST.MF");
+        UIThreadRunnable.syncExec(new VoidResult() {
+
+            public void run() {
+                manifest.setActivePage(BundleDependenciesPage.PAGE_ID);
+            }
+        });
+
+        SWTBotButton button = this.bot.flatButtonInSection("Properties...", SECTION_LABEL);
+        assertFalse(button.isEnabled());
+
+        SWTBotTable table = this.bot.tableInSection(SECTION_LABEL);
+        String text = table.getTableItem(0).getText();
+        table.select(0);
+        assertTrue(button.isEnabled());
+        button.click();
+
+        SWTBotShell propertiesDialog = this.bot.shell(text);
+        assertTrue(propertiesDialog.isOpen());
+        propertiesDialog.close();
+    }
 
 }

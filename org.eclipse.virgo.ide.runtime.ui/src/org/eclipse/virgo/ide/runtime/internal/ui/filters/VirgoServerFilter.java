@@ -18,19 +18,18 @@ import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProject;
 
 /**
- * 
+ *
  * @author Miles Parker
- * 
+ *
  */
 public class VirgoServerFilter extends ViewerFilter {
 
-	/**
-	 * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-	 *      java.lang.Object)
-	 */
-	@Override
-	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		return (element instanceof IProject)
-				&& !FacetUtils.hasNature((IProject) element, ServerProject.SERVER_PROJECT_ID);
-	}
+    /**
+     * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+     *      java.lang.Object)
+     */
+    @Override
+    public boolean select(Viewer viewer, Object parentElement, Object element) {
+        return element instanceof IProject && !FacetUtils.hasNature((IProject) element, ServerProject.SERVER_PROJECT_ID);
+    }
 }

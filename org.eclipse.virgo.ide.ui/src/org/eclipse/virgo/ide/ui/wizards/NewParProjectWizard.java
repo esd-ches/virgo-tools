@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.wizards;
 
 import java.lang.reflect.InvocationTargetException;
@@ -71,234 +72,233 @@ import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
  */
 public class NewParProjectWizard extends AbstractNewParProjectWizard implements INewWizard {
 
-	private static final String PAR_FILE_NAME = ".settings/org.eclipse.virgo.ide.runtime.core.par.xml";
+    private static final String PAR_FILE_NAME = ".settings/org.eclipse.virgo.ide.runtime.core.par.xml";
 
-	private static final String ENCODING_UTF8 = "UTF-8";
+    private static final String ENCODING_UTF8 = "UTF-8";
 
-	private WizardNewProjectCreationPage mainPage;
+    private WizardNewProjectCreationPage mainPage;
 
-	private NewParInformationPage bundlePage;
+    private NewParInformationPage bundlePage;
 
-	private WizardNewProjectReferencePage referencePage;
+    private WizardNewProjectReferencePage referencePage;
 
-	private IProjectProvider projectProvider;
+    private IProjectProvider projectProvider;
 
-	private final AbstractFieldData bundleData;
+    private final AbstractFieldData bundleData;
 
-	private final IDataModel model;
+    private final IDataModel model;
 
-	private final String title = "New PAR Project";
+    private final String title = "New PAR Project";
 
-	protected ParPackage parPackage = ParPackage.eINSTANCE;
+    protected ParPackage parPackage = ParPackage.eINSTANCE;
 
-	protected ParFactory parFactory = parPackage.getParFactory();
+    protected ParFactory parFactory = this.parPackage.getParFactory();
 
-	public NewParProjectWizard() {
-		super();
-		setWindowTitle(title);
-		setNeedsProgressMonitor(true);
-		bundleData = new PluginFieldData();
-		model = DataModelFactory.createDataModel(new JavaProjectFacetCreationDataModelProvider());
-	}
+    public NewParProjectWizard() {
+        super();
+        setWindowTitle(this.title);
+        setNeedsProgressMonitor(true);
+        this.bundleData = new PluginFieldData();
+        this.model = DataModelFactory.createDataModel(new JavaProjectFacetCreationDataModelProvider());
+    }
 
-	private void addFacetsToProject(final IProject project) {
-		WorkspaceModifyOperation oper = new WorkspaceModifyOperation() {
-			@Override
-			protected void execute(IProgressMonitor monitor) throws CoreException, InvocationTargetException,
-					InterruptedException {
-				IFacetedProject fProject = ProjectFacetsManager.create(project.getProject(), true, monitor);
+    private void addFacetsToProject(final IProject project) {
+        WorkspaceModifyOperation oper = new WorkspaceModifyOperation() {
 
-				// WST 3.0 only
-				// fProject.createWorkingCopy().addProjectFacet(
-				// ProjectFacetsManager.getProjectFacet("jst.java").
-				// getLatestVersion());
-				// fProject.createWorkingCopy().addProjectFacet(
-				// ProjectFacetsManager.getProjectFacet(FacetCorePlugin.
-				// BUNDLE_FACET_ID).getLatestVersion());
+            @Override
+            protected void execute(IProgressMonitor monitor) throws CoreException, InvocationTargetException, InterruptedException {
+                IFacetedProject fProject = ProjectFacetsManager.create(project.getProject(), true, monitor);
 
-				fProject.installProjectFacet(ProjectFacetsManager.getProjectFacet(FacetCorePlugin.PAR_FACET_ID)
-						.getDefaultVersion(), null, monitor);
-				IRuntime runtime = (IRuntime) model.getProperty(IFacetProjectCreationDataModelProperties.FACET_RUNTIME);
-				if (runtime != null
-						&& runtime.supports(ProjectFacetsManager.getProjectFacet(FacetCorePlugin.PAR_FACET_ID))) {
-					fProject.setTargetedRuntimes(Collections.singleton(runtime), monitor);
-				}
-			}
-		};
+                // WST 3.0 only
+                // fProject.createWorkingCopy().addProjectFacet(
+                // ProjectFacetsManager.getProjectFacet("jst.java").
+                // getLatestVersion());
+                // fProject.createWorkingCopy().addProjectFacet(
+                // ProjectFacetsManager.getProjectFacet(FacetCorePlugin.
+                // BUNDLE_FACET_ID).getLatestVersion());
 
-		try {
-			getContainer().run(true, true, oper);
-		} catch (InvocationTargetException e) {
-			StatusManager.getManager()
-					.handle(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID,
-							"Exception while adding project facets.", e));
-		} catch (InterruptedException e) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.WARNING, ServerIdeUiPlugin.PLUGIN_ID,
-							"Interruption while adding project facets.", e));
-		}
-	}
+                fProject.installProjectFacet(ProjectFacetsManager.getProjectFacet(FacetCorePlugin.PAR_FACET_ID).getDefaultVersion(), null, monitor);
+                IRuntime runtime = (IRuntime) NewParProjectWizard.this.model.getProperty(IFacetProjectCreationDataModelProperties.FACET_RUNTIME);
+                if (runtime != null && runtime.supports(ProjectFacetsManager.getProjectFacet(FacetCorePlugin.PAR_FACET_ID))) {
+                    fProject.setTargetedRuntimes(Collections.singleton(runtime), monitor);
+                }
+            }
+        };
 
-	@Override
-	public void addPages() {
-		mainPage = new NewParProjectSettingsPage("basicNewProjectPage", getSelection());
-		setMainPage(mainPage);
-		addPage(mainPage);
+        try {
+            getContainer().run(true, true, oper);
+        } catch (InvocationTargetException e) {
+            StatusManager.getManager().handle(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Exception while adding project facets.", e));
+        } catch (InterruptedException e) {
+            StatusManager.getManager().handle(
+                new Status(IStatus.WARNING, ServerIdeUiPlugin.PLUGIN_ID, "Interruption while adding project facets.", e));
+        }
+    }
 
-		projectProvider = new IProjectProvider() {
-			public IPath getLocationPath() {
-				return getProject().getLocation();
-			}
+    @Override
+    public void addPages() {
+        this.mainPage = new NewParProjectSettingsPage("basicNewProjectPage", getSelection());
+        setMainPage(this.mainPage);
+        addPage(this.mainPage);
 
-			public IProject getProject() {
-				return mainPage.getProjectHandle();
-			}
+        this.projectProvider = new IProjectProvider() {
 
-			public String getProjectName() {
-				return mainPage.getProjectName();
-			}
-		};
+            public IPath getLocationPath() {
+                return getProject().getLocation();
+            }
 
-		bundlePage = new NewParInformationPage(title, projectProvider, bundleData, model);
-		addPage(bundlePage);
+            public IProject getProject() {
+                return NewParProjectWizard.this.mainPage.getProjectHandle();
+            }
 
-		// only add page if there are already projects in the workspace
-		if (ResourcesPlugin.getWorkspace().getRoot().getProjects().length > 0) {
-			referencePage = new NewParProjectReferencePage("basicReferenceProjectPage");
-			addPage(referencePage);
-		}
-	}
+            public String getProjectName() {
+                return NewParProjectWizard.this.mainPage.getProjectName();
+            }
+        };
 
-	private IFile associateProjectsToPar(IProject[] references, final IFile parFile) {
-		// Add the initial model object to the contents.
-		//
-		final Par par = parFactory.createPar();
-		for (IProject workspaceProject : references) {
-			Bundle bundle = parFactory.createBundle();
-			bundle.setSymbolicName(ParUtils.getSymbolicName(workspaceProject));
-			par.getBundle().add(bundle);
-		}
+        this.bundlePage = new NewParInformationPage(this.title, this.projectProvider, this.bundleData, this.model);
+        addPage(this.bundlePage);
 
-		try {
-			WorkspaceModifyOperation operation = new WorkspaceModifyOperation() {
-				@Override
-				protected void execute(IProgressMonitor progressMonitor) {
-					try {
-						// Create a resource set
-						//
-						ResourceSet resourceSet = new ResourceSetImpl();
+        // only add page if there are already projects in the workspace
+        if (ResourcesPlugin.getWorkspace().getRoot().getProjects().length > 0) {
+            this.referencePage = new NewParProjectReferencePage("basicReferenceProjectPage");
+            addPage(this.referencePage);
+        }
+    }
 
-						// Get the URI of the model file.
-						//
-						org.eclipse.emf.common.util.URI fileURI = org.eclipse.emf.common.util.URI.createPlatformResourceURI(
-								parFile.getFullPath().toString(), true);
+    private IFile associateProjectsToPar(IProject[] references, final IFile parFile) {
+        // Add the initial model object to the contents.
+        //
+        final Par par = this.parFactory.createPar();
+        for (IProject workspaceProject : references) {
+            Bundle bundle = this.parFactory.createBundle();
+            bundle.setSymbolicName(ParUtils.getSymbolicName(workspaceProject));
+            par.getBundle().add(bundle);
+        }
 
-						// Create a resource for this file.
-						//
-						Resource resource = resourceSet.createResource(fileURI);
-						resource.getContents().add(par);
+        try {
+            WorkspaceModifyOperation operation = new WorkspaceModifyOperation() {
 
-						// Save the contents of the resource to the file
-						// system.
-						//
-						Map<Object, Object> options = new HashMap<Object, Object>();
-						options.put(XMLResource.OPTION_ENCODING, ENCODING_UTF8);
-						resource.save(options);
-					} catch (Exception exception) {
-						ServerIdeUiPlugin.getDefault().log(exception);
-					} finally {
-						progressMonitor.done();
-					}
-				}
-			};
-			getContainer().run(false, false, operation);
-			return parFile;
-		} catch (Exception exception) {
-			ServerIdeUiPlugin.getDefault().log(exception);
-			return null;
-		}
-	}
+                @Override
+                protected void execute(IProgressMonitor progressMonitor) {
+                    try {
+                        // Create a resource set
+                        //
+                        ResourceSet resourceSet = new ResourceSetImpl();
 
-	@Override
-	public boolean canFinish() {
-		IWizardPage page = getContainer().getCurrentPage();
-		return super.canFinish() && page != getMainPage();
-	}
+                        // Get the URI of the model file.
+                        //
+                        org.eclipse.emf.common.util.URI fileURI = org.eclipse.emf.common.util.URI.createPlatformResourceURI(
+                            parFile.getFullPath().toString(), true);
 
-	@Override
-	public boolean performFinish() {
-		createNewProject();
-		if (getNewProject() == null) {
-			return false;
-		}
+                        // Create a resource for this file.
+                        //
+                        Resource resource = resourceSet.createResource(fileURI);
+                        resource.getContents().add(par);
 
-		bundlePage.performPageFinish();
-		addFacetsToProject(getNewProject());
-		writeBundleData(getNewProject());
+                        // Save the contents of the resource to the file
+                        // system.
+                        //
+                        Map<Object, Object> options = new HashMap<Object, Object>();
+                        options.put(XMLResource.OPTION_ENCODING, ENCODING_UTF8);
+                        resource.save(options);
+                    } catch (Exception exception) {
+                        ServerIdeUiPlugin.getDefault().log(exception);
+                    } finally {
+                        progressMonitor.done();
+                    }
+                }
+            };
+            getContainer().run(false, false, operation);
+            return parFile;
+        } catch (Exception exception) {
+            ServerIdeUiPlugin.getDefault().log(exception);
+            return null;
+        }
+    }
 
-		if (referencePage != null) {
-			IProject[] references = referencePage.getReferencedProjects();
-			associateProjectsToPar(references, getNewProject().getFile(PAR_FILE_NAME));
-		}
+    @Override
+    public boolean canFinish() {
+        IWizardPage page = getContainer().getCurrentPage();
+        return super.canFinish() && page != getMainPage();
+    }
 
-		IWorkingSet[] workingSets = mainPage.getSelectedWorkingSets();
-		if (workingSets.length > 0) {
-			getWorkbench().getWorkingSetManager().addToWorkingSets(getNewProject(), workingSets);
-		}
+    @Override
+    public boolean performFinish() {
+        createNewProject();
+        if (getNewProject() == null) {
+            return false;
+        }
 
-		IFile manifestFile = (IFile) getNewProject().findMember("META-INF/MANIFEST.MF");
-		if (manifestFile != null) {
-			// Select the new file resource in the current view.
-			//
-			IWorkbenchWindow workbenchWindow = getWorkbench().getActiveWorkbenchWindow();
-			IWorkbenchPage page = workbenchWindow.getActivePage();
-			final IWorkbenchPart activePart = page.getActivePart();
-			if (activePart instanceof ISetSelectionTarget) {
-				final ISelection targetSelection = new StructuredSelection(manifestFile);
-				getShell().getDisplay().asyncExec(new Runnable() {
-					public void run() {
-						((ISetSelectionTarget) activePart).selectReveal(targetSelection);
-					}
-				});
-			}
+        this.bundlePage.performPageFinish();
+        addFacetsToProject(getNewProject());
+        writeBundleData(getNewProject());
 
-			// Open an editor on the new file.
-			//
-			try {
-				page.openEditor(new FileEditorInput(manifestFile), ParManifestEditor.ID_EDITOR);
-			} catch (PartInitException exception) {
-				MessageDialog.openError(workbenchWindow.getShell(), "Error opening editor", exception.getMessage());
-			}
-			return true;
-		}
-		return false;
-	}
+        if (this.referencePage != null) {
+            IProject[] references = this.referencePage.getReferencedProjects();
+            associateProjectsToPar(references, getNewProject().getFile(PAR_FILE_NAME));
+        }
 
-	private void writeBundleData(final IProject project) {
-		WorkspaceModifyOperation oper = new WorkspaceModifyOperation() {
-			@Override
-			protected void execute(IProgressMonitor monitor) throws CoreException, InvocationTargetException,
-					InterruptedException {
-				BundleManifestUtils.createNewParManifest(project, bundleData.getId(), bundleData.getVersion(),
-						bundleData.getName(), bundleData.getProvider());
-				project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
-			}
-		};
+        IWorkingSet[] workingSets = this.mainPage.getSelectedWorkingSets();
+        if (workingSets.length > 0) {
+            getWorkbench().getWorkingSetManager().addToWorkingSets(getNewProject(), workingSets);
+        }
 
-		try {
-			getContainer().run(true, true, oper);
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+        IFile manifestFile = (IFile) getNewProject().findMember("META-INF/MANIFEST.MF");
+        if (manifestFile != null) {
+            // Select the new file resource in the current view.
+            //
+            IWorkbenchWindow workbenchWindow = getWorkbench().getActiveWorkbenchWindow();
+            IWorkbenchPage page = workbenchWindow.getActivePage();
+            final IWorkbenchPart activePart = page.getActivePart();
+            if (activePart instanceof ISetSelectionTarget) {
+                final ISelection targetSelection = new StructuredSelection(manifestFile);
+                getShell().getDisplay().asyncExec(new Runnable() {
 
-	@Override
-	protected void initializeDefaultPageImageDescriptor() {
-		setDefaultPageImageDescriptor(ServerIdeUiPlugin.getImageDescriptor("full/wizban/wizban-par.png"));
-	}
+                    public void run() {
+                        ((ISetSelectionTarget) activePart).selectReveal(targetSelection);
+                    }
+                });
+            }
+
+            // Open an editor on the new file.
+            //
+            try {
+                page.openEditor(new FileEditorInput(manifestFile), ParManifestEditor.ID_EDITOR);
+            } catch (PartInitException exception) {
+                MessageDialog.openError(workbenchWindow.getShell(), "Error opening editor", exception.getMessage());
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private void writeBundleData(final IProject project) {
+        WorkspaceModifyOperation oper = new WorkspaceModifyOperation() {
+
+            @Override
+            protected void execute(IProgressMonitor monitor) throws CoreException, InvocationTargetException, InterruptedException {
+                BundleManifestUtils.createNewParManifest(project, NewParProjectWizard.this.bundleData.getId(),
+                    NewParProjectWizard.this.bundleData.getVersion(), NewParProjectWizard.this.bundleData.getName(),
+                    NewParProjectWizard.this.bundleData.getProvider());
+                project.refreshLocal(IResource.DEPTH_INFINITE, monitor);
+            }
+        };
+
+        try {
+            getContainer().run(true, true, oper);
+        } catch (InvocationTargetException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void initializeDefaultPageImageDescriptor() {
+        setDefaultPageImageDescriptor(ServerIdeUiPlugin.getImageDescriptor("full/wizban/wizban-par.png"));
+    }
 
 }

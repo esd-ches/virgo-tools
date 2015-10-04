@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.editors.text;
 
 import java.util.Enumeration;
@@ -36,176 +37,176 @@ import org.osgi.framework.Constants;
  */
 public class BundleManifestConfiguration extends AbstractPdeManifestConfiguration {
 
-	private BundleManifestContentAssistProcessor fContentAssistantProcessor;
+    private BundleManifestContentAssistProcessor fContentAssistantProcessor;
 
-	protected class BundleManifestHeaderScanner extends ManifestHeaderScanner {
+    protected class BundleManifestHeaderScanner extends ManifestHeaderScanner {
 
-		private Token springToken;
+        private Token springToken;
 
-		public BundleManifestHeaderScanner() {
-			super();
-		}
+        public BundleManifestHeaderScanner() {
+            super();
+        }
 
-		@Override
-		public boolean affectsTextPresentation(String property) {
-			if (property.startsWith(ISpringColorConstants.P_HEADER_SPRING)) {
-				return true;
-			}
-			return super.affectsTextPresentation(property);
-		}
+        @Override
+        public boolean affectsTextPresentation(String property) {
+            if (property.startsWith(ISpringColorConstants.P_HEADER_SPRING)) {
+                return true;
+            }
+            return super.affectsTextPresentation(property);
+        }
 
-		@Override
-		protected Token getTokenAffected(PropertyChangeEvent event) {
-			if (event.getProperty().startsWith(ISpringColorConstants.P_HEADER_SPRING)) {
-				return springToken;
-			}
-			return super.getTokenAffected(event);
-		}
+        @Override
+        protected Token getTokenAffected(PropertyChangeEvent event) {
+            if (event.getProperty().startsWith(ISpringColorConstants.P_HEADER_SPRING)) {
+                return this.springToken;
+            }
+            return super.getTokenAffected(event);
+        }
 
-		@Override
-		protected void initialize() {
-			fToken = new Token(createTextAttribute(IPDEColorConstants.P_HEADER_OSGI));
-			springToken = new Token(createTextAttribute(ISpringColorConstants.P_HEADER_SPRING));
-			WordRule rule = new WordRule(new KeywordDetector(), Token.UNDEFINED, true);
-			rule.addWord(Constants.BUNDLE_ACTIVATOR, fToken);
-			rule.addWord(Constants.BUNDLE_CATEGORY, fToken);
-			rule.addWord(Constants.BUNDLE_CLASSPATH, fToken);
-			rule.addWord(Constants.BUNDLE_CONTACTADDRESS, fToken);
-			rule.addWord(Constants.BUNDLE_COPYRIGHT, fToken);
-			rule.addWord(Constants.BUNDLE_DESCRIPTION, fToken);
-			rule.addWord(Constants.BUNDLE_DOCURL, fToken);
-			rule.addWord(Constants.BUNDLE_LOCALIZATION, fToken);
-			rule.addWord(Constants.BUNDLE_MANIFESTVERSION, fToken);
-			rule.addWord(Constants.BUNDLE_NAME, fToken);
-			rule.addWord(Constants.BUNDLE_NATIVECODE, fToken);
-			rule.addWord(Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT, fToken);
-			rule.addWord(Constants.BUNDLE_SYMBOLICNAME, fToken);
-			rule.addWord(Constants.BUNDLE_UPDATELOCATION, fToken);
-			rule.addWord(Constants.BUNDLE_VENDOR, fToken);
-			rule.addWord(Constants.BUNDLE_VERSION, fToken);
-			rule.addWord(Constants.REQUIRE_BUNDLE, fToken);
-			rule.addWord(Constants.DYNAMICIMPORT_PACKAGE, fToken);
-			rule.addWord(Constants.EXPORT_PACKAGE, fToken);
-			rule.addWord(ICoreConstants.EXPORT_SERVICE, fToken);
-			rule.addWord(Constants.FRAGMENT_HOST, fToken);
-			rule.addWord(Constants.IMPORT_PACKAGE, fToken);
-			rule.addWord(ICoreConstants.IMPORT_SERVICE, fToken);
-			rule.addWord(ICoreConstants.PROVIDE_PACKAGE, fToken);
+        @Override
+        protected void initialize() {
+            this.fToken = new Token(createTextAttribute(IPDEColorConstants.P_HEADER_OSGI));
+            this.springToken = new Token(createTextAttribute(ISpringColorConstants.P_HEADER_SPRING));
+            WordRule rule = new WordRule(new KeywordDetector(), Token.UNDEFINED, true);
+            rule.addWord(Constants.BUNDLE_ACTIVATOR, this.fToken);
+            rule.addWord(Constants.BUNDLE_CATEGORY, this.fToken);
+            rule.addWord(Constants.BUNDLE_CLASSPATH, this.fToken);
+            rule.addWord(Constants.BUNDLE_CONTACTADDRESS, this.fToken);
+            rule.addWord(Constants.BUNDLE_COPYRIGHT, this.fToken);
+            rule.addWord(Constants.BUNDLE_DESCRIPTION, this.fToken);
+            rule.addWord(Constants.BUNDLE_DOCURL, this.fToken);
+            rule.addWord(Constants.BUNDLE_LOCALIZATION, this.fToken);
+            rule.addWord(Constants.BUNDLE_MANIFESTVERSION, this.fToken);
+            rule.addWord(Constants.BUNDLE_NAME, this.fToken);
+            rule.addWord(Constants.BUNDLE_NATIVECODE, this.fToken);
+            rule.addWord(Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT, this.fToken);
+            rule.addWord(Constants.BUNDLE_SYMBOLICNAME, this.fToken);
+            rule.addWord(Constants.BUNDLE_UPDATELOCATION, this.fToken);
+            rule.addWord(Constants.BUNDLE_VENDOR, this.fToken);
+            rule.addWord(Constants.BUNDLE_VERSION, this.fToken);
+            rule.addWord(Constants.REQUIRE_BUNDLE, this.fToken);
+            rule.addWord(Constants.DYNAMICIMPORT_PACKAGE, this.fToken);
+            rule.addWord(Constants.EXPORT_PACKAGE, this.fToken);
+            rule.addWord(ICoreConstants.EXPORT_SERVICE, this.fToken);
+            rule.addWord(Constants.FRAGMENT_HOST, this.fToken);
+            rule.addWord(Constants.IMPORT_PACKAGE, this.fToken);
+            rule.addWord(ICoreConstants.IMPORT_SERVICE, this.fToken);
+            rule.addWord(ICoreConstants.PROVIDE_PACKAGE, this.fToken);
 
-			addRulesForHeaders(rule);
+            addRulesForHeaders(rule);
 
-			setRules(new IRule[] { rule });
-			setDefaultReturnToken(new Token(createTextAttribute(IPDEColorConstants.P_HEADER_KEY)));
-		}
+            setRules(new IRule[] { rule });
+            setDefaultReturnToken(new Token(createTextAttribute(IPDEColorConstants.P_HEADER_KEY)));
+        }
 
-		private void addRulesForHeaders(WordRule rule) {
-			ResourceBundle bundle = ResourceBundle.getBundle("org.eclipse.virgo.ide.ui.editors.text.headers");
-			Enumeration<String> headers = bundle.getKeys();
-			while (headers.hasMoreElements()) {
-				rule.addWord(headers.nextElement(), springToken);
-			}
-		}
-	}
+        private void addRulesForHeaders(WordRule rule) {
+            ResourceBundle bundle = ResourceBundle.getBundle("org.eclipse.virgo.ide.ui.editors.text.headers");
+            Enumeration<String> headers = bundle.getKeys();
+            while (headers.hasMoreElements()) {
+                rule.addWord(headers.nextElement(), this.springToken);
+            }
+        }
+    }
 
-	protected class BundleManifestValueScanner extends ManifestValueScanner {
+    protected class BundleManifestValueScanner extends ManifestValueScanner {
 
-		public BundleManifestValueScanner() {
-			super();
-		}
+        public BundleManifestValueScanner() {
+            super();
+        }
 
-		@Override
-		protected void initialize() {
-			IRule[] rules = new IRule[2];
-			fAssignmentToken = new Token(createTextAttribute(IPDEColorConstants.P_HEADER_ASSIGNMENT));
-			rules[0] = new WordRule(new AssignmentDetector(), fAssignmentToken);
+        @Override
+        protected void initialize() {
+            IRule[] rules = new IRule[2];
+            this.fAssignmentToken = new Token(createTextAttribute(IPDEColorConstants.P_HEADER_ASSIGNMENT));
+            rules[0] = new WordRule(new AssignmentDetector(), this.fAssignmentToken);
 
-			fAttributeToken = new Token(createTextAttribute(IPDEColorConstants.P_HEADER_ATTRIBUTES));
-			WordRule rule = new WordRule(new KeywordDetector());
-			rule.addWord(Constants.BUNDLE_NATIVECODE_LANGUAGE, fAttributeToken);
-			rule.addWord(Constants.BUNDLE_NATIVECODE_OSNAME, fAttributeToken);
-			rule.addWord(Constants.BUNDLE_NATIVECODE_OSVERSION, fAttributeToken);
-			rule.addWord(Constants.BUNDLE_NATIVECODE_PROCESSOR, fAttributeToken);
-			rule.addWord(Constants.BUNDLE_SYMBOLICNAME_ATTRIBUTE, fAttributeToken);
-			rule.addWord(Constants.BUNDLE_VERSION_ATTRIBUTE, fAttributeToken);
-			rule.addWord(Constants.EXCLUDE_DIRECTIVE, fAttributeToken);
-			rule.addWord(Constants.FRAGMENT_ATTACHMENT_DIRECTIVE, fAttributeToken);
-			rule.addWord(Constants.INCLUDE_DIRECTIVE, fAttributeToken);
-			rule.addWord(Constants.MANDATORY_DIRECTIVE, fAttributeToken);
-			rule.addWord(Constants.RESOLUTION_DIRECTIVE, fAttributeToken);
-			rule.addWord(Constants.SINGLETON_DIRECTIVE, fAttributeToken);
-			rule.addWord(Constants.USES_DIRECTIVE, fAttributeToken);
-			rule.addWord(Constants.VERSION_ATTRIBUTE, fAttributeToken);
-			rule.addWord(Constants.VISIBILITY_DIRECTIVE, fAttributeToken);
-			rule.addWord(ICoreConstants.FRIENDS_DIRECTIVE, fAttributeToken);
-			rule.addWord(ICoreConstants.INTERNAL_DIRECTIVE, fAttributeToken);
-			rule.addWord(ICoreConstants.PACKAGE_SPECIFICATION_VERSION, fAttributeToken);
+            this.fAttributeToken = new Token(createTextAttribute(IPDEColorConstants.P_HEADER_ATTRIBUTES));
+            WordRule rule = new WordRule(new KeywordDetector());
+            rule.addWord(Constants.BUNDLE_NATIVECODE_LANGUAGE, this.fAttributeToken);
+            rule.addWord(Constants.BUNDLE_NATIVECODE_OSNAME, this.fAttributeToken);
+            rule.addWord(Constants.BUNDLE_NATIVECODE_OSVERSION, this.fAttributeToken);
+            rule.addWord(Constants.BUNDLE_NATIVECODE_PROCESSOR, this.fAttributeToken);
+            rule.addWord(Constants.BUNDLE_SYMBOLICNAME_ATTRIBUTE, this.fAttributeToken);
+            rule.addWord(Constants.BUNDLE_VERSION_ATTRIBUTE, this.fAttributeToken);
+            rule.addWord(Constants.EXCLUDE_DIRECTIVE, this.fAttributeToken);
+            rule.addWord(Constants.FRAGMENT_ATTACHMENT_DIRECTIVE, this.fAttributeToken);
+            rule.addWord(Constants.INCLUDE_DIRECTIVE, this.fAttributeToken);
+            rule.addWord(Constants.MANDATORY_DIRECTIVE, this.fAttributeToken);
+            rule.addWord(Constants.RESOLUTION_DIRECTIVE, this.fAttributeToken);
+            rule.addWord(Constants.SINGLETON_DIRECTIVE, this.fAttributeToken);
+            rule.addWord(Constants.USES_DIRECTIVE, this.fAttributeToken);
+            rule.addWord(Constants.VERSION_ATTRIBUTE, this.fAttributeToken);
+            rule.addWord(Constants.VISIBILITY_DIRECTIVE, this.fAttributeToken);
+            rule.addWord(ICoreConstants.FRIENDS_DIRECTIVE, this.fAttributeToken);
+            rule.addWord(ICoreConstants.INTERNAL_DIRECTIVE, this.fAttributeToken);
+            rule.addWord(ICoreConstants.PACKAGE_SPECIFICATION_VERSION, this.fAttributeToken);
 
-			// EASTER EGG
-			for (String element : ICoreConstants.EE_TOKENS) {
-				rule.addWord(element, fAttributeToken);
-			}
+            // EASTER EGG
+            for (String element : ICoreConstants.EE_TOKENS) {
+                rule.addWord(element, this.fAttributeToken);
+            }
 
-			addRulesForAttributes(rule);
-			rules[1] = rule;
+            addRulesForAttributes(rule);
+            rules[1] = rule;
 
-			setRules(rules);
-			setDefaultReturnToken(new Token(createTextAttribute(IPDEColorConstants.P_HEADER_VALUE)));
-		}
+            setRules(rules);
+            setDefaultReturnToken(new Token(createTextAttribute(IPDEColorConstants.P_HEADER_VALUE)));
+        }
 
-		private void addRulesForAttributes(WordRule rule) {
-			ResourceBundle bundle = ResourceBundle.getBundle("org.eclipse.virgo.ide.ui.editors.text.attributes");
-			Enumeration<String> attributes = bundle.getKeys();
-			while (attributes.hasMoreElements()) {
-				rule.addWord(attributes.nextElement(), fAttributeToken);
-			}
-		}
+        private void addRulesForAttributes(WordRule rule) {
+            ResourceBundle bundle = ResourceBundle.getBundle("org.eclipse.virgo.ide.ui.editors.text.attributes");
+            Enumeration<String> attributes = bundle.getKeys();
+            while (attributes.hasMoreElements()) {
+                rule.addWord(attributes.nextElement(), this.fAttributeToken);
+            }
+        }
 
-	}
+    }
 
-	public BundleManifestConfiguration(IColorManager manager) {
-		this(manager, null, null);
-	}
+    public BundleManifestConfiguration(IColorManager manager) {
+        this(manager, null, null);
+    }
 
-	public BundleManifestConfiguration(IColorManager manager, PDESourcePage page) {
-		this(manager, page, null);
-	}
+    public BundleManifestConfiguration(IColorManager manager, PDESourcePage page) {
+        this(manager, page, null);
+    }
 
-	public BundleManifestConfiguration(IColorManager manager, PDESourcePage page, String documentPartitioning) {
-		super(manager, page, documentPartitioning);
-		fPropertyKeyScanner = new BundleManifestHeaderScanner();
-		fPropertyValueScanner = new BundleManifestValueScanner();
-	}
+    public BundleManifestConfiguration(IColorManager manager, PDESourcePage page, String documentPartitioning) {
+        super(manager, page, documentPartitioning);
+        this.fPropertyKeyScanner = new BundleManifestHeaderScanner();
+        this.fPropertyValueScanner = new BundleManifestValueScanner();
+    }
 
-	@Override
-	public void dispose() {
-		if (fQuickAssistant != null) {
-			fQuickAssistant.dispose();
-		}
-		if (fContentAssistant != null) {
-			fContentAssistantProcessor.dispose();
-		}
-	}
+    @Override
+    public void dispose() {
+        if (this.fQuickAssistant != null) {
+            this.fQuickAssistant.dispose();
+        }
+        if (this.fContentAssistant != null) {
+            this.fContentAssistantProcessor.dispose();
+        }
+    }
 
-	@Override
-	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
-		if (fSourcePage != null && fSourcePage.isEditable()) {
-			if (fContentAssistant == null) {
-				fContentAssistant = new ContentAssistant();
-				fContentAssistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-				fContentAssistantProcessor = new BundleManifestContentAssistProcessor(fSourcePage);
-				fContentAssistant.setContentAssistProcessor(fContentAssistantProcessor, IDocument.DEFAULT_CONTENT_TYPE);
-				fContentAssistant.setContentAssistProcessor(fContentAssistantProcessor,
-						ManifestPartitionScanner.MANIFEST_HEADER_VALUE);
-				fContentAssistant.addCompletionListener(fContentAssistantProcessor);
-				fContentAssistant.setInformationControlCreator(new IInformationControlCreator() {
-					public IInformationControl createInformationControl(Shell parent) {
-						return new JFaceDefaultInformationControl(parent, false);
-					}
-				});
-				fContentAssistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
-			}
-			return fContentAssistant;
-		}
-		return null;
-	}
+    @Override
+    public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
+        if (this.fSourcePage != null && this.fSourcePage.isEditable()) {
+            if (this.fContentAssistant == null) {
+                this.fContentAssistant = new ContentAssistant();
+                this.fContentAssistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+                this.fContentAssistantProcessor = new BundleManifestContentAssistProcessor(this.fSourcePage);
+                this.fContentAssistant.setContentAssistProcessor(this.fContentAssistantProcessor, IDocument.DEFAULT_CONTENT_TYPE);
+                this.fContentAssistant.setContentAssistProcessor(this.fContentAssistantProcessor, ManifestPartitionScanner.MANIFEST_HEADER_VALUE);
+                this.fContentAssistant.addCompletionListener(this.fContentAssistantProcessor);
+                this.fContentAssistant.setInformationControlCreator(new IInformationControlCreator() {
+
+                    public IInformationControl createInformationControl(Shell parent) {
+                        return new JFaceDefaultInformationControl(parent, false);
+                    }
+                });
+                this.fContentAssistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
+            }
+            return this.fContentAssistant;
+        }
+        return null;
+    }
 }

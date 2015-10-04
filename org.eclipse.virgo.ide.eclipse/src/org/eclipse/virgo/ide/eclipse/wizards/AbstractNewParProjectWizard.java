@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.eclipse.wizards;
 
 import java.lang.reflect.InvocationTargetException;
@@ -44,103 +45,102 @@ import org.eclipse.ui.wizards.newresource.BasicNewResourceWizard;
 @SuppressWarnings("restriction")
 public abstract class AbstractNewParProjectWizard extends BasicNewResourceWizard {
 
-	private WizardNewProjectCreationPage mainPage;
+    private WizardNewProjectCreationPage mainPage;
 
-	private IProject newProject;
+    private IProject newProject;
 
-	/**
-	 * @see BasicNewProjectResourceWizard
-	 */
-	protected IProject createNewProject() {
-		if (newProject != null) {
-			return newProject;
-		}
+    /**
+     * @see BasicNewProjectResourceWizard
+     */
+    protected IProject createNewProject() {
+        if (this.newProject != null) {
+            return this.newProject;
+        }
 
-		// get a project handle
-		final IProject newProjectHandle = mainPage.getProjectHandle();
+        // get a project handle
+        final IProject newProjectHandle = this.mainPage.getProjectHandle();
 
-		// get a project descriptor
-		URI location = null;
-		if (!mainPage.useDefaults()) {
-			location = mainPage.getLocationURI();
-		}
+        // get a project descriptor
+        URI location = null;
+        if (!this.mainPage.useDefaults()) {
+            location = this.mainPage.getLocationURI();
+        }
 
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		final IProjectDescription description = workspace.newProjectDescription(newProjectHandle.getName());
-		description.setLocationURI(location);
+        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        final IProjectDescription description = workspace.newProjectDescription(newProjectHandle.getName());
+        description.setLocationURI(location);
 
-		// STS - replaced with associateProjectsToPar()
+        // STS - replaced with associateProjectsToPar()
 
-		// update the referenced project if provided
-		// if (referencePage != null) {
-		// IProject[] refProjects = referencePage.getReferencedProjects();
-		// if (refProjects.length > 0) {
-		// description.setReferencedProjects(refProjects);
-		// }
-		// }
+        // update the referenced project if provided
+        // if (referencePage != null) {
+        // IProject[] refProjects = referencePage.getReferencedProjects();
+        // if (refProjects.length > 0) {
+        // description.setReferencedProjects(refProjects);
+        // }
+        // }
 
-		// create the new project operation
-		IRunnableWithProgress op = new IRunnableWithProgress() {
-			public void run(IProgressMonitor monitor) throws InvocationTargetException {
-				CreateProjectOperation op = new CreateProjectOperation(description,
-						ResourceMessages.NewProject_windowTitle);
-				try {
-					// see bug
-					// https://bugs.eclipse.org/bugs/show_bug.cgi?id=219901
-					// directly execute the operation so that the undo state is
-					// not preserved. Making this undoable resulted in too many
-					// accidental file deletions.
-					op.execute(monitor, WorkspaceUndoUtil.getUIInfoAdapter(getShell()));
-				} catch (ExecutionException e) {
-					throw new InvocationTargetException(e);
-				}
-			}
-		};
+        // create the new project operation
+        IRunnableWithProgress op = new IRunnableWithProgress() {
 
-		// run the new project creation operation
-		try {
-			getContainer().run(true, true, op);
-		} catch (InterruptedException e) {
-			return null;
-		} catch (InvocationTargetException e) {
-			Throwable t = e.getTargetException();
-			if (t instanceof ExecutionException && t.getCause() instanceof CoreException) {
-				CoreException cause = (CoreException) t.getCause();
-				StatusAdapter status;
-				if (cause.getStatus().getCode() == IResourceStatus.CASE_VARIANT_EXISTS) {
-					status = new StatusAdapter(StatusUtil.newStatus(IStatus.WARNING,
-							NLS.bind(ResourceMessages.NewProject_caseVariantExistsError, newProjectHandle.getName()),
-							cause));
-				} else {
-					status = new StatusAdapter(StatusUtil.newStatus(cause.getStatus().getSeverity(),
-							ResourceMessages.NewProject_errorMessage, cause));
-				}
-				status.setProperty(StatusAdapter.TITLE_PROPERTY, ResourceMessages.NewProject_errorMessage);
-				StatusManager.getManager().handle(status, StatusManager.BLOCK);
-			} else {
-				StatusAdapter status = new StatusAdapter(new Status(IStatus.WARNING, IDEWorkbenchPlugin.IDE_WORKBENCH,
-						0, NLS.bind(ResourceMessages.NewProject_internalError, t.getMessage()), t));
-				status.setProperty(StatusAdapter.TITLE_PROPERTY, ResourceMessages.NewProject_errorMessage);
-				StatusManager.getManager().handle(status, StatusManager.LOG | StatusManager.BLOCK);
-			}
-			return null;
-		}
+            public void run(IProgressMonitor monitor) throws InvocationTargetException {
+                CreateProjectOperation op = new CreateProjectOperation(description, ResourceMessages.NewProject_windowTitle);
+                try {
+                    // see bug
+                    // https://bugs.eclipse.org/bugs/show_bug.cgi?id=219901
+                    // directly execute the operation so that the undo state is
+                    // not preserved. Making this undoable resulted in too many
+                    // accidental file deletions.
+                    op.execute(monitor, WorkspaceUndoUtil.getUIInfoAdapter(getShell()));
+                } catch (ExecutionException e) {
+                    throw new InvocationTargetException(e);
+                }
+            }
+        };
 
-		newProject = newProjectHandle;
+        // run the new project creation operation
+        try {
+            getContainer().run(true, true, op);
+        } catch (InterruptedException e) {
+            return null;
+        } catch (InvocationTargetException e) {
+            Throwable t = e.getTargetException();
+            if (t instanceof ExecutionException && t.getCause() instanceof CoreException) {
+                CoreException cause = (CoreException) t.getCause();
+                StatusAdapter status;
+                if (cause.getStatus().getCode() == IResourceStatus.CASE_VARIANT_EXISTS) {
+                    status = new StatusAdapter(StatusUtil.newStatus(IStatus.WARNING,
+                        NLS.bind(ResourceMessages.NewProject_caseVariantExistsError, newProjectHandle.getName()), cause));
+                } else {
+                    status = new StatusAdapter(
+                        StatusUtil.newStatus(cause.getStatus().getSeverity(), ResourceMessages.NewProject_errorMessage, cause));
+                }
+                status.setProperty(StatusAdapter.TITLE_PROPERTY, ResourceMessages.NewProject_errorMessage);
+                StatusManager.getManager().handle(status, StatusManager.BLOCK);
+            } else {
+                StatusAdapter status = new StatusAdapter(new Status(IStatus.WARNING, IDEWorkbenchPlugin.IDE_WORKBENCH, 0,
+                    NLS.bind(ResourceMessages.NewProject_internalError, t.getMessage()), t));
+                status.setProperty(StatusAdapter.TITLE_PROPERTY, ResourceMessages.NewProject_errorMessage);
+                StatusManager.getManager().handle(status, StatusManager.LOG | StatusManager.BLOCK);
+            }
+            return null;
+        }
 
-		return newProject;
-	}
+        this.newProject = newProjectHandle;
 
-	protected WizardNewProjectCreationPage getMainPage() {
-		return mainPage;
-	}
+        return this.newProject;
+    }
 
-	protected IProject getNewProject() {
-		return newProject;
-	}
+    protected WizardNewProjectCreationPage getMainPage() {
+        return this.mainPage;
+    }
 
-	protected void setMainPage(WizardNewProjectCreationPage page) {
-		mainPage = page;
-	}
+    protected IProject getNewProject() {
+        return this.newProject;
+    }
+
+    protected void setMainPage(WizardNewProjectCreationPage page) {
+        this.mainPage = page;
+    }
 
 }

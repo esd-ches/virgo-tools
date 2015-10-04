@@ -8,13 +8,9 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.editors;
 
-import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
-import org.eclipse.swtbot.swt.finder.results.VoidResult;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.virgo.ide.ui.tests.AbstractManifestUiTestCase;
 
 /**
@@ -22,42 +18,44 @@ import org.eclipse.virgo.ide.ui.tests.AbstractManifestUiTestCase;
  */
 public class ParDependenciesSectionUiTest extends AbstractManifestUiTestCase {
 
-	private static String SECTION_LABEL = "Nested Bundles";
+    private static String SECTION_LABEL = "Nested Bundles";
 
-	public void testAddButton() throws Exception {
-		final ParManifestEditor manifest = openParManifestFile("META-INF/MANIFEST.MF");
-		UIThreadRunnable.syncExec(new VoidResult() {
-			public void run() {
-				manifest.setActivePage(ParXmlEditorPage.ID_EDITOR);
-			}
-		});
-		bot.flatButtonInSection("Add...", SECTION_LABEL).click();
+    public void testAddButton() throws Exception {
+        final ParManifestEditor manifest = openParManifestFile("META-INF/MANIFEST.MF");
+        UIThreadRunnable.syncExec(new VoidResult() {
 
-		SWTBotShell addDialog = bot.shell("Bundle Selection");
-		assertTrue(addDialog.isOpen());
-		addDialog.close();
-	}
+            public void run() {
+                manifest.setActivePage(ParXmlEditorPage.ID_EDITOR);
+            }
+        });
+        this.bot.flatButtonInSection("Add...", SECTION_LABEL).click();
 
-	public void testRemoveButton() throws Exception {
-		final ParManifestEditor manifest = openParManifestFile("META-INF/MANIFEST.MF");
-		UIThreadRunnable.syncExec(new VoidResult() {
-			public void run() {
-				manifest.setActivePage(ParXmlEditorPage.ID_EDITOR);
-			}
-		});
+        SWTBotShell addDialog = this.bot.shell("Bundle Selection");
+        assertTrue(addDialog.isOpen());
+        addDialog.close();
+    }
 
-		SWTBotButton button = bot.flatButtonInSection("Remove", SECTION_LABEL);
-		assertFalse(button.isEnabled());
+    public void testRemoveButton() throws Exception {
+        final ParManifestEditor manifest = openParManifestFile("META-INF/MANIFEST.MF");
+        UIThreadRunnable.syncExec(new VoidResult() {
 
-		SWTBotTable table = bot.tableInSection(SECTION_LABEL);
-		assertEquals(1, table.rowCount());
+            public void run() {
+                manifest.setActivePage(ParXmlEditorPage.ID_EDITOR);
+            }
+        });
 
-		table.select(0);
-		assertTrue(button.isEnabled());
+        SWTBotButton button = this.bot.flatButtonInSection("Remove", SECTION_LABEL);
+        assertFalse(button.isEnabled());
 
-		button.click();
-		assertEquals(0, table.rowCount());
-		assertFalse(button.isEnabled());
-	}
+        SWTBotTable table = this.bot.tableInSection(SECTION_LABEL);
+        assertEquals(1, table.rowCount());
+
+        table.select(0);
+        assertTrue(button.isEnabled());
+
+        button.click();
+        assertEquals(0, table.rowCount());
+        assertFalse(button.isEnabled());
+    }
 
 }

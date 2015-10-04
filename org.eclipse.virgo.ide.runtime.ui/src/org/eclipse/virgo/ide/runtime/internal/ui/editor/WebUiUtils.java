@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.ui.editor;
 
 import java.net.MalformedURLException;
@@ -30,43 +31,40 @@ import org.eclipse.ui.internal.browser.WorkbenchBrowserSupport;
 @SuppressWarnings("restriction")
 public class WebUiUtils {
 
-	public static void openUrl(String location) {
-		openUrl(location, 0);
-	}
+    public static void openUrl(String location) {
+        openUrl(location, 0);
+    }
 
-	private static void openUrl(String location, int customFlags) {
-		try {
-			URL url = null;
+    private static void openUrl(String location, int customFlags) {
+        try {
+            URL url = null;
 
-			if (location != null) {
-				url = new URL(location);
-			}
-			if (WebBrowserPreference.getBrowserChoice() == WebBrowserPreference.EXTERNAL) {
-				try {
-					IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
-					support.getExternalBrowser().openURL(url);
-				} catch (Exception e) {
-				}
-			} else {
-				IWebBrowser browser = null;
-				int flags = customFlags;
-				if (WorkbenchBrowserSupport.getInstance().isInternalWebBrowserAvailable()) {
-					flags |= IWorkbenchBrowserSupport.AS_EDITOR | IWorkbenchBrowserSupport.LOCATION_BAR
-							| IWorkbenchBrowserSupport.NAVIGATION_BAR;
-				} else {
-					flags |= IWorkbenchBrowserSupport.AS_EXTERNAL | IWorkbenchBrowserSupport.LOCATION_BAR
-							| IWorkbenchBrowserSupport.NAVIGATION_BAR;
-				}
+            if (location != null) {
+                url = new URL(location);
+            }
+            if (WebBrowserPreference.getBrowserChoice() == WebBrowserPreference.EXTERNAL) {
+                try {
+                    IWorkbenchBrowserSupport support = PlatformUI.getWorkbench().getBrowserSupport();
+                    support.getExternalBrowser().openURL(url);
+                } catch (Exception e) {
+                }
+            } else {
+                IWebBrowser browser = null;
+                int flags = customFlags;
+                if (WorkbenchBrowserSupport.getInstance().isInternalWebBrowserAvailable()) {
+                    flags |= IWorkbenchBrowserSupport.AS_EDITOR | IWorkbenchBrowserSupport.LOCATION_BAR | IWorkbenchBrowserSupport.NAVIGATION_BAR;
+                } else {
+                    flags |= IWorkbenchBrowserSupport.AS_EXTERNAL | IWorkbenchBrowserSupport.LOCATION_BAR | IWorkbenchBrowserSupport.NAVIGATION_BAR;
+                }
 
-				String generatedId = "org.eclipse.mylyn.web.browser-" + Calendar.getInstance().getTimeInMillis();
-				browser = WorkbenchBrowserSupport.getInstance().createBrowser(flags, generatedId, null, null);
-				browser.openURL(url);
-			}
-		} catch (PartInitException e) {
-			MessageDialog.openError(Display.getDefault().getActiveShell(), "Browser init error",
-					"Browser could not be initiated");
-		} catch (MalformedURLException e) {
-		}
-	}
+                String generatedId = "org.eclipse.mylyn.web.browser-" + Calendar.getInstance().getTimeInMillis();
+                browser = WorkbenchBrowserSupport.getInstance().createBrowser(flags, generatedId, null, null);
+                browser.openURL(url);
+            }
+        } catch (PartInitException e) {
+            MessageDialog.openError(Display.getDefault().getActiveShell(), "Browser init error", "Browser could not be initiated");
+        } catch (MalformedURLException e) {
+        }
+    }
 
 }

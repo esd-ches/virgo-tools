@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.core.actions;
 
 import org.eclipse.core.commands.ExecutionException;
@@ -20,41 +21,41 @@ import org.eclipse.virgo.ide.runtime.core.IServerWorkingCopy;
 
 /**
  * {@link AbstractOperation} to modify the jmx deployer password.
- * 
+ *
  * @author Christian Dupuis
  * @since 1.0.1
  */
 public class ModifyDeployerPasswordCommand extends AbstractOperation {
 
-	private IServerWorkingCopy workingCopy;
+    private final IServerWorkingCopy workingCopy;
 
-	private String oldPassword;
+    private final String oldPassword;
 
-	private String newPassword;
+    private final String newPassword;
 
-	public ModifyDeployerPasswordCommand(IServerWorkingCopy workingCopy, String username) {
-		super("Modify JMX server port");
-		this.workingCopy = workingCopy;
-		this.oldPassword = workingCopy.getMBeanServerPassword();
-		this.newPassword = username;
-	}
+    public ModifyDeployerPasswordCommand(IServerWorkingCopy workingCopy, String username) {
+        super("Modify JMX server port");
+        this.workingCopy = workingCopy;
+        this.oldPassword = workingCopy.getMBeanServerPassword();
+        this.newPassword = username;
+    }
 
-	@Override
-	public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		workingCopy.setMBeanServerPassword(newPassword);
-		return Status.OK_STATUS;
-	}
+    @Override
+    public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        this.workingCopy.setMBeanServerPassword(this.newPassword);
+        return Status.OK_STATUS;
+    }
 
-	@Override
-	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		workingCopy.setMBeanServerPassword(newPassword);
-		return Status.OK_STATUS;
-	}
+    @Override
+    public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        this.workingCopy.setMBeanServerPassword(this.newPassword);
+        return Status.OK_STATUS;
+    }
 
-	@Override
-	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		workingCopy.setMBeanServerPassword(oldPassword);
-		return Status.OK_STATUS;
-	}
+    @Override
+    public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        this.workingCopy.setMBeanServerPassword(this.oldPassword);
+        return Status.OK_STATUS;
+    }
 
 }

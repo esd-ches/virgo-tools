@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.bundlor.internal.core;
 
 import java.util.ArrayList;
@@ -46,158 +47,156 @@ import org.eclipse.virgo.util.parser.manifest.ManifestContents;
 
 /**
  * Factory to create {@link ManifestGenerator}.
- * 
+ *
  * @author Christian Dupuis
  * @since 2.3.0
  */
 class ManifestGeneratorFactory {
 
-	public static ManifestGenerator create(ReadablePartialManifest partialManifest, ArtifactAnalyzer artifactAnalyzer,
-			PropertiesSource... properties) {
-		ManifestGeneratorContributors contributors = create(artifactAnalyzer, properties);
+    public static ManifestGenerator create(ReadablePartialManifest partialManifest, ArtifactAnalyzer artifactAnalyzer,
+        PropertiesSource... properties) {
+        ManifestGeneratorContributors contributors = create(artifactAnalyzer, properties);
 
-		// Remove custom headers
-		contributors.addManifestModifier(new HeaderRemovingManifestModifier());
-		contributors.addManifestTemplateModifier(new HeaderRemovingTemplateManifestModifier());
+        // Remove custom headers
+        contributors.addManifestModifier(new HeaderRemovingManifestModifier());
+        contributors.addManifestTemplateModifier(new HeaderRemovingTemplateManifestModifier());
 
-		// Add partial manifest model
-		contributors.setReadablePartialManifest(partialManifest);
+        // Add partial manifest model
+        contributors.setReadablePartialManifest(partialManifest);
 
-		if (partialManifest instanceof EntryScannerListener) {
-			contributors.addEntryScannerListener((EntryScannerListener) partialManifest);
-		}
+        if (partialManifest instanceof EntryScannerListener) {
+            contributors.addEntryScannerListener((EntryScannerListener) partialManifest);
+        }
 
-		return new StandardManifestGenerator(contributors);
-	}
+        return new StandardManifestGenerator(contributors);
+    }
 
-	private static ManifestGeneratorContributors create(ArtifactAnalyzer artifactAnalyzer,
-			PropertiesSource... propertiesSources) {
-		ManifestGeneratorContributors contributors = new ManifestGeneratorContributors();
+    private static ManifestGeneratorContributors create(ArtifactAnalyzer artifactAnalyzer, PropertiesSource... propertiesSources) {
+        ManifestGeneratorContributors contributors = new ManifestGeneratorContributors();
 
-		Properties properties = combineProperties(propertiesSources);
+        Properties properties = combineProperties(propertiesSources);
 
-		BlueprintArtifactAnalyzer blueprintArtifactAnalyzer = new BlueprintArtifactAnalyzer();
-		IgnoredExistingHeadersManifestModifier ignoredExistingHeadersManifestModifier = new IgnoredExistingHeadersManifestModifier();
-		ExcludedImportAndExportPartialManifestModifier excludedImportAndExportPartialManifestModifier = new ExcludedImportAndExportPartialManifestModifier();
-		PlaceholderManifestAndTemplateModifier placeholderManifestAndTemplateModifier = new PlaceholderManifestAndTemplateModifier(
-			properties);
-		ManifestTemplateDirectiveMigrator manifestTemplateDirectiveMigrator = new ManifestTemplateDirectiveMigrator();
-		StandardPartialManifestResolver partialManifestResolver = new StandardPartialManifestResolver();
+        BlueprintArtifactAnalyzer blueprintArtifactAnalyzer = new BlueprintArtifactAnalyzer();
+        IgnoredExistingHeadersManifestModifier ignoredExistingHeadersManifestModifier = new IgnoredExistingHeadersManifestModifier();
+        ExcludedImportAndExportPartialManifestModifier excludedImportAndExportPartialManifestModifier = new ExcludedImportAndExportPartialManifestModifier();
+        PlaceholderManifestAndTemplateModifier placeholderManifestAndTemplateModifier = new PlaceholderManifestAndTemplateModifier(properties);
+        ManifestTemplateDirectiveMigrator manifestTemplateDirectiveMigrator = new ManifestTemplateDirectiveMigrator();
+        StandardPartialManifestResolver partialManifestResolver = new StandardPartialManifestResolver();
 
-		List<ArtifactAnalyzer> analyzers = new ArrayList<ArtifactAnalyzer>();
-		BundleClassPathArtifactAnalyzer bundleClassPathArtifactAnalyzer = new BundleClassPathArtifactAnalyzer(analyzers);
+        List<ArtifactAnalyzer> analyzers = new ArrayList<ArtifactAnalyzer>();
+        BundleClassPathArtifactAnalyzer bundleClassPathArtifactAnalyzer = new BundleClassPathArtifactAnalyzer(analyzers);
 
-		contributors //
-				.addArtifactAnalyzer(artifactAnalyzer)
-				// .addArtifactAnalyzer(new AsmTypeArtefactAnalyser()) //
-				.addArtifactAnalyzer(new StaticResourceArtifactAnalyzer()) //
-				.addArtifactAnalyzer(new HibernateMappingArtifactAnalyzer()) //
-				.addArtifactAnalyzer(new JpaPersistenceArtifactAnalyzer()) //
-				.addArtifactAnalyzer(new Log4JXmlArtifactAnalyzer()) //
-				.addArtifactAnalyzer(new SpringApplicationContextArtifactAnalyzer()) //
-				.addArtifactAnalyzer(blueprintArtifactAnalyzer) //
-				.addArtifactAnalyzer(new WebApplicationArtifactAnalyzer()) //
-				.addArtifactAnalyzer(bundleClassPathArtifactAnalyzer) //
-				.addArtifactAnalyzer(new JspArtifactAnalyzer());
+        contributors //
+        .addArtifactAnalyzer(artifactAnalyzer)
+        // .addArtifactAnalyzer(new AsmTypeArtefactAnalyser()) //
+        .addArtifactAnalyzer(new StaticResourceArtifactAnalyzer()) //
+        .addArtifactAnalyzer(new HibernateMappingArtifactAnalyzer()) //
+        .addArtifactAnalyzer(new JpaPersistenceArtifactAnalyzer()) //
+        .addArtifactAnalyzer(new Log4JXmlArtifactAnalyzer()) //
+        .addArtifactAnalyzer(new SpringApplicationContextArtifactAnalyzer()) //
+        .addArtifactAnalyzer(blueprintArtifactAnalyzer) //
+        .addArtifactAnalyzer(new WebApplicationArtifactAnalyzer()) //
+        .addArtifactAnalyzer(bundleClassPathArtifactAnalyzer) //
+        .addArtifactAnalyzer(new JspArtifactAnalyzer());
 
-		analyzers.add(artifactAnalyzer);
-		analyzers.add(new StaticResourceArtifactAnalyzer());
-		analyzers.add(new HibernateMappingArtifactAnalyzer());
-		analyzers.add(new JpaPersistenceArtifactAnalyzer());
-		analyzers.add(new Log4JXmlArtifactAnalyzer());
-		analyzers.add(new SpringApplicationContextArtifactAnalyzer());
-		analyzers.add(blueprintArtifactAnalyzer);
-		analyzers.add(new WebApplicationArtifactAnalyzer());
-		analyzers.add(bundleClassPathArtifactAnalyzer);
-		analyzers.add(new JspArtifactAnalyzer());
+        analyzers.add(artifactAnalyzer);
+        analyzers.add(new StaticResourceArtifactAnalyzer());
+        analyzers.add(new HibernateMappingArtifactAnalyzer());
+        analyzers.add(new JpaPersistenceArtifactAnalyzer());
+        analyzers.add(new Log4JXmlArtifactAnalyzer());
+        analyzers.add(new SpringApplicationContextArtifactAnalyzer());
+        analyzers.add(blueprintArtifactAnalyzer);
+        analyzers.add(new WebApplicationArtifactAnalyzer());
+        analyzers.add(bundleClassPathArtifactAnalyzer);
+        analyzers.add(new JspArtifactAnalyzer());
 
-		contributors //
-				.addManifestReader(excludedImportAndExportPartialManifestModifier) //
-				.addManifestReader(ignoredExistingHeadersManifestModifier) //
-				.addManifestReader(blueprintArtifactAnalyzer);
+        contributors //
+        .addManifestReader(excludedImportAndExportPartialManifestModifier) //
+        .addManifestReader(ignoredExistingHeadersManifestModifier) //
+        .addManifestReader(blueprintArtifactAnalyzer);
 
-		contributors //
-				.addManifestModifier(placeholderManifestAndTemplateModifier) //
-				.addManifestModifier(ignoredExistingHeadersManifestModifier) //
-				.addManifestModifier(new ToolStampManifestModifier());
+        contributors //
+        .addManifestModifier(placeholderManifestAndTemplateModifier) //
+        .addManifestModifier(ignoredExistingHeadersManifestModifier) //
+        .addManifestModifier(new ToolStampManifestModifier());
 
-		contributors //
-				.addManifestTemplateModifier(manifestTemplateDirectiveMigrator) //
-				.addManifestTemplateModifier(placeholderManifestAndTemplateModifier) //
-				.addManifestTemplateModifier(new OsgiProfileManifestTemplateModifier(properties));
+        contributors //
+        .addManifestTemplateModifier(manifestTemplateDirectiveMigrator) //
+        .addManifestTemplateModifier(placeholderManifestAndTemplateModifier) //
+        .addManifestTemplateModifier(new OsgiProfileManifestTemplateModifier(properties));
 
-		contributors //
-				.addManifestContributor(bundleClassPathArtifactAnalyzer);
+        contributors //
+        .addManifestContributor(bundleClassPathArtifactAnalyzer);
 
-		contributors //
-				.addPartialManifestModifier(manifestTemplateDirectiveMigrator) //
-				.addPartialManifestModifier(excludedImportAndExportPartialManifestModifier);
+        contributors //
+        .addPartialManifestModifier(manifestTemplateDirectiveMigrator) //
+        .addPartialManifestModifier(excludedImportAndExportPartialManifestModifier);
 
-		contributors //
-				.addTemplateHeaderReader(excludedImportAndExportPartialManifestModifier) //
-				.addTemplateHeaderReader(ignoredExistingHeadersManifestModifier) //
-				.addTemplateHeaderReader(placeholderManifestAndTemplateModifier) //
-				.addTemplateHeaderReader(partialManifestResolver);
+        contributors //
+        .addTemplateHeaderReader(excludedImportAndExportPartialManifestModifier) //
+        .addTemplateHeaderReader(ignoredExistingHeadersManifestModifier) //
+        .addTemplateHeaderReader(placeholderManifestAndTemplateModifier) //
+        .addTemplateHeaderReader(partialManifestResolver);
 
-		contributors //
-				.setReadablePartialManifest(new StandardReadablePartialManifest());
+        contributors //
+        .setReadablePartialManifest(new StandardReadablePartialManifest());
 
-		contributors //
-				.setPartialManifestResolver(partialManifestResolver);
+        contributors //
+        .setPartialManifestResolver(partialManifestResolver);
 
-		return contributors;
-	}
+        return contributors;
+    }
 
-	private static Properties combineProperties(PropertiesSource... propertiesSources) {
-		PropertiesSource[] sortedPropertiesSources = new PropertiesSource[propertiesSources.length];
-		System.arraycopy(propertiesSources, 0, sortedPropertiesSources, 0, propertiesSources.length);
-		// Sort by priority so that sources with lower priority are added first
-		// into the final
-		// Properties instance to allow for overriding by later instances
-		Arrays.sort(sortedPropertiesSources, new Comparator<PropertiesSource>() {
+    private static Properties combineProperties(PropertiesSource... propertiesSources) {
+        PropertiesSource[] sortedPropertiesSources = new PropertiesSource[propertiesSources.length];
+        System.arraycopy(propertiesSources, 0, sortedPropertiesSources, 0, propertiesSources.length);
+        // Sort by priority so that sources with lower priority are added first
+        // into the final
+        // Properties instance to allow for overriding by later instances
+        Arrays.sort(sortedPropertiesSources, new Comparator<PropertiesSource>() {
 
-			public int compare(PropertiesSource o1, PropertiesSource o2) {
-				if (o1.getPriority() == o2.getPriority()) {
-					return 0;
-				} else if (o1.getPriority() > o2.getPriority()) {
-					return 1;
-				}
-				return -1;
-			}
-		});
+            public int compare(PropertiesSource o1, PropertiesSource o2) {
+                if (o1.getPriority() == o2.getPriority()) {
+                    return 0;
+                } else if (o1.getPriority() > o2.getPriority()) {
+                    return 1;
+                }
+                return -1;
+            }
+        });
 
-		Properties properties = new Properties();
-		for (PropertiesSource source : propertiesSources) {
-			properties.putAll(source.getProperties());
-		}
-		return properties;
-	}
+        Properties properties = new Properties();
+        for (PropertiesSource source : propertiesSources) {
+            properties.putAll(source.getProperties());
+        }
+        return properties;
+    }
 
-	static class HeaderRemovingManifestModifier implements ManifestModifier {
+    static class HeaderRemovingManifestModifier implements ManifestModifier {
 
-		public void modify(ManifestContents manifest) {
-			manifest.getMainAttributes().remove("Import-Library");
-			manifest.getMainAttributes().remove("Import-Bundle");
-			manifest.getMainAttributes().remove("Export-Template");
-			manifest.getMainAttributes().remove("Import-Template");
-			manifest.getMainAttributes().remove("Excluded-Exports");
-			manifest.getMainAttributes().remove("Excluded-Imports");
-			manifest.getMainAttributes().remove("Ignored-Existing-Headers");
-			manifest.getMainAttributes().remove("Test-Import-Package");
-			manifest.getMainAttributes().remove("Test-Import-Library");
-			manifest.getMainAttributes().remove("Test-Import-Bundle");
-			manifest.getMainAttributes().remove("Import-Package");
-			manifest.getMainAttributes().remove("Export-Package");
-		}
+        public void modify(ManifestContents manifest) {
+            manifest.getMainAttributes().remove("Import-Library");
+            manifest.getMainAttributes().remove("Import-Bundle");
+            manifest.getMainAttributes().remove("Export-Template");
+            manifest.getMainAttributes().remove("Import-Template");
+            manifest.getMainAttributes().remove("Excluded-Exports");
+            manifest.getMainAttributes().remove("Excluded-Imports");
+            manifest.getMainAttributes().remove("Ignored-Existing-Headers");
+            manifest.getMainAttributes().remove("Test-Import-Package");
+            manifest.getMainAttributes().remove("Test-Import-Library");
+            manifest.getMainAttributes().remove("Test-Import-Bundle");
+            manifest.getMainAttributes().remove("Import-Package");
+            manifest.getMainAttributes().remove("Export-Package");
+        }
 
-	}
+    }
 
-	static class HeaderRemovingTemplateManifestModifier implements ManifestTemplateModifier {
+    static class HeaderRemovingTemplateManifestModifier implements ManifestTemplateModifier {
 
-		public void modify(ManifestContents manifest) {
-			manifest.getMainAttributes().remove("Test-Import-Package");
-			manifest.getMainAttributes().remove("Test-Import-Library");
-			manifest.getMainAttributes().remove("Test-Import-Bundle");
-		}
-	}
+        public void modify(ManifestContents manifest) {
+            manifest.getMainAttributes().remove("Test-Import-Package");
+            manifest.getMainAttributes().remove("Test-Import-Library");
+            manifest.getMainAttributes().remove("Test-Import-Bundle");
+        }
+    }
 }

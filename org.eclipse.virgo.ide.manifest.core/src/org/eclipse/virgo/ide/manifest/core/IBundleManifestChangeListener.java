@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.manifest.core;
 
 import java.util.Set;
@@ -22,7 +23,7 @@ import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
  * Register and un-register implementations of this interface with the
  * {@link IBundleManifestManager#addBundleManifestChangeListener()} and
  * {@link IBundleManifestManager#removeBundleManifestChangeListener()} method
- * 
+ *
  * @author Christian Dupuis
  * @since 1.0.0
  * @see IBundleManifestManager
@@ -30,15 +31,14 @@ import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
  */
 public interface IBundleManifestChangeListener {
 
-	enum Type {
-		IMPORT_PACKAGE, IMPORT_BUNDLE, IMPORT_LIBRARY, EXPORT_PACKAGE, REQUIRE_BUNDLE
-	}
+    enum Type {
+        IMPORT_PACKAGE, IMPORT_BUNDLE, IMPORT_LIBRARY, EXPORT_PACKAGE, REQUIRE_BUNDLE
+    }
 
-	/**
-	 * Notified if in case of a change to a {@link BundleManifest} within the {@link IJavaProject}.
-	 */
-	void bundleManifestChanged(BundleManifest newBundleManfest, BundleManifest oldBundleManifest,
-			BundleManifest newTestBundleManifest, BundleManifest oldTestBundleManifest, Set<Type> type,
-			IJavaProject javaProject);
+    /**
+     * Notified if in case of a change to a {@link BundleManifest} within the {@link IJavaProject}.
+     */
+    void bundleManifestChanged(BundleManifest newBundleManfest, BundleManifest oldBundleManifest, BundleManifest newTestBundleManifest,
+        BundleManifest oldTestBundleManifest, Set<Type> type, IJavaProject javaProject);
 
 }

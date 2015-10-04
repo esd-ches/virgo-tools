@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.bundlor.ui.internal.actions;
 
 import java.lang.reflect.InvocationTargetException;
@@ -41,71 +42,68 @@ import org.eclipse.virgo.ide.facet.core.FacetUtils;
 
 /**
  * {@link IObjectActionDelegate} to enables/disables the incremental Bundlor project builder.
- * 
+ *
  * @author Christian Dupuis
  * @since 1.1.3
  */
 public class AutomaticRunBundlorActionDelegate extends RunBundlorActionDelegate {
 
-	@Override
-	public void run(IAction action) {
-		final Set<IJavaProject> projects = new LinkedHashSet<IJavaProject>();
-		Iterator<IProject> iter = getSelected().iterator();
-		while (iter.hasNext()) {
-			IProject project = iter.next();
-			if (FacetUtils.isBundleProject(project)) {
-				projects.add(JavaCore.create(project));
-			}
-		}
-		IRunnableWithProgress op = new WorkspaceModifyOperation() {
-			@Override
-			protected void execute(IProgressMonitor monitor) throws CoreException, InterruptedException {
-				for (final IJavaProject javaProject : projects) {
-					IProject project = javaProject.getProject();
-					IProjectDescription description = project.getDescription();
-					try {
-						List<ICommand> cmds = Arrays.asList(description.getBuildSpec());
-						List<ICommand> newCmds = new ArrayList<ICommand>(cmds);
-						if (BundlorUiPlugin.isBundlorBuilding(project)) {
-							for (ICommand config : cmds) {
-								if (config.getBuilderName().equals(BundlorCorePlugin.BUILDER_ID)) {
-									newCmds.remove(config);
-								}
-							}
-						} else {
-							ICommand command = project.getDescription().newCommand();
-							command.setBuilderName(BundlorCorePlugin.BUILDER_ID);
-							newCmds.add(command);
-						}
-						if (!cmds.equals(newCmds)) {
-							description.setBuildSpec(newCmds.toArray(new ICommand[] {}));
-							project.setDescription(description, monitor);
-						}
-					} catch (CoreException e) {
-						StatusManager.getManager().handle(
-								new Status(IStatus.ERROR, BundlorUiPlugin.PLUGIN_ID,
-										"An exception occurred while running bundlor.", e));
-					}
-				}
-			}
-		};
+    @Override
+    public void run(IAction action) {
+        final Set<IJavaProject> projects = new LinkedHashSet<IJavaProject>();
+        Iterator<IProject> iter = getSelected().iterator();
+        while (iter.hasNext()) {
+            IProject project = iter.next();
+            if (FacetUtils.isBundleProject(project)) {
+                projects.add(JavaCore.create(project));
+            }
+        }
+        IRunnableWithProgress op = new WorkspaceModifyOperation() {
 
-		try {
-			PlatformUI.getWorkbench()
-					.getProgressService()
-					.runInUI(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), op,
-							ResourcesPlugin.getWorkspace().getRoot());
-		} catch (InvocationTargetException e) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.ERROR, BundlorUiPlugin.PLUGIN_ID,
-							"An exception occurred while running bundlor.", e));
-		} catch (InterruptedException e) {
-		}
+            @Override
+            protected void execute(IProgressMonitor monitor) throws CoreException, InterruptedException {
+                for (final IJavaProject javaProject : projects) {
+                    IProject project = javaProject.getProject();
+                    IProjectDescription description = project.getDescription();
+                    try {
+                        List<ICommand> cmds = Arrays.asList(description.getBuildSpec());
+                        List<ICommand> newCmds = new ArrayList<ICommand>(cmds);
+                        if (BundlorUiPlugin.isBundlorBuilding(project)) {
+                            for (ICommand config : cmds) {
+                                if (config.getBuilderName().equals(BundlorCorePlugin.BUILDER_ID)) {
+                                    newCmds.remove(config);
+                                }
+                            }
+                        } else {
+                            ICommand command = project.getDescription().newCommand();
+                            command.setBuilderName(BundlorCorePlugin.BUILDER_ID);
+                            newCmds.add(command);
+                        }
+                        if (!cmds.equals(newCmds)) {
+                            description.setBuildSpec(newCmds.toArray(new ICommand[] {}));
+                            project.setDescription(description, monitor);
+                        }
+                    } catch (CoreException e) {
+                        StatusManager.getManager().handle(
+                            new Status(IStatus.ERROR, BundlorUiPlugin.PLUGIN_ID, "An exception occurred while running bundlor.", e));
+                    }
+                }
+            }
+        };
 
-	}
+        try {
+            PlatformUI.getWorkbench().getProgressService().runInUI(PlatformUI.getWorkbench().getActiveWorkbenchWindow(), op,
+                ResourcesPlugin.getWorkspace().getRoot());
+        } catch (InvocationTargetException e) {
+            StatusManager.getManager().handle(
+                new Status(IStatus.ERROR, BundlorUiPlugin.PLUGIN_ID, "An exception occurred while running bundlor.", e));
+        } catch (InterruptedException e) {
+        }
 
-	@Override
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-	}
+    }
+
+    @Override
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+    }
 
 }

@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.bundlor.ui.internal.properties;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ import org.osgi.service.prefs.BackingStoreException;
 
 /**
  * {@link PropertyPage} to configure properties files for Bundlor variable substitution
- * 
+ *
  * @author Christian Dupuis
  * @author Leo Dos Santos
  * @author Miles Parker
@@ -72,316 +73,320 @@ import org.osgi.service.prefs.BackingStoreException;
 @SuppressWarnings("deprecation")
 public class BundlorPreferencePage extends PropertyPage {
 
-	private IProject project;
+    private IProject project;
 
-	private boolean modified = false;
+    private boolean modified = false;
 
-	private Table filenameTable;
+    private Table filenameTable;
 
-	private TableViewer filenamesTableViewer;
+    private TableViewer filenamesTableViewer;
 
-	private Button addButton;
+    private Button addButton;
 
-	private Button pathButton;
+    private Button pathButton;
 
-	private Button deleteButton;
+    private Button deleteButton;
 
-	private List<String> filenames;
+    private List<String> filenames;
 
-	private Button scanByteCode;
+    private Button scanByteCode;
 
-	private Button formatManifests;
+    private Button formatManifests;
 
-	private boolean checkScanByteCodeButton;
+    private boolean checkScanByteCodeButton;
 
-	private boolean checkFormatManifestsButton;
+    private boolean checkFormatManifestsButton;
 
-	@Override
-	protected Control createContents(Composite parent) {
+    @Override
+    protected Control createContents(Composite parent) {
 
-		Font font = parent.getFont();
+        Font font = parent.getFont();
 
-		Composite parentComposite = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		parentComposite.setLayout(layout);
-		parentComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-		parentComposite.setFont(font);
+        Composite parentComposite = new Composite(parent, SWT.NONE);
+        GridLayout layout = new GridLayout();
+        parentComposite.setLayout(layout);
+        parentComposite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+        parentComposite.setFont(font);
 
-		initialize();
+        initialize();
 
-		scanByteCode = new Button(parentComposite, SWT.CHECK);
-		scanByteCode.setText("Scan output folders instead of source folders to generate MANIFEST.MF");
-		scanByteCode.setSelection(checkScanByteCodeButton);
-		scanByteCode.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				modified = true;
-			}
-		});
+        this.scanByteCode = new Button(parentComposite, SWT.CHECK);
+        this.scanByteCode.setText("Scan output folders instead of source folders to generate MANIFEST.MF");
+        this.scanByteCode.setSelection(this.checkScanByteCodeButton);
+        this.scanByteCode.addSelectionListener(new SelectionAdapter() {
 
-		formatManifests = new Button(parentComposite, SWT.CHECK);
-		formatManifests.setText("Auto-format generated MANIFEST.MF and TEST.MF files");
-		formatManifests.setSelection(checkFormatManifestsButton);
-		formatManifests.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				modified = true;
-			}
-		});
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                BundlorPreferencePage.this.modified = true;
+            }
+        });
 
-		Label description = createDescriptionLabel(parentComposite);
-		description.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
+        this.formatManifests = new Button(parentComposite, SWT.CHECK);
+        this.formatManifests.setText("Auto-format generated MANIFEST.MF and TEST.MF files");
+        this.formatManifests.setSelection(this.checkFormatManifestsButton);
+        this.formatManifests.addSelectionListener(new SelectionAdapter() {
 
-		Composite composite = new Composite(parentComposite, SWT.NONE);
-		layout = new GridLayout();
-		layout.numColumns = 2;
-		layout.marginHeight = 5;
-		layout.marginWidth = 0;
-		layout.verticalSpacing = 5;
-		layout.horizontalSpacing = 0;
-		composite.setLayout(layout);
-		composite.setLayoutData(new GridData(GridData.FILL_BOTH | GridData.VERTICAL_ALIGN_FILL));
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                BundlorPreferencePage.this.modified = true;
+            }
+        });
 
-		filenameTable = new Table(composite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
-		GridData data = new GridData(GridData.FILL_BOTH);
-		filenameTable.setLayoutData(data);
-		filenamesTableViewer = new TableViewer(filenameTable);
+        Label description = createDescriptionLabel(parentComposite);
+        description.setLayoutData(new GridData(SWT.FILL, SWT.TOP, true, false));
 
-		filenamesTableViewer.setContentProvider(new PropertiesFileContentProvider());
-		filenamesTableViewer.setLabelProvider(new FilenameLabelProvider());
+        Composite composite = new Composite(parentComposite, SWT.NONE);
+        layout = new GridLayout();
+        layout.numColumns = 2;
+        layout.marginHeight = 5;
+        layout.marginWidth = 0;
+        layout.verticalSpacing = 5;
+        layout.horizontalSpacing = 0;
+        composite.setLayout(layout);
+        composite.setLayoutData(new GridData(GridData.FILL_BOTH | GridData.VERTICAL_ALIGN_FILL));
 
-		filenamesTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
-			public void selectionChanged(SelectionChangedEvent event) {
-				Object obj = ((IStructuredSelection) event.getSelection()).getFirstElement();
-				if (obj != null) {
-					deleteButton.setEnabled(true);
-				} else {
-					deleteButton.setEnabled(false);
-				}
-			}
+        this.filenameTable = new Table(composite, SWT.SINGLE | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION | SWT.BORDER);
+        GridData data = new GridData(GridData.FILL_BOTH);
+        this.filenameTable.setLayoutData(data);
+        this.filenamesTableViewer = new TableViewer(this.filenameTable);
 
-		});
+        this.filenamesTableViewer.setContentProvider(new PropertiesFileContentProvider());
+        this.filenamesTableViewer.setLabelProvider(new FilenameLabelProvider());
 
-		Composite buttonComposite = new Composite(composite, SWT.NONE);
-		buttonComposite.setLayout(new GridLayout(1, true));
-		data = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
-		buttonComposite.setLayoutData(data);
+        this.filenamesTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
-		addButton = new Button(buttonComposite, SWT.PUSH);
-		addButton.setText("Add...");
-		data = new GridData();
-		data.widthHint = 100;
-		addButton.setLayoutData(data);
-		addButton.addSelectionListener(new SelectionAdapter() {
+            public void selectionChanged(SelectionChangedEvent event) {
+                Object obj = ((IStructuredSelection) event.getSelection()).getFirstElement();
+                if (obj != null) {
+                    BundlorPreferencePage.this.deleteButton.setEnabled(true);
+                } else {
+                    BundlorPreferencePage.this.deleteButton.setEnabled(false);
+                }
+            }
 
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				FilteredElementTreeSelectionDialog selDialog = new FilteredElementTreeSelectionDialog(
-						Display.getCurrent().getActiveShell(), new JavaElementLabelProvider(),
-						new WorkspaceResourceContentProvider());
-				selDialog.setTitle("Select properties files");
-				selDialog.setMessage("Select properties files in the workspace that should be\nused for variable substitution:");
-				selDialog.setValidator(new ISelectionStatusValidator() {
-					public IStatus validate(Object[] selection) {
-						for (Object object : selection) {
-							if (object instanceof IStorage) {
-								return new Status(IStatus.OK, BundlorUiPlugin.PLUGIN_ID, IStatus.OK, "", null); //$NON-NLS-1$;
-							}
-						}
-						return new Status(IStatus.ERROR, BundlorUiPlugin.PLUGIN_ID, IStatus.OK, "", null); //$NON-NLS-1$;
-					}
-				});
-				selDialog.setInput(ResourcesPlugin.getWorkspace().getRoot());
-				selDialog.setSorter(new JavaElementSorter());
-				if (selDialog.open() == Window.OK) {
-					IResource resource = (IResource) selDialog.getFirstResult();
-					if (resource instanceof IFile) {
-						if (resource.getProject().equals(project)) {
-							IPath projectRelativePath = resource.getProjectRelativePath();
-							String string = projectRelativePath.toString();
-							filenames.add(string);
-						} else {
-							filenames.add(resource.getFullPath().toString());
-						}
-					}
-					modified = true;
-					filenamesTableViewer.setInput(project);
-				}
-			}
-		});
+        });
 
-		pathButton = new Button(buttonComposite, SWT.PUSH);
-		pathButton.setText("Enter Path...");
-		data = new GridData();
-		data.widthHint = 100;
-		pathButton.setLayoutData(data);
-		pathButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				BundlorPropertiesPathDialog pathDialog = new BundlorPropertiesPathDialog(getShell());
-				if (pathDialog.open() == IDialogConstants.OK_ID) {
-					String path = pathDialog.getPropertiesPath();
-					filenames.add(path);
-					modified = true;
-					filenamesTableViewer.setInput(project);
-				}
-			}
-		});
+        Composite buttonComposite = new Composite(composite, SWT.NONE);
+        buttonComposite.setLayout(new GridLayout(1, true));
+        data = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
+        buttonComposite.setLayoutData(data);
 
-		deleteButton = new Button(buttonComposite, SWT.PUSH);
-		deleteButton.setText("Delete");
-		deleteButton.setLayoutData(data);
-		deleteButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				Object selected = ((IStructuredSelection) filenamesTableViewer.getSelection()).getFirstElement();
-				filenames.remove(selected);
-				filenamesTableViewer.setInput(project);
-				modified = true;
-			}
-		});
+        this.addButton = new Button(buttonComposite, SWT.PUSH);
+        this.addButton.setText("Add...");
+        data = new GridData();
+        data.widthHint = 100;
+        this.addButton.setLayoutData(data);
+        this.addButton.addSelectionListener(new SelectionAdapter() {
 
-		filenamesTableViewer.setInput(project);
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                FilteredElementTreeSelectionDialog selDialog = new FilteredElementTreeSelectionDialog(Display.getCurrent().getActiveShell(),
+                    new JavaElementLabelProvider(), new WorkspaceResourceContentProvider());
+                selDialog.setTitle("Select properties files");
+                selDialog.setMessage("Select properties files in the workspace that should be\nused for variable substitution:");
+                selDialog.setValidator(new ISelectionStatusValidator() {
 
-		return parentComposite;
-	}
+                    public IStatus validate(Object[] selection) {
+                        for (Object object : selection) {
+                            if (object instanceof IStorage) {
+                                return new Status(IStatus.OK, BundlorUiPlugin.PLUGIN_ID, IStatus.OK, "", null); //$NON-NLS-1$ ;
+                            }
+                        }
+                        return new Status(IStatus.ERROR, BundlorUiPlugin.PLUGIN_ID, IStatus.OK, "", null); //$NON-NLS-1$ ;
+                    }
+                });
+                selDialog.setInput(ResourcesPlugin.getWorkspace().getRoot());
+                selDialog.setSorter(new JavaElementSorter());
+                if (selDialog.open() == Window.OK) {
+                    IResource resource = (IResource) selDialog.getFirstResult();
+                    if (resource instanceof IFile) {
+                        if (resource.getProject().equals(BundlorPreferencePage.this.project)) {
+                            IPath projectRelativePath = resource.getProjectRelativePath();
+                            String string = projectRelativePath.toString();
+                            BundlorPreferencePage.this.filenames.add(string);
+                        } else {
+                            BundlorPreferencePage.this.filenames.add(resource.getFullPath().toString());
+                        }
+                    }
+                    BundlorPreferencePage.this.modified = true;
+                    BundlorPreferencePage.this.filenamesTableViewer.setInput(BundlorPreferencePage.this.project);
+                }
+            }
+        });
 
-	private void initialize() {
-		project = (IProject) getElement().getAdapter(IResource.class);
-		noDefaultAndApplyButton();
-		setDescription("Define properties files that should be used for variable substitution during\ngeneration of MANIFEST.MF file:");
+        this.pathButton = new Button(buttonComposite, SWT.PUSH);
+        this.pathButton.setText("Enter Path...");
+        data = new GridData();
+        data.widthHint = 100;
+        this.pathButton.setLayoutData(data);
+        this.pathButton.addSelectionListener(new SelectionAdapter() {
 
-		if (project != null) {
-			IEclipsePreferences node = getProjectPreferences(project);
-			String properties = node.get(BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_KEY,
-					BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_DEFAULT);
-			filenames = new ArrayList<String>(Arrays.asList(StringUtils.split(properties, ";")));
-			checkScanByteCodeButton = node.getBoolean(BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_KEY,
-					BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_DEFAULT);
-			checkFormatManifestsButton = node.getBoolean(BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_KEY,
-					BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_DEFAULT);
-		} else {
-			filenames = new ArrayList<String>();
-			checkScanByteCodeButton = BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_DEFAULT;
-			checkFormatManifestsButton = BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_DEFAULT;
-		}
-	}
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                BundlorPropertiesPathDialog pathDialog = new BundlorPropertiesPathDialog(getShell());
+                if (pathDialog.open() == IDialogConstants.OK_ID) {
+                    String path = pathDialog.getPropertiesPath();
+                    BundlorPreferencePage.this.filenames.add(path);
+                    BundlorPreferencePage.this.modified = true;
+                    BundlorPreferencePage.this.filenamesTableViewer.setInput(BundlorPreferencePage.this.project);
+                }
+            }
+        });
 
-	public IEclipsePreferences getProjectPreferences(IProject project) {
-		IScopeContext context = new ProjectScope(project);
-		IEclipsePreferences node = context.getNode(BundlorCorePlugin.PLUGIN_ID);
-		return node;
-	}
+        this.deleteButton = new Button(buttonComposite, SWT.PUSH);
+        this.deleteButton.setText("Delete");
+        this.deleteButton.setLayoutData(data);
+        this.deleteButton.addSelectionListener(new SelectionAdapter() {
 
-	@Override
-	public boolean performOk() {
-		if (!modified) {
-			return true;
-		}
-		IEclipsePreferences node = getProjectPreferences(project);
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                Object selected = ((IStructuredSelection) BundlorPreferencePage.this.filenamesTableViewer.getSelection()).getFirstElement();
+                BundlorPreferencePage.this.filenames.remove(selected);
+                BundlorPreferencePage.this.filenamesTableViewer.setInput(BundlorPreferencePage.this.project);
+                BundlorPreferencePage.this.modified = true;
+            }
+        });
 
-		node.put(BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_KEY, StringUtils.join(filenames, ";"));
-		boolean oldScanByteCode = node.getBoolean(BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_KEY,
-				BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_DEFAULT);
-		node.putBoolean(BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_KEY, scanByteCode.getSelection());
-		node.putBoolean(BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_KEY, formatManifests.getSelection());
-		try {
-			node.flush();
-		} catch (BackingStoreException e) {
-			throw new RuntimeException(e);
-		}
-		if (oldScanByteCode != scanByteCode.getSelection()) {
-			BundlorCorePlugin.getDefault().getManifestManager().clearPartialManifest(JavaCore.create(project));
-		}
+        this.filenamesTableViewer.setInput(this.project);
 
-		return true;
-	}
+        return parentComposite;
+    }
 
-	class PropertiesFileContentProvider implements ITreeContentProvider {
+    private void initialize() {
+        this.project = (IProject) getElement().getAdapter(IResource.class);
+        noDefaultAndApplyButton();
+        setDescription("Define properties files that should be used for variable substitution during\ngeneration of MANIFEST.MF file:");
 
-		public void dispose() {
-		}
+        if (this.project != null) {
+            IEclipsePreferences node = getProjectPreferences(this.project);
+            String properties = node.get(BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_KEY, BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_DEFAULT);
+            this.filenames = new ArrayList<String>(Arrays.asList(StringUtils.split(properties, ";")));
+            this.checkScanByteCodeButton = node.getBoolean(BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_KEY,
+                BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_DEFAULT);
+            this.checkFormatManifestsButton = node.getBoolean(BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_KEY,
+                BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_DEFAULT);
+        } else {
+            this.filenames = new ArrayList<String>();
+            this.checkScanByteCodeButton = BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_DEFAULT;
+            this.checkFormatManifestsButton = BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_DEFAULT;
+        }
+    }
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    public IEclipsePreferences getProjectPreferences(IProject project) {
+        IScopeContext context = new ProjectScope(project);
+        IEclipsePreferences node = context.getNode(BundlorCorePlugin.PLUGIN_ID);
+        return node;
+    }
 
-		}
+    @Override
+    public boolean performOk() {
+        if (!this.modified) {
+            return true;
+        }
+        IEclipsePreferences node = getProjectPreferences(this.project);
 
-		public Object[] getElements(Object inputElement) {
-			if (inputElement instanceof IProject) {
-				return filenames.toArray();
-			}
-			return new Object[0];
-		}
+        node.put(BundlorCorePlugin.TEMPLATE_PROPERTIES_FILE_KEY, StringUtils.join(this.filenames, ";"));
+        boolean oldScanByteCode = node.getBoolean(BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_KEY,
+            BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_DEFAULT);
+        node.putBoolean(BundlorCorePlugin.TEMPLATE_BYTE_CODE_SCANNING_KEY, this.scanByteCode.getSelection());
+        node.putBoolean(BundlorCorePlugin.FORMAT_GENERATED_MANIFESTS_KEY, this.formatManifests.getSelection());
+        try {
+            node.flush();
+        } catch (BackingStoreException e) {
+            throw new RuntimeException(e);
+        }
+        if (oldScanByteCode != this.scanByteCode.getSelection()) {
+            BundlorCorePlugin.getDefault().getManifestManager().clearPartialManifest(JavaCore.create(this.project));
+        }
 
-		public Object[] getChildren(Object parentElement) {
-			return getElements(parentElement);
-		}
+        return true;
+    }
 
-		public Object getParent(Object element) {
-			return null;
-		}
+    class PropertiesFileContentProvider implements ITreeContentProvider {
 
-		public boolean hasChildren(Object element) {
-			return getChildren(element).length > 0;
-		}
+        public void dispose() {
+        }
 
-	}
+        public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
 
-	class FilenameLabelProvider extends LabelProvider {
+        }
 
-		@Override
-		public Image getImage(Object element) {
-			return BundlorUiPlugin.getImage("full/obj16/file_obj.gif");
-		}
+        public Object[] getElements(Object inputElement) {
+            if (inputElement instanceof IProject) {
+                return BundlorPreferencePage.this.filenames.toArray();
+            }
+            return new Object[0];
+        }
 
-		@Override
-		public String getText(Object element) {
-			return element.toString();
-		}
+        public Object[] getChildren(Object parentElement) {
+            return getElements(parentElement);
+        }
 
-	}
+        public Object getParent(Object element) {
+            return null;
+        }
 
-	class WorkspaceResourceContentProvider implements ITreeContentProvider {
+        public boolean hasChildren(Object element) {
+            return getChildren(element).length > 0;
+        }
 
-		public Object[] getChildren(Object parentElement) {
-			if (parentElement instanceof IContainer) {
-				try {
-					return ((IContainer) parentElement).members();
-				} catch (CoreException e) {
-				}
-			}
-			return new Object[0];
-		}
+    }
 
-		public Object getParent(Object element) {
-			if (element instanceof IResource) {
-				return ((IResource) element).getParent();
-			}
-			return null;
-		}
+    class FilenameLabelProvider extends LabelProvider {
 
-		public boolean hasChildren(Object element) {
-			return getChildren(element).length > 0;
-		}
+        @Override
+        public Image getImage(Object element) {
+            return BundlorUiPlugin.getImage("full/obj16/file_obj.gif");
+        }
 
-		public Object[] getElements(Object inputElement) {
-			if (inputElement instanceof IWorkspaceRoot) {
-				List<IProject> projects = new ArrayList<IProject>();
-				for (IProject project : ((IWorkspaceRoot) inputElement).getProjects()) {
-					if (project.isOpen() && project.isAccessible()) {
-						projects.add(project);
-					}
-				}
-				return projects.toArray();
-			}
-			return new Object[0];
-		}
+        @Override
+        public String getText(Object element) {
+            return element.toString();
+        }
 
-		public void dispose() {
-		}
+    }
 
-		public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-		}
-	}
+    class WorkspaceResourceContentProvider implements ITreeContentProvider {
+
+        public Object[] getChildren(Object parentElement) {
+            if (parentElement instanceof IContainer) {
+                try {
+                    return ((IContainer) parentElement).members();
+                } catch (CoreException e) {
+                }
+            }
+            return new Object[0];
+        }
+
+        public Object getParent(Object element) {
+            if (element instanceof IResource) {
+                return ((IResource) element).getParent();
+            }
+            return null;
+        }
+
+        public boolean hasChildren(Object element) {
+            return getChildren(element).length > 0;
+        }
+
+        public Object[] getElements(Object inputElement) {
+            if (inputElement instanceof IWorkspaceRoot) {
+                List<IProject> projects = new ArrayList<IProject>();
+                for (IProject project : ((IWorkspaceRoot) inputElement).getProjects()) {
+                    if (project.isOpen() && project.isAccessible()) {
+                        projects.add(project);
+                    }
+                }
+                return projects.toArray();
+            }
+            return new Object[0];
+        }
+
+        public void dispose() {
+        }
+
+        public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+        }
+    }
 
 }

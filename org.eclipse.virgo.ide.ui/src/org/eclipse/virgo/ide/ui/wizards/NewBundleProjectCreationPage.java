@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.wizards;
 
 import org.eclipse.jdt.ui.wizards.NewJavaProjectWizardPageOne;
@@ -20,23 +21,23 @@ import org.eclipse.jface.wizard.IWizardPage;
  */
 public class NewBundleProjectCreationPage extends NewJavaProjectWizardPageTwo {
 
-	public NewBundleProjectCreationPage(NewJavaProjectWizardPageOne mainPage) {
-		super(mainPage);
-	}
+    public NewBundleProjectCreationPage(NewJavaProjectWizardPageOne mainPage) {
+        super(mainPage);
+    }
 
-	@Override
-	public IWizardPage getPreviousPage() {
-		NewBundleProjectWizard wizard = (NewBundleProjectWizard) getWizard();
-		if (wizard.getPropertiesPage() instanceof NullPropertiesPage) {
-			return wizard.getInformationPage();
-		} else {
-			return wizard.getPropertiesPage();
-		}
-	}
+    @Override
+    public IWizardPage getPreviousPage() {
+        NewBundleProjectWizard wizard = (NewBundleProjectWizard) getWizard();
+        if (wizard.getPropertiesPage() instanceof NullPropertiesPage) {
+            return wizard.getInformationPage();
+        } else {
+            return wizard.getPropertiesPage();
+        }
+    }
 
-	@Override
-	public IWizardPage getNextPage() {
-		return null;
-	}
+    @Override
+    public IWizardPage getNextPage() {
+        return null;
+    }
 
 }

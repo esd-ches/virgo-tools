@@ -15,14 +15,15 @@ import org.eclipse.virgo.ide.runtime.core.artefacts.LocalArtefactSet;
 import org.eclipse.wst.server.core.IServer;
 
 /**
- * 
+ *
  * @author Miles Parker
- * 
+ *
  */
 public interface IServerProjectContainer {
-	Object[] getMembers();
 
-	IServer getServer();
+    Object[] getMembers();
 
-	LocalArtefactSet getArtefactSet();
+    IServer getServer();
+
+    LocalArtefactSet getArtefactSet();
 }

@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.export;
 
 import java.io.BufferedReader;
@@ -51,204 +52,193 @@ import org.eclipse.wst.common.frameworks.datamodel.IDataModel;
 
 /**
  * Utility class for exporting bundle projects
- * 
+ *
  * @author Christian Dupuis
  * @author Terry Hon
  */
 public class BundleExportUtils {
 
-	/**
-	 * Find manifest file given a java project
-	 * 
-	 * @param project
-	 * @return
-	 */
-	public static IResource getOutputManifestFile(IJavaProject project) {
-		try {
+    /**
+     * Find manifest file given a java project
+     *
+     * @param project
+     * @return
+     */
+    public static IResource getOutputManifestFile(IJavaProject project) {
+        try {
 
-			Set<IPath> outputPaths = new HashSet<IPath>();
-			outputPaths.add(project.getOutputLocation());
-			IPackageFragmentRoot[] roots = project.getPackageFragmentRoots();
-			for (IPackageFragmentRoot root : roots) {
-				if (root != null) {
-					IClasspathEntry cpEntry = root.getRawClasspathEntry();
-					if (cpEntry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
-						IPath location = cpEntry.getOutputLocation();
-						if (location != null) {
-							outputPaths.add(location);
-						}
-					}
-				}
-			}
+            Set<IPath> outputPaths = new HashSet<IPath>();
+            outputPaths.add(project.getOutputLocation());
+            IPackageFragmentRoot[] roots = project.getPackageFragmentRoots();
+            for (IPackageFragmentRoot root : roots) {
+                if (root != null) {
+                    IClasspathEntry cpEntry = root.getRawClasspathEntry();
+                    if (cpEntry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+                        IPath location = cpEntry.getOutputLocation();
+                        if (location != null) {
+                            outputPaths.add(location);
+                        }
+                    }
+                }
+            }
 
-			for (IPath outputPath : outputPaths) {
-				IResource manifest = getManifestFile(outputPath, project.getProject());
-				if (manifest != null) {
-					return manifest;
-				}
-			}
-		} catch (JavaModelException e) {
-			// No error handling existed before. Are these expected?!
-			throw new RuntimeException(e);
-		} catch (MalformedURLException e) {
-			// No error handling existed before. Are these expected?!
-			throw new RuntimeException(e);
-		}
-		return null;
-	}
+            for (IPath outputPath : outputPaths) {
+                IResource manifest = getManifestFile(outputPath, project.getProject());
+                if (manifest != null) {
+                    return manifest;
+                }
+            }
+        } catch (JavaModelException e) {
+            // No error handling existed before. Are these expected?!
+            throw new RuntimeException(e);
+        } catch (MalformedURLException e) {
+            // No error handling existed before. Are these expected?!
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 
-	private static IResource getManifestFile(IPath outputLocation, IProject project) throws MalformedURLException {
-		IPath path = outputLocation.append(BundleManifestCorePlugin.MANIFEST_FILE_LOCATION);
-		IPath projectPath = project.getFullPath();
-		path = path.removeFirstSegments(path.matchingFirstSegments(projectPath));
-		IResource manifest = project.findMember(path);
-		if (manifest != null) {
-			return manifest;
-		}
-		return null;
-	}
+    private static IResource getManifestFile(IPath outputLocation, IProject project) throws MalformedURLException {
+        IPath path = outputLocation.append(BundleManifestCorePlugin.MANIFEST_FILE_LOCATION);
+        IPath projectPath = project.getFullPath();
+        path = path.removeFirstSegments(path.matchingFirstSegments(projectPath));
+        IResource manifest = project.findMember(path);
+        if (manifest != null) {
+            return manifest;
+        }
+        return null;
+    }
 
-	/**
-	 * Create export operation given project to be exported and location of the JAR.
-	 * 
-	 * @param project
-	 * @param jarLocation
-	 * @param shell
-	 * @param warningMessages
-	 * @return
-	 */
-	public static IJarExportRunnable createExportOperation(IJavaProject project, IPath jarLocation, Shell shell,
-			List<IStatus> warnings) {
-		JarPackageData jarPackage = new JarPackageData();
-		jarPackage.setJarLocation(jarLocation);
-		jarPackage.setExportClassFiles(true);
-		jarPackage.setExportJavaFiles(false);
-		jarPackage.setOverwrite(true);
-		jarPackage.setExportErrors(true);
-		jarPackage.setExportWarnings(true);
-		jarPackage.setBuildIfNeeded(true);
+    /**
+     * Create export operation given project to be exported and location of the JAR.
+     *
+     * @param project
+     * @param jarLocation
+     * @param shell
+     * @param warningMessages
+     * @return
+     */
+    public static IJarExportRunnable createExportOperation(IJavaProject project, IPath jarLocation, Shell shell, List<IStatus> warnings) {
+        JarPackageData jarPackage = new JarPackageData();
+        jarPackage.setJarLocation(jarLocation);
+        jarPackage.setExportClassFiles(true);
+        jarPackage.setExportJavaFiles(false);
+        jarPackage.setOverwrite(true);
+        jarPackage.setExportErrors(true);
+        jarPackage.setExportWarnings(true);
+        jarPackage.setBuildIfNeeded(true);
 
-		Set<Object> outputFiles = new LinkedHashSet<Object>();
+        Set<Object> outputFiles = new LinkedHashSet<Object>();
 
-		try {
-			Set<IClasspathEntry> entries = ServerModuleDelegate.getSourceClasspathEntries(project.getProject(), false);
-			for (IPackageFragmentRoot root : project.getPackageFragmentRoots()) {
-				if (entries.contains(root.getRawClasspathEntry())) {
-					outputFiles.add(root);
-				}
-			}
-		} catch (JavaModelException e) {
-			// TODO add error handling
-			throw new RuntimeException(e);
-		}
-		jarPackage.setElements(outputFiles.toArray());
+        try {
+            Set<IClasspathEntry> entries = ServerModuleDelegate.getSourceClasspathEntries(project.getProject(), false);
+            for (IPackageFragmentRoot root : project.getPackageFragmentRoots()) {
+                if (entries.contains(root.getRawClasspathEntry())) {
+                    outputFiles.add(root);
+                }
+            }
+        } catch (JavaModelException e) {
+            // TODO add error handling
+            throw new RuntimeException(e);
+        }
+        jarPackage.setElements(outputFiles.toArray());
 
-		setManifestFile(project, jarPackage, shell, warnings);
+        setManifestFile(project, jarPackage, shell, warnings);
 
-		return jarPackage.createJarExportRunnable(shell);
-	}
+        return jarPackage.createJarExportRunnable(shell);
+    }
 
-	private static void setManifestFile(IJavaProject project, JarPackageData jarPackage, Shell shell,
-			List<IStatus> warnings) {
-		IResource manifest = getOutputManifestFile(project);
-		if (manifest != null) {
-			File manifestFile = manifest.getLocation().toFile();
-			boolean exists = manifestFile.exists();
-			if (exists) {
-				BufferedReader reader;
-				try {
-					reader = new BufferedReader(new FileReader(manifestFile));
-					char charactor = 'a';
-					while (reader.ready()) {
-						charactor = (char) reader.read();
-					}
+    private static void setManifestFile(IJavaProject project, JarPackageData jarPackage, Shell shell, List<IStatus> warnings) {
+        IResource manifest = getOutputManifestFile(project);
+        if (manifest != null) {
+            File manifestFile = manifest.getLocation().toFile();
+            boolean exists = manifestFile.exists();
+            if (exists) {
+                BufferedReader reader;
+                try {
+                    reader = new BufferedReader(new FileReader(manifestFile));
+                    char charactor = 'a';
+                    while (reader.ready()) {
+                        charactor = (char) reader.read();
+                    }
 
-					if (charactor != '\n') {
-						warnings.add(new Status(
-								Status.WARNING,
-								ServerExportPlugin.PLUGIN_ID,
-								"Manifest file for project "
-										+ project.getElementName()
-										+ " is missing a '\\n' at the end of file. The exported bundle might not work properly."));
-					}
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-				jarPackage.setGenerateManifest(false);
-				jarPackage.setManifestLocation(manifest.getFullPath());
-			} else {
-				jarPackage.setGenerateManifest(true);
-			}
-		} else {
-			jarPackage.setGenerateManifest(true);
-		}
-	}
+                    if (charactor != '\n') {
+                        warnings.add(new Status(IStatus.WARNING, ServerExportPlugin.PLUGIN_ID, "Manifest file for project " + project.getElementName()
+                            + " is missing a '\\n' at the end of file. The exported bundle might not work properly."));
+                    }
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                jarPackage.setGenerateManifest(false);
+                jarPackage.setManifestLocation(manifest.getFullPath());
+            } else {
+                jarPackage.setGenerateManifest(true);
+            }
+        } else {
+            jarPackage.setGenerateManifest(true);
+        }
+    }
 
-	/**
-	 * Util method for running IJarExportRunnable operation.
-	 * 
-	 * @param op
-	 *            export JAR operation
-	 * @param reportStatus
-	 *            true if export errors are displayed to the user
-	 * @param context
-	 *            runnable context
-	 * @param shell
-	 * @param warningMessages
-	 * @return if operation was performed successfully
-	 */
-	public static boolean executeExportOperation(IJarExportRunnable op, boolean reportStatus, IRunnableContext context,
-			Shell shell, List<IStatus> warnings) {
-		try {
-			context.run(true, true, op);
-		} catch (InterruptedException e) {
-			return false;
-		} catch (InvocationTargetException ex) {
-			if (ex.getTargetException() != null) {
-				return false;
-			}
-		}
-		IStatus status = op.getStatus();
-		if ((warnings.size() > 0 || !status.isOK()) && reportStatus) {
-			List<IStatus> children = new ArrayList<IStatus>();
-			for (IStatus child : status.getChildren()) {
-				children.add(child);
-			}
-			children.addAll(warnings);
+    /**
+     * Util method for running IJarExportRunnable operation.
+     *
+     * @param op export JAR operation
+     * @param reportStatus true if export errors are displayed to the user
+     * @param context runnable context
+     * @param shell
+     * @param warningMessages
+     * @return if operation was performed successfully
+     */
+    public static boolean executeExportOperation(IJarExportRunnable op, boolean reportStatus, IRunnableContext context, Shell shell,
+        List<IStatus> warnings) {
+        try {
+            context.run(true, true, op);
+        } catch (InterruptedException e) {
+            return false;
+        } catch (InvocationTargetException ex) {
+            if (ex.getTargetException() != null) {
+                return false;
+            }
+        }
+        IStatus status = op.getStatus();
+        if ((warnings.size() > 0 || !status.isOK()) && reportStatus) {
+            List<IStatus> children = new ArrayList<IStatus>();
+            for (IStatus child : status.getChildren()) {
+                children.add(child);
+            }
+            children.addAll(warnings);
 
-			MultiStatus multiStatus = new MultiStatus(ServerExportPlugin.PLUGIN_ID, !status.isOK()
-					? status.getCode()
-					: Status.WARNING, children.toArray(new Status[0]), !status.isOK()
-					? status.getMessage()
-					: "There were warnings while exporting bundle project. Click Details to see more...", null);
-			ErrorDialog.openError(shell, "Export Warning", null, multiStatus);
-			return !(status.matches(IStatus.ERROR));
-		}
-		return true;
-	}
+            MultiStatus multiStatus = new MultiStatus(ServerExportPlugin.PLUGIN_ID, !status.isOK() ? status.getCode() : IStatus.WARNING,
+                children.toArray(new Status[0]),
+                !status.isOK() ? status.getMessage() : "There were warnings while exporting bundle project. Click Details to see more...", null);
+            ErrorDialog.openError(shell, "Export Warning", null, multiStatus);
+            return !status.matches(IStatus.ERROR);
+        }
+        return true;
+    }
 
-	@SuppressWarnings("restriction")
-	public static boolean executeWarExportOperation(IProject bundleProject, String jarName, IFolder settingsFolder) {
-		WebComponentExportDataModelProvider provider = new WebComponentExportDataModelProvider();
-		IDataModel dataModel = DataModelFactory.createDataModel(provider);
-		provider.propertySet(IJ2EEComponentExportDataModelProperties.PROJECT_NAME, bundleProject.getName());
-		dataModel.setBooleanProperty(IJ2EEComponentExportDataModelProperties.OPTIMIZE_FOR_SPECIFIC_RUNTIME, false);
-		dataModel.setBooleanProperty(IJ2EEComponentExportDataModelProperties.EXPORT_SOURCE_FILES, false);
-		dataModel.setBooleanProperty(IJ2EEComponentExportDataModelProperties.OVERWRITE_EXISTING, true);
-		dataModel.setProperty(IJ2EEComponentExportDataModelProperties.ARCHIVE_DESTINATION,
-				settingsFolder.getRawLocation().append(jarName).toString());
-		WebComponentExportOperation operation = new WebComponentExportOperation(dataModel);
+    @SuppressWarnings("restriction")
+    public static boolean executeWarExportOperation(IProject bundleProject, String jarName, IFolder settingsFolder) {
+        WebComponentExportDataModelProvider provider = new WebComponentExportDataModelProvider();
+        IDataModel dataModel = DataModelFactory.createDataModel(provider);
+        provider.propertySet(IJ2EEComponentExportDataModelProperties.PROJECT_NAME, bundleProject.getName());
+        dataModel.setBooleanProperty(IJ2EEComponentExportDataModelProperties.OPTIMIZE_FOR_SPECIFIC_RUNTIME, false);
+        dataModel.setBooleanProperty(IJ2EEComponentExportDataModelProperties.EXPORT_SOURCE_FILES, false);
+        dataModel.setBooleanProperty(IJ2EEComponentExportDataModelProperties.OVERWRITE_EXISTING, true);
+        dataModel.setProperty(IJ2EEComponentExportDataModelProperties.ARCHIVE_DESTINATION,
+            settingsFolder.getRawLocation().append(jarName).toString());
+        WebComponentExportOperation operation = new WebComponentExportOperation(dataModel);
 
-		try {
-			operation.execute(new NullProgressMonitor(), null);
-			settingsFolder.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
-		} catch (ExecutionException e) {
-			return false;
-		} catch (CoreException e) {
-			return false;
-		}
+        try {
+            operation.execute(new NullProgressMonitor(), null);
+            settingsFolder.refreshLocal(IResource.DEPTH_ONE, new NullProgressMonitor());
+        } catch (ExecutionException e) {
+            return false;
+        } catch (CoreException e) {
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
 }

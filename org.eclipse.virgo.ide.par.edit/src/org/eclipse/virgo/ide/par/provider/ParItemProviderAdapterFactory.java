@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.par.provider;
 
 import java.util.ArrayList;
@@ -34,194 +35,194 @@ import org.eclipse.virgo.ide.par.util.ParAdapterFactory;
  * factory convert EMF adapter notifications into calls to {@link #fireNotifyChanged fireNotifyChanged}. The adapters
  * also support Eclipse property sheets. Note that most of the adapters are shared among multiple instances. <!--
  * begin-user-doc --> <!-- end-user-doc -->
- * 
+ *
  * @generated
  */
-public class ParItemProviderAdapterFactory extends ParAdapterFactory implements ComposeableAdapterFactory,
-		IChangeNotifier, IDisposable {
-	/**
-	 * This keeps track of the root adapter factory that delegates to this adapter factory. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected ComposedAdapterFactory parentAdapterFactory;
+public class ParItemProviderAdapterFactory extends ParAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
 
-	/**
-	 * This is used to implement {@link org.eclipse.emf.edit.provider.IChangeNotifier}. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected IChangeNotifier changeNotifier = new ChangeNotifier();
+    /**
+     * This keeps track of the root adapter factory that delegates to this adapter factory. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     *
+     * @generated
+     */
+    protected ComposedAdapterFactory parentAdapterFactory;
 
-	/**
-	 * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected Collection<Object> supportedTypes = new ArrayList<Object>();
+    /**
+     * This is used to implement {@link org.eclipse.emf.edit.provider.IChangeNotifier}. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     *
+     * @generated
+     */
+    protected IChangeNotifier changeNotifier = new ChangeNotifier();
 
-	/**
-	 * This constructs an instance. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public ParItemProviderAdapterFactory() {
-		supportedTypes.add(IEditingDomainItemProvider.class);
-		supportedTypes.add(IStructuredItemContentProvider.class);
-		supportedTypes.add(ITreeItemContentProvider.class);
-		supportedTypes.add(IItemLabelProvider.class);
-		supportedTypes.add(IItemPropertySource.class);
-	}
+    /**
+     * This keeps track of all the supported types checked by {@link #isFactoryForType isFactoryForType}. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated
+     */
+    protected Collection<Object> supportedTypes = new ArrayList<Object>();
 
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.virgo.ide.par.Par} instances. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected ParItemProvider parItemProvider;
+    /**
+     * This constructs an instance. <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated
+     */
+    public ParItemProviderAdapterFactory() {
+        this.supportedTypes.add(IEditingDomainItemProvider.class);
+        this.supportedTypes.add(IStructuredItemContentProvider.class);
+        this.supportedTypes.add(ITreeItemContentProvider.class);
+        this.supportedTypes.add(IItemLabelProvider.class);
+        this.supportedTypes.add(IItemPropertySource.class);
+    }
 
-	/**
-	 * This creates an adapter for a {@link org.eclipse.virgo.ide.par.Par}. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter createParAdapter() {
-		if (parItemProvider == null) {
-			parItemProvider = new ParItemProvider(this);
-		}
+    /**
+     * This keeps track of the one adapter used for all {@link org.eclipse.virgo.ide.par.Par} instances. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated
+     */
+    protected ParItemProvider parItemProvider;
 
-		return parItemProvider;
-	}
+    /**
+     * This creates an adapter for a {@link org.eclipse.virgo.ide.par.Par}. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     *
+     * @generated
+     */
+    @Override
+    public Adapter createParAdapter() {
+        if (this.parItemProvider == null) {
+            this.parItemProvider = new ParItemProvider(this);
+        }
 
-	/**
-	 * This keeps track of the one adapter used for all {@link org.eclipse.virgo.ide.par.Bundle} instances. <!--
-	 * begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	protected BundleItemProvider bundleItemProvider;
+        return this.parItemProvider;
+    }
 
-	/**
-	 * This creates an adapter for a {@link org.eclipse.virgo.ide.par.Bundle}. <!-- begin-user-doc --> <!-- end-user-doc
-	 * -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter createBundleAdapter() {
-		if (bundleItemProvider == null) {
-			bundleItemProvider = new BundleItemProvider(this);
-		}
+    /**
+     * This keeps track of the one adapter used for all {@link org.eclipse.virgo.ide.par.Bundle} instances. <!--
+     * begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated
+     */
+    protected BundleItemProvider bundleItemProvider;
 
-		return bundleItemProvider;
-	}
+    /**
+     * This creates an adapter for a {@link org.eclipse.virgo.ide.par.Bundle}. <!-- begin-user-doc --> <!-- end-user-doc
+     * -->
+     *
+     * @generated
+     */
+    @Override
+    public Adapter createBundleAdapter() {
+        if (this.bundleItemProvider == null) {
+            this.bundleItemProvider = new BundleItemProvider(this);
+        }
 
-	/**
-	 * This returns the root adapter factory that contains this factory. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public ComposeableAdapterFactory getRootAdapterFactory() {
-		return parentAdapterFactory == null ? this : parentAdapterFactory.getRootAdapterFactory();
-	}
+        return this.bundleItemProvider;
+    }
 
-	/**
-	 * This sets the composed adapter factory that contains this factory. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory) {
-		this.parentAdapterFactory = parentAdapterFactory;
-	}
+    /**
+     * This returns the root adapter factory that contains this factory. <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated
+     */
+    public ComposeableAdapterFactory getRootAdapterFactory() {
+        return this.parentAdapterFactory == null ? this : this.parentAdapterFactory.getRootAdapterFactory();
+    }
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public boolean isFactoryForType(Object type) {
-		return supportedTypes.contains(type) || super.isFactoryForType(type);
-	}
+    /**
+     * This sets the composed adapter factory that contains this factory. <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated
+     */
+    public void setParentAdapterFactory(ComposedAdapterFactory parentAdapterFactory) {
+        this.parentAdapterFactory = parentAdapterFactory;
+    }
 
-	/**
-	 * This implementation substitutes the factory itself as the key for the adapter. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Adapter adapt(Notifier notifier, Object type) {
-		return super.adapt(notifier, this);
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated
+     */
+    @Override
+    public boolean isFactoryForType(Object type) {
+        return this.supportedTypes.contains(type) || super.isFactoryForType(type);
+    }
 
-	/**
-	 * <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	@Override
-	public Object adapt(Object object, Object type) {
-		if (isFactoryForType(type)) {
-			Object adapter = super.adapt(object, type);
-			if (!(type instanceof Class<?>) || (((Class<?>) type).isInstance(adapter))) {
-				return adapter;
-			}
-		}
+    /**
+     * This implementation substitutes the factory itself as the key for the adapter. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     *
+     * @generated
+     */
+    @Override
+    public Adapter adapt(Notifier notifier, Object type) {
+        return super.adapt(notifier, this);
+    }
 
-		return null;
-	}
+    /**
+     * <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated
+     */
+    @Override
+    public Object adapt(Object object, Object type) {
+        if (isFactoryForType(type)) {
+            Object adapter = super.adapt(object, type);
+            if (!(type instanceof Class<?>) || ((Class<?>) type).isInstance(adapter)) {
+                return adapter;
+            }
+        }
 
-	/**
-	 * This adds a listener. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public void addListener(INotifyChangedListener notifyChangedListener) {
-		changeNotifier.addListener(notifyChangedListener);
-	}
+        return null;
+    }
 
-	/**
-	 * This removes a listener. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public void removeListener(INotifyChangedListener notifyChangedListener) {
-		changeNotifier.removeListener(notifyChangedListener);
-	}
+    /**
+     * This adds a listener. <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated
+     */
+    public void addListener(INotifyChangedListener notifyChangedListener) {
+        this.changeNotifier.addListener(notifyChangedListener);
+    }
 
-	/**
-	 * This delegates to {@link #changeNotifier} and to {@link #parentAdapterFactory}. <!-- begin-user-doc --> <!--
-	 * end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public void fireNotifyChanged(Notification notification) {
-		changeNotifier.fireNotifyChanged(notification);
+    /**
+     * This removes a listener. <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated
+     */
+    public void removeListener(INotifyChangedListener notifyChangedListener) {
+        this.changeNotifier.removeListener(notifyChangedListener);
+    }
 
-		if (parentAdapterFactory != null) {
-			parentAdapterFactory.fireNotifyChanged(notification);
-		}
-	}
+    /**
+     * This delegates to {@link #changeNotifier} and to {@link #parentAdapterFactory}. <!-- begin-user-doc --> <!--
+     * end-user-doc -->
+     *
+     * @generated
+     */
+    public void fireNotifyChanged(Notification notification) {
+        this.changeNotifier.fireNotifyChanged(notification);
 
-	/**
-	 * This disposes all of the item providers created by this factory. <!-- begin-user-doc --> <!-- end-user-doc -->
-	 * 
-	 * @generated
-	 */
-	public void dispose() {
-		if (parItemProvider != null) {
-			parItemProvider.dispose();
-		}
-		if (bundleItemProvider != null) {
-			bundleItemProvider.dispose();
-		}
-	}
+        if (this.parentAdapterFactory != null) {
+            this.parentAdapterFactory.fireNotifyChanged(notification);
+        }
+    }
+
+    /**
+     * This disposes all of the item providers created by this factory. <!-- begin-user-doc --> <!-- end-user-doc -->
+     *
+     * @generated
+     */
+    public void dispose() {
+        if (this.parItemProvider != null) {
+            this.parItemProvider.dispose();
+        }
+        if (this.bundleItemProvider != null) {
+            this.bundleItemProvider.dispose();
+        }
+    }
 
 }

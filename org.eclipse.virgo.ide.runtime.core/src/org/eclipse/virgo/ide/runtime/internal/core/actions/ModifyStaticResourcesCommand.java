@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.core.actions;
 
 import org.eclipse.core.commands.ExecutionException;
@@ -20,41 +21,41 @@ import org.eclipse.virgo.ide.runtime.core.IServerWorkingCopy;
 
 /**
  * {@link AbstractOperation} to modify the jmx deployer port.
- * 
+ *
  * @author Christian Dupuis
  * @since 1.1.3
  */
 public class ModifyStaticResourcesCommand extends AbstractOperation {
 
-	private IServerWorkingCopy workingCopy;
+    private final IServerWorkingCopy workingCopy;
 
-	private String oldValue;
+    private final String oldValue;
 
-	private String newValue;
+    private final String newValue;
 
-	public ModifyStaticResourcesCommand(IServerWorkingCopy workingCopy, String newValue) {
-		super("Modify static resources");
-		this.workingCopy = workingCopy;
-		this.oldValue = workingCopy.getStaticFilenamePatterns();
-		this.newValue = newValue;
-	}
+    public ModifyStaticResourcesCommand(IServerWorkingCopy workingCopy, String newValue) {
+        super("Modify static resources");
+        this.workingCopy = workingCopy;
+        this.oldValue = workingCopy.getStaticFilenamePatterns();
+        this.newValue = newValue;
+    }
 
-	@Override
-	public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		workingCopy.setStaticFilenamePatterns(newValue);
-		return Status.OK_STATUS;
-	}
+    @Override
+    public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        this.workingCopy.setStaticFilenamePatterns(this.newValue);
+        return Status.OK_STATUS;
+    }
 
-	@Override
-	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		workingCopy.setStaticFilenamePatterns(newValue);
-		return Status.OK_STATUS;
-	}
+    @Override
+    public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        this.workingCopy.setStaticFilenamePatterns(this.newValue);
+        return Status.OK_STATUS;
+    }
 
-	@Override
-	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		workingCopy.setStaticFilenamePatterns(oldValue);
-		return Status.OK_STATUS;
-	}
+    @Override
+    public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        this.workingCopy.setStaticFilenamePatterns(this.oldValue);
+        return Status.OK_STATUS;
+    }
 
 }

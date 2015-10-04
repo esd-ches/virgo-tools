@@ -13,9 +13,9 @@ package org.eclipse.virgo.ide.runtime.core.artefacts;
 
 /**
  * An artefact that has a corresponding file system entity.
- * 
+ *
  * @author Miles Parker
- * 
+ *
  */
 public interface ILocalArtefact extends IArtefact, ILocalEntity {
 

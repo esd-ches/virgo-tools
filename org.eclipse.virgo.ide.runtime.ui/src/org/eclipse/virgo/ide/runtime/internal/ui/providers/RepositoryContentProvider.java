@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 
 import java.io.File;
@@ -30,77 +31,77 @@ import org.eclipse.wst.server.core.IServer;
 /**
  * Common content provider for repository installation nodes. (Not currently used, but could be used in cases where we
  * don't want to create server side projects.)
- * 
+ *
  * @author Miles Parker
  * @author Christian Dupuis
  */
 public class RepositoryContentProvider implements ITreeContentProvider {
 
-	private ArtefactRepository repository;
+    private ArtefactRepository repository;
 
-	public Object[] getElements(Object inputElement) {
-		if (inputElement instanceof IServer) {
-			IServer server = (IServer) inputElement;
-			repository = RepositoryUtils.getRepositoryContents(server.getRuntime());
-			repository.setServer(server);
-			List<Object> children = new ArrayList<Object>();
-			Map<File, ArtefactRepository> setForFile = new HashMap<File, ArtefactRepository>();
+    public Object[] getElements(Object inputElement) {
+        if (inputElement instanceof IServer) {
+            IServer server = (IServer) inputElement;
+            this.repository = RepositoryUtils.getRepositoryContents(server.getRuntime());
+            this.repository.setServer(server);
+            List<Object> children = new ArrayList<Object>();
+            Map<File, ArtefactRepository> setForFile = new HashMap<File, ArtefactRepository>();
 
-			for (IArtefact bundle : repository.getAllArtefacts().getArtefacts()) {
-				if (bundle instanceof ILocalArtefact) {
-					File file = ((ILocalArtefact) bundle).getFile().getParentFile();
-					if (file.getParentFile().getName().equals("subsystems")) {
-						file = file.getParentFile();
-					}
-					if (setForFile.containsKey(file)) {
-						setForFile.get(file).add(bundle);
-					} else {
-						ArtefactRepository localRepository = new LocalArtefactRepository(file);
-						localRepository.setServer(server);
-						localRepository.add(bundle);
-						setForFile.put(file, localRepository);
-					}
-				}
-			}
-			for (ArtefactRepository repos : setForFile.values()) {
-				if (repos.getBundleSet().getArtefacts().iterator().hasNext()) {
-					children.add(repos.getBundleSet());
-				}
-				if (repos.getLibrarySet().getArtefacts().iterator().hasNext()) {
-					children.add(repos.getLibrarySet());
-				}
-			}
-			return children.toArray();
-		}
-		return new Object[0];
-	}
+            for (IArtefact bundle : this.repository.getAllArtefacts().getArtefacts()) {
+                if (bundle instanceof ILocalArtefact) {
+                    File file = ((ILocalArtefact) bundle).getFile().getParentFile();
+                    if (file.getParentFile().getName().equals("subsystems")) {
+                        file = file.getParentFile();
+                    }
+                    if (setForFile.containsKey(file)) {
+                        setForFile.get(file).add(bundle);
+                    } else {
+                        ArtefactRepository localRepository = new LocalArtefactRepository(file);
+                        localRepository.setServer(server);
+                        localRepository.add(bundle);
+                        setForFile.put(file, localRepository);
+                    }
+                }
+            }
+            for (ArtefactRepository repos : setForFile.values()) {
+                if (repos.getBundleSet().getArtefacts().iterator().hasNext()) {
+                    children.add(repos.getBundleSet());
+                }
+                if (repos.getLibrarySet().getArtefacts().iterator().hasNext()) {
+                    children.add(repos.getLibrarySet());
+                }
+            }
+            return children.toArray();
+        }
+        return new Object[0];
+    }
 
-	public Object[] getChildren(Object parentElement) {
-		if (parentElement instanceof ArtefactSet) {
-			return ((ArtefactSet) parentElement).toArray();
-		}
-		return new Object[0];
-	}
+    public Object[] getChildren(Object parentElement) {
+        if (parentElement instanceof ArtefactSet) {
+            return ((ArtefactSet) parentElement).toArray();
+        }
+        return new Object[0];
+    }
 
-	public Object getParent(Object element) {
-		if (element instanceof Artefact) {
-			Artefact artefact = (Artefact) element;
-			return artefact.getSet();
-		}
-		return null;
-	}
+    public Object getParent(Object element) {
+        if (element instanceof Artefact) {
+            Artefact artefact = (Artefact) element;
+            return artefact.getSet();
+        }
+        return null;
+    }
 
-	public boolean hasChildren(Object element) {
-		return getChildren(element).length > 0;
-	}
+    public boolean hasChildren(Object element) {
+        return getChildren(element).length > 0;
+    }
 
-	public void dispose() {
-	}
+    public void dispose() {
+    }
 
-	public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-	}
+    public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+    }
 
-	public ArtefactRepository getRepository() {
-		return repository;
-	}
+    public ArtefactRepository getRepository() {
+        return this.repository;
+    }
 }

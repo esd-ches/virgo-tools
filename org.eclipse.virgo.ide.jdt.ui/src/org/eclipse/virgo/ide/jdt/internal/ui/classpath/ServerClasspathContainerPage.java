@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.jdt.internal.ui.classpath;
 
 import org.eclipse.jdt.core.IClasspathEntry;
@@ -27,31 +28,31 @@ import org.eclipse.virgo.ide.jdt.internal.core.classpath.ServerClasspathContaine
  */
 public class ServerClasspathContainerPage extends WizardPage implements IClasspathContainerPage {
 
-	private IClasspathEntry classpathEntry = null;
+    private IClasspathEntry classpathEntry = null;
 
-	public ServerClasspathContainerPage() {
-		super("Bundle Classpath Container");
-	}
+    public ServerClasspathContainerPage() {
+        super("Bundle Classpath Container");
+    }
 
-	public boolean finish() {
-		classpathEntry = JavaCore.newContainerEntry(ServerClasspathContainer.CLASSPATH_CONTAINER_PATH);
-		return true;
-	}
+    public boolean finish() {
+        classpathEntry = JavaCore.newContainerEntry(ServerClasspathContainer.CLASSPATH_CONTAINER_PATH);
+        return true;
+    }
 
-	public IClasspathEntry getSelection() {
-		return classpathEntry;
-	}
+    public IClasspathEntry getSelection() {
+        return classpathEntry;
+    }
 
-	public void setSelection(IClasspathEntry containerEntry) {
-		this.classpathEntry = containerEntry;
-	}
+    public void setSelection(IClasspathEntry containerEntry) {
+        this.classpathEntry = containerEntry;
+    }
 
-	public void createControl(Composite parent) {
-		setTitle("Bundle Classpath Container");
-		Label label = new Label(parent, SWT.NONE);
-		label.setText("Press Finish to add the SpringSource dm Server Bundle Classpath Container");
-		label.setFont(parent.getFont());
-		setControl(label);
-	}
+    public void createControl(Composite parent) {
+        setTitle("Bundle Classpath Container");
+        Label label = new Label(parent, SWT.NONE);
+        label.setText("Press Finish to add the SpringSource dm Server Bundle Classpath Container");
+        label.setFont(parent.getFont());
+        setControl(label);
+    }
 
 }

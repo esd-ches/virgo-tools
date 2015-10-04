@@ -8,10 +8,8 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
-package org.eclipse.virgo.ide.ui.tests;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+package org.eclipse.virgo.ide.ui.tests;
 
 import org.eclipse.virgo.ide.ui.editors.BundleImportLibrarySectionUiTest;
 import org.eclipse.virgo.ide.ui.editors.BundleImportPackageSectionUiTest;
@@ -21,22 +19,25 @@ import org.eclipse.virgo.ide.ui.editors.ParDependenciesSectionUiTest;
 import org.eclipse.virgo.ide.ui.wizards.NewBundleProjectWizardUiTest;
 import org.eclipse.virgo.ide.ui.wizards.NewParProjectWizardUiTest;
 
+import junit.framework.Test;
+import junit.framework.TestSuite;
+
 /**
  * @author Leo Dos Santos
  */
 public class AllVirgoIdeUiTests {
 
-	public static Test suite() {
-		TestSuite suite = new TestSuite(AllVirgoIdeUiTests.class.getName());
-		suite.addTestSuite(BundleLibrarySectionUiTest.class);
-		suite.addTestSuite(BundleImportLibrarySectionUiTest.class);
-		suite.addTestSuite(BundleImportPackageSectionUiTest.class);
-		suite.addTestSuite(BundleImportSectionUiTest.class);
-		// suite.addTestSuite(BundleOverviewPageUiTest.class);
-		suite.addTestSuite(ParDependenciesSectionUiTest.class);
-		suite.addTestSuite(NewBundleProjectWizardUiTest.class);
-		suite.addTestSuite(NewParProjectWizardUiTest.class);
-		return suite;
-	}
+    public static Test suite() {
+        TestSuite suite = new TestSuite(AllVirgoIdeUiTests.class.getName());
+        suite.addTestSuite(BundleLibrarySectionUiTest.class);
+        suite.addTestSuite(BundleImportLibrarySectionUiTest.class);
+        suite.addTestSuite(BundleImportPackageSectionUiTest.class);
+        suite.addTestSuite(BundleImportSectionUiTest.class);
+        // suite.addTestSuite(BundleOverviewPageUiTest.class);
+        suite.addTestSuite(ParDependenciesSectionUiTest.class);
+        suite.addTestSuite(NewBundleProjectWizardUiTest.class);
+        suite.addTestSuite(NewParProjectWizardUiTest.class);
+        return suite;
+    }
 
 }

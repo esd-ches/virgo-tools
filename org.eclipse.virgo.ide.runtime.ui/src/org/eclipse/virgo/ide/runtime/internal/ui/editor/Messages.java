@@ -107,6 +107,7 @@ public class Messages extends NLS {
     public static String ArtefactOrderEditorSection_up_button;
 
     public static String ArtefactOrderEditorSection_down_button;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

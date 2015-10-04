@@ -19,23 +19,22 @@ import org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectFileContainer;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectFileReference;
 
 /**
- * 
+ *
  * @author Miles Parker
- * 
+ *
  */
 public class LibraryArtefactFilter extends ViewerFilter {
 
-	private static final String VIRGO_LIB_EXT = "libd";
+    private static final String VIRGO_LIB_EXT = "libd";
 
-	/**
-	 * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
-	 *      java.lang.Object)
-	 */
-	@Override
-	public boolean select(Viewer viewer, Object parentElement, Object element) {
-		return (!(element instanceof ProjectFileContainer) && !(element instanceof ProjectFileReference)
-				&& !(element instanceof LocalLibraryArtefact) && !(element instanceof IFile && ((IFile) element).getFileExtension()
-				.equals(VIRGO_LIB_EXT)));
-	}
+    /**
+     * @see org.eclipse.jface.viewers.ViewerFilter#select(org.eclipse.jface.viewers.Viewer, java.lang.Object,
+     *      java.lang.Object)
+     */
+    @Override
+    public boolean select(Viewer viewer, Object parentElement, Object element) {
+        return !(element instanceof ProjectFileContainer) && !(element instanceof ProjectFileReference) && !(element instanceof LocalLibraryArtefact)
+            && !(element instanceof IFile && ((IFile) element).getFileExtension().equals(VIRGO_LIB_EXT));
+    }
 
 }

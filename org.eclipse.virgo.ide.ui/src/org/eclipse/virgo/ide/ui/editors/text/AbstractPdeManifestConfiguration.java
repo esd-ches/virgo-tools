@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.editors.text;
 
 import org.eclipse.jface.text.IDocument;
@@ -47,301 +48,298 @@ import org.osgi.framework.Constants;
  */
 public class AbstractPdeManifestConfiguration extends ChangeAwareSourceViewerConfiguration {
 
-	protected IAnnotationHover fAnnotationHover;
+    protected IAnnotationHover fAnnotationHover;
 
-	protected BasePDEScanner fPropertyKeyScanner;
+    protected BasePDEScanner fPropertyKeyScanner;
 
-	protected BasePDEScanner fPropertyValueScanner;
+    protected BasePDEScanner fPropertyValueScanner;
 
-	protected BundleQuickAssistAssistant fQuickAssistant;
+    protected BundleQuickAssistAssistant fQuickAssistant;
 
-	protected ContentAssistant fContentAssistant;
+    protected ContentAssistant fContentAssistant;
 
-	private ManifestContentAssistProcessor fContentAssistantProcessor;
+    private ManifestContentAssistProcessor fContentAssistantProcessor;
 
-	protected ManifestTextHover fTextHover;
+    protected ManifestTextHover fTextHover;
 
-	protected String fDocumentPartitioning;
+    protected String fDocumentPartitioning;
 
-	protected class ManifestHeaderScanner extends BasePDEScanner {
+    protected class ManifestHeaderScanner extends BasePDEScanner {
 
-		protected Token fToken;
+        protected Token fToken;
 
-		public ManifestHeaderScanner() {
-			super(fColorManager);
-		}
+        public ManifestHeaderScanner() {
+            super(AbstractPdeManifestConfiguration.this.fColorManager);
+        }
 
-		@Override
-		public boolean affectsTextPresentation(String property) {
-			return property.startsWith(IPDEColorConstants.P_HEADER_KEY)
-					|| property.startsWith(IPDEColorConstants.P_HEADER_OSGI);
-		}
+        @Override
+        public boolean affectsTextPresentation(String property) {
+            return property.startsWith(IPDEColorConstants.P_HEADER_KEY) || property.startsWith(IPDEColorConstants.P_HEADER_OSGI);
+        }
 
-		@Override
-		protected Token getTokenAffected(PropertyChangeEvent event) {
-			if (event.getProperty().startsWith(IPDEColorConstants.P_HEADER_OSGI)) {
-				return fToken;
-			}
-			return (Token) fDefaultReturnToken;
-		}
+        @Override
+        protected Token getTokenAffected(PropertyChangeEvent event) {
+            if (event.getProperty().startsWith(IPDEColorConstants.P_HEADER_OSGI)) {
+                return this.fToken;
+            }
+            return (Token) this.fDefaultReturnToken;
+        }
 
-		@Override
-		protected void initialize() {
-			fToken = new Token(createTextAttribute(IPDEColorConstants.P_HEADER_OSGI));
-			WordRule rule = new WordRule(new KeywordDetector(), Token.UNDEFINED, true);
-			rule.addWord(Constants.BUNDLE_ACTIVATOR, fToken);
-			rule.addWord(Constants.BUNDLE_CATEGORY, fToken);
-			rule.addWord(Constants.BUNDLE_CLASSPATH, fToken);
-			rule.addWord(Constants.BUNDLE_CONTACTADDRESS, fToken);
-			rule.addWord(Constants.BUNDLE_COPYRIGHT, fToken);
-			rule.addWord(Constants.BUNDLE_DESCRIPTION, fToken);
-			rule.addWord(Constants.BUNDLE_DOCURL, fToken);
-			rule.addWord(Constants.BUNDLE_LOCALIZATION, fToken);
-			rule.addWord(Constants.BUNDLE_MANIFESTVERSION, fToken);
-			rule.addWord(Constants.BUNDLE_NAME, fToken);
-			rule.addWord(Constants.BUNDLE_NATIVECODE, fToken);
-			rule.addWord(Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT, fToken);
-			rule.addWord(Constants.BUNDLE_SYMBOLICNAME, fToken);
-			rule.addWord(Constants.BUNDLE_UPDATELOCATION, fToken);
-			rule.addWord(Constants.BUNDLE_VENDOR, fToken);
-			rule.addWord(Constants.BUNDLE_VERSION, fToken);
-			rule.addWord(Constants.REQUIRE_BUNDLE, fToken);
-			rule.addWord(Constants.DYNAMICIMPORT_PACKAGE, fToken);
-			rule.addWord(Constants.EXPORT_PACKAGE, fToken);
-			rule.addWord(ICoreConstants.EXPORT_SERVICE, fToken);
-			rule.addWord(Constants.FRAGMENT_HOST, fToken);
-			rule.addWord(Constants.IMPORT_PACKAGE, fToken);
-			rule.addWord(ICoreConstants.IMPORT_SERVICE, fToken);
-			rule.addWord(ICoreConstants.PROVIDE_PACKAGE, fToken);
-			setRules(new IRule[] { rule });
-			setDefaultReturnToken(new Token(createTextAttribute(IPDEColorConstants.P_HEADER_KEY)));
-		}
-	}
+        @Override
+        protected void initialize() {
+            this.fToken = new Token(createTextAttribute(IPDEColorConstants.P_HEADER_OSGI));
+            WordRule rule = new WordRule(new KeywordDetector(), Token.UNDEFINED, true);
+            rule.addWord(Constants.BUNDLE_ACTIVATOR, this.fToken);
+            rule.addWord(Constants.BUNDLE_CATEGORY, this.fToken);
+            rule.addWord(Constants.BUNDLE_CLASSPATH, this.fToken);
+            rule.addWord(Constants.BUNDLE_CONTACTADDRESS, this.fToken);
+            rule.addWord(Constants.BUNDLE_COPYRIGHT, this.fToken);
+            rule.addWord(Constants.BUNDLE_DESCRIPTION, this.fToken);
+            rule.addWord(Constants.BUNDLE_DOCURL, this.fToken);
+            rule.addWord(Constants.BUNDLE_LOCALIZATION, this.fToken);
+            rule.addWord(Constants.BUNDLE_MANIFESTVERSION, this.fToken);
+            rule.addWord(Constants.BUNDLE_NAME, this.fToken);
+            rule.addWord(Constants.BUNDLE_NATIVECODE, this.fToken);
+            rule.addWord(Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT, this.fToken);
+            rule.addWord(Constants.BUNDLE_SYMBOLICNAME, this.fToken);
+            rule.addWord(Constants.BUNDLE_UPDATELOCATION, this.fToken);
+            rule.addWord(Constants.BUNDLE_VENDOR, this.fToken);
+            rule.addWord(Constants.BUNDLE_VERSION, this.fToken);
+            rule.addWord(Constants.REQUIRE_BUNDLE, this.fToken);
+            rule.addWord(Constants.DYNAMICIMPORT_PACKAGE, this.fToken);
+            rule.addWord(Constants.EXPORT_PACKAGE, this.fToken);
+            rule.addWord(ICoreConstants.EXPORT_SERVICE, this.fToken);
+            rule.addWord(Constants.FRAGMENT_HOST, this.fToken);
+            rule.addWord(Constants.IMPORT_PACKAGE, this.fToken);
+            rule.addWord(ICoreConstants.IMPORT_SERVICE, this.fToken);
+            rule.addWord(ICoreConstants.PROVIDE_PACKAGE, this.fToken);
+            setRules(new IRule[] { rule });
+            setDefaultReturnToken(new Token(createTextAttribute(IPDEColorConstants.P_HEADER_KEY)));
+        }
+    }
 
-	protected class ManifestValueScanner extends BasePDEScanner {
+    protected class ManifestValueScanner extends BasePDEScanner {
 
-		protected Token fAssignmentToken;
+        protected Token fAssignmentToken;
 
-		protected Token fAttributeToken;
+        protected Token fAttributeToken;
 
-		public ManifestValueScanner() {
-			super(fColorManager);
-		}
+        public ManifestValueScanner() {
+            super(AbstractPdeManifestConfiguration.this.fColorManager);
+        }
 
-		@Override
-		public boolean affectsTextPresentation(String property) {
-			return property.startsWith(IPDEColorConstants.P_HEADER_ASSIGNMENT)
-					|| property.startsWith(IPDEColorConstants.P_HEADER_VALUE)
-					|| property.startsWith(IPDEColorConstants.P_HEADER_ATTRIBUTES);
-		}
+        @Override
+        public boolean affectsTextPresentation(String property) {
+            return property.startsWith(IPDEColorConstants.P_HEADER_ASSIGNMENT) || property.startsWith(IPDEColorConstants.P_HEADER_VALUE)
+                || property.startsWith(IPDEColorConstants.P_HEADER_ATTRIBUTES);
+        }
 
-		@Override
-		protected Token getTokenAffected(PropertyChangeEvent event) {
-			String property = event.getProperty();
-			if (property.startsWith(IPDEColorConstants.P_HEADER_ASSIGNMENT)) {
-				return fAssignmentToken;
-			}
-			if (property.startsWith(IPDEColorConstants.P_HEADER_ATTRIBUTES)) {
-				return fAttributeToken;
-			}
-			return (Token) fDefaultReturnToken;
-		}
+        @Override
+        protected Token getTokenAffected(PropertyChangeEvent event) {
+            String property = event.getProperty();
+            if (property.startsWith(IPDEColorConstants.P_HEADER_ASSIGNMENT)) {
+                return this.fAssignmentToken;
+            }
+            if (property.startsWith(IPDEColorConstants.P_HEADER_ATTRIBUTES)) {
+                return this.fAttributeToken;
+            }
+            return (Token) this.fDefaultReturnToken;
+        }
 
-		@Override
-		protected void initialize() {
-			IRule[] rules = new IRule[2];
-			fAssignmentToken = new Token(createTextAttribute(IPDEColorConstants.P_HEADER_ASSIGNMENT));
-			rules[0] = new WordRule(new AssignmentDetector(), fAssignmentToken);
+        @Override
+        protected void initialize() {
+            IRule[] rules = new IRule[2];
+            this.fAssignmentToken = new Token(createTextAttribute(IPDEColorConstants.P_HEADER_ASSIGNMENT));
+            rules[0] = new WordRule(new AssignmentDetector(), this.fAssignmentToken);
 
-			fAttributeToken = new Token(createTextAttribute(IPDEColorConstants.P_HEADER_ATTRIBUTES));
-			WordRule rule = new WordRule(new KeywordDetector());
-			rule.addWord(Constants.BUNDLE_NATIVECODE_LANGUAGE, fAttributeToken);
-			rule.addWord(Constants.BUNDLE_NATIVECODE_OSNAME, fAttributeToken);
-			rule.addWord(Constants.BUNDLE_NATIVECODE_OSVERSION, fAttributeToken);
-			rule.addWord(Constants.BUNDLE_NATIVECODE_PROCESSOR, fAttributeToken);
-			rule.addWord(Constants.BUNDLE_SYMBOLICNAME_ATTRIBUTE, fAttributeToken);
-			rule.addWord(Constants.BUNDLE_VERSION_ATTRIBUTE, fAttributeToken);
-			rule.addWord(Constants.EXCLUDE_DIRECTIVE, fAttributeToken);
-			rule.addWord(Constants.FRAGMENT_ATTACHMENT_DIRECTIVE, fAttributeToken);
-			rule.addWord(Constants.INCLUDE_DIRECTIVE, fAttributeToken);
-			rule.addWord(Constants.MANDATORY_DIRECTIVE, fAttributeToken);
-			rule.addWord(Constants.RESOLUTION_DIRECTIVE, fAttributeToken);
-			rule.addWord(Constants.SINGLETON_DIRECTIVE, fAttributeToken);
-			rule.addWord(Constants.USES_DIRECTIVE, fAttributeToken);
-			rule.addWord(Constants.VERSION_ATTRIBUTE, fAttributeToken);
-			rule.addWord(Constants.VISIBILITY_DIRECTIVE, fAttributeToken);
-			rule.addWord(ICoreConstants.FRIENDS_DIRECTIVE, fAttributeToken);
-			rule.addWord(ICoreConstants.INTERNAL_DIRECTIVE, fAttributeToken);
-			rule.addWord(ICoreConstants.PACKAGE_SPECIFICATION_VERSION, fAttributeToken);
-			// EASTER EGG
-			for (String element : ICoreConstants.EE_TOKENS) {
-				rule.addWord(element, fAttributeToken);
-			}
-			rules[1] = rule;
+            this.fAttributeToken = new Token(createTextAttribute(IPDEColorConstants.P_HEADER_ATTRIBUTES));
+            WordRule rule = new WordRule(new KeywordDetector());
+            rule.addWord(Constants.BUNDLE_NATIVECODE_LANGUAGE, this.fAttributeToken);
+            rule.addWord(Constants.BUNDLE_NATIVECODE_OSNAME, this.fAttributeToken);
+            rule.addWord(Constants.BUNDLE_NATIVECODE_OSVERSION, this.fAttributeToken);
+            rule.addWord(Constants.BUNDLE_NATIVECODE_PROCESSOR, this.fAttributeToken);
+            rule.addWord(Constants.BUNDLE_SYMBOLICNAME_ATTRIBUTE, this.fAttributeToken);
+            rule.addWord(Constants.BUNDLE_VERSION_ATTRIBUTE, this.fAttributeToken);
+            rule.addWord(Constants.EXCLUDE_DIRECTIVE, this.fAttributeToken);
+            rule.addWord(Constants.FRAGMENT_ATTACHMENT_DIRECTIVE, this.fAttributeToken);
+            rule.addWord(Constants.INCLUDE_DIRECTIVE, this.fAttributeToken);
+            rule.addWord(Constants.MANDATORY_DIRECTIVE, this.fAttributeToken);
+            rule.addWord(Constants.RESOLUTION_DIRECTIVE, this.fAttributeToken);
+            rule.addWord(Constants.SINGLETON_DIRECTIVE, this.fAttributeToken);
+            rule.addWord(Constants.USES_DIRECTIVE, this.fAttributeToken);
+            rule.addWord(Constants.VERSION_ATTRIBUTE, this.fAttributeToken);
+            rule.addWord(Constants.VISIBILITY_DIRECTIVE, this.fAttributeToken);
+            rule.addWord(ICoreConstants.FRIENDS_DIRECTIVE, this.fAttributeToken);
+            rule.addWord(ICoreConstants.INTERNAL_DIRECTIVE, this.fAttributeToken);
+            rule.addWord(ICoreConstants.PACKAGE_SPECIFICATION_VERSION, this.fAttributeToken);
+            // EASTER EGG
+            for (String element : ICoreConstants.EE_TOKENS) {
+                rule.addWord(element, this.fAttributeToken);
+            }
+            rules[1] = rule;
 
-			setRules(rules);
-			setDefaultReturnToken(new Token(createTextAttribute(IPDEColorConstants.P_HEADER_VALUE)));
-		}
-	}
+            setRules(rules);
+            setDefaultReturnToken(new Token(createTextAttribute(IPDEColorConstants.P_HEADER_VALUE)));
+        }
+    }
 
-	class AssignmentDetector implements IWordDetector {
-		public boolean isWordStart(char c) {
-			return c == ':' || c == '=';
-		}
+    class AssignmentDetector implements IWordDetector {
 
-		public boolean isWordPart(char c) {
-			return false;
-		}
-	}
+        public boolean isWordStart(char c) {
+            return c == ':' || c == '=';
+        }
 
-	class KeywordDetector implements IWordDetector {
-		public boolean isWordStart(char c) {
-			return Character.isJavaIdentifierStart(c);
-		}
+        public boolean isWordPart(char c) {
+            return false;
+        }
+    }
 
-		public boolean isWordPart(char c) {
-			return c != ':' && c != '=' && !Character.isSpaceChar(c);
-		}
-	}
+    class KeywordDetector implements IWordDetector {
 
-	public AbstractPdeManifestConfiguration(IColorManager manager) {
-		this(manager, null, null);
-	}
+        public boolean isWordStart(char c) {
+            return Character.isJavaIdentifierStart(c);
+        }
 
-	public AbstractPdeManifestConfiguration(IColorManager manager, PDESourcePage page) {
-		this(manager, page, null);
-	}
+        public boolean isWordPart(char c) {
+            return c != ':' && c != '=' && !Character.isSpaceChar(c);
+        }
+    }
 
-	public AbstractPdeManifestConfiguration(IColorManager manager, PDESourcePage page, String documentPartitioning) {
-		super(page, manager);
-		fPropertyKeyScanner = new ManifestHeaderScanner();
-		fPropertyValueScanner = new ManifestValueScanner();
-		this.fDocumentPartitioning = documentPartitioning;
-	}
+    public AbstractPdeManifestConfiguration(IColorManager manager) {
+        this(manager, null, null);
+    }
 
-	@Override
-	public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
-		String[] partitions = ManifestPartitionScanner.PARTITIONS;
-		String[] all = new String[partitions.length + 1];
-		all[0] = IDocument.DEFAULT_CONTENT_TYPE;
-		System.arraycopy(partitions, 0, all, 1, partitions.length);
-		return all;
-	}
+    public AbstractPdeManifestConfiguration(IColorManager manager, PDESourcePage page) {
+        this(manager, page, null);
+    }
 
-	@Override
-	public IAnnotationHover getAnnotationHover(ISourceViewer sourceViewer) {
-		if (fAnnotationHover == null) {
-			fAnnotationHover = new AnnotationHover();
-		}
-		return fAnnotationHover;
-	}
+    public AbstractPdeManifestConfiguration(IColorManager manager, PDESourcePage page, String documentPartitioning) {
+        super(page, manager);
+        this.fPropertyKeyScanner = new ManifestHeaderScanner();
+        this.fPropertyValueScanner = new ManifestValueScanner();
+        this.fDocumentPartitioning = documentPartitioning;
+    }
 
-	@Override
-	public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
-		PresentationReconciler reconciler = new PresentationReconciler();
-		reconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+    @Override
+    public String[] getConfiguredContentTypes(ISourceViewer sourceViewer) {
+        String[] partitions = ManifestPartitionScanner.PARTITIONS;
+        String[] all = new String[partitions.length + 1];
+        all[0] = IDocument.DEFAULT_CONTENT_TYPE;
+        System.arraycopy(partitions, 0, all, 1, partitions.length);
+        return all;
+    }
 
-		DefaultDamagerRepairer dr = new DefaultDamagerRepairer(fPropertyKeyScanner);
-		reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
-		reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
+    @Override
+    public IAnnotationHover getAnnotationHover(ISourceViewer sourceViewer) {
+        if (this.fAnnotationHover == null) {
+            this.fAnnotationHover = new AnnotationHover();
+        }
+        return this.fAnnotationHover;
+    }
 
-		dr = new DefaultDamagerRepairer(fPropertyValueScanner);
-		reconciler.setDamager(dr, ManifestPartitionScanner.MANIFEST_HEADER_VALUE);
-		reconciler.setRepairer(dr, ManifestPartitionScanner.MANIFEST_HEADER_VALUE);
+    @Override
+    public IPresentationReconciler getPresentationReconciler(ISourceViewer sourceViewer) {
+        PresentationReconciler reconciler = new PresentationReconciler();
+        reconciler.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
 
-		return reconciler;
-	}
+        DefaultDamagerRepairer dr = new DefaultDamagerRepairer(this.fPropertyKeyScanner);
+        reconciler.setDamager(dr, IDocument.DEFAULT_CONTENT_TYPE);
+        reconciler.setRepairer(dr, IDocument.DEFAULT_CONTENT_TYPE);
 
-	@Override
-	public boolean affectsTextPresentation(PropertyChangeEvent event) {
-		String property = event.getProperty();
-		return property.startsWith(IPDEColorConstants.P_HEADER_KEY)
-				|| property.startsWith(IPDEColorConstants.P_HEADER_OSGI)
-				|| property.startsWith(IPDEColorConstants.P_HEADER_VALUE)
-				|| property.startsWith(IPDEColorConstants.P_HEADER_ATTRIBUTES)
-				|| property.startsWith(IPDEColorConstants.P_HEADER_ASSIGNMENT);
-	}
+        dr = new DefaultDamagerRepairer(this.fPropertyValueScanner);
+        reconciler.setDamager(dr, ManifestPartitionScanner.MANIFEST_HEADER_VALUE);
+        reconciler.setRepairer(dr, ManifestPartitionScanner.MANIFEST_HEADER_VALUE);
 
-	@Override
-	public boolean affectsColorPresentation(PropertyChangeEvent event) {
-		String property = event.getProperty();
-		return property.equals(IPDEColorConstants.P_HEADER_KEY) || property.equals(IPDEColorConstants.P_HEADER_OSGI)
-				|| property.equals(IPDEColorConstants.P_HEADER_VALUE)
-				|| property.equals(IPDEColorConstants.P_HEADER_ATTRIBUTES)
-				|| property.equals(IPDEColorConstants.P_HEADER_ASSIGNMENT);
-	}
+        return reconciler;
+    }
 
-	@Override
-	public void adaptToPreferenceChange(PropertyChangeEvent event) {
-		if (affectsColorPresentation(event)) {
-			fColorManager.handlePropertyChangeEvent(event);
-		}
-		fPropertyKeyScanner.adaptToPreferenceChange(event);
-		fPropertyValueScanner.adaptToPreferenceChange(event);
-	}
+    @Override
+    public boolean affectsTextPresentation(PropertyChangeEvent event) {
+        String property = event.getProperty();
+        return property.startsWith(IPDEColorConstants.P_HEADER_KEY) || property.startsWith(IPDEColorConstants.P_HEADER_OSGI)
+            || property.startsWith(IPDEColorConstants.P_HEADER_VALUE) || property.startsWith(IPDEColorConstants.P_HEADER_ATTRIBUTES)
+            || property.startsWith(IPDEColorConstants.P_HEADER_ASSIGNMENT);
+    }
 
-	@Override
-	public IQuickAssistAssistant getQuickAssistAssistant(ISourceViewer sourceViewer) {
-		if (sourceViewer.isEditable()) {
-			if (fQuickAssistant == null) {
-				fQuickAssistant = new BundleQuickAssistAssistant();
-			}
-			return fQuickAssistant;
-		}
-		return null;
-	}
+    @Override
+    public boolean affectsColorPresentation(PropertyChangeEvent event) {
+        String property = event.getProperty();
+        return property.equals(IPDEColorConstants.P_HEADER_KEY) || property.equals(IPDEColorConstants.P_HEADER_OSGI)
+            || property.equals(IPDEColorConstants.P_HEADER_VALUE) || property.equals(IPDEColorConstants.P_HEADER_ATTRIBUTES)
+            || property.equals(IPDEColorConstants.P_HEADER_ASSIGNMENT);
+    }
 
-	@Override
-	public void dispose() {
-		if (fQuickAssistant != null) {
-			fQuickAssistant.dispose();
-		}
-		if (fContentAssistant != null) {
-			fContentAssistantProcessor.dispose();
-		}
-	}
+    @Override
+    public void adaptToPreferenceChange(PropertyChangeEvent event) {
+        if (affectsColorPresentation(event)) {
+            this.fColorManager.handlePropertyChangeEvent(event);
+        }
+        this.fPropertyKeyScanner.adaptToPreferenceChange(event);
+        this.fPropertyValueScanner.adaptToPreferenceChange(event);
+    }
 
-	@Override
-	public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
-		if (fSourcePage != null && fSourcePage.isEditable()) {
-			if (fContentAssistant == null) {
-				fContentAssistant = new ContentAssistant();
-				fContentAssistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
-				fContentAssistantProcessor = new ManifestContentAssistProcessor(fSourcePage);
-				fContentAssistant.setContentAssistProcessor(fContentAssistantProcessor, IDocument.DEFAULT_CONTENT_TYPE);
-				fContentAssistant.setContentAssistProcessor(fContentAssistantProcessor,
-						ManifestPartitionScanner.MANIFEST_HEADER_VALUE);
-				fContentAssistant.addCompletionListener(fContentAssistantProcessor);
-				fContentAssistant.setInformationControlCreator(new IInformationControlCreator() {
-					public IInformationControl createInformationControl(Shell parent) {
-						return new JFaceDefaultInformationControl(parent, false);
-					}
-				});
-				fContentAssistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
-			}
-			return fContentAssistant;
-		}
-		return null;
-	}
+    @Override
+    public IQuickAssistAssistant getQuickAssistAssistant(ISourceViewer sourceViewer) {
+        if (sourceViewer.isEditable()) {
+            if (this.fQuickAssistant == null) {
+                this.fQuickAssistant = new BundleQuickAssistAssistant();
+            }
+            return this.fQuickAssistant;
+        }
+        return null;
+    }
 
-	@Override
-	public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType) {
-		if (fTextHover == null && fSourcePage != null) {
-			fTextHover = new ManifestTextHover(fSourcePage);
-		}
-		return fTextHover;
-	}
+    @Override
+    public void dispose() {
+        if (this.fQuickAssistant != null) {
+            this.fQuickAssistant.dispose();
+        }
+        if (this.fContentAssistant != null) {
+            this.fContentAssistantProcessor.dispose();
+        }
+    }
 
-	@Override
-	protected int getInfoImplementationType() {
-		return SourceInformationProvider.F_MANIFEST_IMP;
-	}
+    @Override
+    public IContentAssistant getContentAssistant(ISourceViewer sourceViewer) {
+        if (this.fSourcePage != null && this.fSourcePage.isEditable()) {
+            if (this.fContentAssistant == null) {
+                this.fContentAssistant = new ContentAssistant();
+                this.fContentAssistant.setDocumentPartitioning(getConfiguredDocumentPartitioning(sourceViewer));
+                this.fContentAssistantProcessor = new ManifestContentAssistProcessor(this.fSourcePage);
+                this.fContentAssistant.setContentAssistProcessor(this.fContentAssistantProcessor, IDocument.DEFAULT_CONTENT_TYPE);
+                this.fContentAssistant.setContentAssistProcessor(this.fContentAssistantProcessor, ManifestPartitionScanner.MANIFEST_HEADER_VALUE);
+                this.fContentAssistant.addCompletionListener(this.fContentAssistantProcessor);
+                this.fContentAssistant.setInformationControlCreator(new IInformationControlCreator() {
 
-	@Override
-	public String getConfiguredDocumentPartitioning(ISourceViewer sourceViewer) {
-		if (fDocumentPartitioning != null) {
-			return fDocumentPartitioning;
-		}
-		return super.getConfiguredDocumentPartitioning(sourceViewer);
-	}
+                    public IInformationControl createInformationControl(Shell parent) {
+                        return new JFaceDefaultInformationControl(parent, false);
+                    }
+                });
+                this.fContentAssistant.setContextInformationPopupOrientation(IContentAssistant.CONTEXT_INFO_ABOVE);
+            }
+            return this.fContentAssistant;
+        }
+        return null;
+    }
+
+    @Override
+    public ITextHover getTextHover(ISourceViewer sourceViewer, String contentType) {
+        if (this.fTextHover == null && this.fSourcePage != null) {
+            this.fTextHover = new ManifestTextHover(this.fSourcePage);
+        }
+        return this.fTextHover;
+    }
+
+    @Override
+    protected int getInfoImplementationType() {
+        return SourceInformationProvider.F_MANIFEST_IMP;
+    }
+
+    @Override
+    public String getConfiguredDocumentPartitioning(ISourceViewer sourceViewer) {
+        if (this.fDocumentPartitioning != null) {
+            return this.fDocumentPartitioning;
+        }
+        return super.getConfiguredDocumentPartitioning(sourceViewer);
+    }
 }

@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.core.command;
 
 import java.io.IOException;
@@ -22,56 +23,57 @@ import org.eclipse.virgo.ide.runtime.internal.core.DeploymentIdentity;
 
 /**
  * {@link IServerCommand} to deploy a PAR or bundle.
- * 
+ *
  * @author Christian Dupuis
  * @since 1.0.1
  */
-public class GenericJmxServerDeployCommand extends AbstractJmxServerDeployerCommand<CompositeData> implements
-		IServerCommand<DeploymentIdentity> {
+public class GenericJmxServerDeployCommand extends AbstractJmxServerDeployerCommand<CompositeData>implements IServerCommand<DeploymentIdentity> {
 
-	private static final String ITEM_SYMBOLIC_NAME = "symbolicName"; //$NON-NLS-1$
+    private static final String ITEM_SYMBOLIC_NAME = "symbolicName"; //$NON-NLS-1$
 
-	private static final String ITEM_VERSION = "version"; //$NON-NLS-1$
+    private static final String ITEM_VERSION = "version"; //$NON-NLS-1$
 
-	private final URI uri;
+    private final URI uri;
 
-	/**
-	 * Creates a new {@link GenericJmxServerDeployCommand}.
-	 */
-	public GenericJmxServerDeployCommand(IServerBehaviour serverBehaviour, URI uri) {
-		super(serverBehaviour, null);
-		this.uri = uri;
-	}
+    /**
+     * Creates a new {@link GenericJmxServerDeployCommand}.
+     */
+    public GenericJmxServerDeployCommand(IServerBehaviour serverBehaviour, URI uri) {
+        super(serverBehaviour, null);
+        this.uri = uri;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public DeploymentIdentity execute() throws IOException, TimeoutException {
+    /**
+     * {@inheritDoc}
+     */
+    public DeploymentIdentity execute() throws IOException, TimeoutException {
 
-		CompositeData returnValue = doExecute();
-		if (returnValue != null) {
-			String symbolicName = (String) returnValue.get(ITEM_SYMBOLIC_NAME);
-			String version = (String) returnValue.get(ITEM_VERSION);
-			Map<String, DeploymentIdentity> identities = serverBehaviour.getDeploymentIdentities();
-			DeploymentIdentity identity = new DeploymentIdentity(symbolicName, version);
-			identities.put(uri.toString(), identity);
-			return identity;
-		}
-		return null;
-	}
+        CompositeData returnValue = doExecute();
+        if (returnValue != null) {
+            String symbolicName = (String) returnValue.get(ITEM_SYMBOLIC_NAME);
+            String version = (String) returnValue.get(ITEM_VERSION);
+            Map<String, DeploymentIdentity> identities = this.serverBehaviour.getDeploymentIdentities();
+            DeploymentIdentity identity = new DeploymentIdentity(symbolicName, version);
+            identities.put(this.uri.toString(), identity);
+            return identity;
+        }
+        return null;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	protected Object[] getOperationArguments() {
-		return new Object[] { uri.toString(), false };
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected Object[] getOperationArguments() {
+        return new Object[] { this.uri.toString(), false };
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	protected String getOperationName() {
-		return "deploy";
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    protected String getOperationName() {
+        return "deploy";
+    }
 
 }

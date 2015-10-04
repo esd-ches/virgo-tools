@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.core.command;
 
 import java.io.IOException;
@@ -20,39 +21,38 @@ import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 
 /**
  * {@link IServerCommand} to ping a dm Server.
- * 
+ *
  * @author Christian Dupuis
  * @since 1.0.1
  */
 public class JmxServerPingCommand extends AbstractJmxServerCommand implements IServerCommand<Boolean> {
 
-	/**
-	 * Creates a new {@link JmxServerPingCommand}.
-	 */
-	public JmxServerPingCommand(IServerBehaviour serverBehaviour) {
-		super(serverBehaviour);
-	}
+    /**
+     * Creates a new {@link JmxServerPingCommand}.
+     */
+    public JmxServerPingCommand(IServerBehaviour serverBehaviour) {
+        super(serverBehaviour);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public Boolean execute() throws IOException, TimeoutException {
+    /**
+     * {@inheritDoc}
+     */
+    public Boolean execute() throws IOException, TimeoutException {
 
-		JmxServerCommandTemplate template = new JmxServerCommandTemplate() {
+        JmxServerCommandTemplate template = new JmxServerCommandTemplate() {
 
-			public Object invokeOperation(MBeanServerConnection connection) throws Exception {
-				ObjectName name = ObjectName.getInstance(serverBehaviour.getVersionHandler()
-						.getRecoveryMonitorMBeanName());
-				return connection.getAttribute(name, "RecoveryComplete");
-			}
+            public Object invokeOperation(MBeanServerConnection connection) throws Exception {
+                ObjectName name = ObjectName.getInstance(JmxServerPingCommand.this.serverBehaviour.getVersionHandler().getRecoveryMonitorMBeanName());
+                return connection.getAttribute(name, "RecoveryComplete");
+            }
 
-		};
+        };
 
-		Object returnValue = execute(template);
-		if (returnValue instanceof Boolean) {
-			return (Boolean) returnValue;
-		}
-		return null;
-	}
+        Object returnValue = execute(template);
+        if (returnValue instanceof Boolean) {
+            return (Boolean) returnValue;
+        }
+        return null;
+    }
 
 }

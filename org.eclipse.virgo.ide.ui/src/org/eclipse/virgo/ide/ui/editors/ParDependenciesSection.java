@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.editors;
 
 import java.util.ArrayList;
@@ -38,113 +39,111 @@ import org.eclipse.virgo.ide.par.Par;
  */
 public class ParDependenciesSection extends DependenciesSection {
 
-	private final ParXmlEditorPage page;
+    private final ParXmlEditorPage page;
 
-	private Par par;
+    private Par par;
 
-	public ParDependenciesSection(ParXmlEditorPage page, Composite parent, String[] buttonLabels) {
-		super(page, parent, buttonLabels);
-		this.page = page;
-		initialize();
-		getSection().setText("Nested Bundles");
-		getSection().setDescription("Add or remove bundle dependencies to the PAR.");
-	}
+    public ParDependenciesSection(ParXmlEditorPage page, Composite parent, String[] buttonLabels) {
+        super(page, parent, buttonLabels);
+        this.page = page;
+        initialize();
+        getSection().setText("Nested Bundles");
+        getSection().setDescription("Add or remove bundle dependencies to the PAR.");
+    }
 
-	@Override
-	protected void enableButtons() {
-		if (getTableViewer() != null) {
-			Object[] selected = ((IStructuredSelection) getTableViewer().getSelection()).toArray();
-			int size = selected.length;
-			TablePart tablePart = getTablePart();
-			tablePart.setButtonEnabled(getRemoveIndex(), size > 0);
-		}
-	}
+    @Override
+    protected void enableButtons() {
+        if (getTableViewer() != null) {
+            Object[] selected = ((IStructuredSelection) getTableViewer().getSelection()).toArray();
+            int size = selected.length;
+            TablePart tablePart = getTablePart();
+            tablePart.setButtonEnabled(getRemoveIndex(), size > 0);
+        }
+    }
 
-	@Override
-	protected void entryModified(Object entry, String value) {
-		// TODO Auto-generated method stub
+    @Override
+    protected void entryModified(Object entry, String value) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	protected void handleAdd() {
-		// get list of facet projects that are not in the model
-		List<IProject> facetProjects = new ArrayList<IProject>(Arrays.asList(FacetUtils.getBundleProjects()));
-		for (Iterator<IProject> it = facetProjects.iterator(); it.hasNext();) {
-			IProject workspaceProject = it.next();
-			for (Bundle bundle : par.getBundle()) {
-				if (bundle.getSymbolicName() != null
-						&& bundle.getSymbolicName().equals(ParUtils.getSymbolicName(workspaceProject))) {
-					it.remove();
-					break;
-				}
-			}
-		}
+    @Override
+    protected void handleAdd() {
+        // get list of facet projects that are not in the model
+        List<IProject> facetProjects = new ArrayList<IProject>(Arrays.asList(FacetUtils.getBundleProjects()));
+        for (Iterator<IProject> it = facetProjects.iterator(); it.hasNext();) {
+            IProject workspaceProject = it.next();
+            for (Bundle bundle : this.par.getBundle()) {
+                if (bundle.getSymbolicName() != null && bundle.getSymbolicName().equals(ParUtils.getSymbolicName(workspaceProject))) {
+                    it.remove();
+                    break;
+                }
+            }
+        }
 
-		ProjectSelectionDialog dialog = new ProjectSelectionDialog(getSection().getShell());
-		dialog.setElements(facetProjects.toArray(new IProject[0]));
+        ProjectSelectionDialog dialog = new ProjectSelectionDialog(getSection().getShell());
+        dialog.setElements(facetProjects.toArray(new IProject[0]));
 
-		if (dialog.open() == Window.OK) {
-			// add selected facet projects to the model
-			IProject[] workspaceProjects = dialog.getSelectedProjects();
-			for (IProject workspaceProject : workspaceProjects) {
-				Collection<?> newChildDescriptors = page.getModel().getNewChildDescriptors(par, null);
-				Object descriptor = newChildDescriptors.iterator().next();
-				Command command = CreateChildCommand.create(page.getModel(), par, descriptor,
-						Collections.singleton(par));
-				page.getModel().getCommandStack().execute(command);
-				if (command.getResult() != null && !command.getResult().isEmpty()) {
-					Bundle project = (Bundle) command.getResult().iterator().next();
-					project.setSymbolicName(ParUtils.getSymbolicName(workspaceProject));
-				}
-			}
-		}
-	}
+        if (dialog.open() == Window.OK) {
+            // add selected facet projects to the model
+            IProject[] workspaceProjects = dialog.getSelectedProjects();
+            for (IProject workspaceProject : workspaceProjects) {
+                Collection<?> newChildDescriptors = this.page.getModel().getNewChildDescriptors(this.par, null);
+                Object descriptor = newChildDescriptors.iterator().next();
+                Command command = CreateChildCommand.create(this.page.getModel(), this.par, descriptor, Collections.singleton(this.par));
+                this.page.getModel().getCommandStack().execute(command);
+                if (command.getResult() != null && !command.getResult().isEmpty()) {
+                    Bundle project = (Bundle) command.getResult().iterator().next();
+                    project.setSymbolicName(ParUtils.getSymbolicName(workspaceProject));
+                }
+            }
+        }
+    }
 
-	@Override
-	protected void handleDoubleClick(IStructuredSelection selection) {
-		// TODO Auto-generated method stub
+    @Override
+    protected void handleDoubleClick(IStructuredSelection selection) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	protected void handleDown() {
-		// TODO Auto-generated method stub
+    @Override
+    protected void handleDown() {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	protected void handleOpenProperties() {
-		// TODO Auto-generated method stub
+    @Override
+    protected void handleOpenProperties() {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	protected void handleRemove() {
-		IStructuredSelection selection = (IStructuredSelection) getTableViewer().getSelection();
-		if (!selection.isEmpty()) {
-			Command command = RemoveCommand.create(page.getModel(), par, null, selection.toList());
-			page.getModel().getCommandStack().execute(command);
-		}
-	}
+    @Override
+    protected void handleRemove() {
+        IStructuredSelection selection = (IStructuredSelection) getTableViewer().getSelection();
+        if (!selection.isEmpty()) {
+            Command command = RemoveCommand.create(this.page.getModel(), this.par, null, selection.toList());
+            this.page.getModel().getCommandStack().execute(command);
+        }
+    }
 
-	@Override
-	protected void handleUp() {
-		// TODO Auto-generated method stub
+    @Override
+    protected void handleUp() {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	protected void initialize() {
-		getTableViewer().setContentProvider(new AdapterFactoryContentProvider(page.getModel().getAdapterFactory()));
-		getTableViewer().setLabelProvider(new AdapterFactoryLabelProvider(page.getModel().getAdapterFactory()));
-		par = page.getPar();
-		getTableViewer().setInput(par);
-	}
+    @Override
+    protected void initialize() {
+        getTableViewer().setContentProvider(new AdapterFactoryContentProvider(this.page.getModel().getAdapterFactory()));
+        getTableViewer().setLabelProvider(new AdapterFactoryLabelProvider(this.page.getModel().getAdapterFactory()));
+        this.par = this.page.getPar();
+        getTableViewer().setInput(this.par);
+    }
 
-	@Override
-	protected void selectionChanged(IStructuredSelection selection) {
-		enableButtons();
-	}
+    @Override
+    protected void selectionChanged(IStructuredSelection selection) {
+        enableButtons();
+    }
 
 }

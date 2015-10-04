@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.editors.plan;
 
 import org.eclipse.wst.sse.core.internal.ltk.modelhandler.IDocumentTypeHandler;
@@ -19,9 +20,9 @@ import org.eclipse.wst.xml.ui.internal.registry.AdapterFactoryProviderForXML;
  */
 public class PlanAdapterFactoryProvider extends AdapterFactoryProviderForXML {
 
-	@Override
-	public boolean isFor(IDocumentTypeHandler contentTypeDescription) {
-		return (contentTypeDescription instanceof PlanModelHandler);
-	}
+    @Override
+    public boolean isFor(IDocumentTypeHandler contentTypeDescription) {
+        return contentTypeDescription instanceof PlanModelHandler;
+    }
 
 }

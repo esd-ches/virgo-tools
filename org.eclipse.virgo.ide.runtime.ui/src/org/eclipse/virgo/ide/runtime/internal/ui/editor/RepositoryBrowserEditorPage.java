@@ -157,7 +157,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
     @Override
     public void createPartControl(Composite parent) {
 
-        shell = parent.getShell();
+        this.shell = parent.getShell();
 
         FormToolkit toolkit = getFormToolkit(parent.getDisplay());
 
@@ -189,27 +189,27 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
     public void dispose() {
         super.dispose();
 
-        if (serverWC != null) {
-            serverWC.removeConfigurationChangeListener(propertyListener);
+        if (this.serverWC != null) {
+            this.serverWC.removeConfigurationChangeListener(this.propertyListener);
         }
-        Job.getJobManager().removeJobChangeListener(jobListener);
-        ServerCorePlugin.getArtefactRepositoryManager().removeBundleRepositoryChangeListener(repositoryListener);
+        Job.getJobManager().removeJobChangeListener(this.jobListener);
+        ServerCorePlugin.getArtefactRepositoryManager().removeBundleRepositoryChangeListener(this.repositoryListener);
     }
 
     @Override
     public void init(IEditorSite site, IEditorInput input) {
         super.init(site, input);
 
-        IServerWorkingCopy ts = (IServerWorkingCopy) server.loadAdapter(IServerWorkingCopy.class, null);
-        serverWC = ts;
+        IServerWorkingCopy ts = (IServerWorkingCopy) this.server.loadAdapter(IServerWorkingCopy.class, null);
+        this.serverWC = ts;
         addListeners();
         initialize();
     }
 
     @Override
     public void setFocus() {
-        if (searchResultTable != null) {
-            searchResultTable.setFocus();
+        if (this.searchResultTable != null) {
+            this.searchResultTable.setFocus();
         }
     }
 
@@ -228,10 +228,10 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
         toolkit.paintBordersFor(leftComposite);
         leftSection.setClient(leftComposite);
 
-        searchText = toolkit.createText(leftComposite, Messages.RepositoryBrowserEditorPage_4);
+        this.searchText = toolkit.createText(leftComposite, Messages.RepositoryBrowserEditorPage_4);
         GridData data = new GridData(GridData.FILL_HORIZONTAL);
-        searchText.setLayoutData(data);
-        searchText.addKeyListener(new KeyListener() {
+        this.searchText.setLayoutData(data);
+        this.searchText.addKeyListener(new KeyListener() {
 
             public void keyPressed(KeyEvent e) {
                 if (e.character == SWT.CR || e.character == SWT.LF) {
@@ -248,8 +248,8 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
         data = new GridData(GridData.VERTICAL_ALIGN_BEGINNING);
         searchButtonComposite.setLayoutData(data);
 
-        searchButton = toolkit.createButton(searchButtonComposite, Messages.RepositoryBrowserEditorPage_Search, SWT.PUSH);
-        searchButton.addSelectionListener(new SelectionAdapter() {
+        this.searchButton = toolkit.createButton(searchButtonComposite, Messages.RepositoryBrowserEditorPage_Search, SWT.PUSH);
+        this.searchButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
@@ -258,57 +258,58 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
         });
         data = new GridData(GridData.FILL_HORIZONTAL);
         data.widthHint = 100;
-        searchButton.setLayoutData(data);
+        this.searchButton.setLayoutData(data);
 
-        searchResultTable = toolkit.createTree(leftComposite, SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION | SWT.CHECK);
+        this.searchResultTable = toolkit.createTree(leftComposite, SWT.V_SCROLL | SWT.MULTI | SWT.FULL_SELECTION | SWT.CHECK);
 
-        searchResultTableViewer = new CheckboxTreeViewer(searchResultTable);
-        searchResultTableViewer.setContentProvider(searchResultContentProvider);
-        searchResultTableViewer.setLabelProvider(coloredRespositoryLabelProvider);
-        searchResultTableViewer.setInput(this); // activate content provider
-        searchResultTableViewer.setSorter(new RepositoryViewerSorter());
-        searchResultTableViewer.addCheckStateListener(new ICheckStateListener() {
+        this.searchResultTableViewer = new CheckboxTreeViewer(this.searchResultTable);
+        this.searchResultTableViewer.setContentProvider(this.searchResultContentProvider);
+        this.searchResultTableViewer.setLabelProvider(this.coloredRespositoryLabelProvider);
+        this.searchResultTableViewer.setInput(this); // activate content provider
+        this.searchResultTableViewer.setSorter(new RepositoryViewerSorter());
+        this.searchResultTableViewer.addCheckStateListener(new ICheckStateListener() {
 
             public void checkStateChanged(CheckStateChangedEvent event) {
                 handleCheckStateChange(event);
-                downloadButton.setEnabled(searchResultTableViewer.getCheckedElements().length > 0);
+                RepositoryBrowserEditorPage.this.downloadButton.setEnabled(
+                    RepositoryBrowserEditorPage.this.searchResultTableViewer.getCheckedElements().length > 0);
             }
         });
-        searchResultTableViewer.addTreeListener(new ITreeViewerListener() {
+        this.searchResultTableViewer.addTreeListener(new ITreeViewerListener() {
 
             public void treeCollapsed(TreeExpansionEvent event) {
             }
 
             public void treeExpanded(TreeExpansionEvent event) {
                 final Object element = event.getElement();
-                if (searchResultTableViewer.getGrayed(element) == false) {
-                    BusyIndicator.showWhile(shell.getDisplay(), new Runnable() {
+                if (RepositoryBrowserEditorPage.this.searchResultTableViewer.getGrayed(element) == false) {
+                    BusyIndicator.showWhile(RepositoryBrowserEditorPage.this.shell.getDisplay(), new Runnable() {
 
                         public void run() {
-                            setSubtreeChecked(element, searchResultTableViewer.getChecked(element), false);
+                            setSubtreeChecked(element, RepositoryBrowserEditorPage.this.searchResultTableViewer.getChecked(element), false);
                         }
                     });
                 }
             }
         });
-        registerContextMenu(searchResultTableViewer);
+        registerContextMenu(this.searchResultTableViewer);
 
         data = new GridData(GridData.FILL_BOTH);
         data.heightHint = 120;
-        searchResultTable.setLayoutData(data);
-        searchResultTable.addSelectionListener(new SelectionAdapter() {
+        this.searchResultTable.setLayoutData(data);
+        this.searchResultTable.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                ISelection selection = searchResultTableViewer.getSelection();
+                ISelection selection = RepositoryBrowserEditorPage.this.searchResultTableViewer.getSelection();
                 if (selection instanceof IStructuredSelection) {
                     Object element = ((IStructuredSelection) selection).getFirstElement();
                     if (element instanceof IArtefact) {
-                        anaylseButton.setEnabled(true);
-                        licenseButton.setEnabled(true);
+                        RepositoryBrowserEditorPage.this.anaylseButton.setEnabled(true);
+                        RepositoryBrowserEditorPage.this.licenseButton.setEnabled(true);
                     } else {
-                        anaylseButton.setEnabled(false);
-                        licenseButton.setEnabled(false);
+                        RepositoryBrowserEditorPage.this.anaylseButton.setEnabled(false);
+                        RepositoryBrowserEditorPage.this.licenseButton.setEnabled(false);
                     }
                 }
             }
@@ -328,7 +329,9 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 
             @Override
             public void widgetSelected(SelectionEvent selectionEvent) {
-                searchResultTableViewer.setCheckedElements(searchResultContentProvider.getElements(searchResultTableViewer.getInput()));
+                RepositoryBrowserEditorPage.this.searchResultTableViewer.setCheckedElements(
+                    RepositoryBrowserEditorPage.this.searchResultContentProvider.getElements(
+                        RepositoryBrowserEditorPage.this.searchResultTableViewer.getInput()));
             }
         });
 
@@ -340,22 +343,22 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 
             @Override
             public void widgetSelected(SelectionEvent selectionEvent) {
-                searchResultTableViewer.setCheckedElements(new Object[0]);
+                RepositoryBrowserEditorPage.this.searchResultTableViewer.setCheckedElements(new Object[0]);
             }
         });
 
         // insert vertical space to make the download button stand out
         toolkit.createLabel(buttonComposite, Messages.RepositoryBrowserEditorPage_10);
 
-        anaylseButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_Analyse, SWT.PUSH);
-        anaylseButton.setEnabled(false);
-        anaylseButton.setLayoutData(data);
-        anaylseButton.setToolTipText(Messages.RepositoryBrowserEditorPage_AnalyseSelected);
-        anaylseButton.addSelectionListener(new SelectionAdapter() {
+        this.anaylseButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_Analyse, SWT.PUSH);
+        this.anaylseButton.setEnabled(false);
+        this.anaylseButton.setLayoutData(data);
+        this.anaylseButton.setToolTipText(Messages.RepositoryBrowserEditorPage_AnalyseSelected);
+        this.anaylseButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent selectionEvent) {
-                ISelection selection = searchResultTableViewer.getSelection();
+                ISelection selection = RepositoryBrowserEditorPage.this.searchResultTableViewer.getSelection();
                 if (selection instanceof IStructuredSelection) {
                     Object element = ((IStructuredSelection) selection).getFirstElement();
                     if (element instanceof IArtefact) {
@@ -365,15 +368,15 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
             }
         });
 
-        licenseButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_ViewLicense, SWT.PUSH);
-        licenseButton.setEnabled(false);
-        licenseButton.setLayoutData(data);
-        licenseButton.setToolTipText(Messages.RepositoryBrowserEditorPage_OpenLicense);
-        licenseButton.addSelectionListener(new SelectionAdapter() {
+        this.licenseButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_ViewLicense, SWT.PUSH);
+        this.licenseButton.setEnabled(false);
+        this.licenseButton.setLayoutData(data);
+        this.licenseButton.setToolTipText(Messages.RepositoryBrowserEditorPage_OpenLicense);
+        this.licenseButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent selectionEvent) {
-                ISelection selection = searchResultTableViewer.getSelection();
+                ISelection selection = RepositoryBrowserEditorPage.this.searchResultTableViewer.getSelection();
                 if (selection instanceof IStructuredSelection) {
                     Object element = ((IStructuredSelection) selection).getFirstElement();
                     if (element instanceof LibraryArtefact) {
@@ -388,16 +391,16 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
         // insert vertical space to make the download button stand out
         toolkit.createLabel(buttonComposite, ""); //$NON-NLS-1$
 
-        downloadButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_Download, SWT.PUSH);
-        downloadButton.setEnabled(false);
-        downloadButton.setLayoutData(data);
-        downloadButton.setToolTipText(Messages.RepositoryBrowserEditorPage_DownloadSelected);
-        downloadButton.addSelectionListener(new SelectionAdapter() {
+        this.downloadButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_Download, SWT.PUSH);
+        this.downloadButton.setEnabled(false);
+        this.downloadButton.setLayoutData(data);
+        this.downloadButton.setToolTipText(Messages.RepositoryBrowserEditorPage_DownloadSelected);
+        this.downloadButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent selectionEvent) {
                 Set<Artefact> artifacts = new LinkedHashSet<Artefact>();
-                Object[] selections = searchResultTableViewer.getCheckedElements();
+                Object[] selections = RepositoryBrowserEditorPage.this.searchResultTableViewer.getCheckedElements();
                 for (Object selection : selections) {
                     if (selection instanceof IArtefact) {
                         artifacts.add((Artefact) selection);
@@ -407,10 +410,10 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
                 boolean showDialog = ServerUiPlugin.getDefault().getPreferenceStore().getBoolean(ServerUiPlugin.PLUGIN_ID + ".download.message"); //$NON-NLS-1$
 
                 if (!showDialog) {
-                    MessageDialogWithToggle dialog = MessageDialogWithToggle.openOkCancelConfirm(shell,
-                        Messages.RepositoryBrowserEditorPage_DownloadBundlesAndLibraries,
-                        Messages.RepositoryBrowserEditorPage_DownloadTriggerMessage, Messages.RepositoryBrowserEditorPage_DontShowDialog, false,
-                        ServerUiPlugin.getDefault().getPreferenceStore(), ServerUiPlugin.PLUGIN_ID + ".download.message"); //$NON-NLS-1$
+                    MessageDialogWithToggle dialog = MessageDialogWithToggle.openOkCancelConfirm(RepositoryBrowserEditorPage.this.shell,
+                        Messages.RepositoryBrowserEditorPage_DownloadBundlesAndLibraries, Messages.RepositoryBrowserEditorPage_DownloadTriggerMessage,
+                        Messages.RepositoryBrowserEditorPage_DontShowDialog, false, ServerUiPlugin.getDefault().getPreferenceStore(),
+                        ServerUiPlugin.PLUGIN_ID + ".download.message"); //$NON-NLS-1$
                     if (dialog.getReturnCode() != Window.OK) {
                         return;
                     } else {
@@ -422,13 +425,13 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
                 Set<IRuntime> runtimes = new HashSet<IRuntime>();
                 runtimes.add(getServer().getRuntime());
                 RepositoryProvisioningJob operation = new RepositoryProvisioningJob(runtimes, RepositoryUtils.resolveDependencies(artifacts, false),
-                    downloadSourcesCheckbox.getSelection());
+                    RepositoryBrowserEditorPage.this.downloadSourcesCheckbox.getSelection());
                 operation.setProperty(IProgressConstants.ICON_PROPERTY, ServerUiImages.DESC_OBJ_BUNDLE);
                 operation.schedule();
 
                 // reset checked state
-                searchResultTableViewer.setCheckedElements(new Object[0]);
-                downloadButton.setEnabled(false);
+                RepositoryBrowserEditorPage.this.searchResultTableViewer.setCheckedElements(new Object[0]);
+                RepositoryBrowserEditorPage.this.downloadButton.setEnabled(false);
             }
         });
 
@@ -442,10 +445,10 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
         wrappedComposite.setLayout(twLayout);
         GridDataFactory.fillDefaults().grab(true, false).span(2, 1).applyTo(wrappedComposite);
 
-        downloadSourcesCheckbox = toolkit.createButton(wrappedComposite, Messages.RepositoryBrowserEditorPage_DownloadSourceJars, SWT.CHECK
-            | SWT.WRAP);
-        downloadSourcesCheckbox.setSelection(true);
-        downloadSourcesCheckbox.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP));
+        this.downloadSourcesCheckbox = toolkit.createButton(wrappedComposite, Messages.RepositoryBrowserEditorPage_DownloadSourceJars,
+            SWT.CHECK | SWT.WRAP);
+        this.downloadSourcesCheckbox.setSelection(true);
+        this.downloadSourcesCheckbox.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP));
 
         Link repoLink = new Link(wrappedComposite, SWT.WRAP);
         repoLink.setText(Messages.RepositoryBrowserEditorPage_SourceReposMessage);
@@ -458,12 +461,12 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
         });
         repoLink.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP));
 
-        update = new Link(wrappedComposite, SWT.WRAP);
-        update.addSelectionListener(new SelectionAdapter() {
+        this.update = new Link(wrappedComposite, SWT.WRAP);
+        this.update.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent e) {
-                if (MessageDialog.openQuestion(shell, Messages.RepositoryBrowserEditorPage_UpdateLocalBundles,
+                if (MessageDialog.openQuestion(RepositoryBrowserEditorPage.this.shell, Messages.RepositoryBrowserEditorPage_UpdateLocalBundles,
                     Messages.RepositoryBrowserEditorPage_ConfirmIndexMessage)) {
                     ServerCorePlugin.getArtefactRepositoryManager().update();
                 }
@@ -471,7 +474,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
             }
         });
         setRepositoryDateString();
-        update.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP));
+        this.update.setLayoutData(new TableWrapData(TableWrapData.LEFT, TableWrapData.TOP));
 
         Hyperlink disclaimer = toolkit.createHyperlink(wrappedComposite, Messages.RepositoryBrowserEditorPage_FirewallConfigureMessage, SWT.WRAP);
         disclaimer.addHyperlinkListener(new HyperlinkAdapter() {
@@ -497,7 +500,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
     private void setRepositoryDateString() {
         Date date = ServerCorePlugin.getArtefactRepositoryManager().getArtefactRepositoryDate();
         String dateString = dateFormat.format(date);
-        update.setText(Messages.RepositoryBrowserEditorPage_UpdateURL + dateString + ")"); //$NON-NLS-1$
+        this.update.setText(Messages.RepositoryBrowserEditorPage_UpdateURL + dateString + ")"); //$NON-NLS-1$
     }
 
     protected String getServerName() {
@@ -530,14 +533,14 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
         composite2.setLayoutData(new GridData(GridData.FILL_BOTH));
         toolkit.paintBordersFor(composite2);
 
-        repositoryTableViewer = new CommonViewer(ServerUiPlugin.ARTEFACTS_BROWSER_VIEW_ID, composite2, SWT.BORDER | SWT.SINGLE);
-        repositoryTableViewer.setSorter(new RepositoryViewerSorter());
+        this.repositoryTableViewer = new CommonViewer(ServerUiPlugin.ARTEFACTS_BROWSER_VIEW_ID, composite2, SWT.BORDER | SWT.SINGLE);
+        this.repositoryTableViewer.setSorter(new RepositoryViewerSorter());
 
-        registerContextMenu(repositoryTableViewer);
+        registerContextMenu(this.repositoryTableViewer);
 
         data = new GridData(GridData.FILL_BOTH);
         data.heightHint = 120;
-        repositoryTableViewer.getControl().setLayoutData(data);
+        this.repositoryTableViewer.getControl().setLayoutData(data);
 
         Composite buttonComposite = new Composite(composite2, SWT.NONE);
         buttonComposite.setLayout(new GridLayout(1, true));
@@ -546,10 +549,10 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
 
         data = new GridData(GridData.FILL_HORIZONTAL);
         data.widthHint = 100;
-        refreshButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_Refresh, SWT.PUSH);
-        refreshButton.setLayoutData(data);
-        refreshButton.setToolTipText(Messages.RepositoryBrowserEditorPage_RefreshMessage);
-        refreshButton.addSelectionListener(new SelectionAdapter() {
+        this.refreshButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_Refresh, SWT.PUSH);
+        this.refreshButton.setLayoutData(data);
+        this.refreshButton.setToolTipText(Messages.RepositoryBrowserEditorPage_RefreshMessage);
+        this.refreshButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent selectionEvent) {
@@ -557,10 +560,10 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
             }
         });
 
-        downloadSourcesButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_InstallSources, SWT.PUSH);
-        downloadSourcesButton.setLayoutData(data);
-        downloadSourcesButton.setToolTipText(Messages.RepositoryBrowserEditorPage_InstallSourcesMessage);
-        downloadSourcesButton.addSelectionListener(new SelectionAdapter() {
+        this.downloadSourcesButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_InstallSources, SWT.PUSH);
+        this.downloadSourcesButton.setLayoutData(data);
+        this.downloadSourcesButton.setToolTipText(Messages.RepositoryBrowserEditorPage_InstallSourcesMessage);
+        this.downloadSourcesButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent selectionEvent) {
@@ -571,14 +574,14 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
         // insert vertical space to make the download button stand out
         toolkit.createLabel(buttonComposite, Messages.RepositoryBrowserEditorPage_40);
 
-        openManifestButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_OpenManifest, SWT.PUSH);
-        openManifestButton.setLayoutData(data);
-        openManifestButton.setToolTipText(Messages.RepositoryBrowserEditorPage_OpenManifestMessage);
-        openManifestButton.addSelectionListener(new SelectionAdapter() {
+        this.openManifestButton = toolkit.createButton(buttonComposite, Messages.RepositoryBrowserEditorPage_OpenManifest, SWT.PUSH);
+        this.openManifestButton.setLayoutData(data);
+        this.openManifestButton.setToolTipText(Messages.RepositoryBrowserEditorPage_OpenManifestMessage);
+        this.openManifestButton.addSelectionListener(new SelectionAdapter() {
 
             @Override
             public void widgetSelected(SelectionEvent selectionEvent) {
-                ISelection selection = repositoryTableViewer.getSelection();
+                ISelection selection = RepositoryBrowserEditorPage.this.repositoryTableViewer.getSelection();
                 if (selection instanceof IStructuredSelection) {
                     Object element = ((IStructuredSelection) selection).getFirstElement();
                     if (element instanceof IPackageFragmentRoot) {
@@ -589,17 +592,17 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
             }
         });
 
-        openManifestButton.setEnabled(false);
-        repositoryTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+        this.openManifestButton.setEnabled(false);
+        this.repositoryTableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
             public void selectionChanged(SelectionChangedEvent event) {
                 ISelection selection = event.getSelection();
                 if (selection instanceof IStructuredSelection) {
                     Object element = ((IStructuredSelection) selection).getFirstElement();
                     if (element instanceof IPackageFragmentRoot) {
-                        openManifestButton.setEnabled(true);
+                        RepositoryBrowserEditorPage.this.openManifestButton.setEnabled(true);
                     } else {
-                        openManifestButton.setEnabled(false);
+                        RepositoryBrowserEditorPage.this.openManifestButton.setEnabled(false);
                     }
                 }
             }
@@ -631,12 +634,12 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
     }
 
     private void refreshBundleRepository() {
-        RefreshBundleJob.execute(shell, getServer().getRuntime());
+        RefreshBundleJob.execute(this.shell, getServer().getRuntime());
     }
 
     protected void downloadSources() {
         Set<Artefact> artifacts = new LinkedHashSet<Artefact>();
-        ArtefactRepository repository = RepositoryUtils.getRepositoryContents(server.getRuntime());
+        ArtefactRepository repository = RepositoryUtils.getRepositoryContents(this.server.getRuntime());
         for (IArtefactTyped bundle : repository.getBundles()) {
             if (bundle instanceof LocalBundleArtefact) {
                 if (!((LocalBundleArtefact) bundle).isSourceDownloaded()) {
@@ -652,7 +655,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
     }
 
     private void handleCheckStateChange(final CheckStateChangedEvent event) {
-        BusyIndicator.showWhile(shell.getDisplay(), new Runnable() {
+        BusyIndicator.showWhile(this.shell.getDisplay(), new Runnable() {
 
             public void run() {
                 boolean state = event.getChecked();
@@ -666,100 +669,103 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
         // checked state is set lazily on expand, don't set it if container is
         // collapsed
 
-        Object[] members = searchResultContentProvider.getChildren(container);
+        Object[] members = this.searchResultContentProvider.getChildren(container);
         for (int i = members.length - 1; i >= 0; i--) {
             Object element = members[i];
-            boolean elementGrayChecked = searchResultTableViewer.getGrayed(element) || searchResultTableViewer.getChecked(element);
+            boolean elementGrayChecked = this.searchResultTableViewer.getGrayed(element) || this.searchResultTableViewer.getChecked(element);
             if (state) {
-                searchResultTableViewer.setChecked(element, true);
-                searchResultTableViewer.setGrayed(element, false);
+                this.searchResultTableViewer.setChecked(element, true);
+                this.searchResultTableViewer.setGrayed(element, false);
             } else {
-                searchResultTableViewer.setGrayChecked(element, false);
+                this.searchResultTableViewer.setGrayChecked(element, false);
             } // unchecked state only
               // needs
-            if ((state || elementGrayChecked)) {
+            if (state || elementGrayChecked) {
                 setSubtreeChecked(element, state, true);
             }
         }
     }
 
     private void updateParentState(Object child) {
-        if (child == null || searchResultContentProvider.getParent(child) == null) {
+        if (child == null || this.searchResultContentProvider.getParent(child) == null) {
             return;
         }
-        Object parent = searchResultContentProvider.getParent(child);
+        Object parent = this.searchResultContentProvider.getParent(child);
         boolean childChecked = false;
-        Object[] members = searchResultContentProvider.getChildren(parent);
+        Object[] members = this.searchResultContentProvider.getChildren(parent);
         for (int i = members.length - 1; i >= 0; i--) {
-            if (searchResultTableViewer.getChecked(members[i]) || searchResultTableViewer.getGrayed(members[i])) {
+            if (this.searchResultTableViewer.getChecked(members[i]) || this.searchResultTableViewer.getGrayed(members[i])) {
                 childChecked = true;
                 break;
             }
         }
-        searchResultTableViewer.setGrayChecked(parent, childChecked);
+        this.searchResultTableViewer.setGrayChecked(parent, childChecked);
         updateParentState(parent);
     }
 
     protected void addListeners() {
-        propertyListener = new PropertyChangeListener() {
+        this.propertyListener = new PropertyChangeListener() {
 
             public void propertyChange(PropertyChangeEvent event) {
             }
         };
 
-        serverWC.addConfigurationChangeListener(propertyListener);
-        Job.getJobManager().addJobChangeListener(jobListener);
+        this.serverWC.addConfigurationChangeListener(this.propertyListener);
+        Job.getJobManager().addJobChangeListener(this.jobListener);
 
-        repositoryListener = new IBundleRepositoryChangeListener() {
+        this.repositoryListener = new IBundleRepositoryChangeListener() {
 
             public void bundleRepositoryChanged(IRuntime runtime) {
                 refreshViewers();
             }
         };
-        ServerCorePlugin.getArtefactRepositoryManager().addBundleRepositoryChangeListener(repositoryListener);
+        ServerCorePlugin.getArtefactRepositoryManager().addBundleRepositoryChangeListener(this.repositoryListener);
 
     }
 
     protected void handleSearch() {
-        String search = searchText.getText();
-        searchResultTableViewer.setInput(RepositoryUtils.searchForArtifacts(search));
-        searchResultTableViewer.expandToLevel(2);
+        String search = this.searchText.getText();
+        this.searchResultTableViewer.setInput(RepositoryUtils.searchForArtifacts(search));
+        this.searchResultTableViewer.expandToLevel(2);
     }
 
     protected void initialize() {
-        if (searchResultTable == null) {
+        if (this.searchResultTable == null) {
             return;
         }
-        searchResultTable.removeAll();
+        this.searchResultTable.removeAll();
         setErrorMessage(null);
         initializeViewers();
     }
 
     protected void initializeViewers() {
-        shell.getDisplay().asyncExec(new Runnable() {
+        this.shell.getDisplay().asyncExec(new Runnable() {
 
             public void run() {
-                if (repositoryTableViewer.getControl() != null && !repositoryTableViewer.getControl().isDisposed()) {
-                    repositoryTableViewer.setInput(getServer());
-                    repositoryTableViewer.expandToLevel(2);
+                if (RepositoryBrowserEditorPage.this.repositoryTableViewer.getControl() != null
+                    && !RepositoryBrowserEditorPage.this.repositoryTableViewer.getControl().isDisposed()) {
+                    RepositoryBrowserEditorPage.this.repositoryTableViewer.setInput(getServer());
+                    RepositoryBrowserEditorPage.this.repositoryTableViewer.expandToLevel(2);
                 }
-                if (searchResultTableViewer.getControl() != null && !searchResultTableViewer.getControl().isDisposed()) {
-                    searchResultTableViewer.refresh(true);
-                    searchResultTableViewer.expandToLevel(2);
+                if (RepositoryBrowserEditorPage.this.searchResultTableViewer.getControl() != null
+                    && !RepositoryBrowserEditorPage.this.searchResultTableViewer.getControl().isDisposed()) {
+                    RepositoryBrowserEditorPage.this.searchResultTableViewer.refresh(true);
+                    RepositoryBrowserEditorPage.this.searchResultTableViewer.expandToLevel(2);
                 }
             }
         });
     }
 
     protected void refreshViewers() {
-        shell.getDisplay().asyncExec(new Runnable() {
+        this.shell.getDisplay().asyncExec(new Runnable() {
 
             public void run() {
-                if (repositoryTableViewer.getControl() != null && !repositoryTableViewer.getControl().isDisposed()) {
-                    ISelection selection = repositoryTableViewer.getSelection();
-                    repositoryTableViewer.refresh();
-                    repositoryTableViewer.setSelection(selection);
-                    searchResultTableViewer.refresh(true);
+                if (RepositoryBrowserEditorPage.this.repositoryTableViewer.getControl() != null
+                    && !RepositoryBrowserEditorPage.this.repositoryTableViewer.getControl().isDisposed()) {
+                    ISelection selection = RepositoryBrowserEditorPage.this.repositoryTableViewer.getSelection();
+                    RepositoryBrowserEditorPage.this.repositoryTableViewer.refresh();
+                    RepositoryBrowserEditorPage.this.repositoryTableViewer.setSelection(selection);
+                    RepositoryBrowserEditorPage.this.searchResultTableViewer.refresh(true);
                 }
             }
         });
@@ -774,10 +780,10 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
                     refreshViewers();
                 }
             } else if (event.getJob() instanceof ArtefactRepositoryManager.ArtefactRepositoryUpdateJob) {
-                shell.getDisplay().asyncExec(new Runnable() {
+                RepositoryBrowserEditorPage.this.shell.getDisplay().asyncExec(new Runnable() {
 
                     public void run() {
-                        if (update != null && !update.isDisposed()) {
+                        if (RepositoryBrowserEditorPage.this.update != null && !RepositoryBrowserEditorPage.this.update.isDisposed()) {
                             setRepositoryDateString();
                         }
                     }
@@ -799,8 +805,8 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
      */
     public void selectionChanged(SelectionChangedEvent event) {
         IStructuredSelection sel = (IStructuredSelection) event.getSelection();
-        repositoryTableViewer.setSelection(sel, true);
-        repositoryTableViewer.expandToLevel(sel.getFirstElement(), AbstractTreeViewer.ALL_LEVELS);
+        this.repositoryTableViewer.setSelection(sel, true);
+        this.repositoryTableViewer.expandToLevel(sel.getFirstElement(), AbstractTreeViewer.ALL_LEVELS);
     }
 
     private class ColoredRespositoryLabelProvider extends RuntimeLabelProvider implements IColorProvider {
@@ -810,7 +816,7 @@ public class RepositoryBrowserEditorPage extends ServerEditorPart implements ISe
         }
 
         public Color getForeground(Object element) {
-            ArtefactRepository repository = RepositoryUtils.getRepositoryContents(server.getRuntime());
+            ArtefactRepository repository = RepositoryUtils.getRepositoryContents(RepositoryBrowserEditorPage.this.server.getRuntime());
             if (repository != null && element instanceof Artefact && repository.contains((IArtefact) element)) {
                 return Display.getCurrent().getSystemColor(SWT.COLOR_DARK_GRAY);
             }

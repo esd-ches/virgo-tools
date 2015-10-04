@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.jdt.internal.ui.actions;
 
 import java.util.ArrayList;
@@ -36,57 +37,56 @@ import org.eclipse.virgo.ide.manifest.internal.core.BundleManifestManager;
  */
 public class RefreshServerClasspathContainerActionDelegate implements IObjectActionDelegate {
 
-	private final List<IProject> selected = new ArrayList<IProject>();
+    private final List<IProject> selected = new ArrayList<IProject>();
 
-	public void run(IAction action) {
-		Set<IJavaProject> projects = new LinkedHashSet<IJavaProject>();
-		Iterator<IProject> iter = selected.iterator();
-		while (iter.hasNext()) {
-			IProject project = iter.next();
-			if (FacetUtils.isBundleProject(project)) {
-				projects.add(JavaCore.create(project));
-			} else if (FacetUtils.isParProject(project)) {
-				for (IProject bundle : FacetUtils.getBundleProjects(project)) {
-					projects.add(JavaCore.create(bundle));
-				}
-			}
-		}
+    public void run(IAction action) {
+        Set<IJavaProject> projects = new LinkedHashSet<IJavaProject>();
+        Iterator<IProject> iter = selected.iterator();
+        while (iter.hasNext()) {
+            IProject project = iter.next();
+            if (FacetUtils.isBundleProject(project)) {
+                projects.add(JavaCore.create(project));
+            } else if (FacetUtils.isParProject(project)) {
+                for (IProject bundle : FacetUtils.getBundleProjects(project)) {
+                    projects.add(JavaCore.create(bundle));
+                }
+            }
+        }
 
-		for (IJavaProject javaProject : projects) {
-			ServerClasspathContainerUpdateJob.scheduleClasspathContainerUpdateJob(javaProject,
-					BundleManifestManager.IMPORTS_CHANGED);
-		}
+        for (IJavaProject javaProject : projects) {
+            ServerClasspathContainerUpdateJob.scheduleClasspathContainerUpdateJob(javaProject, BundleManifestManager.IMPORTS_CHANGED);
+        }
 
-	}
+    }
 
-	public void selectionChanged(IAction action, ISelection selection) {
-		selected.clear();
-		if (selection instanceof IStructuredSelection) {
-			boolean enabled = true;
-			Iterator<?> iter = ((IStructuredSelection) selection).iterator();
-			while (iter.hasNext()) {
-				Object obj = iter.next();
-				if (obj instanceof IJavaProject) {
-					obj = ((IJavaProject) obj).getProject();
-				}
-				if (obj instanceof IProject) {
-					IProject project = (IProject) obj;
-					if (!project.isOpen()) {
-						enabled = false;
-						break;
-					} else {
-						selected.add(project);
-					}
-				} else {
-					enabled = false;
-					break;
-				}
-			}
-			action.setEnabled(enabled);
-		}
-	}
+    public void selectionChanged(IAction action, ISelection selection) {
+        selected.clear();
+        if (selection instanceof IStructuredSelection) {
+            boolean enabled = true;
+            Iterator<?> iter = ((IStructuredSelection) selection).iterator();
+            while (iter.hasNext()) {
+                Object obj = iter.next();
+                if (obj instanceof IJavaProject) {
+                    obj = ((IJavaProject) obj).getProject();
+                }
+                if (obj instanceof IProject) {
+                    IProject project = (IProject) obj;
+                    if (!project.isOpen()) {
+                        enabled = false;
+                        break;
+                    } else {
+                        selected.add(project);
+                    }
+                } else {
+                    enabled = false;
+                    break;
+                }
+            }
+            action.setEnabled(enabled);
+        }
+    }
 
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-	}
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+    }
 
 }

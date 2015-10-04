@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.wizards;
 
 import java.lang.reflect.InvocationTargetException;
@@ -69,258 +70,249 @@ import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
  */
 public class NewBundleProjectWizard extends NewElementWizard implements INewWizard {
 
-	private NewJavaProjectWizardPageOne projectPage;
+    private NewJavaProjectWizardPageOne projectPage;
 
-	private NewBundleInformationPage bundlePage;
+    private NewBundleInformationPage bundlePage;
 
-	private AbstractPropertiesPage propertiesPage;
+    private AbstractPropertiesPage propertiesPage;
 
-	private NewJavaProjectWizardPageTwo finalPage;
+    private NewJavaProjectWizardPageTwo finalPage;
 
-	private IProjectProvider projectProvider;
+    private IProjectProvider projectProvider;
 
-	private final AbstractFieldData bundleData;
+    private final AbstractFieldData bundleData;
 
-	private final IDataModel model;
+    private final IDataModel model;
 
-	private final String title = "New Bundle Project";
+    private final String title = "New Bundle Project";
 
-	private Map<String, String> properties;
+    private Map<String, String> properties;
 
-	private String platformModule;
+    private String platformModule;
 
-	public NewBundleProjectWizard() {
-		super();
-		setWindowTitle(title);
-		setDefaultPageImageDescriptor(ServerIdeUiPlugin.getImageDescriptor("full/wizban/wizban-bundle.png"));
-		setNeedsProgressMonitor(true);
-		bundleData = new PluginFieldData();
-		model = DataModelFactory.createDataModel(new BundleFacetInstallDataModelProvider());
-	}
+    public NewBundleProjectWizard() {
+        super();
+        setWindowTitle(this.title);
+        setDefaultPageImageDescriptor(ServerIdeUiPlugin.getImageDescriptor("full/wizban/wizban-bundle.png"));
+        setNeedsProgressMonitor(true);
+        this.bundleData = new PluginFieldData();
+        this.model = DataModelFactory.createDataModel(new BundleFacetInstallDataModelProvider());
+    }
 
-	private void addFacetsToProject(final IJavaProject project) {
-		WorkspaceModifyOperation oper = new WorkspaceModifyOperation() {
-			@Override
-			protected void execute(IProgressMonitor monitor) throws CoreException, InvocationTargetException,
-					InterruptedException {
+    private void addFacetsToProject(final IJavaProject project) {
+        WorkspaceModifyOperation oper = new WorkspaceModifyOperation() {
 
-				IFacetedProject fProject = ProjectFacetsManager.create(project.getProject(), true, monitor);
+            @Override
+            protected void execute(IProgressMonitor monitor) throws CoreException, InvocationTargetException, InterruptedException {
 
-				// WST 3.0 only
+                IFacetedProject fProject = ProjectFacetsManager.create(project.getProject(), true, monitor);
 
-				if (model.getBooleanProperty(BundleFacetInstallDataModelProvider.ENABLE_WEB_BUNDLE)) {
-					fProject.installProjectFacet(ProjectFacetsManager.getProjectFacet("jst.java").getDefaultVersion(),
-							null, monitor);
-					fProject.installProjectFacet(ProjectFacetsManager.getProjectFacet(FacetCorePlugin.WEB_FACET_ID)
-							.getVersion("2.5"), null, monitor);
+                // WST 3.0 only
 
-					// wanna uninstall JavaScript facet, but it doesn't seem to
-					// be there yet
-					// fProject.uninstallProjectFacet(ProjectFacetsManager
-					// .getProjectFacet(FacetCorePlugin.WEB_JS_FACET_ID).getDefaultVersion(),
-					// null, monitor);
+                if (NewBundleProjectWizard.this.model.getBooleanProperty(BundleFacetInstallDataModelProvider.ENABLE_WEB_BUNDLE)) {
+                    fProject.installProjectFacet(ProjectFacetsManager.getProjectFacet("jst.java").getDefaultVersion(), null, monitor);
+                    fProject.installProjectFacet(ProjectFacetsManager.getProjectFacet(FacetCorePlugin.WEB_FACET_ID).getVersion("2.5"), null, monitor);
 
-					removeFromClasspath(project, "org.eclipse.jst.j2ee.internal.web.container", monitor);
-					removeFromClasspath(project, "org.eclipse.jst.j2ee.internal.module.container", monitor);
-				}
+                    // wanna uninstall JavaScript facet, but it doesn't seem to
+                    // be there yet
+                    // fProject.uninstallProjectFacet(ProjectFacetsManager
+                    // .getProjectFacet(FacetCorePlugin.WEB_JS_FACET_ID).getDefaultVersion(),
+                    // null, monitor);
 
-				fProject.installProjectFacet(ProjectFacetsManager.getProjectFacet(FacetCorePlugin.BUNDLE_FACET_ID)
-						.getDefaultVersion(), null, monitor);
-				IRuntime runtime = (IRuntime) model.getProperty(IFacetProjectCreationDataModelProperties.FACET_RUNTIME);
-				if (runtime != null
-						&& runtime.supports(ProjectFacetsManager.getProjectFacet(FacetCorePlugin.BUNDLE_FACET_ID)
-								.getDefaultVersion())) {
-					fProject.setTargetedRuntimes(Collections.singleton(runtime), monitor);
-				}
-				if (model.getBooleanProperty(BundleFacetInstallDataModelProvider.ENABLE_SERVER_CLASSPATH_CONTAINER)) {
-					addToClasspath(project, JavaCore.newContainerEntry(FacetCorePlugin.CLASSPATH_CONTAINER_PATH),
-							monitor);
-				}
-			}
-		};
+                    removeFromClasspath(project, "org.eclipse.jst.j2ee.internal.web.container", monitor);
+                    removeFromClasspath(project, "org.eclipse.jst.j2ee.internal.module.container", monitor);
+                }
 
-		try {
-			getContainer().run(true, true, oper);
-		} catch (InvocationTargetException e) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Failure opening project facets.", e));
-		} catch (InterruptedException e) {
-			StatusManager.getManager().handle(
-					new Status(IStatus.WARNING, ServerIdeUiPlugin.PLUGIN_ID,
-							"Interruption while opening project facets.", e));
-		}
-	}
+                fProject.installProjectFacet(ProjectFacetsManager.getProjectFacet(FacetCorePlugin.BUNDLE_FACET_ID).getDefaultVersion(), null,
+                    monitor);
+                IRuntime runtime = (IRuntime) NewBundleProjectWizard.this.model.getProperty(IFacetProjectCreationDataModelProperties.FACET_RUNTIME);
+                if (runtime != null && runtime.supports(ProjectFacetsManager.getProjectFacet(FacetCorePlugin.BUNDLE_FACET_ID).getDefaultVersion())) {
+                    fProject.setTargetedRuntimes(Collections.singleton(runtime), monitor);
+                }
+                if (NewBundleProjectWizard.this.model.getBooleanProperty(BundleFacetInstallDataModelProvider.ENABLE_SERVER_CLASSPATH_CONTAINER)) {
+                    addToClasspath(project, JavaCore.newContainerEntry(FacetCorePlugin.CLASSPATH_CONTAINER_PATH), monitor);
+                }
+            }
+        };
 
-	protected void removeFromClasspath(IJavaProject javaProject, String entryPath, IProgressMonitor monitor)
-			throws CoreException {
-		List<IClasspathEntry> rawClasspath = new ArrayList<IClasspathEntry>();
-		rawClasspath.addAll(Arrays.asList(javaProject.getRawClasspath()));
+        try {
+            getContainer().run(true, true, oper);
+        } catch (InvocationTargetException e) {
+            StatusManager.getManager().handle(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Failure opening project facets.", e));
+        } catch (InterruptedException e) {
+            StatusManager.getManager().handle(
+                new Status(IStatus.WARNING, ServerIdeUiPlugin.PLUGIN_ID, "Interruption while opening project facets.", e));
+        }
+    }
 
-		Iterator<IClasspathEntry> iter = rawClasspath.iterator();
-		while (iter.hasNext()) {
-			IClasspathEntry entry = iter.next();
-			if (entry.getPath() != null && entry.getPath().toString() != null
-					&& entry.getPath().toString().equals(entryPath)) {
-				iter.remove();
-			}
-		}
+    protected void removeFromClasspath(IJavaProject javaProject, String entryPath, IProgressMonitor monitor) throws CoreException {
+        List<IClasspathEntry> rawClasspath = new ArrayList<IClasspathEntry>();
+        rawClasspath.addAll(Arrays.asList(javaProject.getRawClasspath()));
 
-		javaProject.setRawClasspath(rawClasspath.toArray(new IClasspathEntry[0]), monitor);
-	}
+        Iterator<IClasspathEntry> iter = rawClasspath.iterator();
+        while (iter.hasNext()) {
+            IClasspathEntry entry = iter.next();
+            if (entry.getPath() != null && entry.getPath().toString() != null && entry.getPath().toString().equals(entryPath)) {
+                iter.remove();
+            }
+        }
 
-	protected void addToClasspath(IJavaProject javaProject, IClasspathEntry entry, IProgressMonitor monitor)
-			throws CoreException {
-		IClasspathEntry[] current = javaProject.getRawClasspath();
-		IClasspathEntry[] updated = new IClasspathEntry[current.length + 1];
-		System.arraycopy(current, 0, updated, 0, current.length);
-		updated[current.length] = entry;
-		javaProject.setRawClasspath(updated, monitor);
-	}
+        javaProject.setRawClasspath(rawClasspath.toArray(new IClasspathEntry[0]), monitor);
+    }
 
-	@Override
-	public void addPages() {
-		projectPage = new NewBundleProjectSettingsPage();
-		addPage(projectPage);
+    protected void addToClasspath(IJavaProject javaProject, IClasspathEntry entry, IProgressMonitor monitor) throws CoreException {
+        IClasspathEntry[] current = javaProject.getRawClasspath();
+        IClasspathEntry[] updated = new IClasspathEntry[current.length + 1];
+        System.arraycopy(current, 0, updated, 0, current.length);
+        updated[current.length] = entry;
+        javaProject.setRawClasspath(updated, monitor);
+    }
 
-		projectProvider = new IProjectProvider() {
+    @Override
+    public void addPages() {
+        this.projectPage = new NewBundleProjectSettingsPage();
+        addPage(this.projectPage);
 
-			public IPath getLocationPath() {
-				return getProject().getLocation();
-			}
+        this.projectProvider = new IProjectProvider() {
 
-			public IProject getProject() {
-				return ResourcesPlugin.getWorkspace().getRoot().getProject(getProjectName());
-			}
+            public IPath getLocationPath() {
+                return getProject().getLocation();
+            }
 
-			public String getProjectName() {
-				return projectPage.getProjectName();
-			}
+            public IProject getProject() {
+                return ResourcesPlugin.getWorkspace().getRoot().getProject(getProjectName());
+            }
 
-		};
+            public String getProjectName() {
+                return NewBundleProjectWizard.this.projectPage.getProjectName();
+            }
 
-		bundlePage = new NewBundleInformationPage(title, projectProvider, bundleData, model);
-		addPage(bundlePage);
+        };
 
-		setPropertiesPage(new NullPropertiesPage());
+        this.bundlePage = new NewBundleInformationPage(this.title, this.projectProvider, this.bundleData, this.model);
+        addPage(this.bundlePage);
 
-		finalPage = new NewBundleProjectCreationPage(projectPage);
-		addPage(finalPage);
-	}
+        setPropertiesPage(new NullPropertiesPage());
 
-	@Override
-	public boolean canFinish() {
-		IWizardPage page = getContainer().getCurrentPage();
-		return super.canFinish() && page != projectPage;
-	}
+        this.finalPage = new NewBundleProjectCreationPage(this.projectPage);
+        addPage(this.finalPage);
+    }
 
-	@Override
-	protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
-		finalPage.performFinish(monitor);
-	}
+    @Override
+    public boolean canFinish() {
+        IWizardPage page = getContainer().getCurrentPage();
+        return super.canFinish() && page != this.projectPage;
+    }
 
-	private IWorkbenchPart getActivePart() {
-		IWorkbenchWindow activeWindow = getWorkbench().getActiveWorkbenchWindow();
-		if (activeWindow != null) {
-			IWorkbenchPage activePage = activeWindow.getActivePage();
-			if (activePage != null) {
-				return activePage.getActivePart();
-			}
-		}
-		return null;
-	}
+    @Override
+    protected void finishPage(IProgressMonitor monitor) throws InterruptedException, CoreException {
+        this.finalPage.performFinish(monitor);
+    }
 
-	@Override
-	public IJavaElement getCreatedElement() {
-		return finalPage.getJavaProject();
-	}
+    private IWorkbenchPart getActivePart() {
+        IWorkbenchWindow activeWindow = getWorkbench().getActiveWorkbenchWindow();
+        if (activeWindow != null) {
+            IWorkbenchPage activePage = activeWindow.getActivePage();
+            if (activePage != null) {
+                return activePage.getActivePart();
+            }
+        }
+        return null;
+    }
 
-	@Override
-	public boolean performCancel() {
-		finalPage.performCancel();
-		return super.performCancel();
-	}
+    @Override
+    public IJavaElement getCreatedElement() {
+        return this.finalPage.getJavaProject();
+    }
 
-	@Override
-	public boolean performFinish() {
-		boolean res = super.performFinish();
-		if (res) {
-			bundlePage.performPageFinish();
-			properties = propertiesPage.getProperties();
-			platformModule = propertiesPage.getModuleType();
+    @Override
+    public boolean performCancel() {
+        this.finalPage.performCancel();
+        return super.performCancel();
+    }
 
-			final IJavaElement element = getCreatedElement();
-			IJavaProject project = element.getJavaProject();
-			addFacetsToProject(project);
-			writeBundleData(project, platformModule, properties);
+    @Override
+    public boolean performFinish() {
+        boolean res = super.performFinish();
+        if (res) {
+            this.bundlePage.performPageFinish();
+            this.properties = this.propertiesPage.getProperties();
+            this.platformModule = this.propertiesPage.getModuleType();
 
-			IWorkingSet[] workingSets = projectPage.getWorkingSets();
-			if (workingSets.length > 0) {
-				getWorkbench().getWorkingSetManager().addToWorkingSets(element, workingSets);
-			}
-			selectAndReveal(project.getProject());
+            final IJavaElement element = getCreatedElement();
+            IJavaProject project = element.getJavaProject();
+            addFacetsToProject(project);
+            writeBundleData(project, this.platformModule, this.properties);
 
-			Display.getDefault().asyncExec(new Runnable() {
-				public void run() {
-					IWorkbenchPart activePart = getActivePart();
-					if (activePart instanceof PackageExplorerPart) {
-						((PackageExplorerPart) activePart).tryToReveal(element);
-					}
-				}
-			});
+            IWorkingSet[] workingSets = this.projectPage.getWorkingSets();
+            if (workingSets.length > 0) {
+                getWorkbench().getWorkingSetManager().addToWorkingSets(element, workingSets);
+            }
+            selectAndReveal(project.getProject());
 
-			IFile manifestFile = (IFile) project.getProject().findMember("src/META-INF/MANIFEST.MF");
-			if (manifestFile != null) {
-				IWorkbenchWindow workbenchWindow = getWorkbench().getActiveWorkbenchWindow();
-				IWorkbenchPage page = workbenchWindow.getActivePage();
-				try {
-					page.openEditor(new FileEditorInput(manifestFile), BundleManifestEditor.ID_EDITOR);
-				} catch (PartInitException e) {
-					MessageDialog.openError(workbenchWindow.getShell(), "Error opening editor", e.getMessage());
-				}
-			}
-		}
+            Display.getDefault().asyncExec(new Runnable() {
 
-		return res;
-	}
+                public void run() {
+                    IWorkbenchPart activePart = getActivePart();
+                    if (activePart instanceof PackageExplorerPart) {
+                        ((PackageExplorerPart) activePart).tryToReveal(element);
+                    }
+                }
+            });
 
-	private void writeBundleData(final IJavaProject project, final String platformModule,
-			final Map<String, String> properties) {
-		WorkspaceModifyOperation oper = new WorkspaceModifyOperation() {
-			@Override
-			protected void execute(IProgressMonitor monitor) throws CoreException, InvocationTargetException,
-					InterruptedException {
-				BundleManifestUtils.createNewBundleManifest(project, bundleData.getId(), bundleData.getVersion(),
-						bundleData.getProvider(), bundleData.getName(), platformModule, properties);
-				project.getProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
-			}
-		};
+            IFile manifestFile = (IFile) project.getProject().findMember("src/META-INF/MANIFEST.MF");
+            if (manifestFile != null) {
+                IWorkbenchWindow workbenchWindow = getWorkbench().getActiveWorkbenchWindow();
+                IWorkbenchPage page = workbenchWindow.getActivePage();
+                try {
+                    page.openEditor(new FileEditorInput(manifestFile), BundleManifestEditor.ID_EDITOR);
+                } catch (PartInitException e) {
+                    MessageDialog.openError(workbenchWindow.getShell(), "Error opening editor", e.getMessage());
+                }
+            }
+        }
 
-		try {
-			getContainer().run(true, true, oper);
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
+        return res;
+    }
 
-	protected void setPropertiesPage(AbstractPropertiesPage page) {
-		propertiesPage = page;
-		if (getPage(page.getName()) == null) {
-			addPage(page);
-		}
-	}
+    private void writeBundleData(final IJavaProject project, final String platformModule, final Map<String, String> properties) {
+        WorkspaceModifyOperation oper = new WorkspaceModifyOperation() {
 
-	protected AbstractPropertiesPage getPropertiesPage() {
-		return propertiesPage;
-	}
+            @Override
+            protected void execute(IProgressMonitor monitor) throws CoreException, InvocationTargetException, InterruptedException {
+                BundleManifestUtils.createNewBundleManifest(project, NewBundleProjectWizard.this.bundleData.getId(),
+                    NewBundleProjectWizard.this.bundleData.getVersion(), NewBundleProjectWizard.this.bundleData.getProvider(),
+                    NewBundleProjectWizard.this.bundleData.getName(), platformModule, properties);
+                project.getProject().refreshLocal(IResource.DEPTH_INFINITE, monitor);
+            }
+        };
 
-	protected NewBundleInformationPage getInformationPage() {
-		return bundlePage;
-	}
+        try {
+            getContainer().run(true, true, oper);
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
-	protected NewJavaProjectWizardPageTwo getFinalPage() {
-		return finalPage;
-	}
+    protected void setPropertiesPage(AbstractPropertiesPage page) {
+        this.propertiesPage = page;
+        if (getPage(page.getName()) == null) {
+            addPage(page);
+        }
+    }
+
+    protected AbstractPropertiesPage getPropertiesPage() {
+        return this.propertiesPage;
+    }
+
+    protected NewBundleInformationPage getInformationPage() {
+        return this.bundlePage;
+    }
+
+    protected NewJavaProjectWizardPageTwo getFinalPage() {
+        return this.finalPage;
+    }
 
 }

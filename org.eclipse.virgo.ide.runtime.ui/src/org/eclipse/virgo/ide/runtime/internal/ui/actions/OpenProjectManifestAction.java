@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.ui.actions;
 
 import org.eclipse.core.resources.IFile;
@@ -37,62 +38,60 @@ import org.eclipse.wst.server.ui.internal.view.servers.ModuleServer;
 
 /**
  * Action implementation that opens a MANIFEST.MF or par.xml file of the selected module.
- * 
+ *
  * @author Christian Dupuis
  * @since 1.0.0
  */
 @SuppressWarnings("restriction")
 public class OpenProjectManifestAction implements IObjectActionDelegate {
 
-	private IModule selectedModule;
+    private IModule selectedModule;
 
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		// nothing to do here
-	}
+    public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+        // nothing to do here
+    }
 
-	public void run(IAction action) {
-		IProject project = selectedModule.getProject();
-		if (FacetUtils.isBundleProject(project)) {
-			openResource(BundleManifestUtils.locateManifest(JavaCore.create(project), false));
-		} else if (FacetUtils.isParProject(project)) {
-			openResource(project.findMember(BundleManifestCorePlugin.MANIFEST_FILE_LOCATION));
-		} else {
-			try {
-				if (FacetUtils.hasNature(project, JavaCore.NATURE_ID)
-						&& FacetedProjectFramework.hasProjectFacet(project, FacetCorePlugin.WEB_FACET_ID)) {
-					openResource(BundleManifestUtils.locateManifest(JavaCore.create(project), false));
-				}
-			} catch (CoreException e) {
-				StatusManager.getManager().handle(
-						new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID,
-								"Problem occurred while openeing project manifest.", e));
-			}
-		}
-	}
+    public void run(IAction action) {
+        IProject project = this.selectedModule.getProject();
+        if (FacetUtils.isBundleProject(project)) {
+            openResource(BundleManifestUtils.locateManifest(JavaCore.create(project), false));
+        } else if (FacetUtils.isParProject(project)) {
+            openResource(project.findMember(BundleManifestCorePlugin.MANIFEST_FILE_LOCATION));
+        } else {
+            try {
+                if (FacetUtils.hasNature(project, JavaCore.NATURE_ID)
+                    && FacetedProjectFramework.hasProjectFacet(project, FacetCorePlugin.WEB_FACET_ID)) {
+                    openResource(BundleManifestUtils.locateManifest(JavaCore.create(project), false));
+                }
+            } catch (CoreException e) {
+                StatusManager.getManager().handle(
+                    new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, "Problem occurred while openeing project manifest.", e));
+            }
+        }
+    }
 
-	private void openResource(IResource resource) {
-		if (resource instanceof IFile) {
-			try {
-				IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), (IFile) resource);
-			} catch (PartInitException e) {
-				StatusManager.getManager().handle(
-						new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID,
-								"Problem occurred while opening project manifest.", e));
-			}
-		}
-	}
+    private void openResource(IResource resource) {
+        if (resource instanceof IFile) {
+            try {
+                IDE.openEditor(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage(), (IFile) resource);
+            } catch (PartInitException e) {
+                StatusManager.getManager().handle(
+                    new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, "Problem occurred while opening project manifest.", e));
+            }
+        }
+    }
 
-	public void selectionChanged(IAction action, ISelection selection) {
-		selectedModule = null;
-		if (!selection.isEmpty()) {
-			if (selection instanceof IStructuredSelection) {
-				Object obj = ((IStructuredSelection) selection).getFirstElement();
-				if (obj instanceof ModuleServer) {
-					ModuleServer ms = (ModuleServer) obj;
-					selectedModule = ms.module[ms.module.length - 1];
-				}
-			}
-		}
-	}
+    public void selectionChanged(IAction action, ISelection selection) {
+        this.selectedModule = null;
+        if (!selection.isEmpty()) {
+            if (selection instanceof IStructuredSelection) {
+                Object obj = ((IStructuredSelection) selection).getFirstElement();
+                if (obj instanceof ModuleServer) {
+                    ModuleServer ms = (ModuleServer) obj;
+                    this.selectedModule = ms.module[ms.module.length - 1];
+                }
+            }
+        }
+    }
 
 }

@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.editors;
 
 /**
@@ -15,7 +16,7 @@ package org.eclipse.virgo.ide.ui.editors;
  */
 public interface IBundleManifestSaveListener {
 
-	/** Called to indicate that the manifest editor has been saved */
-	void manifestSaved();
+    /** Called to indicate that the manifest editor has been saved */
+    void manifestSaved();
 
 }

@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.eclipse.editors;
 
 import org.eclipse.pde.internal.ui.editor.PDEDetails;
@@ -30,108 +31,108 @@ import org.eclipse.ui.forms.editor.FormPage;
 @SuppressWarnings("restriction")
 public abstract class AbstractPdeFormPage extends FormPage {
 
-	public AbstractPdeFormPage(FormEditor editor, String id, String title) {
-		super(editor, id, title);
-	}
+    public AbstractPdeFormPage(FormEditor editor, String id, String title) {
+        super(editor, id, title);
+    }
 
-	protected boolean canPerformDirectly(String id, Control control) {
-		if (control instanceof Text) {
-			Text text = (Text) control;
-			if (id.equals(ActionFactory.CUT.getId())) {
-				text.cut();
-				return true;
-			}
-			if (id.equals(ActionFactory.COPY.getId())) {
-				text.copy();
-				return true;
-			}
-			if (id.equals(ActionFactory.PASTE.getId())) {
-				text.paste();
-				return true;
-			}
-			if (id.equals(ActionFactory.SELECT_ALL.getId())) {
-				text.selectAll();
-				return true;
-			}
-			if (id.equals(ActionFactory.DELETE.getId())) {
-				int count = text.getSelectionCount();
-				if (count == 0) {
-					int caretPos = text.getCaretPosition();
-					text.setSelection(caretPos, caretPos + 1);
-				}
-				text.insert(""); //$NON-NLS-1$
-				return true;
-			}
-		} else if (control instanceof Table) {
-			Table table = (Table) control;
-			if (id.equals(ActionFactory.SELECT_ALL.getId())) {
-				table.selectAll();
-				return true;
-			}
-		} else if (control instanceof Tree) {
-			Tree tree = (Tree) control;
-			if (id.equals(ActionFactory.SELECT_ALL.getId())) {
-				tree.selectAll();
-				return true;
-			}
-		}
-		return false;
-	}
+    protected boolean canPerformDirectly(String id, Control control) {
+        if (control instanceof Text) {
+            Text text = (Text) control;
+            if (id.equals(ActionFactory.CUT.getId())) {
+                text.cut();
+                return true;
+            }
+            if (id.equals(ActionFactory.COPY.getId())) {
+                text.copy();
+                return true;
+            }
+            if (id.equals(ActionFactory.PASTE.getId())) {
+                text.paste();
+                return true;
+            }
+            if (id.equals(ActionFactory.SELECT_ALL.getId())) {
+                text.selectAll();
+                return true;
+            }
+            if (id.equals(ActionFactory.DELETE.getId())) {
+                int count = text.getSelectionCount();
+                if (count == 0) {
+                    int caretPos = text.getCaretPosition();
+                    text.setSelection(caretPos, caretPos + 1);
+                }
+                text.insert(""); //$NON-NLS-1$
+                return true;
+            }
+        } else if (control instanceof Table) {
+            Table table = (Table) control;
+            if (id.equals(ActionFactory.SELECT_ALL.getId())) {
+                table.selectAll();
+                return true;
+            }
+        } else if (control instanceof Tree) {
+            Tree tree = (Tree) control;
+            if (id.equals(ActionFactory.SELECT_ALL.getId())) {
+                tree.selectAll();
+                return true;
+            }
+        }
+        return false;
+    }
 
-	protected Control getFocusControl() {
-		IManagedForm form = getManagedForm();
-		if (form == null) {
-			return null;
-		}
-		Control control = form.getForm();
-		if (control == null || control.isDisposed()) {
-			return null;
-		}
-		Display display = control.getDisplay();
-		Control focusControl = display.getFocusControl();
-		if (focusControl == null || focusControl.isDisposed()) {
-			return null;
-		}
-		return focusControl;
-	}
+    protected Control getFocusControl() {
+        IManagedForm form = getManagedForm();
+        if (form == null) {
+            return null;
+        }
+        Control control = form.getForm();
+        if (control == null || control.isDisposed()) {
+            return null;
+        }
+        Display display = control.getDisplay();
+        Control focusControl = display.getFocusControl();
+        if (focusControl == null || focusControl.isDisposed()) {
+            return null;
+        }
+        return focusControl;
+    }
 
-	private AbstractFormPart getFocusSection() {
-		Control focusControl = getFocusControl();
-		if (focusControl == null) {
-			return null;
-		}
-		Composite parent = focusControl.getParent();
-		AbstractFormPart targetPart = null;
-		while (parent != null) {
-			Object data = parent.getData("part"); //$NON-NLS-1$
-			if (data != null && data instanceof AbstractFormPart) {
-				targetPart = (AbstractFormPart) data;
-				break;
-			}
-			parent = parent.getParent();
-		}
-		return targetPart;
-	}
+    private AbstractFormPart getFocusSection() {
+        Control focusControl = getFocusControl();
+        if (focusControl == null) {
+            return null;
+        }
+        Composite parent = focusControl.getParent();
+        AbstractFormPart targetPart = null;
+        while (parent != null) {
+            Object data = parent.getData("part"); //$NON-NLS-1$
+            if (data != null && data instanceof AbstractFormPart) {
+                targetPart = (AbstractFormPart) data;
+                break;
+            }
+            parent = parent.getParent();
+        }
+        return targetPart;
+    }
 
-	public boolean performGlobalAction(String actionId) {
-		Control focusControl = getFocusControl();
-		if (focusControl == null) {
-			return false;
-		}
+    public boolean performGlobalAction(String actionId) {
+        Control focusControl = getFocusControl();
+        if (focusControl == null) {
+            return false;
+        }
 
-		if (canPerformDirectly(actionId, focusControl)) {
-			return true;
-		}
-		AbstractFormPart focusPart = getFocusSection();
-		if (focusPart != null) {
-			if (focusPart instanceof PDESection) {
-				return ((PDESection) focusPart).doGlobalAction(actionId);
-			}
-			if (focusPart instanceof PDEDetails) {
-				return ((PDEDetails) focusPart).doGlobalAction(actionId);
-			}
-		}
-		return false;
-	}
+        if (canPerformDirectly(actionId, focusControl)) {
+            return true;
+        }
+        AbstractFormPart focusPart = getFocusSection();
+        if (focusPart != null) {
+            if (focusPart instanceof PDESection) {
+                return ((PDESection) focusPart).doGlobalAction(actionId);
+            }
+            if (focusPart instanceof PDEDetails) {
+                return ((PDEDetails) focusPart).doGlobalAction(actionId);
+            }
+        }
+        return false;
+    }
 
 }

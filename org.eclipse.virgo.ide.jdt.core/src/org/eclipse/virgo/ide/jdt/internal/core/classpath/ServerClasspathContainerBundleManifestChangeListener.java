@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.jdt.internal.core.classpath;
 
 import java.util.Arrays;
@@ -22,43 +23,41 @@ import org.eclipse.virgo.ide.manifest.core.IBundleManifestChangeListener;
 import org.eclipse.virgo.ide.manifest.internal.core.BundleManifestManager;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.virgo.ide.runtime.core.provisioning.IBundleRepositoryChangeListener;
+import org.eclipse.virgo.kernel.repository.BundleRepository;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.wst.server.core.IRuntime;
 
 /**
  * {@link IBundleManifestChangeListener} that triggers refreshing of the bundle class path container through scheduling
  * a new workspace job.
- * 
+ *
  * @author Christian Dupuis
  * @since 1.0.0
  */
-public class ServerClasspathContainerBundleManifestChangeListener implements IBundleManifestChangeListener,
-		IBundleRepositoryChangeListener {
+public class ServerClasspathContainerBundleManifestChangeListener implements IBundleManifestChangeListener, IBundleRepositoryChangeListener {
 
-	/**
-	 * Gets notified for every change to a given <code>bundleManifest</code> and delegates the refreshment of the class
-	 * path container to the {@link ServerClasspathContainerUpdateJob}.
-	 */
-	public void bundleManifestChanged(BundleManifest newBundleManifest, BundleManifest oldBundleManifest,
-			BundleManifest newTestBundleManifest, BundleManifest oldTestBundleManifest, Set<Type> types,
-			IJavaProject javaProject) {
-		if (newBundleManifest != null || newTestBundleManifest != null) {
-			ServerClasspathContainerUpdateJob.scheduleClasspathContainerUpdateJob(javaProject, types);
-		}
-	}
+    /**
+     * Gets notified for every change to a given <code>bundleManifest</code> and delegates the refreshment of the class
+     * path container to the {@link ServerClasspathContainerUpdateJob}.
+     */
+    public void bundleManifestChanged(BundleManifest newBundleManifest, BundleManifest oldBundleManifest, BundleManifest newTestBundleManifest,
+        BundleManifest oldTestBundleManifest, Set<Type> types, IJavaProject javaProject) {
+        if (newBundleManifest != null || newTestBundleManifest != null) {
+            ServerClasspathContainerUpdateJob.scheduleClasspathContainerUpdateJob(javaProject, types);
+        }
+    }
 
-	/**
-	 * Gets notified for every change of the given <code>runtime</code>'s {@link BundleRepository}. On every
-	 * notification it will update <i>all</i> bundle project's {@link BundleManifest}.
-	 */
-	public void bundleRepositoryChanged(IRuntime runtime) {
-		for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
-			if (FacetUtils.isBundleProject(project)
-					&& Arrays.asList(ServerUtils.getTargettedRuntimes(project)).contains(runtime)) {
-				ServerClasspathContainerUpdateJob.scheduleClasspathContainerUpdateJob(JavaCore.create(project),
-						BundleManifestManager.IMPORTS_CHANGED);
-			}
-		}
-	}
+    /**
+     * Gets notified for every change of the given <code>runtime</code>'s {@link BundleRepository}. On every
+     * notification it will update <i>all</i> bundle project's {@link BundleManifest}.
+     */
+    public void bundleRepositoryChanged(IRuntime runtime) {
+        for (IProject project : ResourcesPlugin.getWorkspace().getRoot().getProjects()) {
+            if (FacetUtils.isBundleProject(project) && Arrays.asList(ServerUtils.getTargettedRuntimes(project)).contains(runtime)) {
+                ServerClasspathContainerUpdateJob.scheduleClasspathContainerUpdateJob(JavaCore.create(project),
+                    BundleManifestManager.IMPORTS_CHANGED);
+            }
+        }
+    }
 
 }

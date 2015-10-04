@@ -8,22 +8,23 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.core;
 
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 
 /**
  * Default Virgo server behavior.
- * 
+ *
  * @author Terry Hon
  * @author Christian Dupuis
  * @since 1.0.0
  */
 public class VirgoServerBehaviour extends ServerBehaviour implements IServerBehaviour {
 
-	@Override
-	public String toString() {
-		return "Virgo Server";
-	}
+    @Override
+    public String toString() {
+        return "Virgo Server";
+    }
 
 }

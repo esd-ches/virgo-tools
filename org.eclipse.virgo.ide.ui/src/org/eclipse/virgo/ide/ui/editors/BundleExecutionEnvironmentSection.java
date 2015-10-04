@@ -8,20 +8,12 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.editors;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IncrementalProjectBuilder;
-import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
-import org.eclipse.core.runtime.jobs.Job;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jdt.launching.environments.IExecutionEnvironment;
 import org.eclipse.jface.action.Action;
@@ -71,430 +63,409 @@ import org.osgi.framework.Constants;
 
 /**
  * Adapted from PDE's <code>ExcecutionEnvironmentSection</code>. *
- * 
+ *
  * @author Christian Dupuis
  * @author Steffen Pingel
  */
 public class BundleExecutionEnvironmentSection extends TableSection {
 
-	private TableViewer fEETable;
+    private TableViewer fEETable;
 
-	private Action fRemoveAction;
+    private Action fRemoveAction;
 
-	private Action fAddAction;
+    private Action fAddAction;
 
-	class EELabelProvider extends LabelProvider {
+    class EELabelProvider extends LabelProvider {
 
-		private final Image fImage;
+        private final Image fImage;
 
-		public EELabelProvider() {
-			fImage = PDEPluginImages.DESC_JAVA_LIB_OBJ.createImage();
-		}
+        public EELabelProvider() {
+            this.fImage = PDEPluginImages.DESC_JAVA_LIB_OBJ.createImage();
+        }
 
-		@Override
-		public Image getImage(Object element) {
-			return fImage;
-		}
+        @Override
+        public Image getImage(Object element) {
+            return this.fImage;
+        }
 
-		@Override
-		public String getText(Object element) {
-			if (element instanceof IExecutionEnvironment) {
-				return ((IExecutionEnvironment) element).getId();
-			}
-			return super.getText(element);
-		}
+        @Override
+        public String getText(Object element) {
+            if (element instanceof IExecutionEnvironment) {
+                return ((IExecutionEnvironment) element).getId();
+            }
+            return super.getText(element);
+        }
 
-		@Override
-		public void dispose() {
-			if (fImage != null) {
-				fImage.dispose();
-			}
-			super.dispose();
-		}
-	}
+        @Override
+        public void dispose() {
+            if (this.fImage != null) {
+                this.fImage.dispose();
+            }
+            super.dispose();
+        }
+    }
 
-	class ContentProvider extends DefaultTableProvider {
-		public Object[] getElements(Object inputElement) {
-			if (inputElement instanceof IBundleModel) {
-				IBundleModel model = (IBundleModel) inputElement;
-				IBundle bundle = model.getBundle();
-				IManifestHeader header = bundle.getManifestHeader(Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT);
-				if (header instanceof RequiredExecutionEnvironmentHeader) {
-					return ((RequiredExecutionEnvironmentHeader) header).getEnvironments();
-				}
-			}
-			return new Object[0];
-		}
-	}
+    class ContentProvider extends DefaultTableProvider {
 
-	public BundleExecutionEnvironmentSection(PDEFormPage page, Composite parent) {
-		super(page, parent, Section.DESCRIPTION, new String[] { PDEUIMessages.RequiredExecutionEnvironmentSection_add,
-				PDEUIMessages.RequiredExecutionEnvironmentSection_remove,
-				PDEUIMessages.RequiredExecutionEnvironmentSection_up,
-				PDEUIMessages.RequiredExecutionEnvironmentSection_down });
-		createClient(getSection(), page.getEditor().getToolkit());
-	}
+        public Object[] getElements(Object inputElement) {
+            if (inputElement instanceof IBundleModel) {
+                IBundleModel model = (IBundleModel) inputElement;
+                IBundle bundle = model.getBundle();
+                IManifestHeader header = bundle.getManifestHeader(Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT);
+                if (header instanceof RequiredExecutionEnvironmentHeader) {
+                    return ((RequiredExecutionEnvironmentHeader) header).getEnvironments();
+                }
+            }
+            return new Object[0];
+        }
+    }
 
-	@Override
-	protected void createClient(Section section, FormToolkit toolkit) {
-		section.setText(PDEUIMessages.RequiredExecutionEnvironmentSection_title);
-		if (isFragment()) {
-			section.setDescription(PDEUIMessages.RequiredExecutionEnvironmentSection_fragmentDesc);
-		} else {
-			section.setDescription(PDEUIMessages.RequiredExecutionEnvironmentSection_pluginDesc);
-		}
+    public BundleExecutionEnvironmentSection(PDEFormPage page, Composite parent) {
+        super(page, parent, Section.DESCRIPTION,
+            new String[] { PDEUIMessages.RequiredExecutionEnvironmentSection_add, PDEUIMessages.RequiredExecutionEnvironmentSection_remove,
+                PDEUIMessages.RequiredExecutionEnvironmentSection_up, PDEUIMessages.RequiredExecutionEnvironmentSection_down });
+        createClient(getSection(), page.getEditor().getToolkit());
+    }
 
-		section.setLayout(FormLayoutFactory.createClearTableWrapLayout(false, 1));
+    @Override
+    protected void createClient(Section section, FormToolkit toolkit) {
+        section.setText(PDEUIMessages.RequiredExecutionEnvironmentSection_title);
+        if (isFragment()) {
+            section.setDescription(PDEUIMessages.RequiredExecutionEnvironmentSection_fragmentDesc);
+        } else {
+            section.setDescription(PDEUIMessages.RequiredExecutionEnvironmentSection_pluginDesc);
+        }
 
-		TableWrapData data = new TableWrapData(TableWrapData.FILL_GRAB);
-		section.setLayoutData(data);
+        section.setLayout(FormLayoutFactory.createClearTableWrapLayout(false, 1));
 
-		Composite container = createClientContainer(section, 2, toolkit);
-		EditableTablePart tablePart = getTablePart();
-		tablePart.setEditable(isEditable());
+        TableWrapData data = new TableWrapData(TableWrapData.FILL_GRAB);
+        section.setLayoutData(data);
 
-		createViewerPartControl(container, SWT.FULL_SELECTION | SWT.MULTI, 2, toolkit);
-		fEETable = tablePart.getTableViewer();
-		fEETable.setContentProvider(new ContentProvider());
-		fEETable.setLabelProvider(PDEPlugin.getDefault().getLabelProvider());
+        Composite container = createClientContainer(section, 2, toolkit);
+        EditableTablePart tablePart = getTablePart();
+        tablePart.setEditable(isEditable());
 
-		Hyperlink link = toolkit.createHyperlink(container, PDEUIMessages.BuildExecutionEnvironmentSection_configure,
-				SWT.NONE);
-		link.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-		link.addHyperlinkListener(new IHyperlinkListener() {
-			public void linkEntered(HyperlinkEvent e) {
-			}
+        createViewerPartControl(container, SWT.FULL_SELECTION | SWT.MULTI, 2, toolkit);
+        this.fEETable = tablePart.getTableViewer();
+        this.fEETable.setContentProvider(new ContentProvider());
+        this.fEETable.setLabelProvider(PDEPlugin.getDefault().getLabelProvider());
 
-			public void linkExited(HyperlinkEvent e) {
-			}
+        Hyperlink link = toolkit.createHyperlink(container, PDEUIMessages.BuildExecutionEnvironmentSection_configure, SWT.NONE);
+        link.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
+        link.addHyperlinkListener(new IHyperlinkListener() {
 
-			public void linkActivated(HyperlinkEvent e) {
-				showPreferencePage(
-						new String[] { "org.eclipse.jdt.debug.ui.jreProfiles" }, PDEPlugin.getActiveWorkbenchShell()); //$NON-NLS-1$
-			}
-		});
-		GridData gd = new GridData();
-		gd.horizontalSpan = 2;
-		link.setLayoutData(gd);
+            public void linkEntered(HyperlinkEvent e) {
+            }
 
-		makeActions();
+            public void linkExited(HyperlinkEvent e) {
+            }
 
-		IBundleModel model = getBundleModel();
-		if (model != null) {
-			fEETable.setInput(model);
-			model.addModelChangedListener(this);
-		}
-		toolkit.paintBordersFor(container);
-		section.setClient(container);
-	}
+            public void linkActivated(HyperlinkEvent e) {
+                showPreferencePage(new String[] { "org.eclipse.jdt.debug.ui.jreProfiles" }, PDEPlugin.getActiveWorkbenchShell()); //$NON-NLS-1$
+            }
+        });
+        GridData gd = new GridData();
+        gd.horizontalSpan = 2;
+        link.setLayoutData(gd);
 
-	public static boolean showPreferencePage(String[] pageIds, final Shell shell) {
-		final PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(shell, pageIds[0], pageIds, null);
-		return dialog.open() == Window.OK;
-	}
+        makeActions();
 
-	@Override
-	public void dispose() {
-		IBundleModel model = getBundleModel();
-		if (model != null) {
-			model.removeModelChangedListener(this);
-		}
-	}
+        IBundleModel model = getBundleModel();
+        if (model != null) {
+            this.fEETable.setInput(model);
+            model.addModelChangedListener(this);
+        }
+        toolkit.paintBordersFor(container);
+        section.setClient(container);
+    }
 
-	@Override
-	public void refresh() {
-		fEETable.refresh();
-		updateButtons();
-	}
+    public static boolean showPreferencePage(String[] pageIds, final Shell shell) {
+        final PreferenceDialog dialog = PreferencesUtil.createPreferenceDialogOn(shell, pageIds[0], pageIds, null);
+        return dialog.open() == Window.OK;
+    }
 
-	@Override
-	protected void buttonSelected(int index) {
-		switch (index) {
-		case 0:
-			handleAdd();
-			break;
-		case 1:
-			handleRemove();
-			break;
-		case 2:
-			handleUp();
-			break;
-		case 3:
-			handleDown();
-			break;
-		}
-	}
+    @Override
+    public void dispose() {
+        IBundleModel model = getBundleModel();
+        if (model != null) {
+            model.removeModelChangedListener(this);
+        }
+    }
 
-	@Override
-	protected void fillContextMenu(IMenuManager manager) {
-		manager.add(fAddAction);
-		if (!fEETable.getSelection().isEmpty()) {
-			manager.add(new Separator());
-			manager.add(fRemoveAction);
-		}
-		getPage().getPDEEditor().getContributor().contextMenuAboutToShow(manager);
-	}
+    @Override
+    public void refresh() {
+        this.fEETable.refresh();
+        updateButtons();
+    }
 
-	private void makeActions() {
-		fAddAction = new Action(PDEUIMessages.RequiredExecutionEnvironmentSection_add) {
-			@Override
-			public void run() {
-				handleAdd();
-			}
-		};
-		fAddAction.setEnabled(isEditable());
+    @Override
+    protected void buttonSelected(int index) {
+        switch (index) {
+            case 0:
+                handleAdd();
+                break;
+            case 1:
+                handleRemove();
+                break;
+            case 2:
+                handleUp();
+                break;
+            case 3:
+                handleDown();
+                break;
+        }
+    }
 
-		fRemoveAction = new Action(PDEUIMessages.NewManifestEditor_LibrarySection_remove) {
-			@Override
-			public void run() {
-				handleRemove();
-			}
-		};
-		fRemoveAction.setEnabled(isEditable());
-	}
+    @Override
+    protected void fillContextMenu(IMenuManager manager) {
+        manager.add(this.fAddAction);
+        if (!this.fEETable.getSelection().isEmpty()) {
+            manager.add(new Separator());
+            manager.add(this.fRemoveAction);
+        }
+        getPage().getPDEEditor().getContributor().contextMenuAboutToShow(manager);
+    }
 
-	private void updateButtons() {
-		Table table = fEETable.getTable();
-		int count = table.getItemCount();
-		boolean canMoveUp = count > 0 && table.getSelection().length == 1 && table.getSelectionIndex() > 0;
-		boolean canMoveDown = count > 0 && table.getSelection().length == 1 && table.getSelectionIndex() < count - 1;
+    private void makeActions() {
+        this.fAddAction = new Action(PDEUIMessages.RequiredExecutionEnvironmentSection_add) {
 
-		TablePart tablePart = getTablePart();
-		tablePart.setButtonEnabled(0, isEditable());
-		tablePart.setButtonEnabled(1, isEditable() && table.getSelection().length > 0);
-		tablePart.setButtonEnabled(2, isEditable() && canMoveUp);
-		tablePart.setButtonEnabled(3, isEditable() && canMoveDown);
-	}
+            @Override
+            public void run() {
+                handleAdd();
+            }
+        };
+        this.fAddAction.setEnabled(isEditable());
 
-	private void handleDown() {
-		int selection = fEETable.getTable().getSelectionIndex();
-		swap(selection, selection + 1);
-	}
+        this.fRemoveAction = new Action(PDEUIMessages.NewManifestEditor_LibrarySection_remove) {
 
-	private void handleUp() {
-		int selection = fEETable.getTable().getSelectionIndex();
-		swap(selection, selection - 1);
-	}
+            @Override
+            public void run() {
+                handleRemove();
+            }
+        };
+        this.fRemoveAction.setEnabled(isEditable());
+    }
 
-	public void swap(int index1, int index2) {
-		RequiredExecutionEnvironmentHeader header = getHeader();
-		header.swap(index1, index2);
-	}
+    private void updateButtons() {
+        Table table = this.fEETable.getTable();
+        int count = table.getItemCount();
+        boolean canMoveUp = count > 0 && table.getSelection().length == 1 && table.getSelectionIndex() > 0;
+        boolean canMoveDown = count > 0 && table.getSelection().length == 1 && table.getSelectionIndex() < count - 1;
 
-	@SuppressWarnings("unchecked")
-	private void handleRemove() {
-		IStructuredSelection ssel = (IStructuredSelection) fEETable.getSelection();
-		if (ssel.size() > 0) {
-			Iterator iter = ssel.iterator();
-			while (iter.hasNext()) {
-				Object object = iter.next();
-				if (object instanceof ExecutionEnvironment) {
-					getHeader().removeExecutionEnvironment((ExecutionEnvironment) object);
-				}
-			}
-		}
-	}
+        TablePart tablePart = getTablePart();
+        tablePart.setButtonEnabled(0, isEditable());
+        tablePart.setButtonEnabled(1, isEditable() && table.getSelection().length > 0);
+        tablePart.setButtonEnabled(2, isEditable() && canMoveUp);
+        tablePart.setButtonEnabled(3, isEditable() && canMoveDown);
+    }
 
-	private void handleAdd() {
-		ElementListSelectionDialog dialog = new ElementListSelectionDialog(PDEPlugin.getActiveWorkbenchShell(),
-				new EELabelProvider());
-		dialog.setElements(getEnvironments());
-		dialog.setAllowDuplicates(false);
-		dialog.setMultipleSelection(true);
-		dialog.setTitle(PDEUIMessages.RequiredExecutionEnvironmentSection_dialog_title);
-		dialog.setMessage(PDEUIMessages.RequiredExecutionEnvironmentSection_dialogMessage);
-		if (dialog.open() == Window.OK) {
-			addExecutionEnvironments(dialog.getResult());
-		}
-	}
+    private void handleDown() {
+        int selection = this.fEETable.getTable().getSelectionIndex();
+        swap(selection, selection + 1);
+    }
 
-	private void addExecutionEnvironments(Object[] result) {
-		IManifestHeader header = getHeader();
-		if (header == null) {
-			StringBuffer buffer = new StringBuffer();
-			for (Object element : result) {
-				String id = null;
-				if (element instanceof IExecutionEnvironment) {
-					id = ((IExecutionEnvironment) element).getId();
-				} else if (element instanceof ExecutionEnvironment) {
-					id = ((ExecutionEnvironment) element).getName();
-				} else {
-					continue;
-				}
-				if (buffer.length() > 0) {
-					buffer.append(","); //$NON-NLS-1$
-					buffer.append(getLineDelimiter());
-					buffer.append(" "); //$NON-NLS-1$
-				}
-				buffer.append(id);
-			}
-			getBundle().setHeader(Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT, buffer.toString());
-		} else {
-			RequiredExecutionEnvironmentHeader ee = (RequiredExecutionEnvironmentHeader) header;
-			ee.addExecutionEnvironments(result);
-		}
-	}
+    private void handleUp() {
+        int selection = this.fEETable.getTable().getSelectionIndex();
+        swap(selection, selection - 1);
+    }
 
-	private String getLineDelimiter() {
-		BundleInputContext inputContext = getBundleContext();
-		if (inputContext != null) {
-			return inputContext.getLineDelimiter();
-		}
-		return System.getProperty("line.separator"); //$NON-NLS-1$
-	}
+    public void swap(int index1, int index2) {
+        RequiredExecutionEnvironmentHeader header = getHeader();
+        header.swap(index1, index2);
+    }
 
-	@SuppressWarnings("unchecked")
-	private Object[] getEnvironments() {
-		RequiredExecutionEnvironmentHeader header = getHeader();
-		IExecutionEnvironment[] envs = JavaRuntime.getExecutionEnvironmentsManager().getExecutionEnvironments();
-		if (header == null) {
-			return envs;
-		}
-		ArrayList list = new ArrayList();
-		for (int i = 0; i < envs.length; i++) {
-			if (!header.hasExecutionEnvironment(envs[i])) {
-				list.add(envs[i]);
-			}
-		}
-		return list.toArray();
-	}
+    @SuppressWarnings("unchecked")
+    private void handleRemove() {
+        IStructuredSelection ssel = (IStructuredSelection) this.fEETable.getSelection();
+        if (ssel.size() > 0) {
+            Iterator iter = ssel.iterator();
+            while (iter.hasNext()) {
+                Object object = iter.next();
+                if (object instanceof ExecutionEnvironment) {
+                    getHeader().removeExecutionEnvironment((ExecutionEnvironment) object);
+                }
+            }
+        }
+    }
 
-	@Override
-	public void modelChanged(IModelChangedEvent e) {
-		if (e.getChangeType() == IModelChangedEvent.WORLD_CHANGED) {
-			markStale();
-		} else if (e.getChangeType() == IModelChangedEvent.REMOVE) {
-			Object[] objects = e.getChangedObjects();
-			for (Object element : objects) {
-				Table table = fEETable.getTable();
-				if (element instanceof ExecutionEnvironment) {
-					int index = table.getSelectionIndex();
-					fEETable.remove(element);
-					table.setSelection(index < table.getItemCount() ? index : table.getItemCount() - 1);
-				}
-			}
-			updateButtons();
-		} else if (e.getChangeType() == IModelChangedEvent.INSERT) {
-			Object[] objects = e.getChangedObjects();
-			for (Object element : objects) {
-				if (element instanceof ExecutionEnvironment) {
-					fEETable.add(element);
-				}
-			}
-			if (objects.length > 0) {
-				fEETable.setSelection(new StructuredSelection(objects[objects.length - 1]));
-			}
-			updateButtons();
-		} else if (Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT.equals(e.getChangedProperty())) {
-			refresh();
-		}
-	}
+    private void handleAdd() {
+        ElementListSelectionDialog dialog = new ElementListSelectionDialog(PDEPlugin.getActiveWorkbenchShell(), new EELabelProvider());
+        dialog.setElements(getEnvironments());
+        dialog.setAllowDuplicates(false);
+        dialog.setMultipleSelection(true);
+        dialog.setTitle(PDEUIMessages.RequiredExecutionEnvironmentSection_dialog_title);
+        dialog.setMessage(PDEUIMessages.RequiredExecutionEnvironmentSection_dialogMessage);
+        if (dialog.open() == Window.OK) {
+            addExecutionEnvironments(dialog.getResult());
+        }
+    }
 
-	private BundleInputContext getBundleContext() {
-		InputContextManager manager = getPage().getPDEEditor().getContextManager();
-		return (BundleInputContext) manager.findContext(BundleInputContext.CONTEXT_ID);
-	}
+    private void addExecutionEnvironments(Object[] result) {
+        IManifestHeader header = getHeader();
+        if (header == null) {
+            StringBuffer buffer = new StringBuffer();
+            for (Object element : result) {
+                String id = null;
+                if (element instanceof IExecutionEnvironment) {
+                    id = ((IExecutionEnvironment) element).getId();
+                } else if (element instanceof ExecutionEnvironment) {
+                    id = ((ExecutionEnvironment) element).getName();
+                } else {
+                    continue;
+                }
+                if (buffer.length() > 0) {
+                    buffer.append(","); //$NON-NLS-1$
+                    buffer.append(getLineDelimiter());
+                    buffer.append(" "); //$NON-NLS-1$
+                }
+                buffer.append(id);
+            }
+            getBundle().setHeader(Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT, buffer.toString());
+        } else {
+            RequiredExecutionEnvironmentHeader ee = (RequiredExecutionEnvironmentHeader) header;
+            ee.addExecutionEnvironments(result);
+        }
+    }
 
-	private IBundle getBundle() {
-		IBundleModel model = getBundleModel();
-		return model == null ? null : model.getBundle();
-	}
+    private String getLineDelimiter() {
+        BundleInputContext inputContext = getBundleContext();
+        if (inputContext != null) {
+            return inputContext.getLineDelimiter();
+        }
+        return System.getProperty("line.separator"); //$NON-NLS-1$
+    }
 
-	private IBundleModel getBundleModel() {
-		BundleInputContext context = getBundleContext();
-		return context == null ? null : (IBundleModel) context.getModel();
-	}
+    @SuppressWarnings("unchecked")
+    private Object[] getEnvironments() {
+        RequiredExecutionEnvironmentHeader header = getHeader();
+        IExecutionEnvironment[] envs = JavaRuntime.getExecutionEnvironmentsManager().getExecutionEnvironments();
+        if (header == null) {
+            return envs;
+        }
+        ArrayList list = new ArrayList();
+        for (int i = 0; i < envs.length; i++) {
+            if (!header.hasExecutionEnvironment(envs[i])) {
+                list.add(envs[i]);
+            }
+        }
+        return list.toArray();
+    }
 
-	protected RequiredExecutionEnvironmentHeader getHeader() {
-		IBundle bundle = getBundle();
-		if (bundle == null) {
-			return null;
-		}
-		IManifestHeader header = bundle.getManifestHeader(Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT);
-		if (header instanceof RequiredExecutionEnvironmentHeader) {
-			return (RequiredExecutionEnvironmentHeader) header;
-		}
-		return null;
-	}
+    @Override
+    public void modelChanged(IModelChangedEvent e) {
+        if (e.getChangeType() == IModelChangedEvent.WORLD_CHANGED) {
+            markStale();
+        } else if (e.getChangeType() == IModelChangedEvent.REMOVE) {
+            Object[] objects = e.getChangedObjects();
+            for (Object element : objects) {
+                Table table = this.fEETable.getTable();
+                if (element instanceof ExecutionEnvironment) {
+                    int index = table.getSelectionIndex();
+                    this.fEETable.remove(element);
+                    table.setSelection(index < table.getItemCount() ? index : table.getItemCount() - 1);
+                }
+            }
+            updateButtons();
+        } else if (e.getChangeType() == IModelChangedEvent.INSERT) {
+            Object[] objects = e.getChangedObjects();
+            for (Object element : objects) {
+                if (element instanceof ExecutionEnvironment) {
+                    this.fEETable.add(element);
+                }
+            }
+            if (objects.length > 0) {
+                this.fEETable.setSelection(new StructuredSelection(objects[objects.length - 1]));
+            }
+            updateButtons();
+        } else if (Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT.equals(e.getChangedProperty())) {
+            refresh();
+        }
+    }
 
-	protected boolean isFragment() {
-		InputContextManager manager = getPage().getPDEEditor().getContextManager();
-		IPluginModelBase model = (IPluginModelBase) manager.getAggregateModel();
-		return model.isFragmentModel();
-	}
+    private BundleInputContext getBundleContext() {
+        InputContextManager manager = getPage().getPDEEditor().getContextManager();
+        return (BundleInputContext) manager.findContext(BundleInputContext.CONTEXT_ID);
+    }
 
-	@Override
-	public boolean doGlobalAction(String actionId) {
-		if (!isEditable()) {
-			return false;
-		}
+    private IBundle getBundle() {
+        IBundleModel model = getBundleModel();
+        return model == null ? null : model.getBundle();
+    }
 
-		if (actionId.equals(ActionFactory.DELETE.getId())) {
-			handleRemove();
-			return true;
-		}
+    private IBundleModel getBundleModel() {
+        BundleInputContext context = getBundleContext();
+        return context == null ? null : (IBundleModel) context.getModel();
+    }
 
-		if (actionId.equals(ActionFactory.CUT.getId())) {
-			// delete here and let the editor transfer
-			// the selection to the clipboard
-			handleRemove();
-			return false;
-		}
+    protected RequiredExecutionEnvironmentHeader getHeader() {
+        IBundle bundle = getBundle();
+        if (bundle == null) {
+            return null;
+        }
+        IManifestHeader header = bundle.getManifestHeader(Constants.BUNDLE_REQUIREDEXECUTIONENVIRONMENT);
+        if (header instanceof RequiredExecutionEnvironmentHeader) {
+            return (RequiredExecutionEnvironmentHeader) header;
+        }
+        return null;
+    }
 
-		if (actionId.equals(ActionFactory.PASTE.getId())) {
-			doPaste();
-			return true;
-		}
+    protected boolean isFragment() {
+        InputContextManager manager = getPage().getPDEEditor().getContextManager();
+        IPluginModelBase model = (IPluginModelBase) manager.getAggregateModel();
+        return model.isFragmentModel();
+    }
 
-		return false;
-	}
+    @Override
+    public boolean doGlobalAction(String actionId) {
+        if (!isEditable()) {
+            return false;
+        }
 
-	@Override
-	protected boolean canPaste(Object target, Object[] objects) {
-		RequiredExecutionEnvironmentHeader header = getHeader();
-		for (Object element : objects) {
-			if (element instanceof ExecutionEnvironment) {
-				String env = ((ExecutionEnvironment) element).getName();
-				if (header == null || !header.hasElement(env)) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
+        if (actionId.equals(ActionFactory.DELETE.getId())) {
+            handleRemove();
+            return true;
+        }
 
-	@Override
-	protected void selectionChanged(IStructuredSelection selection) {
-		getPage().getPDEEditor().setSelection(selection);
-		if (getPage().getModel().isEditable()) {
-			updateButtons();
-		}
-	}
+        if (actionId.equals(ActionFactory.CUT.getId())) {
+            // delete here and let the editor transfer
+            // the selection to the clipboard
+            handleRemove();
+            return false;
+        }
 
-	@Override
-	protected void doPaste(Object target, Object[] objects) {
-		addExecutionEnvironments(objects);
-	}
+        if (actionId.equals(ActionFactory.PASTE.getId())) {
+            doPaste();
+            return true;
+        }
 
-	@SuppressWarnings("unused")
-	private void doFullBuild(final IProject project) {
-		Job buildJob = new Job(PDEUIMessages.CompilersConfigurationBlock_building) {
-			@Override
-			public boolean belongsTo(Object family) {
-				return ResourcesPlugin.FAMILY_MANUAL_BUILD == family;
-			}
+        return false;
+    }
 
-			@Override
-			protected IStatus run(IProgressMonitor monitor) {
-				try {
-					project.build(IncrementalProjectBuilder.FULL_BUILD, JavaCore.BUILDER_ID, null, monitor);
-				} catch (CoreException e) {
-				}
-				return Status.OK_STATUS;
-			}
-		};
-		buildJob.setRule(ResourcesPlugin.getWorkspace().getRuleFactory().buildRule());
-		buildJob.schedule();
-	}
+    @Override
+    protected boolean canPaste(Object target, Object[] objects) {
+        RequiredExecutionEnvironmentHeader header = getHeader();
+        for (Object element : objects) {
+            if (element instanceof ExecutionEnvironment) {
+                String env = ((ExecutionEnvironment) element).getName();
+                if (header == null || !header.hasElement(env)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    @Override
+    protected void selectionChanged(IStructuredSelection selection) {
+        getPage().getPDEEditor().setSelection(selection);
+        if (getPage().getModel().isEditable()) {
+            updateButtons();
+        }
+    }
+
+    @Override
+    protected void doPaste(Object target, Object[] objects) {
+        addExecutionEnvironments(objects);
+    }
 
 }

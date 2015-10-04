@@ -8,6 +8,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.eclipse.editors;
 
 import java.util.ArrayList;
@@ -36,54 +37,54 @@ import org.eclipse.ui.forms.widgets.ScrolledForm;
 @SuppressWarnings("restriction")
 public abstract class AbstractParXmlEditorPage extends AbstractPdeFormPage {
 
-	public AbstractParXmlEditorPage(FormEditor editor, String id, String title) {
-		super(editor, id, title);
-	}
+    public AbstractParXmlEditorPage(FormEditor editor, String id, String title) {
+        super(editor, id, title);
+    }
 
-	/**
-	 * @see DependenciesPage
-	 */
-	@Override
-	protected void createFormContent(IManagedForm managedForm) {
-		ScrolledForm form = managedForm.getForm();
-		FormToolkit toolkit = managedForm.getToolkit();
-		toolkit.decorateFormHeading(form.getForm());
+    /**
+     * @see DependenciesPage
+     */
+    @Override
+    protected void createFormContent(IManagedForm managedForm) {
+        ScrolledForm form = managedForm.getForm();
+        FormToolkit toolkit = managedForm.getToolkit();
+        toolkit.decorateFormHeading(form.getForm());
 
-		// From PDE's DependenciesPage
-		form.setImage(PDEPlugin.getDefault().getLabelProvider().get(PDEPluginImages.DESC_REQ_PLUGINS_OBJ));
-		form.setText(PDEUIMessages.DependenciesPage_title);
-		Composite body = form.getBody();
-		body.setLayout(FormLayoutFactory.createFormGridLayout(true, 3));
-		Composite left, right;
+        // From PDE's DependenciesPage
+        form.setImage(PDEPlugin.getDefault().getLabelProvider().get(PDEPluginImages.DESC_REQ_PLUGINS_OBJ));
+        form.setText(PDEUIMessages.DependenciesPage_title);
+        Composite body = form.getBody();
+        body.setLayout(FormLayoutFactory.createFormGridLayout(true, 3));
+        Composite left, right;
 
-		left = toolkit.createComposite(body, SWT.NONE);
-		left.setLayout(FormLayoutFactory.createFormPaneGridLayout(false, 1));
-		GridDataFactory.createFrom(new GridData(GridData.FILL_BOTH)).span(2, 1).applyTo(left);
-		right = toolkit.createComposite(body, SWT.NONE);
-		right.setLayout(FormLayoutFactory.createFormPaneGridLayout(false, 1));
-		right.setLayoutData(new GridData(GridData.FILL_BOTH));
+        left = toolkit.createComposite(body, SWT.NONE);
+        left.setLayout(FormLayoutFactory.createFormPaneGridLayout(false, 1));
+        GridDataFactory.createFrom(new GridData(GridData.FILL_BOTH)).span(2, 1).applyTo(left);
+        right = toolkit.createComposite(body, SWT.NONE);
+        right.setLayout(FormLayoutFactory.createFormPaneGridLayout(false, 1));
+        right.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		managedForm.addPart(getFormPart(left, getRequiredSectionLabels()));
+        managedForm.addPart(getFormPart(left, getRequiredSectionLabels()));
 
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(), IHelpContextIds.MANIFEST_PLUGIN_DEPENDENCIES);
-	}
+        PlatformUI.getWorkbench().getHelpSystem().setHelp(form.getBody(), IHelpContextIds.MANIFEST_PLUGIN_DEPENDENCIES);
+    }
 
-	protected abstract IFormPart getFormPart(Composite parent, String[] labels);
+    protected abstract IFormPart getFormPart(Composite parent, String[] labels);
 
-	/**
-	 * @see DependenciesPage
-	 */
-	@SuppressWarnings("unchecked")
-	private String[] getRequiredSectionLabels() {
-		ArrayList labels = new ArrayList();
-		labels.add(PDEUIMessages.RequiresSection_add);
-		labels.add(PDEUIMessages.RequiresSection_delete);
-		// labels.add(PDEUIMessages.RequiresSection_up);
-		// labels.add(PDEUIMessages.RequiresSection_down);
-		// if (isBundle()) {
-		// labels.add(PDEUIMessages.DependenciesPage_properties);
-		// }
-		return (String[]) labels.toArray(new String[labels.size()]);
-	}
+    /**
+     * @see DependenciesPage
+     */
+    @SuppressWarnings("unchecked")
+    private String[] getRequiredSectionLabels() {
+        ArrayList labels = new ArrayList();
+        labels.add(PDEUIMessages.RequiresSection_add);
+        labels.add(PDEUIMessages.RequiresSection_delete);
+        // labels.add(PDEUIMessages.RequiresSection_up);
+        // labels.add(PDEUIMessages.RequiresSection_down);
+        // if (isBundle()) {
+        // labels.add(PDEUIMessages.DependenciesPage_properties);
+        // }
+        return (String[]) labels.toArray(new String[labels.size()]);
+    }
 
 }

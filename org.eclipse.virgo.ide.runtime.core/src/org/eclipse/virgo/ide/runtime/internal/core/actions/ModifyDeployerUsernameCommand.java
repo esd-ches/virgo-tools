@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.core.actions;
 
 import org.eclipse.core.commands.ExecutionException;
@@ -20,41 +21,41 @@ import org.eclipse.virgo.ide.runtime.core.IServerWorkingCopy;
 
 /**
  * {@link AbstractOperation} to modify the jmx deployer username.
- * 
+ *
  * @author Christian Dupuis
  * @since 1.0.1
  */
 public class ModifyDeployerUsernameCommand extends AbstractOperation {
 
-	private IServerWorkingCopy workingCopy;
+    private final IServerWorkingCopy workingCopy;
 
-	private String oldUsername;
+    private final String oldUsername;
 
-	private String newUsername;
+    private final String newUsername;
 
-	public ModifyDeployerUsernameCommand(IServerWorkingCopy workingCopy, String username) {
-		super("Modify JMX server port");
-		this.workingCopy = workingCopy;
-		this.oldUsername = workingCopy.getMBeanServerUsername();
-		this.newUsername = username;
-	}
+    public ModifyDeployerUsernameCommand(IServerWorkingCopy workingCopy, String username) {
+        super("Modify JMX server port");
+        this.workingCopy = workingCopy;
+        this.oldUsername = workingCopy.getMBeanServerUsername();
+        this.newUsername = username;
+    }
 
-	@Override
-	public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		workingCopy.setMBeanServerUsername(newUsername);
-		return Status.OK_STATUS;
-	}
+    @Override
+    public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        this.workingCopy.setMBeanServerUsername(this.newUsername);
+        return Status.OK_STATUS;
+    }
 
-	@Override
-	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		workingCopy.setMBeanServerUsername(newUsername);
-		return Status.OK_STATUS;
-	}
+    @Override
+    public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        this.workingCopy.setMBeanServerUsername(this.newUsername);
+        return Status.OK_STATUS;
+    }
 
-	@Override
-	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		workingCopy.setMBeanServerUsername(oldUsername);
-		return Status.OK_STATUS;
-	}
+    @Override
+    public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        this.workingCopy.setMBeanServerUsername(this.oldUsername);
+        return Status.OK_STATUS;
+    }
 
 }

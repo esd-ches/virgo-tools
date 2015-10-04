@@ -13,33 +13,34 @@ package org.eclipse.virgo.ide.runtime.core.artefacts;
 
 /**
  * Types of artefacts that might exist within a repository.
- * 
+ *
  * @author Miles Parker
- * 
+ *
  */
 public enum ArtefactType {
-	BUNDLE("Bundle", "Bundles", 2), LIBRARY("Library", "Libraries", 3), COMBINED("Library Or Bundle",
-			"Libraries and Bundles", 1);
+    BUNDLE("Bundle", "Bundles", 2), LIBRARY("Library", "Libraries", 3), COMBINED("Library Or Bundle", "Libraries and Bundles", 1);
 
-	private final String label;
-	private final int ordering;
-	private final String pluralLabel;
+    private final String label;
 
-	ArtefactType(String label, String pluralLabel, int ordering) {
-		this.label = label;
-		this.pluralLabel = pluralLabel;
-		this.ordering = ordering;
-	}
+    private final int ordering;
 
-	public String getLabel() {
-		return label;
-	}
+    private final String pluralLabel;
 
-	public String getPluralLabel() {
-		return pluralLabel;
-	}
+    ArtefactType(String label, String pluralLabel, int ordering) {
+        this.label = label;
+        this.pluralLabel = pluralLabel;
+        this.ordering = ordering;
+    }
 
-	public int getOrdering() {
-		return ordering;
-	}
+    public String getLabel() {
+        return this.label;
+    }
+
+    public String getPluralLabel() {
+        return this.pluralLabel;
+    }
+
+    public int getOrdering() {
+        return this.ordering;
+    }
 }

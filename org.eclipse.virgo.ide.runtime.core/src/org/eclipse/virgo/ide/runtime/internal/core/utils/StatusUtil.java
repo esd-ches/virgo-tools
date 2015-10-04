@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.core.utils;
 
 import java.io.IOException;
@@ -18,30 +19,29 @@ import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 
 /**
- * 
+ *
  * @author mparker
- * 
+ *
  */
 public class StatusUtil {
-	public static void error(String message, Exception e) {
-		error(message, e, StatusManager.LOG);
-	}
-	/**
-	 * @param message
-	 *            the message to be reported
-	 * @param e
-	 *            the cause
-	 * @param style
-	 *            a bitmask of style bits as enumerated on {@link StatusManager}
-	 */
-	public static void error(String message, Exception e, int style) {
-		StatusManager.getManager().handle(
-				new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, "An IO Exception occurred.", e), style);
-	}
-	public static void error(Exception e) {
-		if (e instanceof IOException) {
-			error("An IO Exception occurred.", e);
-		}
-		error("An unexpected exception occurred.", e);
-	}
+
+    public static void error(String message, Exception e) {
+        error(message, e, StatusManager.LOG);
+    }
+
+    /**
+     * @param message the message to be reported
+     * @param e the cause
+     * @param style a bitmask of style bits as enumerated on {@link StatusManager}
+     */
+    public static void error(String message, Exception e, int style) {
+        StatusManager.getManager().handle(new Status(IStatus.ERROR, ServerCorePlugin.PLUGIN_ID, "An IO Exception occurred.", e), style);
+    }
+
+    public static void error(Exception e) {
+        if (e instanceof IOException) {
+            error("An IO Exception occurred.", e);
+        }
+        error("An unexpected exception occurred.", e);
+    }
 }

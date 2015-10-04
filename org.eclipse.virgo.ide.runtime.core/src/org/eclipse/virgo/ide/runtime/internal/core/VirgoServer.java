@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.core;
 
 import org.eclipse.virgo.ide.runtime.core.IServer;
@@ -15,24 +16,25 @@ import org.eclipse.virgo.ide.runtime.core.IServerWorkingCopy;
 
 /**
  * Default Virgo server implementation.
- * 
+ *
  * @author Terry Hon
  * @author Christian Dupuis
  * @since 1.0.0
  */
 public class VirgoServer extends Server implements IServer, IServerWorkingCopy {
 
-	public VirgoServerRuntime getRuntime() {
-		if (getServer().getRuntime() == null) {
-			return null;
-		}
+    @Override
+    public VirgoServerRuntime getRuntime() {
+        if (getServer().getRuntime() == null) {
+            return null;
+        }
 
-		return (VirgoServerRuntime) getServer().getRuntime().loadAdapter(VirgoServerRuntime.class, null);
-	}
+        return (VirgoServerRuntime) getServer().getRuntime().loadAdapter(VirgoServerRuntime.class, null);
+    }
 
-	@Override
-	protected String getServerName() {
-		return "Virgo Server";
-	}
+    @Override
+    protected String getServerName() {
+        return "Virgo Server";
+    }
 
 }

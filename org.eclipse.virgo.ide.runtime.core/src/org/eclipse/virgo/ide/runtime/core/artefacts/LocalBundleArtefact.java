@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.core.artefacts;
 
 import java.io.File;
@@ -17,38 +18,37 @@ import org.eclipse.virgo.ide.bundlerepository.domain.OsgiVersion;
 
 /**
  * An extension to {@link BundleArtefact} to take some more information of local bundles.
- * 
+ *
  * @author Christian Dupuis
  * @since 1.0.0
  */
 public class LocalBundleArtefact extends BundleArtefact implements ILocalArtefact {
 
-	private final boolean hasDownloadedSources;
+    private final boolean hasDownloadedSources;
 
-	private final File file;
+    private final File file;
 
-	public LocalBundleArtefact(String name, String symbolicName, OsgiVersion version, boolean hasDownloadedSources,
-			URI fileURI) {
-		super(name, symbolicName, version, symbolicName, symbolicName);
-		this.hasDownloadedSources = hasDownloadedSources;
-		this.file = (fileURI != null ? new File(fileURI) : null);
-	}
+    public LocalBundleArtefact(String name, String symbolicName, OsgiVersion version, boolean hasDownloadedSources, URI fileURI) {
+        super(name, symbolicName, version, symbolicName, symbolicName);
+        this.hasDownloadedSources = hasDownloadedSources;
+        this.file = fileURI != null ? new File(fileURI) : null;
+    }
 
-	public boolean isSourceDownloaded() {
-		return hasDownloadedSources;
-	}
+    public boolean isSourceDownloaded() {
+        return this.hasDownloadedSources;
+    }
 
-	@Override
-	public String getSignature() {
-		String signature = super.getSignature();
-		if (hasDownloadedSources) {
-			signature += "+Source";
-		}
-		return signature;
-	}
+    @Override
+    public String getSignature() {
+        String signature = super.getSignature();
+        if (this.hasDownloadedSources) {
+            signature += "+Source";
+        }
+        return signature;
+    }
 
-	public File getFile() {
-		return file;
-	}
+    public File getFile() {
+        return this.file;
+    }
 
 }

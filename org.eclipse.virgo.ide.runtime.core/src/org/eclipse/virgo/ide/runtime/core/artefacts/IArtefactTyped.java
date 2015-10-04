@@ -12,15 +12,15 @@
 package org.eclipse.virgo.ide.runtime.core.artefacts;
 
 /**
- * 
+ *
  * @author Miles Parker
- * 
+ *
  */
 public interface IArtefactTyped {
 
-	/**
-	 * What type of artefact is this?
-	 */
-	public abstract ArtefactType getArtefactType();
+    /**
+     * What type of artefact is this?
+     */
+    public abstract ArtefactType getArtefactType();
 
 }

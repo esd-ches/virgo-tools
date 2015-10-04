@@ -8,6 +8,7 @@
  * Contributors:
  *     Tasktop Technologies - initial implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.core.actions;
 
 import org.eclipse.core.commands.ExecutionException;
@@ -23,34 +24,34 @@ import org.eclipse.virgo.ide.runtime.core.IServerWorkingCopy;
  */
 public class ModifyMaxPermSizeCommand extends AbstractOperation {
 
-	private final IServerWorkingCopy workingCopy;
+    private final IServerWorkingCopy workingCopy;
 
-	private final String oldPermSizeValue;
+    private final String oldPermSizeValue;
 
-	private final String newPermSizeValue;
+    private final String newPermSizeValue;
 
-	public ModifyMaxPermSizeCommand(IServerWorkingCopy workingCopy, String maxPermSizeValue) {
-		super("Modify -XX:MaxPermSize value");
-		this.workingCopy = workingCopy;
-		this.oldPermSizeValue = workingCopy.getMaxPermSize();
-		this.newPermSizeValue = maxPermSizeValue;
-	}
+    public ModifyMaxPermSizeCommand(IServerWorkingCopy workingCopy, String maxPermSizeValue) {
+        super("Modify -XX:MaxPermSize value");
+        this.workingCopy = workingCopy;
+        this.oldPermSizeValue = workingCopy.getMaxPermSize();
+        this.newPermSizeValue = maxPermSizeValue;
+    }
 
-	@Override
-	public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		workingCopy.setMaxPermSize(newPermSizeValue);
-		return Status.OK_STATUS;
-	}
+    @Override
+    public IStatus execute(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        this.workingCopy.setMaxPermSize(this.newPermSizeValue);
+        return Status.OK_STATUS;
+    }
 
-	@Override
-	public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		return execute(monitor, info);
-	}
+    @Override
+    public IStatus redo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        return execute(monitor, info);
+    }
 
-	@Override
-	public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
-		workingCopy.setMaxPermSize(oldPermSizeValue);
-		return Status.OK_STATUS;
-	}
+    @Override
+    public IStatus undo(IProgressMonitor monitor, IAdaptable info) throws ExecutionException {
+        this.workingCopy.setMaxPermSize(this.oldPermSizeValue);
+        return Status.OK_STATUS;
+    }
 
 }

@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.editors.plan;
 
 import org.eclipse.wst.xml.ui.internal.contentoutline.JFaceNodeLabelProvider;
@@ -19,13 +20,13 @@ import org.w3c.dom.Node;
  */
 public class PlanOutlineLabelProvider extends JFaceNodeLabelProvider {
 
-	@Override
-	public String getText(Object o) {
+    @Override
+    public String getText(Object o) {
 
-		Node node = (Node) o;
-		String shortNodeName = node.getLocalName();
-		String text = shortNodeName;
+        Node node = (Node) o;
+        String shortNodeName = node.getLocalName();
+        String text = shortNodeName;
 
-		return text;
-	}
+        return text;
+    }
 }

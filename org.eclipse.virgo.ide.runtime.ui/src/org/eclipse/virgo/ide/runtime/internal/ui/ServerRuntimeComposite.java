@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.ui;
 
 import java.util.ArrayList;
@@ -53,311 +54,313 @@ import org.eclipse.wst.server.ui.wizard.IWizardHandle;
 @SuppressWarnings("restriction")
 public class ServerRuntimeComposite extends Composite {
 
-	protected IRuntimeWorkingCopy runtimeWC;
+    protected IRuntimeWorkingCopy runtimeWC;
 
-	protected IServerRuntimeWorkingCopy runtime;
+    protected IServerRuntimeWorkingCopy runtime;
 
-	protected IWizardHandle wizard;
+    protected IWizardHandle wizard;
 
-	protected Text installDir;
+    protected Text installDir;
 
-	protected Text name;
+    protected Text name;
 
-	protected Combo vmCombo;
+    protected Combo vmCombo;
 
-	protected List<IVMInstall> installedJREs;
+    protected List<IVMInstall> installedJREs;
 
-	protected String[] jreNames;
+    protected String[] jreNames;
 
-	protected IInstallableRuntime ir;
+    protected IInstallableRuntime ir;
 
-	protected Label installLabel;
+    protected Label installLabel;
 
-	protected Button install;
+    protected Button install;
 
-	private Combo versionCombo;
+    protected ServerRuntimeComposite(Composite parent, IWizardHandle wizard, String wizardTitle, String wizardDescription) {
+        this(parent, wizard, wizardTitle, wizardDescription, ServerUiImages.DESC_WIZB_SERVER);
+    }
 
-	protected ServerRuntimeComposite(Composite parent, IWizardHandle wizard, String wizardTitle,
-			String wizardDescription) {
-		this(parent, wizard, wizardTitle, wizardDescription, ServerUiImages.DESC_WIZB_SERVER);
-	}
+    protected ServerRuntimeComposite(Composite parent, IWizardHandle wizard, String wizardTitle, String wizardDescription,
+        ImageDescriptor imageDescriptor) {
+        super(parent, SWT.NONE);
+        this.wizard = wizard;
 
-	protected ServerRuntimeComposite(Composite parent, IWizardHandle wizard, String wizardTitle,
-			String wizardDescription, ImageDescriptor imageDescriptor) {
-		super(parent, SWT.NONE);
-		this.wizard = wizard;
+        wizard.setTitle(wizardTitle);
+        wizard.setDescription(wizardDescription);
+        wizard.setImageDescriptor(imageDescriptor);
 
-		wizard.setTitle(wizardTitle);
-		wizard.setDescription(wizardDescription);
-		wizard.setImageDescriptor(imageDescriptor);
+        createControl();
+    }
 
-		createControl();
-	}
+    protected void setRuntime(IRuntimeWorkingCopy newRuntime) {
+        if (newRuntime == null) {
+            this.runtimeWC = null;
+            this.runtime = null;
+        } else {
+            this.runtimeWC = newRuntime;
+            this.runtime = (IServerRuntimeWorkingCopy) newRuntime.loadAdapter(IServerRuntimeWorkingCopy.class, null);
+        }
 
-	protected void setRuntime(IRuntimeWorkingCopy newRuntime) {
-		if (newRuntime == null) {
-			runtimeWC = null;
-			runtime = null;
-		} else {
-			runtimeWC = newRuntime;
-			runtime = (IServerRuntimeWorkingCopy) newRuntime.loadAdapter(IServerRuntimeWorkingCopy.class, null);
-		}
+        if (this.runtimeWC == null) {
+            this.ir = null;
+            this.install.setEnabled(false);
+            this.installLabel.setText("");
+        } else {
+            this.ir = ServerPlugin.findInstallableRuntime(this.runtimeWC.getRuntimeType().getId());
+        }
 
-		if (runtimeWC == null) {
-			ir = null;
-			install.setEnabled(false);
-			installLabel.setText("");
-		} else {
-			ir = ServerPlugin.findInstallableRuntime(runtimeWC.getRuntimeType().getId());
-		}
+        init();
+        validate();
+    }
 
-		init();
-		validate();
-	}
+    protected void createControl() {
+        GridLayout layout = new GridLayout();
+        layout.numColumns = 2;
+        setLayout(layout);
+        setLayoutData(new GridData(GridData.FILL_BOTH));
 
-	protected void createControl() {
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 2;
-		setLayout(layout);
-		setLayoutData(new GridData(GridData.FILL_BOTH));
+        Label label = new Label(this, SWT.NONE);
+        label.setText(ServerUiPlugin.getResourceString("runtimeName"));
+        GridData data = new GridData();
+        data.horizontalSpan = 2;
+        label.setLayoutData(data);
 
-		Label label = new Label(this, SWT.NONE);
-		label.setText(ServerUiPlugin.getResourceString("runtimeName"));
-		GridData data = new GridData();
-		data.horizontalSpan = 2;
-		label.setLayoutData(data);
+        this.name = new Text(this, SWT.BORDER);
+        data = new GridData(GridData.FILL_HORIZONTAL);
+        this.name.setLayoutData(data);
+        this.name.addModifyListener(new ModifyListener() {
 
-		name = new Text(this, SWT.BORDER);
-		data = new GridData(GridData.FILL_HORIZONTAL);
-		name.setLayoutData(data);
-		name.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				runtimeWC.setName(name.getText());
-				validate();
-			}
-		});
+            public void modifyText(ModifyEvent e) {
+                ServerRuntimeComposite.this.runtimeWC.setName(ServerRuntimeComposite.this.name.getText());
+                validate();
+            }
+        });
 
-		label = new Label(this, SWT.NONE);
-		label.setText(ServerUiPlugin.getResourceString("installDir"));
-		data = new GridData();
-		data.horizontalSpan = 2;
-		label.setLayoutData(data);
+        label = new Label(this, SWT.NONE);
+        label.setText(ServerUiPlugin.getResourceString("installDir"));
+        data = new GridData();
+        data.horizontalSpan = 2;
+        label.setLayoutData(data);
 
-		installDir = new Text(this, SWT.BORDER);
-		data = new GridData(GridData.FILL_HORIZONTAL);
-		installDir.setLayoutData(data);
-		installDir.addModifyListener(new ModifyListener() {
-			public void modifyText(ModifyEvent e) {
-				runtimeWC.setLocation(new Path(installDir.getText()));
-				validate();
-			}
-		});
+        this.installDir = new Text(this, SWT.BORDER);
+        data = new GridData(GridData.FILL_HORIZONTAL);
+        this.installDir.setLayoutData(data);
+        this.installDir.addModifyListener(new ModifyListener() {
 
-		Button browse = SWTUtil.createButton(this, ServerUiPlugin.getResourceString("browse"));
-		browse.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent se) {
-				DirectoryDialog dialog = new DirectoryDialog(ServerRuntimeComposite.this.getShell());
-				dialog.setMessage(ServerUiPlugin.getResourceString("selectInstallDir"));
-				dialog.setFilterPath(installDir.getText());
-				String selectedDirectory = dialog.open();
-				if (selectedDirectory != null) {
-					installDir.setText(selectedDirectory);
-				}
-			}
-		});
+            public void modifyText(ModifyEvent e) {
+                ServerRuntimeComposite.this.runtimeWC.setLocation(new Path(ServerRuntimeComposite.this.installDir.getText()));
+                validate();
+            }
+        });
 
-//		Composite configuration = new Composite(this, SWT.BORDER);
-//		GridLayout configLayout = new GridLayout();
-//		configLayout.numColumns = 2;
-//		configuration.setLayout(configLayout);
-//		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-//		configuration.setLayoutData(data);
-//
-//		Label versionLabel = new Label(configuration, SWT.NONE);
-//		versionLabel.setText(ServerUiPlugin.getResourceString("version"));
-//		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-//		versionLabel.setLayoutData(data);
-//
-//		versionCombo = new Combo(configuration, SWT.DROP_DOWN | SWT.READ_ONLY);
-//
-//		List<String> names = new ArrayList<String>();
-//		for (ServerVirgoHandler version : ServerVersionAdapter.ALL_HANDLERS) {
-//			names.add(version.getName());
-//		}
-//		versionCombo.setItems(names.toArray(new String[] {}));
-//		data = new GridData(GridData.FILL_HORIZONTAL);
-//
-//		versionCombo.setLayoutData(data);
-//
-//		versionCombo.addSelectionListener(new SelectionListener() {
-//			public void widgetSelected(SelectionEvent e) {
-//				int sel = versionCombo.getSelectionIndex();
-//				runtime.setVirgoVersion(ServerVersionAdapter.ALL_HANDLERS[sel]);
-//				validate();
-//			}
-//
-//			public void widgetDefaultSelected(SelectionEvent e) {
-//				widgetSelected(e);
-//			}
-//		});
+        Button browse = SWTUtil.createButton(this, ServerUiPlugin.getResourceString("browse"));
+        browse.addSelectionListener(new SelectionAdapter() {
 
-		updateJREs();
+            @Override
+            public void widgetSelected(SelectionEvent se) {
+                DirectoryDialog dialog = new DirectoryDialog(ServerRuntimeComposite.this.getShell());
+                dialog.setMessage(ServerUiPlugin.getResourceString("selectInstallDir"));
+                dialog.setFilterPath(ServerRuntimeComposite.this.installDir.getText());
+                String selectedDirectory = dialog.open();
+                if (selectedDirectory != null) {
+                    ServerRuntimeComposite.this.installDir.setText(selectedDirectory);
+                }
+            }
+        });
 
-		// JDK location
-		label = new Label(this, SWT.NONE);
-		label.setText(ServerUiPlugin.getResourceString("installedJRE"));
-		data = new GridData();
-		data.horizontalSpan = 2;
-		label.setLayoutData(data);
+        // Composite configuration = new Composite(this, SWT.BORDER);
+        // GridLayout configLayout = new GridLayout();
+        // configLayout.numColumns = 2;
+        // configuration.setLayout(configLayout);
+        // data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+        // configuration.setLayoutData(data);
+        //
+        // Label versionLabel = new Label(configuration, SWT.NONE);
+        // versionLabel.setText(ServerUiPlugin.getResourceString("version"));
+        // data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+        // versionLabel.setLayoutData(data);
+        //
+        // versionCombo = new Combo(configuration, SWT.DROP_DOWN | SWT.READ_ONLY);
+        //
+        // List<String> names = new ArrayList<String>();
+        // for (ServerVirgoHandler version : ServerVersionAdapter.ALL_HANDLERS) {
+        // names.add(version.getName());
+        // }
+        // versionCombo.setItems(names.toArray(new String[] {}));
+        // data = new GridData(GridData.FILL_HORIZONTAL);
+        //
+        // versionCombo.setLayoutData(data);
+        //
+        // versionCombo.addSelectionListener(new SelectionListener() {
+        // public void widgetSelected(SelectionEvent e) {
+        // int sel = versionCombo.getSelectionIndex();
+        // runtime.setVirgoVersion(ServerVersionAdapter.ALL_HANDLERS[sel]);
+        // validate();
+        // }
+        //
+        // public void widgetDefaultSelected(SelectionEvent e) {
+        // widgetSelected(e);
+        // }
+        // });
 
-		vmCombo = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
-		vmCombo.setItems(jreNames);
-		data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
-		vmCombo.setLayoutData(data);
+        updateJREs();
 
-		vmCombo.addSelectionListener(new SelectionListener() {
-			public void widgetSelected(SelectionEvent e) {
-				int sel = vmCombo.getSelectionIndex();
-				IVMInstall vmInstall = null;
-				if (sel > 0) {
-					vmInstall = installedJREs.get(sel - 1);
-				}
+        // JDK location
+        label = new Label(this, SWT.NONE);
+        label.setText(ServerUiPlugin.getResourceString("installedJRE"));
+        data = new GridData();
+        data.horizontalSpan = 2;
+        label.setLayoutData(data);
 
-				runtime.setVMInstall(vmInstall);
-				validate();
-			}
+        this.vmCombo = new Combo(this, SWT.DROP_DOWN | SWT.READ_ONLY);
+        this.vmCombo.setItems(this.jreNames);
+        data = new GridData(GridData.HORIZONTAL_ALIGN_FILL);
+        this.vmCombo.setLayoutData(data);
 
-			public void widgetDefaultSelected(SelectionEvent e) {
-				widgetSelected(e);
-			}
-		});
+        this.vmCombo.addSelectionListener(new SelectionListener() {
 
-		Button button = SWTUtil.createButton(this, ServerUiPlugin.getResourceString("installedJREs"));
-		button.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				String currentVM = vmCombo.getText();
-				if (showPreferencePage()) {
-					updateJREs();
-					vmCombo.setItems(jreNames);
-					vmCombo.setText(currentVM);
-					if (vmCombo.getSelectionIndex() == -1) {
-						vmCombo.select(0);
-					}
-					validate();
-				}
-			}
-		});
+            public void widgetSelected(SelectionEvent e) {
+                int sel = ServerRuntimeComposite.this.vmCombo.getSelectionIndex();
+                IVMInstall vmInstall = null;
+                if (sel > 0) {
+                    vmInstall = ServerRuntimeComposite.this.installedJREs.get(sel - 1);
+                }
 
-		init();
-		validate();
+                ServerRuntimeComposite.this.runtime.setVMInstall(vmInstall);
+                validate();
+            }
 
-		Dialog.applyDialogFont(this);
+            public void widgetDefaultSelected(SelectionEvent e) {
+                widgetSelected(e);
+            }
+        });
 
-		name.forceFocus();
-	}
+        Button button = SWTUtil.createButton(this, ServerUiPlugin.getResourceString("installedJREs"));
+        button.addSelectionListener(new SelectionAdapter() {
 
-	protected void updateJREs() {
-		// get all installed JVMs
-		installedJREs = new ArrayList<IVMInstall>();
-		IVMInstallType[] vmInstallTypes = JavaRuntime.getVMInstallTypes();
-		int size = vmInstallTypes.length;
-		for (int i = 0; i < size; i++) {
-			IVMInstall[] vmInstalls = vmInstallTypes[i].getVMInstalls();
-			int size2 = vmInstalls.length;
-			for (int j = 0; j < size2; j++) {
-				installedJREs.add(vmInstalls[j]);
-			}
-		}
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                String currentVM = ServerRuntimeComposite.this.vmCombo.getText();
+                if (showPreferencePage()) {
+                    updateJREs();
+                    ServerRuntimeComposite.this.vmCombo.setItems(ServerRuntimeComposite.this.jreNames);
+                    ServerRuntimeComposite.this.vmCombo.setText(currentVM);
+                    if (ServerRuntimeComposite.this.vmCombo.getSelectionIndex() == -1) {
+                        ServerRuntimeComposite.this.vmCombo.select(0);
+                    }
+                    validate();
+                }
+            }
+        });
 
-		// get names
-		size = installedJREs.size();
-		jreNames = new String[size + 1];
-		jreNames[0] = ServerUiPlugin.getResourceString("runtimeDefaultJRE");
-		for (int i = 0; i < size; i++) {
-			IVMInstall vmInstall = installedJREs.get(i);
-			jreNames[i + 1] = vmInstall.getName();
-		}
-	}
+        init();
+        validate();
 
-	protected boolean showPreferencePage() {
-		String id = "org.eclipse.jdt.debug.ui.preferences.VMPreferencePage";
-		PreferenceManager manager = PlatformUI.getWorkbench().getPreferenceManager();
-		IPreferenceNode node = manager.find("org.eclipse.jdt.ui.preferences.JavaBasePreferencePage").findSubNode(id);
-		PreferenceManager manager2 = new PreferenceManager();
-		manager2.addToRoot(node);
-		PreferenceDialog dialog = new PreferenceDialog(getShell(), manager2);
-		dialog.create();
-		return (dialog.open() == Window.OK);
-	}
+        Dialog.applyDialogFont(this);
 
-	protected void init() {
-		if (name == null || runtime == null) {
-			return;
-		}
+        this.name.forceFocus();
+    }
 
-		if (runtimeWC.getName() != null) {
-			name.setText(runtimeWC.getName());
-		} else {
-			name.setText("");
-		}
+    protected void updateJREs() {
+        // get all installed JVMs
+        this.installedJREs = new ArrayList<IVMInstall>();
+        IVMInstallType[] vmInstallTypes = JavaRuntime.getVMInstallTypes();
+        int size = vmInstallTypes.length;
+        for (int i = 0; i < size; i++) {
+            IVMInstall[] vmInstalls = vmInstallTypes[i].getVMInstalls();
+            int size2 = vmInstalls.length;
+            for (int j = 0; j < size2; j++) {
+                this.installedJREs.add(vmInstalls[j]);
+            }
+        }
 
-		if (runtimeWC.getLocation() != null) {
-			installDir.setText(runtimeWC.getLocation().toOSString());
-		} else {
-			installDir.setText("");
-		}
+        // get names
+        size = this.installedJREs.size();
+        this.jreNames = new String[size + 1];
+        this.jreNames[0] = ServerUiPlugin.getResourceString("runtimeDefaultJRE");
+        for (int i = 0; i < size; i++) {
+            IVMInstall vmInstall = this.installedJREs.get(i);
+            this.jreNames[i + 1] = vmInstall.getName();
+        }
+    }
 
-//		updateConfiguration();
+    protected boolean showPreferencePage() {
+        String id = "org.eclipse.jdt.debug.ui.preferences.VMPreferencePage";
+        PreferenceManager manager = PlatformUI.getWorkbench().getPreferenceManager();
+        IPreferenceNode node = manager.find("org.eclipse.jdt.ui.preferences.JavaBasePreferencePage").findSubNode(id);
+        PreferenceManager manager2 = new PreferenceManager();
+        manager2.addToRoot(node);
+        PreferenceDialog dialog = new PreferenceDialog(getShell(), manager2);
+        dialog.create();
+        return dialog.open() == Window.OK;
+    }
 
-		// set selection
-		if (runtime.isUsingDefaultJRE()) {
-			vmCombo.select(0);
-		} else {
-			boolean found = false;
-			int size = installedJREs.size();
-			for (int i = 0; i < size; i++) {
-				IVMInstall vmInstall = installedJREs.get(i);
-				if (vmInstall.equals(runtime.getVMInstall())) {
-					vmCombo.select(i + 1);
-					found = true;
-				}
-			}
-			if (!found) {
-				vmCombo.select(0);
-			}
-		}
-	}
+    protected void init() {
+        if (this.name == null || this.runtime == null) {
+            return;
+        }
 
-//	private void updateConfiguration() {
-//		int v = 0;
-//		for (ServerVirgoHandler version : ServerVersionAdapter.ALL_HANDLERS) {
-//			if (version.isHandlerFor(runtimeWC)) {
-//				versionCombo.select(v);
-//				break;
-//			}
-//			v++;
-//		}
-//	}
+        if (this.runtimeWC.getName() != null) {
+            this.name.setText(this.runtimeWC.getName());
+        } else {
+            this.name.setText("");
+        }
 
-	protected void validate() {
-		if (runtime == null) {
-			wizard.setMessage("", IMessageProvider.ERROR);
-			return;
-		}
+        if (this.runtimeWC.getLocation() != null) {
+            this.installDir.setText(this.runtimeWC.getLocation().toOSString());
+        } else {
+            this.installDir.setText("");
+        }
 
-		IStatus status = runtimeWC.validate(null);
-		if (status == null) {
-			wizard.setMessage(null, IMessageProvider.NONE);
-		} else if (status.isOK()) {
-			wizard.setMessage(status.getMessage(), IMessageProvider.INFORMATION);
-		} else if (status.getSeverity() == IStatus.WARNING) {
-			wizard.setMessage(status.getMessage(), IMessageProvider.WARNING);
-		} else {
-			wizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
-		}
-		wizard.update();
-//		updateConfiguration();
-	}
+        // updateConfiguration();
+
+        // set selection
+        if (this.runtime.isUsingDefaultJRE()) {
+            this.vmCombo.select(0);
+        } else {
+            boolean found = false;
+            int size = this.installedJREs.size();
+            for (int i = 0; i < size; i++) {
+                IVMInstall vmInstall = this.installedJREs.get(i);
+                if (vmInstall.equals(this.runtime.getVMInstall())) {
+                    this.vmCombo.select(i + 1);
+                    found = true;
+                }
+            }
+            if (!found) {
+                this.vmCombo.select(0);
+            }
+        }
+    }
+
+    // private void updateConfiguration() {
+    // int v = 0;
+    // for (ServerVirgoHandler version : ServerVersionAdapter.ALL_HANDLERS) {
+    // if (version.isHandlerFor(runtimeWC)) {
+    // versionCombo.select(v);
+    // break;
+    // }
+    // v++;
+    // }
+    // }
+
+    protected void validate() {
+        if (this.runtime == null) {
+            this.wizard.setMessage("", IMessageProvider.ERROR);
+            return;
+        }
+
+        IStatus status = this.runtimeWC.validate(null);
+        if (status == null) {
+            this.wizard.setMessage(null, IMessageProvider.NONE);
+        } else if (status.isOK()) {
+            this.wizard.setMessage(status.getMessage(), IMessageProvider.INFORMATION);
+        } else if (status.getSeverity() == IStatus.WARNING) {
+            this.wizard.setMessage(status.getMessage(), IMessageProvider.WARNING);
+        } else {
+            this.wizard.setMessage(status.getMessage(), IMessageProvider.ERROR);
+        }
+        this.wizard.update();
+        // updateConfiguration();
+    }
 }

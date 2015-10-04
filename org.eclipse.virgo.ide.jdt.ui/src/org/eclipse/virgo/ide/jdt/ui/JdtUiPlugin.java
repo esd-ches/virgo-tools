@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.jdt.ui;
 
 import org.eclipse.ui.plugin.AbstractUIPlugin;
@@ -21,27 +22,27 @@ import org.osgi.framework.BundleContext;
  */
 public class JdtUiPlugin extends AbstractUIPlugin {
 
-	/** The bundle-symbolic name */
-	public static final String PLUGIN_ID = "org.eclipse.virgo.ide.jdt.ui";
+    /** The bundle-symbolic name */
+    public static final String PLUGIN_ID = "org.eclipse.virgo.ide.jdt.ui";
 
-	/** Id for the decorator */
-	public static final String DECORATOR_ID = PLUGIN_ID + ".notAccessibleJavaElementDecorator";
+    /** Id for the decorator */
+    public static final String DECORATOR_ID = PLUGIN_ID + ".notAccessibleJavaElementDecorator";
 
-	// The shared instance
-	private static JdtUiPlugin plugin;
+    // The shared instance
+    private static JdtUiPlugin plugin;
 
-	public void start(BundleContext context) throws Exception {
-		super.start(context);
-		plugin = this;
-	}
+    public void start(BundleContext context) throws Exception {
+        super.start(context);
+        plugin = this;
+    }
 
-	public void stop(BundleContext context) throws Exception {
-		plugin = null;
-		super.stop(context);
-	}
+    public void stop(BundleContext context) throws Exception {
+        plugin = null;
+        super.stop(context);
+    }
 
-	public static JdtUiPlugin getDefault() {
-		return plugin;
-	}
+    public static JdtUiPlugin getDefault() {
+        return plugin;
+    }
 
 }

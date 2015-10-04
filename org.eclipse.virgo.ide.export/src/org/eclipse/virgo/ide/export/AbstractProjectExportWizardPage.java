@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.export;
 
 import java.io.File;
@@ -49,7 +50,7 @@ import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 
 /**
  * Abstract wizard page for presenting a list of projects and specifying a location to export to.
- * 
+ *
  * @author Christian Dupuis
  * @author Terry Hon
  * @author Leo Dos Santos
@@ -57,293 +58,293 @@ import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 @SuppressWarnings("restriction")
 public abstract class AbstractProjectExportWizardPage extends WizardExportResourcesPage {
 
-	private Button browseButton;
+    private Button browseButton;
 
-	private Text destinationText;
+    private Text destinationText;
 
-	protected TableViewer tableViewer;
+    protected TableViewer tableViewer;
 
-	protected IStructuredSelection initialSelection;
+    protected IStructuredSelection initialSelection;
 
-	private boolean overwrite;
+    private boolean overwrite;
 
-	protected AbstractProjectExportWizardPage(String pageName, IStructuredSelection selection) {
-		super(pageName, selection);
-		this.initialSelection = selection;
-	}
+    protected AbstractProjectExportWizardPage(String pageName, IStructuredSelection selection) {
+        super(pageName, selection);
+        this.initialSelection = selection;
+    }
 
-	@Override
-	public void createControl(Composite parent) {
-		Composite composite = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout();
-		composite.setLayout(layout);
+    @Override
+    public void createControl(Composite parent) {
+        Composite composite = new Composite(parent, SWT.NONE);
+        GridLayout layout = new GridLayout();
+        composite.setLayout(layout);
 
-		Label selectProject = new Label(composite, SWT.NONE);
-		selectProject.setText("Select the project to export:");
-		selectProject.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+        Label selectProject = new Label(composite, SWT.NONE);
+        selectProject.setText("Select the project to export:");
+        selectProject.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
-		createInputGroup(composite);
+        createInputGroup(composite);
 
-		createDestinationGroup(composite);
+        createDestinationGroup(composite);
 
-		setControl(composite);
-	}
+        setControl(composite);
+    }
 
-	public boolean getOverwrite() {
-		return overwrite;
-	}
+    public boolean getOverwrite() {
+        return this.overwrite;
+    }
 
-	@Override
-	protected void createDestinationGroup(Composite parent) {
-		initializeDialogUnits(parent);
+    @Override
+    protected void createDestinationGroup(Composite parent) {
+        initializeDialogUnits(parent);
 
-		Composite destinationSelectionGroup = new Composite(parent, SWT.NONE);
-		GridLayout layout = new GridLayout(3, false);
-		destinationSelectionGroup.setLayout(layout);
-		destinationSelectionGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
+        Composite destinationSelectionGroup = new Composite(parent, SWT.NONE);
+        GridLayout layout = new GridLayout(3, false);
+        destinationSelectionGroup.setLayout(layout);
+        destinationSelectionGroup.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
-		Label label = new Label(destinationSelectionGroup, SWT.NONE);
-		label.setText("Select the export destination:");
-		GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false);
-		gridData.horizontalSpan = 3;
-		label.setLayoutData(gridData);
+        Label label = new Label(destinationSelectionGroup, SWT.NONE);
+        label.setText("Select the export destination:");
+        GridData gridData = new GridData(SWT.FILL, SWT.FILL, true, false);
+        gridData.horizontalSpan = 3;
+        label.setLayoutData(gridData);
 
-		Label jarLabel = new Label(destinationSelectionGroup, SWT.NONE);
-		jarLabel.setText(getDestinationLabel());
-		jarLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true));
+        Label jarLabel = new Label(destinationSelectionGroup, SWT.NONE);
+        jarLabel.setText(getDestinationLabel());
+        jarLabel.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, false, true));
 
-		destinationText = new Text(destinationSelectionGroup, SWT.BORDER);
-		destinationText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
-		destinationText.setEditable(true);
-		destinationText.addListener(SWT.Modify, this);
+        this.destinationText = new Text(destinationSelectionGroup, SWT.BORDER);
+        this.destinationText.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
+        this.destinationText.setEditable(true);
+        this.destinationText.addListener(SWT.Modify, this);
 
-		browseButton = new Button(destinationSelectionGroup, SWT.PUSH);
-		browseButton.setText("Browse...");
-		browseButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true));
-		browseButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				handleDestinationBrowseButtonPressed();
-			}
-		});
+        this.browseButton = new Button(destinationSelectionGroup, SWT.PUSH);
+        this.browseButton.setText("Browse...");
+        this.browseButton.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, true));
+        this.browseButton.addSelectionListener(new SelectionAdapter() {
 
-		tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                handleDestinationBrowseButtonPressed();
+            }
+        });
 
-			public void selectionChanged(SelectionChangedEvent event) {
-				updateFileName();
-			}
-		});
+        this.tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 
-		updateFileName();
+            public void selectionChanged(SelectionChangedEvent event) {
+                updateFileName();
+            }
+        });
 
-		final Button overwriteButton = new Button(destinationSelectionGroup, SWT.CHECK);
-		overwriteButton.setText("Overwrite existing file without warning");
+        updateFileName();
 
-		GridData buttonData = new GridData(SWT.FILL, SWT.FILL, true, false);
-		buttonData.horizontalSpan = 3;
-		buttonData.verticalIndent = 5;
-		overwriteButton.setLayoutData(buttonData);
-		overwriteButton.setSelection(false);
+        final Button overwriteButton = new Button(destinationSelectionGroup, SWT.CHECK);
+        overwriteButton.setText("Overwrite existing file without warning");
 
-		overwriteButton.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				overwrite = overwriteButton.getSelection();
-			}
-		});
-	}
+        GridData buttonData = new GridData(SWT.FILL, SWT.FILL, true, false);
+        buttonData.horizontalSpan = 3;
+        buttonData.verticalIndent = 5;
+        overwriteButton.setLayoutData(buttonData);
+        overwriteButton.setSelection(false);
 
-	protected void updateFileName() {
-		IProject project = getSelectedProject();
-		if (project == null) {
-			return;
-		}
+        overwriteButton.addSelectionListener(new SelectionAdapter() {
 
-		BundleManifest manifest = getBundleManifest(project);
-		if (manifest != null) {
-			String name = getSymbolicName(manifest);
-			String version = getVersion(manifest);
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                AbstractProjectExportWizardPage.this.overwrite = overwriteButton.getSelection();
+            }
+        });
+    }
 
-			IPath path = null;
-			if (destinationText.getText() != null) {
-				path = new Path("");
-			} else {
-				path = new Path(destinationText.getText());
-			}
-			if (name != null && version != null) {
-				path = path.removeLastSegments(1).append(name + "-" + version + getExtension());
-				destinationText.setText(path.toOSString());
-			}
-		}
-	}
+    protected void updateFileName() {
+        IProject project = getSelectedProject();
+        if (project == null) {
+            return;
+        }
 
-	protected abstract String getSymbolicName(BundleManifest bundleManifest);
+        BundleManifest manifest = getBundleManifest(project);
+        if (manifest != null) {
+            String name = getSymbolicName(manifest);
+            String version = getVersion(manifest);
 
-	protected abstract String getVersion(BundleManifest bundleManifest);
+            IPath path = null;
+            if (this.destinationText.getText() != null) {
+                path = new Path("");
+            } else {
+                path = new Path(this.destinationText.getText());
+            }
+            if (name != null && version != null) {
+                path = path.removeLastSegments(1).append(name + "-" + version + getExtension());
+                this.destinationText.setText(path.toOSString());
+            }
+        }
+    }
 
-	protected abstract BundleManifest getBundleManifest(IProject project);
+    protected abstract String getSymbolicName(BundleManifest bundleManifest);
 
-	private void createInputGroup(Composite parent) {
-		GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
+    protected abstract String getVersion(BundleManifest bundleManifest);
 
-		tableViewer = new TableViewer(parent, SWT.BORDER | SWT.SINGLE);
-		tableViewer.getTable().setLayoutData(data);
-		tableViewer.setUseHashlookup(true);
+    protected abstract BundleManifest getBundleManifest(IProject project);
 
-		int labelFlags = JavaElementLabelProvider.SHOW_BASICS | JavaElementLabelProvider.SHOW_OVERLAY_ICONS
-				| JavaElementLabelProvider.SHOW_SMALL_ICONS;
-		ITreeContentProvider treeContentProvider = getTreeContentProvider();
+    private void createInputGroup(Composite parent) {
+        GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
 
-		final DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new JavaElementLabelProvider(
-				labelFlags), new ProblemsLabelDecorator(null));
+        this.tableViewer = new TableViewer(parent, SWT.BORDER | SWT.SINGLE);
+        this.tableViewer.getTable().setLayoutData(data);
+        this.tableViewer.setUseHashlookup(true);
 
-		tableViewer.setContentProvider(treeContentProvider);
-		tableViewer.setLabelProvider(labelProvider);
-		tableViewer.addFilter(new EmptyInnerPackageFilter());
-		tableViewer.setComparator(new JavaElementComparator());
-		tableViewer.addFilter(getTreeViewerFilter());
+        int labelFlags = JavaElementLabelProvider.SHOW_BASICS | JavaElementLabelProvider.SHOW_OVERLAY_ICONS
+            | JavaElementLabelProvider.SHOW_SMALL_ICONS;
+        ITreeContentProvider treeContentProvider = getTreeContentProvider();
 
-		tableViewer.setInput(getInput());
-		tableViewer.setSelection(new StructuredSelection(initialSelection.toArray()), true);
-	}
+        final DecoratingLabelProvider labelProvider = new DecoratingLabelProvider(new JavaElementLabelProvider(labelFlags),
+            new ProblemsLabelDecorator(null));
 
-	abstract protected String getDestinationLabel();
+        this.tableViewer.setContentProvider(treeContentProvider);
+        this.tableViewer.setLabelProvider(labelProvider);
+        this.tableViewer.addFilter(new EmptyInnerPackageFilter());
+        this.tableViewer.setComparator(new JavaElementComparator());
+        this.tableViewer.addFilter(getTreeViewerFilter());
 
-	// copied from AbstractJarDestinationWizardPage
-	private String getDestinationValue() {
-		String destinationString = destinationText.getText().trim();
-		if (destinationString.indexOf('.') < 0) {
-			destinationString += getOutputSuffix();
-		}
-		return destinationString;
-	}
+        this.tableViewer.setInput(getInput());
+        this.tableViewer.setSelection(new StructuredSelection(this.initialSelection.toArray()), true);
+    }
 
-	abstract protected String getExtension();
+    abstract protected String getDestinationLabel();
 
-	protected Object getInput() {
-		return ResourcesPlugin.getWorkspace().getRoot();
-	}
+    // copied from AbstractJarDestinationWizardPage
+    private String getDestinationValue() {
+        String destinationString = this.destinationText.getText().trim();
+        if (destinationString.indexOf('.') < 0) {
+            destinationString += getOutputSuffix();
+        }
+        return destinationString;
+    }
 
-	public IPath getJarLocation() {
-		return Path.fromOSString(destinationText.getText());
-	}
+    abstract protected String getExtension();
 
-	private String getOutputSuffix() {
-		return ".jar";
-	}
+    protected Object getInput() {
+        return ResourcesPlugin.getWorkspace().getRoot();
+    }
 
-	public IProject getSelectedProject() {
-		ISelection selection = tableViewer.getSelection();
-		Object[] selectedItems;
-		if (selection instanceof IStructuredSelection) {
-			selectedItems = ((IStructuredSelection) selection).toArray();
-		} else {
-			selectedItems = new Object[0];
-		}
+    public IPath getJarLocation() {
+        return Path.fromOSString(this.destinationText.getText());
+    }
 
-		for (Object selectedItem : selectedItems) {
-			if (selectedItem instanceof IJavaProject) {
-				return ((IJavaProject) selectedItem).getProject();
-			} else if (selectedItem instanceof IProject) {
-				return (IProject) selectedItem;
-			}
-		}
-		return null;
-	}
+    private String getOutputSuffix() {
+        return ".jar";
+    }
 
-	protected ITreeContentProvider getTreeContentProvider() {
-		return new ITreeContentProvider() {
+    public IProject getSelectedProject() {
+        ISelection selection = this.tableViewer.getSelection();
+        Object[] selectedItems;
+        if (selection instanceof IStructuredSelection) {
+            selectedItems = ((IStructuredSelection) selection).toArray();
+        } else {
+            selectedItems = new Object[0];
+        }
 
-			private final Object[] NO_CHILDREN = new Object[0];
+        for (Object selectedItem : selectedItems) {
+            if (selectedItem instanceof IJavaProject) {
+                return ((IJavaProject) selectedItem).getProject();
+            } else if (selectedItem instanceof IProject) {
+                return (IProject) selectedItem;
+            }
+        }
+        return null;
+    }
 
-			public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
-				// no op
-			}
+    protected ITreeContentProvider getTreeContentProvider() {
+        return new ITreeContentProvider() {
 
-			public void dispose() {
-				// no op
-			}
+            private final Object[] NO_CHILDREN = new Object[0];
 
-			public Object[] getElements(Object inputElement) {
-				return getChildren(inputElement);
-			}
+            public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+                // no op
+            }
 
-			public boolean hasChildren(Object element) {
-				return getChildren(element).length > 0;
-			}
+            public void dispose() {
+                // no op
+            }
 
-			public Object getParent(Object element) {
-				// TODO Auto-generated method stub
-				return null;
-			}
+            public Object[] getElements(Object inputElement) {
+                return getChildren(inputElement);
+            }
 
-			public Object[] getChildren(Object parentElement) {
-				if (parentElement instanceof IProject) {
-					return NO_CHILDREN;
-				}
-				if (parentElement instanceof IContainer) {
-					IContainer container = (IContainer) parentElement;
-					try {
-						return container.members();
-					} catch (CoreException e) {
-					}
-				}
-				return NO_CHILDREN;
-			}
-		};
-	}
+            public boolean hasChildren(Object element) {
+                return getChildren(element).length > 0;
+            }
 
-	abstract protected ViewerFilter getTreeViewerFilter();
+            public Object getParent(Object element) {
+                // TODO Auto-generated method stub
+                return null;
+            }
 
-	// copied from AbstractJarDestinationWizardPage
-	private void handleDestinationBrowseButtonPressed() {
-		FileDialog dialog = new FileDialog(getContainer().getShell(), SWT.SAVE);
-		dialog.setFilterExtensions(new String[] { "*" + getExtension() });
+            public Object[] getChildren(Object parentElement) {
+                if (parentElement instanceof IProject) {
+                    return this.NO_CHILDREN;
+                }
+                if (parentElement instanceof IContainer) {
+                    IContainer container = (IContainer) parentElement;
+                    try {
+                        return container.members();
+                    } catch (CoreException e) {
+                    }
+                }
+                return this.NO_CHILDREN;
+            }
+        };
+    }
 
-		String currentSourceString = getDestinationValue();
-		int lastSeparatorIndex = currentSourceString.lastIndexOf(File.separator);
-		if (lastSeparatorIndex != -1) {
-			dialog.setFilterPath(currentSourceString.substring(0, lastSeparatorIndex));
-			dialog.setFileName(currentSourceString.substring(lastSeparatorIndex + 1, currentSourceString.length()));
-		} else {
-			dialog.setFileName(currentSourceString);
-		}
-		String selectedFileName = dialog.open();
-		if (selectedFileName != null) {
-			IContainer[] findContainersForLocation = ResourcesPlugin.getWorkspace()
-					.getRoot()
-					.findContainersForLocation(new Path(selectedFileName));
-			if (findContainersForLocation.length > 0) {
-				selectedFileName = findContainersForLocation[0].getFullPath().makeRelative().toString();
-			}
-			destinationText.setText(selectedFileName);
-		}
-	}
+    abstract protected ViewerFilter getTreeViewerFilter();
 
-	public void handleEvent(Event event) {
-		setPageComplete(isPageComplete());
-	}
+    // copied from AbstractJarDestinationWizardPage
+    private void handleDestinationBrowseButtonPressed() {
+        FileDialog dialog = new FileDialog(getContainer().getShell(), SWT.SAVE);
+        dialog.setFilterExtensions(new String[] { "*" + getExtension() });
 
-	@Override
-	public boolean isPageComplete() {
-		String text = destinationText.getText();
-		if (text.length() == 0) {
-			setErrorMessage(null);
-			return false;
-		}
+        String currentSourceString = getDestinationValue();
+        int lastSeparatorIndex = currentSourceString.lastIndexOf(File.separator);
+        if (lastSeparatorIndex != -1) {
+            dialog.setFilterPath(currentSourceString.substring(0, lastSeparatorIndex));
+            dialog.setFileName(currentSourceString.substring(lastSeparatorIndex + 1, currentSourceString.length()));
+        } else {
+            dialog.setFileName(currentSourceString);
+        }
+        String selectedFileName = dialog.open();
+        if (selectedFileName != null) {
+            IContainer[] findContainersForLocation = ResourcesPlugin.getWorkspace().getRoot().findContainersForLocation(new Path(selectedFileName));
+            if (findContainersForLocation.length > 0) {
+                selectedFileName = findContainersForLocation[0].getFullPath().makeRelative().toString();
+            }
+            this.destinationText.setText(selectedFileName);
+        }
+    }
 
-		if (!text.endsWith(getExtension())) {
-			setErrorMessage("Export destination must have " + getExtension() + " extension.");
-			return false;
-		}
+    public void handleEvent(Event event) {
+        setPageComplete(isPageComplete());
+    }
 
-		if (tableViewer.getSelection().isEmpty()) {
-			setErrorMessage("Bundle project selection must not be empty.");
-			return false;
-		}
+    @Override
+    public boolean isPageComplete() {
+        String text = this.destinationText.getText();
+        if (text.length() == 0) {
+            setErrorMessage(null);
+            return false;
+        }
 
-		setErrorMessage(null);
-		return true;
-	}
+        if (!text.endsWith(getExtension())) {
+            setErrorMessage("Export destination must have " + getExtension() + " extension.");
+            return false;
+        }
+
+        if (this.tableViewer.getSelection().isEmpty()) {
+            setErrorMessage("Bundle project selection must not be empty.");
+            return false;
+        }
+
+        setErrorMessage(null);
+        return true;
+    }
 
 }

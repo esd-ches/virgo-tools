@@ -8,12 +8,14 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.editors;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.OperationCanceledException;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
@@ -38,92 +40,89 @@ import org.eclipse.virgo.ide.ui.StatusHandler;
  */
 public class BundleRuntimePage extends PDEFormPage implements IBundleManifestSaveListener {
 
-	public static final String PAGE_ID = "bundle_runtime"; //$NON-NLS-1$
+    public static final String PAGE_ID = "bundle_runtime"; //$NON-NLS-1$
 
-	private BundleExportPackageSection bundleExportPackageSection = null;
+    private BundleExportPackageSection bundleExportPackageSection = null;
 
-	private BundleLibrarySection bundleLibrarySection = null;
+    private BundleLibrarySection bundleLibrarySection = null;
 
-	protected ScrolledForm form = null;
+    protected ScrolledForm form = null;
 
-	protected IResource resource = null;
+    protected IResource resource = null;
 
-	private static final String MANIFEST_ERRORS = "Runtime: Please correct one or more errors in the manifest";
+    private static final String MANIFEST_ERRORS = "Runtime: Please correct one or more errors in the manifest";
 
-	public BundleRuntimePage(FormEditor editor) {
-		super(editor, PAGE_ID, PDEUIMessages.RuntimePage_tabName);
-	}
+    public BundleRuntimePage(FormEditor editor) {
+        super(editor, PAGE_ID, PDEUIMessages.RuntimePage_tabName);
+    }
 
-	@Override
-	protected void createFormContent(IManagedForm mform) {
-		super.createFormContent(mform);
-		form = mform.getForm();
-		form.setImage(PDEPlugin.getDefault().getLabelProvider().get(PDEPluginImages.DESC_JAVA_LIB_OBJ));
-		form.setText(PDEUIMessages.ManifestEditor_RuntimeForm_title);
+    @Override
+    protected void createFormContent(IManagedForm mform) {
+        super.createFormContent(mform);
+        this.form = mform.getForm();
+        this.form.setImage(PDEPlugin.getDefault().getLabelProvider().get(PDEPluginImages.DESC_JAVA_LIB_OBJ));
+        this.form.setText(PDEUIMessages.ManifestEditor_RuntimeForm_title);
 
-		Composite body = form.getBody();
-		body.setLayout(FormLayoutFactory.createFormGridLayout(true, 2));
-		Composite left, right;
-		FormToolkit toolkit = mform.getToolkit();
-		left = toolkit.createComposite(body, SWT.NONE);
-		left.setLayout(FormLayoutFactory.createFormPaneGridLayout(false, 1));
-		left.setLayoutData(new GridData(GridData.FILL_BOTH));
-		right = toolkit.createComposite(body, SWT.NONE);
-		right.setLayout(FormLayoutFactory.createFormPaneGridLayout(false, 1));
-		right.setLayoutData(new GridData(GridData.FILL_BOTH));
+        Composite body = this.form.getBody();
+        body.setLayout(FormLayoutFactory.createFormGridLayout(true, 2));
+        Composite left, right;
+        FormToolkit toolkit = mform.getToolkit();
+        left = toolkit.createComposite(body, SWT.NONE);
+        left.setLayout(FormLayoutFactory.createFormPaneGridLayout(false, 1));
+        left.setLayoutData(new GridData(GridData.FILL_BOTH));
+        right = toolkit.createComposite(body, SWT.NONE);
+        right.setLayout(FormLayoutFactory.createFormPaneGridLayout(false, 1));
+        right.setLayoutData(new GridData(GridData.FILL_BOTH));
 
-		bundleExportPackageSection = new BundleExportPackageSection(this, left);
-		bundleLibrarySection = new BundleLibrarySection(this, right);
+        this.bundleExportPackageSection = new BundleExportPackageSection(this, left);
+        this.bundleLibrarySection = new BundleLibrarySection(this, right);
 
-		mform.addPart(bundleExportPackageSection);
-		mform.addPart(bundleLibrarySection);
+        mform.addPart(this.bundleExportPackageSection);
+        mform.addPart(this.bundleLibrarySection);
 
-		IPluginModelBase model = (IPluginModelBase) ((BundleManifestEditor) this.getEditor()).getAggregateModel();
-		resource = model.getUnderlyingResource();
-		updateFormText();
-	}
+        IPluginModelBase model = (IPluginModelBase) ((BundleManifestEditor) this.getEditor()).getAggregateModel();
+        this.resource = model.getUnderlyingResource();
+        updateFormText();
+    }
 
-	public void manifestSaved() {
-		if (resource != null) {
-			updateFormText();
-		}
-	}
+    public void manifestSaved() {
+        if (this.resource != null) {
+            updateFormText();
+        }
+    }
 
-	protected void updateFormText() {
-		try {
-			// Wait for build
-			Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
-		} catch (OperationCanceledException e) {
-			StatusHandler.log(new Status(Status.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Could not update page title text",
-					e));
-		} catch (InterruptedException e) {
-			StatusHandler.log(new Status(Status.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Could not update page title text",
-					e));
-		}
+    protected void updateFormText() {
+        try {
+            // Wait for build
+            Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+        } catch (OperationCanceledException e) {
+            StatusHandler.log(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Could not update page title text", e));
+        } catch (InterruptedException e) {
+            StatusHandler.log(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Could not update page title text", e));
+        }
 
-		try {
-			if (resource != null) {
-				IMarker[] markers = resource.findMarkers(null, true, IResource.DEPTH_ZERO);
-				if (ManifestEditorUtils.hasErrorSeverityMarker(markers)) {
-					form.setText(MANIFEST_ERRORS);
-					form.setImage(ServerIdeUiPlugin.getImage("full/obj16/manifest_error.png"));
-				} else {
-					form.setText(PDEUIMessages.ManifestEditor_RuntimeForm_title);
-					form.setImage(ServerIdeUiPlugin.getImage("full/obj16/osgi_obj.gif"));
-				}
-			}
-		} catch (CoreException e) {
-			StatusHandler.log(new Status(Status.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Could not update page title text",
-					e));
-		}
-	}
+        try {
+            if (this.resource != null) {
+                IMarker[] markers = this.resource.findMarkers(null, true, IResource.DEPTH_ZERO);
+                if (ManifestEditorUtils.hasErrorSeverityMarker(markers)) {
+                    this.form.setText(MANIFEST_ERRORS);
+                    this.form.setImage(ServerIdeUiPlugin.getImage("full/obj16/manifest_error.png"));
+                } else {
+                    this.form.setText(PDEUIMessages.ManifestEditor_RuntimeForm_title);
+                    this.form.setImage(ServerIdeUiPlugin.getImage("full/obj16/osgi_obj.gif"));
+                }
+            }
+        } catch (CoreException e) {
+            StatusHandler.log(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Could not update page title text", e));
+        }
+    }
 
-	public BundleExportPackageSection getBundleExportPackageSection() {
-		return this.bundleExportPackageSection;
-	}
+    public BundleExportPackageSection getBundleExportPackageSection() {
+        return this.bundleExportPackageSection;
+    }
 
-	public BundleLibrarySection getBundleLibrarySection() {
-		return this.bundleLibrarySection;
-	}
+    public BundleLibrarySection getBundleLibrarySection() {
+        return this.bundleLibrarySection;
+    }
 
 }

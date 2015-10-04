@@ -14,12 +14,13 @@ package org.eclipse.virgo.ide.runtime.internal.ui.projects;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ILocalArtefact;
 
 /**
- * 
+ *
  * @author Miles Parker
- * 
+ *
  */
 public interface IServerProjectArtefact {
-	IServerProjectContainer getContainer();
 
-	public ILocalArtefact getArtefact();
+    IServerProjectContainer getContainer();
+
+    public ILocalArtefact getArtefact();
 }

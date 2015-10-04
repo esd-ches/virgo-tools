@@ -8,13 +8,9 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.editors;
 
-import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
-import org.eclipse.swtbot.swt.finder.results.VoidResult;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
-import org.eclipse.swtbot.swt.finder.widgets.SWTBotTable;
 import org.eclipse.virgo.ide.ui.tests.AbstractManifestUiTestCase;
 
 /**
@@ -22,56 +18,59 @@ import org.eclipse.virgo.ide.ui.tests.AbstractManifestUiTestCase;
  */
 public class BundleLibrarySectionUiTest extends AbstractManifestUiTestCase {
 
-	private static String SECTION_LABEL = "Classpath";
+    private static String SECTION_LABEL = "Classpath";
 
-	public void testNewButton() throws Exception {
-		final BundleManifestEditor manifest = openBundleManifestFile("src/META-INF/MANIFEST.MF");
-		UIThreadRunnable.syncExec(new VoidResult() {
-			public void run() {
-				manifest.setActivePage(BundleRuntimePage.PAGE_ID);
-			}
-		});
-		bot.flatButtonInSection("New...", SECTION_LABEL).click();
+    public void testNewButton() throws Exception {
+        final BundleManifestEditor manifest = openBundleManifestFile("src/META-INF/MANIFEST.MF");
+        UIThreadRunnable.syncExec(new VoidResult() {
 
-		SWTBotShell newDialog = bot.shell("New Library");
-		assertTrue(newDialog.isOpen());
-		newDialog.close();
-	}
+            public void run() {
+                manifest.setActivePage(BundleRuntimePage.PAGE_ID);
+            }
+        });
+        this.bot.flatButtonInSection("New...", SECTION_LABEL).click();
 
-	public void testAddButton() throws Exception {
-		final BundleManifestEditor manifest = openBundleManifestFile("src/META-INF/MANIFEST.MF");
-		UIThreadRunnable.syncExec(new VoidResult() {
-			public void run() {
-				manifest.setActivePage(BundleRuntimePage.PAGE_ID);
-			}
-		});
-		bot.flatButtonInSection("Add...", SECTION_LABEL).click();
+        SWTBotShell newDialog = this.bot.shell("New Library");
+        assertTrue(newDialog.isOpen());
+        newDialog.close();
+    }
 
-		SWTBotShell addDialog = bot.shell("JAR Selection");
-		assertTrue(addDialog.isOpen());
-		addDialog.close();
-	}
+    public void testAddButton() throws Exception {
+        final BundleManifestEditor manifest = openBundleManifestFile("src/META-INF/MANIFEST.MF");
+        UIThreadRunnable.syncExec(new VoidResult() {
 
-	public void testRemoveButton() throws Exception {
-		final BundleManifestEditor manifest = openBundleManifestFile("src/META-INF/MANIFEST.MF");
-		UIThreadRunnable.syncExec(new VoidResult() {
-			public void run() {
-				manifest.setActivePage(BundleRuntimePage.PAGE_ID);
-			}
-		});
+            public void run() {
+                manifest.setActivePage(BundleRuntimePage.PAGE_ID);
+            }
+        });
+        this.bot.flatButtonInSection("Add...", SECTION_LABEL).click();
 
-		SWTBotButton button = bot.flatButtonInSection("Remove", SECTION_LABEL);
-		assertFalse(button.isEnabled());
+        SWTBotShell addDialog = this.bot.shell("JAR Selection");
+        assertTrue(addDialog.isOpen());
+        addDialog.close();
+    }
 
-		SWTBotTable table = bot.tableInSection(SECTION_LABEL);
-		int count = table.rowCount();
-		assertTrue(count > 0);
+    public void testRemoveButton() throws Exception {
+        final BundleManifestEditor manifest = openBundleManifestFile("src/META-INF/MANIFEST.MF");
+        UIThreadRunnable.syncExec(new VoidResult() {
 
-		table.select(0);
-		assertTrue(button.isEnabled());
+            public void run() {
+                manifest.setActivePage(BundleRuntimePage.PAGE_ID);
+            }
+        });
 
-		button.click();
-		assertEquals(count - 1, table.rowCount());
-	}
+        SWTBotButton button = this.bot.flatButtonInSection("Remove", SECTION_LABEL);
+        assertFalse(button.isEnabled());
+
+        SWTBotTable table = this.bot.tableInSection(SECTION_LABEL);
+        int count = table.rowCount();
+        assertTrue(count > 0);
+
+        table.select(0);
+        assertTrue(button.isEnabled());
+
+        button.click();
+        assertEquals(count - 1, table.rowCount());
+    }
 
 }

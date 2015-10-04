@@ -9,6 +9,7 @@
  * Contributors:
  *     IBM Corporation - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.ui.actions;
 
 import java.util.Iterator;
@@ -39,111 +40,97 @@ import org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFileSelection;
  * <p>
  * This class may be instantiated; it is not intended to be subclassed.
  * </p>
- * 
+ *
  * @author Others
  * @author Miles Parker
  * @noextend This class is not intended to be subclassed by clients.
  */
 public class OpenServerProjectFileAction extends SelectionListenerAction {
 
-	/**
-	 * The id of this action.
-	 */
-	public static final String ID = PlatformUI.PLUGIN_ID + ".OpenFileAction";//$NON-NLS-1$
+    /**
+     * The id of this action.
+     */
+    public static final String ID = PlatformUI.PLUGIN_ID + ".OpenFileAction";//$NON-NLS-1$
 
-	/**
-	 * The editor to open.
-	 */
-	private final IEditorDescriptor editorDescriptor;
+    private final IWorkbenchPage workbenchPage2;
 
-	private final IWorkbenchPage workbenchPage2;
+    /**
+     * Creates a new action that will open editors on the then-selected file resources. Equivalent to
+     * <code>OpenFileAction(page,null)</code>.
+     *
+     * @param page the workbench page in which to open the editor
+     */
+    public OpenServerProjectFileAction(IWorkbenchPage page) {
+        this(page, null);
+    }
 
-	/**
-	 * Creates a new action that will open editors on the then-selected file resources. Equivalent to
-	 * <code>OpenFileAction(page,null)</code>.
-	 * 
-	 * @param page
-	 *            the workbench page in which to open the editor
-	 */
-	public OpenServerProjectFileAction(IWorkbenchPage page) {
-		this(page, null);
-	}
+    /**
+     * Creates a new action that will open instances of the specified editor on the then-selected file resources.
+     *
+     * @param page the workbench page in which to open the editor
+     * @param descriptor the editor descriptor, or <code>null</code> if unspecified
+     */
+    public OpenServerProjectFileAction(IWorkbenchPage page, IEditorDescriptor descriptor) {
+        super("Open Linked File");
+        this.workbenchPage2 = page;
+        setText(descriptor == null ? IDEWorkbenchMessages.OpenFileAction_text : descriptor.getLabel());
+        PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IIDEHelpContextIds.OPEN_FILE_ACTION);
+        setToolTipText(IDEWorkbenchMessages.OpenFileAction_toolTip);
+        setId(ID);
+    }
 
-	/**
-	 * Creates a new action that will open instances of the specified editor on the then-selected file resources.
-	 * 
-	 * @param page
-	 *            the workbench page in which to open the editor
-	 * @param descriptor
-	 *            the editor descriptor, or <code>null</code> if unspecified
-	 */
-	public OpenServerProjectFileAction(IWorkbenchPage page, IEditorDescriptor descriptor) {
-		super("Open Linked File");
-		this.workbenchPage2 = page;
-		setText(descriptor == null ? IDEWorkbenchMessages.OpenFileAction_text : descriptor.getLabel());
-		PlatformUI.getWorkbench().getHelpSystem().setHelp(this, IIDEHelpContextIds.OPEN_FILE_ACTION);
-		setToolTipText(IDEWorkbenchMessages.OpenFileAction_toolTip);
-		setId(ID);
-		this.editorDescriptor = descriptor;
-	}
+    /**
+     * @see org.eclipse.ui.actions.OpenSystemEditorAction#updateSelection(org.eclipse.jface.viewers.IStructuredSelection)
+     */
+    @Override
+    public boolean updateSelection(IStructuredSelection selection) {
+        Object element = ((StructuredSelection) selection).getFirstElement();
+        return selection instanceof StructuredSelection
+            && (element instanceof ProjectFileReference || element instanceof IFile || element instanceof ServerFile);
+    }
 
-	/**
-	 * @see org.eclipse.ui.actions.OpenSystemEditorAction#updateSelection(org.eclipse.jface.viewers.IStructuredSelection)
-	 */
-	@Override
-	public boolean updateSelection(IStructuredSelection selection) {
-		Object element = ((StructuredSelection) selection).getFirstElement();
-		return selection instanceof StructuredSelection
-				&& (element instanceof ProjectFileReference || element instanceof IFile || element instanceof ServerFile);
-	}
+    /**
+     * @see org.eclipse.ui.actions.OpenSystemEditorAction#run()
+     */
+    @Override
+    public void run() {
+        Iterator iterator = getStructuredSelection().iterator();
+        while (iterator.hasNext()) {
+            Object next = iterator.next();
+            if (next instanceof ProjectFileReference) {
+                openFile(((ProjectFileReference) next).getWorkspaceFile());
+            } else if (next instanceof IFile) {
+                openFile((IFile) next);
+            } else if (next instanceof ServerFileSelection) {
+                openFile((ServerFileSelection) next);
+            } else if (next instanceof ServerFile) {
+                openFile(((ServerFile) next).getFile());
+            }
+        }
+    }
 
-	/**
-	 * @see org.eclipse.ui.actions.OpenSystemEditorAction#run()
-	 */
-	@Override
-	public void run() {
-		Iterator iterator = getStructuredSelection().iterator();
-		while (iterator.hasNext()) {
-			Object next = iterator.next();
-			if (next instanceof ProjectFileReference) {
-				openFile(((ProjectFileReference) next).getWorkspaceFile());
-			} else if (next instanceof IFile) {
-				openFile((IFile) next);
-			} else if (next instanceof ServerFileSelection) {
-				openFile((ServerFileSelection) next);
-			} else if (next instanceof ServerFile) {
-				openFile(((ServerFile) next).getFile());
-			}
-		}
-	}
+    public void openFile(ServerFileSelection selection) {
+        IEditorPart openEditor = openFile(selection.getFile());
+        if (openEditor instanceof ITextEditor) {
+            ((ITextEditor) openEditor).selectAndReveal(selection.getOffset(), selection.getLength());
+        }
+    }
 
-	public void openFile(ServerFileSelection selection) {
-		IEditorPart openEditor = openFile(selection.getFile());
-		if (openEditor instanceof ITextEditor) {
-			((ITextEditor) openEditor).selectAndReveal(selection.getOffset(), selection.getLength());
-		}
-	}
-
-	public IEditorPart openFile(IFile file) {
-		try {
-			IEditorDescriptor defaultEditor = workbenchPage2.getWorkbenchWindow()
-					.getWorkbench()
-					.getEditorRegistry()
-					.getDefaultEditor(file.getName());
-			if (defaultEditor == null) {
-				defaultEditor = workbenchPage2.getWorkbenchWindow()
-						.getWorkbench()
-						.getEditorRegistry()
-						.getDefaultEditor("fake.txt");
-			}
-			if (defaultEditor != null) {
-				IEditorPart openEditor = workbenchPage2.openEditor(new FileEditorInput(file), defaultEditor.getId());
-				return openEditor;
-			}
-		} catch (PartInitException e) {
-			DialogUtil.openError(workbenchPage2.getWorkbenchWindow().getShell(),
-					IDEWorkbenchMessages.OpenSystemEditorAction_dialogTitle, e.getMessage(), e);
-		}
-		return null;
-	}
+    public IEditorPart openFile(IFile file) {
+        try {
+            IEditorDescriptor defaultEditor = this.workbenchPage2.getWorkbenchWindow().getWorkbench().getEditorRegistry().getDefaultEditor(
+                file.getName());
+            if (defaultEditor == null) {
+                defaultEditor = this.workbenchPage2.getWorkbenchWindow().getWorkbench().getEditorRegistry().getDefaultEditor("fake.txt");
+            }
+            if (defaultEditor != null) {
+                IEditorPart openEditor = this.workbenchPage2.openEditor(new FileEditorInput(file), defaultEditor.getId());
+                return openEditor;
+            }
+        } catch (PartInitException e) {
+            DialogUtil.openError(this.workbenchPage2.getWorkbenchWindow().getShell(), IDEWorkbenchMessages.OpenSystemEditorAction_dialogTitle,
+                e.getMessage(), e);
+        }
+        return null;
+    }
 }

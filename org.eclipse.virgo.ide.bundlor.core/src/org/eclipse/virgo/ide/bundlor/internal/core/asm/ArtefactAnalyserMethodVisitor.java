@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.bundlor.internal.core.asm;
 
 import org.eclipse.virgo.bundlor.support.partialmanifest.PartialManifest;
@@ -19,112 +20,120 @@ import org.objectweb.asm.commons.EmptyVisitor;
 
 /**
  * ASM {@link MethodVisitor} to scan method bodies for imports.
- * 
+ *
  * @author Christian Dupuis
  * @author Rob Harrop
  */
 final class ArtefactAnalyserMethodVisitor extends EmptyVisitor implements MethodVisitor {
 
-	/**
-	 * The <code>PartialManifest</code> being updated.
-	 */
-	private final PartialManifest partialManifest;
+    /**
+     * The <code>PartialManifest</code> being updated.
+     */
+    private final PartialManifest partialManifest;
 
-	/**
-	 * The type that is being scanned.
-	 */
-	private final Type type;
+    /**
+     * The type that is being scanned.
+     */
+    private final Type type;
 
-	/**
-	 * Creates a new <code>ArtefactAnalyserMethodVisitor</code> for the supplied
-	 * {@link PartialManifest}.
-	 * 
-	 * @param partialManifest the <code>PartialManifest</code>.
-	 */
-	public ArtefactAnalyserMethodVisitor(PartialManifest partialManifest, Type type) {
-		this.partialManifest = partialManifest;
-		this.type = type;
-	}
+    /**
+     * Creates a new <code>ArtefactAnalyserMethodVisitor</code> for the supplied {@link PartialManifest}.
+     *
+     * @param partialManifest the <code>PartialManifest</code>.
+     */
+    public ArtefactAnalyserMethodVisitor(PartialManifest partialManifest, Type type) {
+        this.partialManifest = partialManifest;
+        this.type = type;
+    }
 
-	/**
-	 * @inheritDoc
-	 */
-	public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-		Type t = Type.getType(desc);
-		VisitorUtils.recordReferencedTypes(partialManifest, t);
-		VisitorUtils.recordUses(partialManifest, this.type, t);
-		return null;
-	}
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+        Type t = Type.getType(desc);
+        VisitorUtils.recordReferencedTypes(this.partialManifest, t);
+        VisitorUtils.recordUses(this.partialManifest, this.type, t);
+        return null;
+    }
 
-	/**
-	 * @inheritDoc
-	 */
-	public void visitFieldInsn(int opcode, String owner, String name, String desc) {
-		VisitorUtils.recordReferencedTypes(partialManifest, Type.getType(desc));
-		VisitorUtils.recordReferencedTypes(partialManifest, Type.getObjectType(owner));
-	}
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void visitFieldInsn(int opcode, String owner, String name, String desc) {
+        VisitorUtils.recordReferencedTypes(this.partialManifest, Type.getType(desc));
+        VisitorUtils.recordReferencedTypes(this.partialManifest, Type.getObjectType(owner));
+    }
 
-	/**
-	 * @inheritDoc
-	 */
-	public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
-		Type t = Type.getType(desc);
-		VisitorUtils.recordReferencedTypes(partialManifest, t);
-	}
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {
+        Type t = Type.getType(desc);
+        VisitorUtils.recordReferencedTypes(this.partialManifest, t);
+    }
 
-	/**
-	 * @inheritDoc
-	 */
-	public void visitMethodInsn(int opcode, String owner, String name, String desc) {
-		Type t = Type.getObjectType(owner);
-		VisitorUtils.recordReferencedTypes(partialManifest, t);
-		VisitorUtils.recordReferencedTypes(partialManifest, Type.getReturnType(desc));
-		VisitorUtils.recordReferencedTypes(partialManifest, Type.getArgumentTypes(desc));
-	}
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void visitMethodInsn(int opcode, String owner, String name, String desc) {
+        Type t = Type.getObjectType(owner);
+        VisitorUtils.recordReferencedTypes(this.partialManifest, t);
+        VisitorUtils.recordReferencedTypes(this.partialManifest, Type.getReturnType(desc));
+        VisitorUtils.recordReferencedTypes(this.partialManifest, Type.getArgumentTypes(desc));
+    }
 
-	/**
-	 * @inheritDoc
-	 */
-	public void visitMultiANewArrayInsn(String desc, int dims) {
-		Type t = Type.getType(desc);
-		VisitorUtils.recordReferencedTypes(partialManifest, t);
-	}
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void visitMultiANewArrayInsn(String desc, int dims) {
+        Type t = Type.getType(desc);
+        VisitorUtils.recordReferencedTypes(this.partialManifest, t);
+    }
 
-	/**
-	 * @inheritDoc
-	 */
-	public AnnotationVisitor visitParameterAnnotation(int parameter, String desc, boolean visible) {
-		Type t = Type.getType(desc);
-		VisitorUtils.recordReferencedTypes(partialManifest, t);
-		VisitorUtils.recordUses(partialManifest, this.type, t);
-		return null;
-	}
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public AnnotationVisitor visitParameterAnnotation(int parameter, String desc, boolean visible) {
+        Type t = Type.getType(desc);
+        VisitorUtils.recordReferencedTypes(this.partialManifest, t);
+        VisitorUtils.recordUses(this.partialManifest, this.type, t);
+        return null;
+    }
 
-	/**
-	 * @inheritDoc
-	 */
-	public void visitTryCatchBlock(Label start, Label end, Label handler, String type) {
-		if (type != null) {
-			Type t = Type.getObjectType(type);
-			VisitorUtils.recordReferencedTypes(partialManifest, t);
-		}
-	}
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void visitTryCatchBlock(Label start, Label end, Label handler, String type) {
+        if (type != null) {
+            Type t = Type.getObjectType(type);
+            VisitorUtils.recordReferencedTypes(this.partialManifest, t);
+        }
+    }
 
-	/**
-	 * @inheritDoc
-	 */
-	public void visitTypeInsn(int opcode, String type) {
-		Type t = Type.getObjectType(type);
-		VisitorUtils.recordReferencedTypes(partialManifest, t);
-	}
+    /**
+     * @inheritDoc
+     */
+    @Override
+    public void visitTypeInsn(int opcode, String type) {
+        Type t = Type.getObjectType(type);
+        VisitorUtils.recordReferencedTypes(this.partialManifest, t);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	public void visitLdcInsn(Object cst) {
-		if (cst instanceof Type) {
-			VisitorUtils.recordReferencedTypes(partialManifest, (Type) cst);
-		}
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void visitLdcInsn(Object cst) {
+        if (cst instanceof Type) {
+            VisitorUtils.recordReferencedTypes(this.partialManifest, (Type) cst);
+        }
+    }
 
 }

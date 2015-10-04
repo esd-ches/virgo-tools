@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.core;
 
 import java.net.URL;
@@ -22,54 +23,53 @@ import org.eclipse.wst.server.core.util.HttpLaunchable;
 import org.eclipse.wst.server.core.util.WebResource;
 
 /**
- * {@link LaunchableAdapterDelegate} to allow "Run as..." actions for web
- * resources.
- * 
+ * {@link LaunchableAdapterDelegate} to allow "Run as..." actions for web resources.
+ *
  * @author Christian Dupuis
  * @since 1.0.0
  */
 public class ServerLaunchableAdapterDelegate extends LaunchableAdapterDelegate {
 
-	public Object getLaunchable(IServer server, IModuleArtifact moduleObject) {
-		// Check for correct module type
-		if (server.getAdapter(Server.class) == null) {
-			return null;
-		}
-		if (!(moduleObject instanceof Servlet) && !(moduleObject instanceof WebResource)) {
-			return null;
-		}
-		if (moduleObject.getModule().loadAdapter(IWebModule.class, null) == null) {
-			return null;
-		}
+    @Override
+    public Object getLaunchable(IServer server, IModuleArtifact moduleObject) {
+        // Check for correct module type
+        if (server.getAdapter(Server.class) == null) {
+            return null;
+        }
+        if (!(moduleObject instanceof Servlet) && !(moduleObject instanceof WebResource)) {
+            return null;
+        }
+        if (moduleObject.getModule().loadAdapter(IWebModule.class, null) == null) {
+            return null;
+        }
 
-		try {
-			URL url = ((IURLProvider) server.loadAdapter(IURLProvider.class, null)).getModuleRootURL(moduleObject
-					.getModule());
+        try {
+            URL url = ((IURLProvider) server.loadAdapter(IURLProvider.class, null)).getModuleRootURL(moduleObject.getModule());
 
-			if (moduleObject instanceof Servlet) {
-				Servlet servlet = (Servlet) moduleObject;
-				if (servlet.getAlias() != null) {
-					String path = servlet.getAlias();
-					if (path.startsWith("/")) {
-						path = path.substring(1);
-					}
-					url = new URL(url, path);
-				} else {
-					url = new URL(url, "servlet/" + servlet.getServletClassName());
-				}
-			} else if (moduleObject instanceof WebResource) {
-				WebResource resource = (WebResource) moduleObject;
-				String path = resource.getPath().toString();
-				if (path != null && path.startsWith("/") && path.length() > 0) {
-					path = path.substring(1);
-				}
-				if (path != null && path.length() > 0) {
-					url = new URL(url, path);
-				}
-			}
-			return new HttpLaunchable(url);
-		} catch (Exception e) {
-			return null;
-		}
-	}
+            if (moduleObject instanceof Servlet) {
+                Servlet servlet = (Servlet) moduleObject;
+                if (servlet.getAlias() != null) {
+                    String path = servlet.getAlias();
+                    if (path.startsWith("/")) {
+                        path = path.substring(1);
+                    }
+                    url = new URL(url, path);
+                } else {
+                    url = new URL(url, "servlet/" + servlet.getServletClassName());
+                }
+            } else if (moduleObject instanceof WebResource) {
+                WebResource resource = (WebResource) moduleObject;
+                String path = resource.getPath().toString();
+                if (path != null && path.startsWith("/") && path.length() > 0) {
+                    path = path.substring(1);
+                }
+                if (path != null && path.length() > 0) {
+                    url = new URL(url, path);
+                }
+            }
+            return new HttpLaunchable(url);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

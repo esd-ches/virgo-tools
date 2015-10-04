@@ -16,47 +16,49 @@ import java.io.File;
 import org.apache.commons.lang.ObjectUtils;
 
 /**
- * 
+ *
  * @author Miles Parker
- * 
+ *
  */
 public class LocalArtefactRepository extends ArtefactRepository implements ILocalEntity {
 
-	private final File file;
+    private final File file;
 
-	public LocalArtefactRepository(File file) {
-		this.file = file;
-		bundles = createArtefactSet(ArtefactType.BUNDLE, file);
-		libraries = createArtefactSet(ArtefactType.LIBRARY, file);
-		allArtefacts = new LocalArtefactSet(this, ArtefactType.COMBINED, file);
-	}
+    public LocalArtefactRepository(File file) {
+        this.file = file;
+        this.bundles = createArtefactSet(ArtefactType.BUNDLE, file);
+        this.libraries = createArtefactSet(ArtefactType.LIBRARY, file);
+        this.allArtefacts = new LocalArtefactSet(this, ArtefactType.COMBINED, file);
+    }
 
-	protected ArtefactSet createArtefactSet(ArtefactType type, File file) {
-		return new LocalArtefactSet(this, type, file) {
-			@Override
-			public boolean add(IArtefact artefact) {
-				return super.add(artefact) && allArtefacts.add(artefact);
-			}
-		};
-	}
+    protected ArtefactSet createArtefactSet(ArtefactType type, File file) {
+        return new LocalArtefactSet(this, type, file) {
 
-	/**
-	 * @see org.eclipse.virgo.ide.runtime.core.artefacts.ILocalEntity#getFile()
-	 */
-	public File getFile() {
-		return file;
-	}
+            @Override
+            public boolean add(IArtefact artefact) {
+                return super.add(artefact) && LocalArtefactRepository.this.allArtefacts.add(artefact);
+            }
+        };
+    }
 
-	/**
-	 * Assumes one and only one repository at each file.
-	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	public boolean equals(Object other) {
-		if (other instanceof LocalArtefactRepository) {
-			LocalArtefactRepository otherRepos = (LocalArtefactRepository) other;
-			return ObjectUtils.equals(file, otherRepos.file);
-		}
-		return false;
-	}
+    /**
+     * @see org.eclipse.virgo.ide.runtime.core.artefacts.ILocalEntity#getFile()
+     */
+    public File getFile() {
+        return this.file;
+    }
+
+    /**
+     * Assumes one and only one repository at each file.
+     *
+     * @see java.lang.Object#equals(java.lang.Object)
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (other instanceof LocalArtefactRepository) {
+            LocalArtefactRepository otherRepos = (LocalArtefactRepository) other;
+            return ObjectUtils.equals(this.file, otherRepos.file);
+        }
+        return false;
+    }
 }

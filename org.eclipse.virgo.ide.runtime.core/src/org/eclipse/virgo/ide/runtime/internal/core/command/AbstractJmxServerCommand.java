@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.core.command;
 
 import java.io.IOException;
@@ -35,72 +36,71 @@ import org.eclipse.virgo.ide.runtime.internal.core.utils.StatusUtil;
  */
 public abstract class AbstractJmxServerCommand {
 
-	protected interface JmxServerCommandTemplate {
+    protected interface JmxServerCommandTemplate {
 
-		Object invokeOperation(MBeanServerConnection connection) throws Exception;
+        Object invokeOperation(MBeanServerConnection connection) throws Exception;
 
-	}
+    }
 
-	private static final String JMX_CONNECTOR_URL = "service:jmx:rmi:///jndi/rmi://%s:%d/jmxrmi"; //$NON-NLS-1$
+    private static final String JMX_CONNECTOR_URL = "service:jmx:rmi:///jndi/rmi://%s:%d/jmxrmi"; //$NON-NLS-1$
 
-	protected final IServerBehaviour serverBehaviour;
+    protected final IServerBehaviour serverBehaviour;
 
-	public AbstractJmxServerCommand(IServerBehaviour serverBehaviour) {
-		this.serverBehaviour = serverBehaviour;
-	}
+    public AbstractJmxServerCommand(IServerBehaviour serverBehaviour) {
+        this.serverBehaviour = serverBehaviour;
+    }
 
-	private JMXConnector getJmxConnector() throws IOException {
-		Hashtable<String, Object> h = new Hashtable<String, Object>();
-		Server server = ServerUtils.getServer(serverBehaviour);
+    private JMXConnector getJmxConnector() throws IOException {
+        Hashtable<String, Object> h = new Hashtable<String, Object>();
+        Server server = ServerUtils.getServer(this.serverBehaviour);
 
-		if (serverBehaviour.getMBeanServerIp() == null) {
-			throw new IOException("MBean server not open for connection");
-		}
-		String connectorUrl = String.format(JMX_CONNECTOR_URL, serverBehaviour.getMBeanServerIp(),
-											server.getMBeanServerPort());
-		return JMXConnectorFactory.connect(new JMXServiceURL(connectorUrl), h);
-	}
+        if (this.serverBehaviour.getMBeanServerIp() == null) {
+            throw new IOException("MBean server not open for connection");
+        }
+        String connectorUrl = String.format(JMX_CONNECTOR_URL, this.serverBehaviour.getMBeanServerIp(), server.getMBeanServerPort());
+        return JMXConnectorFactory.connect(new JMXServiceURL(connectorUrl), h);
+    }
 
-	protected final Object execute(final JmxServerCommandTemplate template) throws TimeoutException {
+    protected final Object execute(final JmxServerCommandTemplate template) throws TimeoutException {
 
-		Callable<Object> deployOperation = new Callable<Object>() {
+        Callable<Object> deployOperation = new Callable<Object>() {
 
-			public Object call() throws Exception {
-				JMXConnector connector = null;
-				try {
-					connector = getJmxConnector();
-					return template.invokeOperation(connector.getMBeanServerConnection());
-				} finally {
-					if (connector != null) {
-						try {
-							connector.close();
-						} catch (IOException e) {
-							StatusUtil.error(e);
-						}
-					}
-				}
-			}
-		};
+            public Object call() throws Exception {
+                JMXConnector connector = null;
+                try {
+                    connector = getJmxConnector();
+                    return template.invokeOperation(connector.getMBeanServerConnection());
+                } finally {
+                    if (connector != null) {
+                        try {
+                            connector.close();
+                        } catch (IOException e) {
+                            StatusUtil.error(e);
+                        }
+                    }
+                }
+            }
+        };
 
-		FutureTask<Object> task = new FutureTask<Object>(deployOperation);
-		ServerCorePlugin.EXECUTOR.submit(task);
+        FutureTask<Object> task = new FutureTask<Object>(deployOperation);
+        ServerCorePlugin.EXECUTOR.submit(task);
 
-		try {
-			return task.get(getTimeout(), TimeUnit.SECONDS);
-		} catch (InterruptedException e) {
-			// swallow exception here
-		} catch (ExecutionException e) {
-			// swallow exception here
-		}
+        try {
+            return task.get(getTimeout(), TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            // swallow exception here
+        } catch (ExecutionException e) {
+            // swallow exception here
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * @return the timeout of the operation in seconds
-	 */
-	protected int getTimeout() {
-		return 30;
-	}
+    /**
+     * @return the timeout of the operation in seconds
+     */
+    protected int getTimeout() {
+        return 30;
+    }
 
 }

@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.runtime.internal.ui;
 
 import org.eclipse.debug.ui.AbstractLaunchConfigurationTabGroup;
@@ -26,20 +27,20 @@ import org.eclipse.wst.server.ui.ServerLaunchConfigurationTab;
  */
 public class VirgoLaunchConfigurationTabGroup extends AbstractLaunchConfigurationTabGroup {
 
-	public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
-		ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[6];
-		tabs[0] = new ServerLaunchConfigurationTab(new String[] { ServerCorePlugin.VIRGO_SERVER_ID });
-		tabs[0].setLaunchConfigurationDialog(dialog);
-		tabs[1] = new JavaArgumentsTab();
-		tabs[1].setLaunchConfigurationDialog(dialog);
-		tabs[2] = new JavaClasspathTab();
-		tabs[2].setLaunchConfigurationDialog(dialog);
-		tabs[3] = new SourceLookupTab();
-		tabs[3].setLaunchConfigurationDialog(dialog);
-		tabs[4] = new EnvironmentTab();
-		tabs[4].setLaunchConfigurationDialog(dialog);
-		tabs[5] = new CommonTab();
-		tabs[5].setLaunchConfigurationDialog(dialog);
-		setTabs(tabs);
-	}
+    public void createTabs(ILaunchConfigurationDialog dialog, String mode) {
+        ILaunchConfigurationTab[] tabs = new ILaunchConfigurationTab[6];
+        tabs[0] = new ServerLaunchConfigurationTab(new String[] { ServerCorePlugin.VIRGO_SERVER_ID });
+        tabs[0].setLaunchConfigurationDialog(dialog);
+        tabs[1] = new JavaArgumentsTab();
+        tabs[1].setLaunchConfigurationDialog(dialog);
+        tabs[2] = new JavaClasspathTab();
+        tabs[2].setLaunchConfigurationDialog(dialog);
+        tabs[3] = new SourceLookupTab();
+        tabs[3].setLaunchConfigurationDialog(dialog);
+        tabs[4] = new EnvironmentTab();
+        tabs[4].setLaunchConfigurationDialog(dialog);
+        tabs[5] = new CommonTab();
+        tabs[5].setLaunchConfigurationDialog(dialog);
+        setTabs(tabs);
+    }
 }

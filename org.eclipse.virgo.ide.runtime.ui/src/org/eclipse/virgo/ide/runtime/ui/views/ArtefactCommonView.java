@@ -26,75 +26,76 @@ import org.eclipse.wst.server.core.IRuntime;
 import org.eclipse.wst.server.core.IServer;
 
 /**
- * 
+ *
  * @see org.eclipse.pde.internal.ui.views.dependencies.DependenciesView
  * @author Miles Parker
- * 
+ *
  */
 @SuppressWarnings("restriction")
 public class ArtefactCommonView extends CommonView {
 
-	private static final String FILTER_ACTION_GROUP = "filters";
+    private static final String FILTER_ACTION_GROUP = "filters";
 
-	private IBundleRepositoryChangeListener repositoryListener;
+    private IBundleRepositoryChangeListener repositoryListener;
 
-	/**
-	 * @see org.eclipse.ui.navigator.CommonNavigator#createPartControl(org.eclipse.swt.widgets.Composite)
-	 */
-	@Override
-	public void createPartControl(Composite aParent) {
+    /**
+     * @see org.eclipse.ui.navigator.CommonNavigator#createPartControl(org.eclipse.swt.widgets.Composite)
+     */
+    @Override
+    public void createPartControl(Composite aParent) {
 
-		super.createPartControl(aParent);
-		IActionBars actionBars = getViewSite().getActionBars();
-		IToolBarManager manager = actionBars.getToolBarManager();
+        super.createPartControl(aParent);
+        IActionBars actionBars = getViewSite().getActionBars();
+        IToolBarManager manager = actionBars.getToolBarManager();
 
-		manager.add(new Separator(FILTER_ACTION_GROUP));
-		FilterAction[] filterActions = FilterAction.createSet(this);
-		for (FilterAction action : filterActions) {
-			manager.appendToGroup(FILTER_ACTION_GROUP, action);
-		}
+        manager.add(new Separator(FILTER_ACTION_GROUP));
+        FilterAction[] filterActions = FilterAction.createSet(this);
+        for (FilterAction action : filterActions) {
+            manager.appendToGroup(FILTER_ACTION_GROUP, action);
+        }
 
-		repositoryListener = new IBundleRepositoryChangeListener() {
-			public void bundleRepositoryChanged(IRuntime runtime) {
-				refreshView();
-			}
-		};
-		ServerCorePlugin.getArtefactRepositoryManager().addBundleRepositoryChangeListener(repositoryListener);
-	}
+        this.repositoryListener = new IBundleRepositoryChangeListener() {
 
-	/**
-	 * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#refreshAll()
-	 */
-	@Override
-	protected void refreshAll() {
-		for (IServer server : getServers()) {
-			RefreshBundleJob.execute(getSite().getShell(), server.getRuntime());
-			ServerProjectManager.getInstance().getProject(server).refresh();
-		}
-		super.refreshAll();
-	}
+            public void bundleRepositoryChanged(IRuntime runtime) {
+                refreshView();
+            }
+        };
+        ServerCorePlugin.getArtefactRepositoryManager().addBundleRepositoryChangeListener(this.repositoryListener);
+    }
 
-	/**
-	 * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#getListContentId()
-	 */
-	@Override
-	protected String getListContentId() {
-		return ServerUiPlugin.RUNTIME_FLATTENED_ARTEFACTS_CONTENT_ID;
-	}
+    /**
+     * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#refreshAll()
+     */
+    @Override
+    protected void refreshAll() {
+        for (IServer server : getServers()) {
+            RefreshBundleJob.execute(getSite().getShell(), server.getRuntime());
+            ServerProjectManager.getInstance().getProject(server).refresh();
+        }
+        super.refreshAll();
+    }
 
-	/**
-	 * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#getTreeContentId()
-	 */
-	@Override
-	protected String getTreeContentId() {
-		return ServerUiPlugin.RUNTIME_ARTEFACTS_CONTENT_ID;
-	}
+    /**
+     * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#getListContentId()
+     */
+    @Override
+    protected String getListContentId() {
+        return ServerUiPlugin.RUNTIME_FLATTENED_ARTEFACTS_CONTENT_ID;
+    }
 
-	/**
-	 * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#getViewId()
-	 */
-	@Override
-	protected String getViewId() {
-		return ServerUiPlugin.ARTEFACTS_DETAIL_VIEW_ID;
-	}
+    /**
+     * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#getTreeContentId()
+     */
+    @Override
+    protected String getTreeContentId() {
+        return ServerUiPlugin.RUNTIME_ARTEFACTS_CONTENT_ID;
+    }
+
+    /**
+     * @see org.eclipse.virgo.ide.runtime.ui.views.CommonView#getViewId()
+     */
+    @Override
+    protected String getViewId() {
+        return ServerUiPlugin.ARTEFACTS_DETAIL_VIEW_ID;
+    }
 }

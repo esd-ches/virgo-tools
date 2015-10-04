@@ -8,6 +8,7 @@
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
  *******************************************************************************/
+
 package org.eclipse.virgo.ide.ui.editors;
 
 import java.lang.reflect.InvocationTargetException;
@@ -73,256 +74,250 @@ import org.eclipse.virgo.ide.ui.StatusHandler;
  */
 public class BundleOverviewPage extends PDEFormPage implements IHyperlinkListener, IBundleManifestSaveListener {
 
-	public static final String PAGE_ID = "bundle_overview"; //$NON-NLS-1$
+    public static final String PAGE_ID = "bundle_overview"; //$NON-NLS-1$
 
-	private BundleGeneralInfoSection fInfoSection;
+    private BundleGeneralInfoSection fInfoSection;
 
-	private static final String BUNDLE_CONTENT_SECTION_TEXT = "<form><p>The content of the bundle is made up of two sections:</p><li style=\"image\" value=\"page\" bindent=\"5\"><a href=\"dependencies\">Dependencies</a>: lists all the bundles required on this bundle's classpath to compile and run.</li><li style=\"image\" value=\"page\" bindent=\"5\"><a href=\"runtime\">Runtime</a>: lists the packages that this bundle exports to other bundles.</li></form>";
+    private static final String BUNDLE_CONTENT_SECTION_TEXT = "<form><p>The content of the bundle is made up of two sections:</p><li style=\"image\" value=\"page\" bindent=\"5\"><a href=\"dependencies\">Dependencies</a>: lists all the bundles required on this bundle's classpath to compile and run.</li><li style=\"image\" value=\"page\" bindent=\"5\"><a href=\"runtime\">Runtime</a>: lists the packages that this bundle exports to other bundles.</li></form>";
 
-	private static final String BUNDLE_ACTION_SECTION_TEXT = "<form><p>Perform common actions on the bundle:</p>"
-			+ "<li style=\"image\" value=\"dependencies\" bindent=\"5\"><a href=\"refreshdependencies\">Refresh Bundle Dependencies</a>: refresh the Bundle Classpath Container to reflect changes in the MANIFEST.MF file.</li>"
-			+ "<li style=\"image\" value=\"export\" bindent=\"5\"><a href=\"exportbundle\">Export Bundle</a>: export the contents of the Bundle to a deployable JAR.</li>"
-			+ "</form>";
+    private static final String BUNDLE_ACTION_SECTION_TEXT = "<form><p>Perform common actions on the bundle:</p>"
+        + "<li style=\"image\" value=\"dependencies\" bindent=\"5\"><a href=\"refreshdependencies\">Refresh Bundle Dependencies</a>: refresh the Bundle Classpath Container to reflect changes in the MANIFEST.MF file.</li>"
+        + "<li style=\"image\" value=\"export\" bindent=\"5\"><a href=\"exportbundle\">Export Bundle</a>: export the contents of the Bundle to a deployable JAR.</li>"
+        + "</form>";
 
-	private static final String MANIFEST_ERRORS = "Overview: Please correct one or more errors in the manifest";
+    private static final String MANIFEST_ERRORS = "Overview: Please correct one or more errors in the manifest";
 
-	protected ScrolledForm form = null;
+    protected ScrolledForm form = null;
 
-	protected IResource resource = null;
+    protected IResource resource = null;
 
-	public BundleOverviewPage(FormEditor editor) {
-		super(editor, PAGE_ID, "Overview");
-	}
+    public BundleOverviewPage(FormEditor editor) {
+        super(editor, PAGE_ID, "Overview");
+    }
 
-	@Override
-	protected void createFormContent(IManagedForm managedForm) {
-		super.createFormContent(managedForm);
-		IPluginModelBase model = (IPluginModelBase) ((BundleManifestEditor) this.getEditor()).getAggregateModel();
-		resource = model.getUnderlyingResource();
-		form = managedForm.getForm();
-		FormToolkit toolkit = managedForm.getToolkit();
-		form.setImage(ServerIdeUiPlugin.getImage("full/obj16/osgi_obj.gif"));
-		form.setText(PDEUIMessages.ManifestEditor_OverviewPage_title);
-		fillBody(managedForm, toolkit);
-		updateFormText();
-	}
+    @Override
+    protected void createFormContent(IManagedForm managedForm) {
+        super.createFormContent(managedForm);
+        IPluginModelBase model = (IPluginModelBase) ((BundleManifestEditor) this.getEditor()).getAggregateModel();
+        this.resource = model.getUnderlyingResource();
+        this.form = managedForm.getForm();
+        FormToolkit toolkit = managedForm.getToolkit();
+        this.form.setImage(ServerIdeUiPlugin.getImage("full/obj16/osgi_obj.gif"));
+        this.form.setText(PDEUIMessages.ManifestEditor_OverviewPage_title);
+        fillBody(managedForm, toolkit);
+        updateFormText();
+    }
 
-	public void manifestSaved() {
-		if (resource != null) {
-			updateFormText();
-		}
-	}
+    public void manifestSaved() {
+        if (this.resource != null) {
+            updateFormText();
+        }
+    }
 
-	protected void updateFormText() {
-		if (resource != null) {
-			try {
-				// Wait for build
-				Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
-				IMarker[] markers = resource.findMarkers(null, true, IResource.DEPTH_ZERO);
-				if (ManifestEditorUtils.hasErrorSeverityMarker(markers)) {
-					form.setText(MANIFEST_ERRORS);
-					form.setImage(ServerIdeUiPlugin.getImage("full/obj16/manifest_error.png"));
-				} else {
-					form.setText(PDEUIMessages.ManifestEditor_OverviewPage_title);
-					form.setImage(ServerIdeUiPlugin.getImage("full/obj16/osgi_obj.gif"));
-				}
-			} catch (OperationCanceledException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID,
-						"Could not update page title text", e));
-			} catch (InterruptedException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID,
-						"Could not update page title text", e));
-			} catch (CoreException e) {
-				StatusHandler.log(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID,
-						"Could not update page title text", e));
-			}
-		}
-	}
+    protected void updateFormText() {
+        if (this.resource != null) {
+            try {
+                // Wait for build
+                Job.getJobManager().join(ResourcesPlugin.FAMILY_AUTO_BUILD, null);
+                IMarker[] markers = this.resource.findMarkers(null, true, IResource.DEPTH_ZERO);
+                if (ManifestEditorUtils.hasErrorSeverityMarker(markers)) {
+                    this.form.setText(MANIFEST_ERRORS);
+                    this.form.setImage(ServerIdeUiPlugin.getImage("full/obj16/manifest_error.png"));
+                } else {
+                    this.form.setText(PDEUIMessages.ManifestEditor_OverviewPage_title);
+                    this.form.setImage(ServerIdeUiPlugin.getImage("full/obj16/osgi_obj.gif"));
+                }
+            } catch (OperationCanceledException e) {
+                StatusHandler.log(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Could not update page title text", e));
+            } catch (InterruptedException e) {
+                StatusHandler.log(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Could not update page title text", e));
+            } catch (CoreException e) {
+                StatusHandler.log(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Could not update page title text", e));
+            }
+        }
+    }
 
-	private void fillBody(IManagedForm managedForm, FormToolkit toolkit) {
-		Composite body = managedForm.getForm().getBody();
-		body.setLayout(FormLayoutFactory.createFormTableWrapLayout(true, 2));
+    private void fillBody(IManagedForm managedForm, FormToolkit toolkit) {
+        Composite body = managedForm.getForm().getBody();
+        body.setLayout(FormLayoutFactory.createFormTableWrapLayout(true, 2));
 
-		Composite left = toolkit.createComposite(body);
-		left.setLayout(FormLayoutFactory.createFormPaneTableWrapLayout(false, 1));
-		left.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
-		fInfoSection = new BundleGeneralInfoSection(this, left);
-		managedForm.addPart(fInfoSection);
-		managedForm.addPart(new BundleExecutionEnvironmentSection(this, left));
+        Composite left = toolkit.createComposite(body);
+        left.setLayout(FormLayoutFactory.createFormPaneTableWrapLayout(false, 1));
+        left.setLayoutData(new TableWrapData(TableWrapData.FILL_GRAB));
+        this.fInfoSection = new BundleGeneralInfoSection(this, left);
+        managedForm.addPart(this.fInfoSection);
+        managedForm.addPart(new BundleExecutionEnvironmentSection(this, left));
 
-		Composite right = toolkit.createComposite(body);
-		right.setLayout(FormLayoutFactory.createFormPaneTableWrapLayout(false, 1));
-		right.setLayoutData(new TableWrapData(TableWrapData.FILL));
-		createBundleActionSection(managedForm, right, toolkit);
-		createBundleContentSection(managedForm, right, toolkit);
+        Composite right = toolkit.createComposite(body);
+        right.setLayout(FormLayoutFactory.createFormPaneTableWrapLayout(false, 1));
+        right.setLayoutData(new TableWrapData(TableWrapData.FILL));
+        createBundleActionSection(managedForm, right, toolkit);
+        createBundleContentSection(managedForm, right, toolkit);
 
-	}
+    }
 
-	private void createBundleContentSection(IManagedForm managedForm, Composite parent, FormToolkit toolkit) {
-		String sectionTitle;
-		sectionTitle = "Bundle Content";
-		Section section = createStaticSection(toolkit, parent, sectionTitle);
+    private void createBundleContentSection(IManagedForm managedForm, Composite parent, FormToolkit toolkit) {
+        String sectionTitle;
+        sectionTitle = "Bundle Content";
+        Section section = createStaticSection(toolkit, parent, sectionTitle);
 
-		Composite container = createStaticSectionClient(toolkit, section);
+        Composite container = createStaticSectionClient(toolkit, section);
 
-		FormText text = createClient(container, BUNDLE_CONTENT_SECTION_TEXT, true, toolkit);
-		PDELabelProvider lp = PDEPlugin.getDefault().getLabelProvider();
-		text.setImage("page", lp.get(PDEPluginImages.DESC_PAGE_OBJ, SharedLabelProvider.F_EDIT)); //$NON-NLS-1$
-		text.addHyperlinkListener(this);
-		section.setClient(container);
-	}
+        FormText text = createClient(container, BUNDLE_CONTENT_SECTION_TEXT, true, toolkit);
+        PDELabelProvider lp = PDEPlugin.getDefault().getLabelProvider();
+        text.setImage("page", lp.get(PDEPluginImages.DESC_PAGE_OBJ, SharedLabelProvider.F_EDIT)); //$NON-NLS-1$
+        text.addHyperlinkListener(this);
+        section.setClient(container);
+    }
 
-	private void createBundleActionSection(IManagedForm managedForm, Composite parent, FormToolkit toolkit) {
-		String sectionTitle;
-		sectionTitle = "Bundle Actions";
-		Section section = createStaticSection(toolkit, parent, sectionTitle);
+    private void createBundleActionSection(IManagedForm managedForm, Composite parent, FormToolkit toolkit) {
+        String sectionTitle;
+        sectionTitle = "Bundle Actions";
+        Section section = createStaticSection(toolkit, parent, sectionTitle);
 
-		Composite container = createStaticSectionClient(toolkit, section);
+        Composite container = createStaticSectionClient(toolkit, section);
 
-		FormText noteText = createClient(
-				container,
-				"<form><p>OSGi dependency meta data in the MANIFEST.MF file can automatically be updated based on dependencies expressed in source code artifacts.</p><p>Java source files, Spring XML configuration, JPA persistence.xml and Hibernate .hbm mapping files will be analysed. The process will create Import-Package and Export-Package headers.</p><li style=\"image\" value=\"manifest\" bindent=\"5\"><a href=\"generate\">Update MANIFEST.MF</a>: automatically generate MANIFEST.MF file based on dependencies in source code artifacts.</li></form>",
-				true, toolkit);
-		noteText.setImage("manifest", ServerIdeUiPlugin.getImage("full/obj16/osgi_obj.gif")); //$NON-NLS-1$
-		noteText.addHyperlinkListener(this);
+        FormText noteText = createClient(container,
+            "<form><p>OSGi dependency meta data in the MANIFEST.MF file can automatically be updated based on dependencies expressed in source code artifacts.</p><p>Java source files, Spring XML configuration, JPA persistence.xml and Hibernate .hbm mapping files will be analysed. The process will create Import-Package and Export-Package headers.</p><li style=\"image\" value=\"manifest\" bindent=\"5\"><a href=\"generate\">Update MANIFEST.MF</a>: automatically generate MANIFEST.MF file based on dependencies in source code artifacts.</li></form>",
+            true, toolkit);
+        noteText.setImage("manifest", ServerIdeUiPlugin.getImage("full/obj16/osgi_obj.gif")); //$NON-NLS-1$
+        noteText.addHyperlinkListener(this);
 
-		Button button = toolkit.createButton(container, "Automatically update MANIFEST.MF file in background.",
-				SWT.CHECK);
-		button.addSelectionListener(new SelectionAdapter() {
-			@Override
-			public void widgetSelected(SelectionEvent e) {
-				IRunnableWithProgress op = new WorkspaceModifyOperation() {
-					@Override
-					protected void execute(IProgressMonitor monitor) throws CoreException, InterruptedException {
-						IProject project = resource.getProject();
-						IProjectDescription description = project.getDescription();
-						try {
-							List<ICommand> cmds = Arrays.asList(description.getBuildSpec());
-							List<ICommand> newCmds = new ArrayList<ICommand>(cmds);
-							if (BundlorUiPlugin.isBundlorBuilding(project)) {
-								for (ICommand config : cmds) {
-									if (config.getBuilderName().equals(BundlorCorePlugin.BUILDER_ID)) {
-										newCmds.remove(config);
-									}
-								}
-							} else {
-								ICommand command = project.getDescription().newCommand();
-								command.setBuilderName(BundlorCorePlugin.BUILDER_ID);
-								newCmds.add(command);
-							}
-							if (!cmds.equals(newCmds)) {
-								description.setBuildSpec(newCmds.toArray(new ICommand[] {}));
-								project.setDescription(description, monitor);
-							}
-						} catch (CoreException e1) {
-						}
-					}
-				};
-				try {
-					PlatformUI.getWorkbench()
-							.getProgressService()
-							.runInUI(PDEPlugin.getActiveWorkbenchWindow(), op, PDEPlugin.getWorkspace().getRoot());
-				} catch (InvocationTargetException e1) {
-				} catch (InterruptedException e1) {
-				}
+        Button button = toolkit.createButton(container, "Automatically update MANIFEST.MF file in background.", SWT.CHECK);
+        button.addSelectionListener(new SelectionAdapter() {
 
-			}
-		});
-		TableWrapData data = new TableWrapData(TableWrapData.FILL_GRAB);
-		data.indent = 5;
-		button.setLayoutData(data);
-		boolean building = resource != null && BundlorUiPlugin.isBundlorBuilding(resource.getProject());
-		button.setSelection(building);
+            @Override
+            public void widgetSelected(SelectionEvent e) {
+                IRunnableWithProgress op = new WorkspaceModifyOperation() {
 
-		toolkit.createLabel(container, "");
+                    @Override
+                    protected void execute(IProgressMonitor monitor) throws CoreException, InterruptedException {
+                        IProject project = BundleOverviewPage.this.resource.getProject();
+                        IProjectDescription description = project.getDescription();
+                        try {
+                            List<ICommand> cmds = Arrays.asList(description.getBuildSpec());
+                            List<ICommand> newCmds = new ArrayList<ICommand>(cmds);
+                            if (BundlorUiPlugin.isBundlorBuilding(project)) {
+                                for (ICommand config : cmds) {
+                                    if (config.getBuilderName().equals(BundlorCorePlugin.BUILDER_ID)) {
+                                        newCmds.remove(config);
+                                    }
+                                }
+                            } else {
+                                ICommand command = project.getDescription().newCommand();
+                                command.setBuilderName(BundlorCorePlugin.BUILDER_ID);
+                                newCmds.add(command);
+                            }
+                            if (!cmds.equals(newCmds)) {
+                                description.setBuildSpec(newCmds.toArray(new ICommand[] {}));
+                                project.setDescription(description, monitor);
+                            }
+                        } catch (CoreException e1) {
+                        }
+                    }
+                };
+                try {
+                    PlatformUI.getWorkbench().getProgressService().runInUI(PDEPlugin.getActiveWorkbenchWindow(), op,
+                        PDEPlugin.getWorkspace().getRoot());
+                } catch (InvocationTargetException e1) {
+                } catch (InterruptedException e1) {
+                }
 
-		FormText text = createClient(container, BUNDLE_ACTION_SECTION_TEXT, true, toolkit);
-		PDELabelProvider lp = PDEPlugin.getDefault().getLabelProvider();
-		text.setImage("page", lp.get(PDEPluginImages.DESC_PAGE_OBJ, SharedLabelProvider.F_EDIT)); //$NON-NLS-1$
-		text.setImage(
-				"dependencies", JavaUI.getSharedImages().getImage(ISharedImages.IMG_OBJS_EXTERNAL_ARCHIVE_WITH_SOURCE)); //$NON-NLS-1$
-		//TODO Replace these with appropriate images as needed. MTP
-		//text.setImage("export", BeansGraphImages.getImage(BeansGraphImages.IMG_OBJS_EXPORT_ENABLED));
-		text.addHyperlinkListener(this);
+            }
+        });
+        TableWrapData data = new TableWrapData(TableWrapData.FILL_GRAB);
+        data.indent = 5;
+        button.setLayoutData(data);
+        boolean building = this.resource != null && BundlorUiPlugin.isBundlorBuilding(this.resource.getProject());
+        button.setSelection(building);
 
-		section.setClient(container);
-	}
+        toolkit.createLabel(container, "");
 
-	protected final Section createStaticSection(FormToolkit toolkit, Composite parent, String text) {
-		Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
-		section.clientVerticalSpacing = FormLayoutFactory.SECTION_HEADER_VERTICAL_SPACING;
-		section.setText(text);
-		section.setLayout(FormLayoutFactory.createClearTableWrapLayout(false, 1));
-		TableWrapData data = new TableWrapData(TableWrapData.FILL_GRAB);
-		section.setLayoutData(data);
-		return section;
-	}
+        FormText text = createClient(container, BUNDLE_ACTION_SECTION_TEXT, true, toolkit);
+        PDELabelProvider lp = PDEPlugin.getDefault().getLabelProvider();
+        text.setImage("page", lp.get(PDEPluginImages.DESC_PAGE_OBJ, SharedLabelProvider.F_EDIT)); //$NON-NLS-1$
+        text.setImage("dependencies", JavaUI.getSharedImages().getImage(ISharedImages.IMG_OBJS_EXTERNAL_ARCHIVE_WITH_SOURCE)); //$NON-NLS-1$
+        // TODO Replace these with appropriate images as needed. MTP
+        // text.setImage("export", BeansGraphImages.getImage(BeansGraphImages.IMG_OBJS_EXPORT_ENABLED));
+        text.addHyperlinkListener(this);
 
-	protected Composite createStaticSectionClient(FormToolkit toolkit, Composite parent) {
-		Composite container = toolkit.createComposite(parent, SWT.NONE);
-		container.setLayout(FormLayoutFactory.createSectionClientTableWrapLayout(false, 1));
-		TableWrapData data = new TableWrapData(TableWrapData.FILL_GRAB);
-		container.setLayoutData(data);
-		return container;
-	}
+        section.setClient(container);
+    }
 
-	protected final FormText createClient(Composite section, String content, boolean parseTags, FormToolkit toolkit) {
-		FormText text = toolkit.createFormText(section, true);
-		try {
-			text.setText(content, parseTags, false);
-		} catch (SWTException e) {
-			text.setText(e.getMessage(), false, false);
-		}
-		return text;
-	}
+    protected final Section createStaticSection(FormToolkit toolkit, Composite parent, String text) {
+        Section section = toolkit.createSection(parent, ExpandableComposite.TITLE_BAR);
+        section.clientVerticalSpacing = FormLayoutFactory.SECTION_HEADER_VERTICAL_SPACING;
+        section.setText(text);
+        section.setLayout(FormLayoutFactory.createClearTableWrapLayout(false, 1));
+        TableWrapData data = new TableWrapData(TableWrapData.FILL_GRAB);
+        section.setLayoutData(data);
+        return section;
+    }
 
-	public void linkActivated(HyperlinkEvent e) {
-		if (e.getHref().equals("dependencies")) {
-			getEditor().setActivePage(BundleDependenciesPage.PAGE_ID);
-		} else if (e.getHref().equals("runtime")) {
-			getEditor().setActivePage(BundleRuntimePage.PAGE_ID);
-		} else if (e.getHref().equals("refreshdependencies")) {
-			IRunnableWithProgress op = new WorkspaceModifyOperation() {
-				@Override
-				protected void execute(IProgressMonitor monitor) throws CoreException, InterruptedException {
-					ServerClasspathContainerUpdateJob.scheduleClasspathContainerUpdateJob(
-							JavaCore.create(resource.getProject()), BundleManifestManager.IMPORTS_CHANGED);
-				}
-			};
-			try {
-				PlatformUI.getWorkbench()
-						.getProgressService()
-						.runInUI(PDEPlugin.getActiveWorkbenchWindow(), op, PDEPlugin.getWorkspace().getRoot());
-			} catch (InvocationTargetException e1) {
-			} catch (InterruptedException e1) {
-			}
-		} else if (e.getHref().equals("generate")) {
-			BundlorUiPlugin.runBundlorOnProject(JavaCore.create(resource.getProject()));
-		} else if (e.getHref().equals("exportbundle")) {
-			Display.getDefault().asyncExec(new Runnable() {
+    protected Composite createStaticSectionClient(FormToolkit toolkit, Composite parent) {
+        Composite container = toolkit.createComposite(parent, SWT.NONE);
+        container.setLayout(FormLayoutFactory.createSectionClientTableWrapLayout(false, 1));
+        TableWrapData data = new TableWrapData(TableWrapData.FILL_GRAB);
+        container.setLayoutData(data);
+        return container;
+    }
 
-				public void run() {
-					BundleExportWizard wizard = new BundleExportWizard();
-					WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), wizard);
-					wizard.init(PlatformUI.getWorkbench(),
-							new StructuredSelection(new Object[] { JavaCore.create(resource.getProject()) }));
-					dialog.open();
-				}
-			});
-		}
-	}
+    protected final FormText createClient(Composite section, String content, boolean parseTags, FormToolkit toolkit) {
+        FormText text = toolkit.createFormText(section, true);
+        try {
+            text.setText(content, parseTags, false);
+        } catch (SWTException e) {
+            text.setText(e.getMessage(), false, false);
+        }
+        return text;
+    }
 
-	public void linkEntered(HyperlinkEvent e) {
-		// Nothing to do
-	}
+    public void linkActivated(HyperlinkEvent e) {
+        if (e.getHref().equals("dependencies")) {
+            getEditor().setActivePage(BundleDependenciesPage.PAGE_ID);
+        } else if (e.getHref().equals("runtime")) {
+            getEditor().setActivePage(BundleRuntimePage.PAGE_ID);
+        } else if (e.getHref().equals("refreshdependencies")) {
+            IRunnableWithProgress op = new WorkspaceModifyOperation() {
 
-	public void linkExited(HyperlinkEvent e) {
-		// Nothing to do
-	}
+                @Override
+                protected void execute(IProgressMonitor monitor) throws CoreException, InterruptedException {
+                    ServerClasspathContainerUpdateJob.scheduleClasspathContainerUpdateJob(
+                        JavaCore.create(BundleOverviewPage.this.resource.getProject()), BundleManifestManager.IMPORTS_CHANGED);
+                }
+            };
+            try {
+                PlatformUI.getWorkbench().getProgressService().runInUI(PDEPlugin.getActiveWorkbenchWindow(), op, PDEPlugin.getWorkspace().getRoot());
+            } catch (InvocationTargetException e1) {
+            } catch (InterruptedException e1) {
+            }
+        } else if (e.getHref().equals("generate")) {
+            BundlorUiPlugin.runBundlorOnProject(JavaCore.create(this.resource.getProject()));
+        } else if (e.getHref().equals("exportbundle")) {
+            Display.getDefault().asyncExec(new Runnable() {
 
-	/** For JUnit testing only * */
-	public BundleGeneralInfoSection getBundleGeneralInfoSection() {
-		return this.fInfoSection;
-	}
+                public void run() {
+                    BundleExportWizard wizard = new BundleExportWizard();
+                    WizardDialog dialog = new WizardDialog(Display.getDefault().getActiveShell(), wizard);
+                    wizard.init(PlatformUI.getWorkbench(),
+                        new StructuredSelection(new Object[] { JavaCore.create(BundleOverviewPage.this.resource.getProject()) }));
+                    dialog.open();
+                }
+            });
+        }
+    }
+
+    public void linkEntered(HyperlinkEvent e) {
+        // Nothing to do
+    }
+
+    public void linkExited(HyperlinkEvent e) {
+        // Nothing to do
+    }
+
+    /** For JUnit testing only * */
+    public BundleGeneralInfoSection getBundleGeneralInfoSection() {
+        return this.fInfoSection;
+    }
 
 }
