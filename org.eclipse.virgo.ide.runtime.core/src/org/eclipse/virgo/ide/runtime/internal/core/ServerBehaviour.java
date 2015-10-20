@@ -58,6 +58,7 @@ import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.core.IServerDeployer;
 import org.eclipse.virgo.ide.runtime.core.IServerRuntime;
 import org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider;
+import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
 import org.eclipse.wst.common.project.facet.core.FacetedProjectFramework;
@@ -257,6 +258,8 @@ public class ServerBehaviour extends ServerBehaviourDelegate implements IServerB
         if (getServer().getServerState() != IServer.STATE_STARTED) {
             setServerState(IServer.STATE_STOPPING);
         }
+
+        ServerCorePlugin.getVirgoToolingHook().beforeStop();
 
         if (this.pingThread != null) {
             this.pingThread.stop();

@@ -28,6 +28,7 @@ import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.core.IServerDeployer;
+import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.virgo.ide.runtime.internal.core.command.IServerCommand;
 import org.eclipse.virgo.ide.runtime.internal.core.utils.StatusUtil;
@@ -71,6 +72,7 @@ public class DefaultServerDeployer implements IServerDeployer {
         });
 
         for (IModule module : orderedModules) {
+            ServerCorePlugin.getVirgoToolingHook().beforeDeploy(module);
             DeploymentIdentity identity = executeDeployerCommand(getServerDeployCommand(module));
             if (this.behaviour instanceof ServerBehaviour) {
                 ((ServerBehaviour) this.behaviour).tail(identity);

@@ -6,7 +6,6 @@ Bundle-Version: 3.5.0.qualifier
 Import-Package: org.eclipse.gemini.blueprint,
  org.eclipse.gemini.blueprint.util,
  org.eclipse.osgi.framework.console,
- org.eclipse.osgi.framework.internal.core,
  org.eclipse.osgi.service.resolver,
  org.eclipse.osgi.util,
  org.osgi.framework,

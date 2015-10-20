@@ -34,6 +34,7 @@ import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
 import org.eclipse.virgo.ide.module.core.ServerModuleDelegate;
+import org.eclipse.virgo.ide.runtime.core.ServerCorePlugin;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.virgo.util.common.StringUtils;
 import org.eclipse.virgo.util.osgi.manifest.BundleManifest;
@@ -54,7 +55,6 @@ import org.eclipse.wst.server.core.model.ServerBehaviourDelegate;
  * @author Christian Dupuis
  * @since 1.0.0
  */
-@SuppressWarnings("restriction")
 public class ServerPublishOperation extends PublishOperation {
 
     private final int deltaKind;
@@ -238,6 +238,7 @@ public class ServerPublishOperation extends PublishOperation {
         IPath path = this.server.getModuleDeployDirectory(module);
 
         if (this.deltaKind == ServerBehaviourDelegate.REMOVED) {
+            ServerCorePlugin.getVirgoToolingHook().beforeUndeploy(module);
             File f = path.toFile();
             if (ServerUtils.getServer(this.server).getServer().getServerState() == IServer.STATE_STARTED) {
                 this.server.getServerDeployer().undeploy(module);
@@ -285,6 +286,7 @@ public class ServerPublishOperation extends PublishOperation {
         }
 
         IModuleResourceDelta[] delta = this.server.getPublishedResourceDelta(this.modules);
+        ServerCorePlugin.getVirgoToolingHook().beforeDeploy(module);
         for (IModuleResourceDelta d : delta) {
             status.addAll(Arrays.asList(PublishUtil.publishDelta(d, path, monitor)));
         }

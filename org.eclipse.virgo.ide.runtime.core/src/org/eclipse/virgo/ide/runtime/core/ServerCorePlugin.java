@@ -24,6 +24,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepositoryManager;
+import org.eclipse.virgo.ide.runtime.core.ches.VirgoToolingHook;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -49,6 +50,8 @@ public class ServerCorePlugin extends AbstractUIPlugin {
 
     private BundleContext context;
 
+    private VirgoToolingHook virgoToolingHook;
+
     public static final String VIRGO_SERVER_ID = "org.eclipse.virgo.server.virgo";
 
     public static final String VIRGO_SERVER_PROJECT_NATURE = "org.eclipse.virgo.ide.runtime.managedProject";
@@ -63,11 +66,14 @@ public class ServerCorePlugin extends AbstractUIPlugin {
         plugin.getPreferenceStore().setDefault(PREF_LOAD_CLASSES_KEY, false);
 
         this.artefactRepositoryManager = new ArtefactRepositoryManager();
+        this.virgoToolingHook = new VirgoToolingHook();
     }
 
     @Override
     public void stop(BundleContext context) throws Exception {
         ServerUtils.clearCacheDirectory();
+        this.virgoToolingHook.beforeStop();
+        this.virgoToolingHook = null;
         this.artefactRepositoryManager.stop();
         this.artefactRepositoryManager = null;
         plugin = null;
@@ -87,8 +93,24 @@ public class ServerCorePlugin extends AbstractUIPlugin {
         getDefault().savePluginPreferences();
     }
 
+    public static VirgoToolingHook getVirgoToolingHook() {
+        return getDefault().virgoToolingHook;
+    }
+
     public static ArtefactRepositoryManager getArtefactRepositoryManager() {
         return getDefault().artefactRepositoryManager;
+    }
+
+    public static void logError(String message, Exception e) {
+        plugin.getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, message, e));
+    }
+
+    public static void logError(String message) {
+        plugin.getLog().log(new Status(IStatus.ERROR, PLUGIN_ID, message));
+    }
+
+    public static void logWarning(String message) {
+        plugin.getLog().log(new Status(IStatus.WARNING, PLUGIN_ID, message));
     }
 
     public URI getBundleUri(String bundleName) {
@@ -107,4 +129,5 @@ public class ServerCorePlugin extends AbstractUIPlugin {
         StatusManager.getManager().handle(new Status(IStatus.ERROR, PLUGIN_ID, "Couldn't locate bundle:" + bundleName));
         return null;
     }
+
 }
