@@ -1,0 +1,131 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>Test</title>
+		<link type="text/css" rel="stylesheet" href="../../book.css"/>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">Test</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left"></td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="Virgo-Test-Framework.html" title="Virgo Test Framework">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top"></td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Virgo Test Framework</td>
+			</tr>
+		</table><hr/>
+		<p>
+			<a href="http://wiki.eclipse.org/Category:Virgo" title="Category:Virgo" target="doc_external">Category:Virgo</a> 
+			<a href="http://wiki.eclipse.org/Category:EclipseRT" title="Category:EclipseRT" target="doc_external">Category:EclipseRT</a>
+		</p>
+		<p>
+			<a href="http://wiki.eclipse.org/Category:Virgo" title="Category:Virgo" target="doc_external">Category:Virgo</a>
+			{{DEFAULTCATEGORYSORT:{{SUBPAGENAME}}}}
+		</p>
+		<h1 id="Testing">Testing</h1>
+		<p>Virgo has a strong emphasis on testing. Unit tests check the behaviour of individual classes or small groups of classes. Integration tests check the behaviour of groups of Virgo bundles running together in Equinox. System verification tests (SVTs), including some simple performance tests, check the behaviour of packaging builds of the kernel and web server from a user's perspective. </p>
+		<p>
+			<a href="http://www.junit.org/" target="doc_external">JUnit</a> is used for all these types of tests. Each testcase is structured as a class with class name ending in &lt;tt&gt;Tests&lt;/tt&gt;. Tests typically reside in the &lt;tt&gt;src/test/java&lt;/tt&gt; folder of a project. 
+		</p>
+		<p>If you need a thorough introduction to Test Driven Development, we recommend "
+			<a href="http://www.growing-object-oriented-software.com/" target="doc_external">Growing Object-Oriented Software Guided by Tests</a>". This book makes the important point that unless test code is as clean as the code under test, the tests will inevitably end up slowing down the whole project. Good test coverage enables changes to be made with confidence, so test code should be refactored and kept clean just like the code under test. 
+		</p>
+		<p>We find that an emphasis on testing has a strong beneficial effect on code design. Writing tests is much simpler if the code is well-structured and modular. Designing for testability encourages good structure and small modifiable pieces.</p>
+		<h2 id="Unit_Tests">Unit Tests</h2>
+		<p>Each unit test tests a small unit, typically a single class. Dependencies are usually stubbed or mocked out. </p>
+		<p>Stubs are hand-written, dummy implementations of interfaces just sufficient to simulate the behaviour of a full implementation of the interface and in some cases to check that the interface has been used correctly. Stubs for several standard OSGi interfaces are provided in the 
+			<a href="http://git.eclipse.org/c/virgo/org.eclipse.virgo.osgi-test-stubs.git/tree/" target="doc_external">OSGi Test Stubs</a> git repository. Other projects may supply stubs for commonly used interfaces. For example, the Quasi Framework interfaces have stubs 
+			<a href="add">link once kernel checked in</a> provided. 
+		</p>
+		<p>Mocks are generated on the fly from interfaces. 
+			<a href="http://easymock.org/" target="doc_external">EasyMock</a> is typically used. Expectations of how an interface is used can be set and checked. It is important not to code expectations that are too specific to an implementation otherwise the resultant test will be fragile and is likely to break if the implementation being tested is refactored. 
+		</p>
+		<p>Some tests of complex classes use a combination of stubs and mocks. </p>
+		<p>In general, unit tests aim to provide at least 80% coverage of Virgo code, but some components fall short of this and more tests need to be written. The precommit ant target used to check coverage using Clover, but this check is not currently supported as the Eclipse Hudson server does not support Clover. </p>
+		<p>Some complex classes are simply too messy to unit test and refactoring is required to enable maintainable unit tests to be created. So if significant refactoring of existing code is planned, that is often a good time to add a suite of unit tests. </p>
+		<p>New code should be written with unit tests from the start. This is the only way to make sure that code can be thoroughly unit tested. </p>
+		<h2 id="Integration_Tests">Integration Tests</h2>
+		<p>Integration tests install a collection of bundles into Equinox and then run the testcase as part of a bundle. Some integration tests install sufficient bundles to start a Virgo kernel or web server, but others install a relatively small subset. </p>
+		<p>Virgo tests are implemented using JUnit and EasyMock. In addition, integration tests which require an OSGi environment use the 
+			<a href="Virgo-Test-Framework.html#Virgo_Test_Framework">Virgo test framework</a>, described below.
+		</p>
+		<h2 id="Automated_Testing">Automated Testing</h2>
+		<p>Test dependencies are either checked in to &lt;tt&gt;src/test/resources&lt;/tt&gt; or are downloaded into an Ivy repository when the tests are built. </p>
+		<p>The unit and integration tests of a Virgo git repository can be run by changing into the &lt;tt&gt;build-xxx&lt;/tt&gt; directory and issuing: </p>
+		<pre>ant clean clean-integration test
+</pre>
+		<p> 
+			This will halt when the first test fails. To run all the tests and not halt on failure, issue: </p>
+		<pre>ant -Dci.build=true clean clean-integration test
+</pre>
+		<p> 
+			and, since this will always report "build successful", remember to open &lt;tt&gt;target/test-results/index.html&lt;/tt&gt; at the end to see which tests passed and which failed. </p>
+		<h3 id="Running_a_Subset_of_the_Tests">Running a Subset of the Tests</h3>
+		<p>To run the tests in a particular project, change directory to the project directory and then issue:</p>
+		<pre>ant test
+</pre>
+		<p>To run a single test case, change directory to the project containing the testcase (not strictly necessary, but saves time skipping all the other tests in other projects) and issue:</p>
+		<pre>ant -Dtestcase=fully.qualified.ClassName test
+</pre>
+		<h3 id="Known_Issues">Known Issues</h3>
+		<p>Sometimes on 
+			<b>Windows</b> machines a number of 
+			<b>kernel repository</b> tests can fail with the following error:
+		</p>
+		<pre> org.eclipse.virgo.kernel.deployer.core.DeploymentException: listFiles() failed for file ... 
+</pre>
+		<p>This is due to a limitation of the Windows FS - it is not supporting filepaths longer than 260 characters. 
+			In order to solve that issue it is recommended to either always execute the tests with ''-Dci.build=true'' option or move your kernel repository closer to the root and shorten its folder name.
+			Here's an example. Instead of: &lt;pre&gt; C:\myDir\org.eclipse.virgo.kernel\&lt;repo_content&gt; &lt;/pre&gt; use &lt;pre&gt; C:\o.e.v.k\&lt;repo_content&gt; &lt;/pre&gt;
+			That way the tests will pass and you won't have to include ''-Dci.build=true''.</p>
+		<h2 id="System_Verification_Tests">System Verification Tests</h2>
+		<p>SVTs are present in the Virgo Kernel System Verification Tests and the Virgo System Verification Tests repositories. Building these repositories runs the tests.</p>
+		<h3 id="Manual_Steps_for_Virgo_System_Verification_Tests">Manual Steps for Virgo System Verification Tests</h3>
+		<p>The Virgo System Verification Tests repository requires a certain amount of manual hand-holding.</p>
+		<p>You need to copy a packaged Tomcat server zip file into &lt;tt&gt;build-svt/target/artifacts/&lt;/tt&gt; and then run the following ant target: </p>
+		<pre>ant test-svt
+</pre>
+		<p>At the (successful or unsuccessful) end, some processes are typically left running: the Virgo web server ("Launcher") and/or a database ("Server"). This is convenient if you want to run some specific SVT test in Eclipse but not if you want to do other work, such as run the tests again, in which case you must kill these processes, e.g.:</p>
+		<pre>$ jps
+29925 Launcher
+29908 Server
+29955 Jps
+$ kill -9 29925 29908
+</pre>
+		<h2 id="Performance_Tests">Performance Tests</h2>
+		<p>A small number of SVTs in the Virgo Performance Tests git repository check that the performance of Virgo does not worsen. These tests are very approximate since it is impossible to enforce precise performance goals when tests are run in a general CI server which may be subject to fluctuation in its load and performance. </p>
+		<h2 id="Ignoring_Tests">Ignoring Tests</h2>
+		<p>Ignoring a failing test is always a last resort. If this is required, then a bug must be raised and the failing test method or, in rare situations, the whole test class should be annotated using the &lt;tt&gt;org.junit.Ignore&lt;/tt&gt; annotation: </p>
+		<pre>@Ignore("bug &amp;lt;bugzilla number&amp;gt;: &amp;lt;reason for ignoring the test&amp;gt;")
+</pre>
+		<p> 
+			The bug should also detail which test or tests are ignored.</p><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left"></td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="Virgo-Test-Framework.html" title="Virgo Test Framework">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top"></td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Virgo Test Framework</td>
+			</tr>
+		</table>
+	</body>
+</html>

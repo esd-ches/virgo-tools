@@ -1,0 +1,83 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>Committers - Agile Project Management</title>
+		<link type="text/css" rel="stylesheet" href="../../book.css"/>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">Agile Project Management</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Development-process-advice.html" title="Development process advice">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="Logos.html" title="Logos">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Development process advice</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Logos</td>
+			</tr>
+		</table><hr/>
+		<h1 id="Agile_Project_Management">Agile Project Management</h1>
+		<p>The basic principle is that tasks which need to be worked on are placed in the backlog. For a particular sprint, some of the tasks in the backlog are moved to the sprint and completed. So no task appears in both the backlog and a sprint.</p>
+		<p>Import bugs from bugzilla into 
+			<a href="http://eclipse-virgo.acunote.com/projects/16748/sprints" target="doc_external">Acunote</a> as follows:
+		</p>
+		<ol>
+			<li>Export all the open bugs for Virgo (and Gemini Web if you like) to a CSV file using the CSV link on the bugzilla search results panel.</li>
+			<li>Go to the "Imported from bugzilla" sprint (not really a sprint at all) and import the CSV using the Tools link followed by "Import tasks from Bugzilla" (
+				<b>not</b> "Import tasks from CSV"). Make a note of the task numbers added.
+			</li>
+			<li>Go to the "Imported from bugzilla" sprint and 
+				<b>copy</b> the tasks added in the previous step to the backlog.
+			</li>
+			<li>It is helpful to categorise bugs and features using the "More Actions" pull down. We put the bugs at the top of the backlog so we don't lose track of them.</li>
+		</ol>
+		<p>To work on a sprint:</p>
+		<ol>
+			<li>Add a sprint.</li>
+			<li>
+				<b>Move</b> tasks from the backlog into the new sprint to work on them. If you don't complete them, 
+				<b>move</b> them to a new sprint or 
+				<b>move</b> them back to the backlog.
+			</li>
+		</ol>
+		<p>Since we are trying to use Acunote to manage sprints in Southampton, Sofia, and potentially elsewhere, please ensure that bugzilla is kept up to date in case the Acunote data gets corrupted.</p>
+		<p>Note that we never remove tasks from the "Imported from bugzilla" so that subsequent imports do not accidentally re-create finished tasks. The maintainers of Acunote recommended this technique.</p><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Development-process-advice.html" title="Development process advice">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center">
+					<a href="Committers.html" title="Committers">
+						<img alt="Committers" border="0" src="../../images/home.gif"/>
+					</a>
+				</td>
+				<td style="width: 20%" align="right">
+					<a href="Logos.html" title="Logos">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Development process advice</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Logos</td>
+			</tr>
+		</table>
+	</body>
+</html>

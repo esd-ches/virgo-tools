@@ -1,0 +1,86 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Running GreenPages from Eclipse</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="A Guide to the GreenPages Sample"><link rel="up" href="ch02.html" title="Chapter&nbsp;2.&nbsp;Installing and Running GreenPages"><link rel="prev" href="ch02s04.html" title="Browsing the GreenPages Application"><link rel="next" href="ch03.html" title="Chapter&nbsp;3.&nbsp;GreenPages Highlights"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch02s04.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch03.html">Next</a></td></tr></table><hr></div><div class="section" title="Running GreenPages from Eclipse"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="installing.greenpages.tools"></a>Running GreenPages from Eclipse</h2></div></div></div><p>Using Eclipse and the Virgo Tomcat Server tools, it is possible to run applications directly from the IDE. 
+      As changes are made to the application in the IDE,
+      they can be automatically applied to the running application allowing for rapid feedback of changes in function.
+    </p><div class="section" title="Importing the GreenPages Projects into Eclipse"><div class="titlepage"><div><div><h3 class="title"><a name="installing.greenpages.tools.importing"></a>Importing the GreenPages Projects into Eclipse</h3></div></div></div><p>
+            Before starting the GreenPages application from Eclipse, import the projects:
+            </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Open the Import Wizard using 
+    <span class="guimenu">File</span> &rarr; <span class="guimenuitem">Import</span>.
+</p></li><li class="listitem"><p>From the Import Wizard select 
+    <span class="guimenu">General</span> &rarr; <span class="guimenuitem">Existing Projects into Workspace</span>
+and click <span class="emphasis"><em>Next</em></span>:
+    </p><div class="mediaobject" align="center"><img src="images/installing-greenpages/import-projects2.png" align="middle"></div><p>
+</p></li><li class="listitem"><p>Click <span class="guibutton">Browse???</span> and select <code class="code">$GREENPAGES_HOME/</code> as the root directory.</p></li><li class="listitem"><p>In the <span class="emphasis"><em>Import Projects</em></span> window, select all the projects which include <code class="literal">greenpages</code> in their name and click <span class="emphasis"><em>Finish</em></span>:
+    </p><div class="mediaobject" align="center"><img src="images/installing-greenpages/import-projects3.png" align="middle"></div><p>
+</p></li><li class="listitem"><p>Validate that the imported projects appear in Package Explorer:
+
+    </p><div class="mediaobject" align="center"><img src="images/installing-greenpages/import-projects4.png" align="middle"></div><p>
+    
+There may be compilation errors at this stage.
+</p></li></ol></div><p>
+          </p></div><div class="section" title="Configuring Virgo Tomcat Server Target Runtime"><div class="titlepage"><div><div><h3 class="title"><a name="installing.greenpages.tools.configuring"></a>Configuring Virgo Tomcat Server Target Runtime</h3></div></div></div><p>
+              Projects for Virgo Tomcat Server are associated with a Virgo Virgo Tomcat Server runtime environment in Eclipse. This is to allow
+              launching and testing from within Eclipse, and also to allow classpath construction in Eclipse to
+              mirror the dynamic classpath in the Virgo Tomcat Server runtime.
+          </p><p>
+            Compilation errors in the previous step will be resolved here.
+          </p><p>
+              To configure a Virgo Tomcat Server runtime environment:
+          </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Open <span class="guimenu">Window</span> &rarr; <span class="guisubmenu">Show View</span> &rarr; <span class="guimenuitem">Other???</span>.</p></li><li class="listitem"><p>In the <span class="emphasis"><em>Show View</em></span> dialog choose 
+<span class="guimenu">Server</span> &rarr; <span class="guimenuitem">Servers</span> to make the servers view visible:
+    </p><div class="mediaobject" align="center"><img src="images/installing-greenpages/servers.png" align="middle"></div><p>
+</p></li><li class="listitem"><p>Right-click in the <span class="emphasis"><em>Servers</em></span> (which may not be empty) view and select 
+    <span class="guimenu">New</span> &rarr; <span class="guimenuitem">Server</span>.
+</p></li><li class="listitem"><p>In the <span class="emphasis"><em>New Server</em></span> dialog, choose 
+<span class="guimenu">EclipseRT</span> &rarr; <span class="guimenuitem">Virgo Web Server</span> 
+    and click <span class="emphasis"><em>Next</em></span>.
+</p></li><li class="listitem"><p>Click <span class="guibutton">Browse</span> and select the <code class="code">$SERVER_HOME</code> directory. Ensure that a JRE is selected
+supporting Java 1.6 or above.
+Click <span class="guibutton">Finish</span> to complete creation of the server:
+    </p><div class="mediaobject" align="center"><img src="images/installing-greenpages/new-server.png" align="middle"></div><p>
+</p></li><li class="listitem"><p>Select all projects (except <span class="emphasis"><em>Servers</em></span>) in <span class="emphasis"><em>Package Explorer</em></span>.
+Right-click on the projects and choose <span class="guimenuitem">Close Project</span> 
+and then <span class="guimenuitem">Open Project</span>.
+</p></li></ol></div><p>
+It is possible that there remain spurious build errors from Eclipse (see the <span class="emphasis"><em>Problems</em></span> view), in which case
+a project clean build may clear the problems. Select <span class="guimenu">Project</span> &rarr; <span class="guimenuitem">Clean???</span>
+from the main menu, and choose to <span class="emphasis"><em>Clean all projects</em></span>.
+It may be necessary to repeat this on a few projects.
+(This process is sometimes known as the <span class="quote">&ldquo;<span class="quote">Eclipse dance</span>&rdquo;</span>.)
+</p><p>
+Despite the dance steps outlined, there will remain some <span class="emphasis"><em>Warnings/Errors</em></span> like this:
+</p><div class="mediaobject" align="center"><img src="images/installing-greenpages/problem-warning.png" align="middle"></div><p>
+It is safe to ignore these.
+</p><p>
+	When the Virgo Tooling starts the Virgo Tomcat Server it uses a &lsquo;warm start&rsquo; by default.
+	It is useful to set the <code class="literal">-clean</code> option so that every server start is a clean one.
+	This is done by an option on the Virgo Tomcat Server Overview window, which is obtained by opening the Virgo Tomcat Server entry in the Servers window. 
+	(Double-click, or right-click and choose Open.)	
+	The check box is labelled &lsquo;Start server with -clean option&rsquo;.
+	Close the window before proceeding.
+</p></div><div class="section" title="Running GreenPages from Within Eclipse"><div class="titlepage"><div><div><h3 class="title"><a name="installing.greenpages.tools.run"></a>Running GreenPages from Within Eclipse</h3></div></div></div><p>
+              Now that GreenPages is successfully imported into Eclipse, run the project directly from within the IDE.</p><p>If the GreenPages PAR file was previously copied to the <code class="literal">pickup</code> directory, be sure it is now removed so that
+				it does not conflict with the deployment of the Eclipse project.  On Unix:</p><pre class="programlisting">prompt$ cd $SERVER_HOME/pickup
+prompt$ rm greenpages-2.5.0.RELEASE.par</pre><p>On Windows:</p><pre class="programlisting">prompt&gt; cd %SERVER_HOME%\pickup
+prompt&gt; del greenpages-2.5.0.RELEASE.par</pre><p>Also, to prevent conflicts with the server configured in Eclipse, stop a currently-running Virgo Tomcat Server by typing <code class="literal">Control-C</code> in the console window.</p><p>
+              To run GreenPages from within Eclipse:
+              </p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+                      Right click on the Virgo Tomcat Server instance in the <span class="emphasis"><em>Servers</em></span> view and select the <span class="guimenu">Add and Remove???</span>
+                      menu item.
+     </p><div class="mediaobject" align="center"><img src="images/installing-greenpages/addedtoserver.png" align="middle"></div><p>
+    </p></li><li class="listitem"><p>
+     Add <span class="emphasis"><em>greenpages</em></span> (which is the containing project or PAR) to the server and finish.
+    </p></li><li class="listitem"><p>To start Virgo Tomcat Server from within Eclipse right-click on the Virgo Tomcat Server node in the Servers window and choose <span class="guimenuitem">Start</span>.
+                      The <span class="emphasis"><em>Servers</em></span> view should now show the server and the added project:
+    </p><div class="mediaobject" align="center"><img src="images/installing-greenpages/installed.png" align="middle"></div><p>
+                      </p></li><li class="listitem"><p>
+							Verify that GreenPages is started correctly by checking for:
+</p><pre class="programlisting">&lt;DE0005I&gt; Started par 'greenpages' version '2.5.0.RELEASE'.
+</pre><p>
+							in the Console window.
+                      </p></li></ol></div><p>
+          </p><p>
+          (<span class="emphasis"><em>If errors are shown implying that GreenPages failed to be installed, this may be because some dependencies were not
+          copied to Virgo Tomcat Server, as described in <a class="xref" href="ch02s03.html#installing.greenpages.building.par.provided" title="Installing Dependencies into Virgo Tomcat Server">Installing Dependencies into Virgo Tomcat Server</a>. Check this.</em></span>)
+          </p><p>Once installed and started GreenPages is again available from a web browser at the address 
+              <a class="ulink" href="http://localhost:8080/greenpages" target="_top">http://localhost:8080/greenpages</a>.
+          </p></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch02s04.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch02.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch03.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

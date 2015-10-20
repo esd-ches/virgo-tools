@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>Concepts - Pipeline</title>
+		<link type="text/css" rel="stylesheet" href="../../book.css"/>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">Pipeline</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Scoping.html" title="Scoping">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="Repositories.html" title="Repositories">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Scoping</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Repositories</td>
+			</tr>
+		</table><hr/>
+		<h1 id="Pipeline">Pipeline</h1>
+		<p>Artifacts are deployed into Virgo using a deployment 
+			<i>pipeline</i> consisting of several pipeline 
+			<i>stages</i> some of which have pipelines nested inside them as shown in the figure below. 
+		</p>
+		<p>
+			<img width="500" align="middle" border="0" src="images/Virgo_Pipeline_Stages.png"/> 
+		</p>
+		<p>The pipeline, and each pipeline stage, accepts a tree of install artifacts as input and outputs a possibly modified tree. The deployment pipeline is constructed by the &lt;tt&gt;Plumber&lt;/tt&gt; class.</p>
+		<h2 id="Transformers">Transformers</h2>
+		<p>Many of the interesting modifications to the tree are performed by the transform stage which uses the whiteboard pattern to drive all services of a Transformer type in order of service ranking. A number of standard Transformer services are defined in the Spring context file &lt;tt&gt;deployer-context.xml&lt;/tt&gt; in the kernel's deployer bundle. Some interesting examples of standard Transformers are: </p>
+		<ul>
+			<li>&lt;tt&gt;PlanResolver&lt;/tt&gt; which takes as input a tree consisting of a single plan node and adds a subtree representing the content of the plan, including any nested plans and their subtrees, </li>
+			<li>&lt;tt&gt;ScopingTransformer&lt;/tt&gt; which rewrites the metadata of a subtree rooted in a scoped plan and gathers service scoping information for the subtree, </li>
+			<li>&lt;tt&gt;SyntheticContextBundleCreatingTransformer&lt;/tt&gt; which adds a synthetic context bundle as a child node of a scoped plan, and </li>
+			<li>&lt;tt&gt;ImportExpandingTransformer&lt;/tt&gt; which converts Virgo-specific headers such as &lt;tt&gt;import-bundle&lt;/tt&gt; into standard OSGi &lt;tt&gt;import-package&lt;/tt&gt; statements.</li>
+		</ul>
+		<h2 id="Quasi_Framework">Quasi Framework</h2>
+		<p>The 
+			<i>quasi framework</i> is an abstraction of the Equinox State and is used in auto-provisioning missing dependencies during deployment. The quasiInstall stage installs the bundles in the input tree into an instance of the quasi framework. The quasiResolve stage attempts to resolve these bundles and auto-provision any missing dependencies from the Virgo repository by installing them in the quasi framework instance. The commit stage attempts to install the bundles in the input tree, along with any auto-provisioned bundles, into the OSGi framework.
+		</p>
+		<h2 id="Exception_Handling">Exception Handling</h2>
+		<p>There are two approaches to handling exceptions thrown by a pipeline stage. In general, unexpected exceptions are allowed to percolate upward and result in diagnostics and a failed deployment. However, certain expected exceptions, such as failure to resolve the dependencies of the install artifact tree, need to be handled more gracefully. In these cases, a 
+			<i>compensating pipeline stage</i> is defined which drives a 
+			<i>compensation stage</i> if an exception is thrown. failInstall and failResolve in the figure above are examples of compensation stages.
+			<br/>
+		</p>
+		<p>
+			<br/>
+		</p><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Scoping.html" title="Scoping">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center">
+					<a href="Concepts.html" title="Concepts">
+						<img alt="Concepts" border="0" src="../../images/home.gif"/>
+					</a>
+				</td>
+				<td style="width: 20%" align="right">
+					<a href="Repositories.html" title="Repositories">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Scoping</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Repositories</td>
+			</tr>
+		</table>
+	</body>
+</html>

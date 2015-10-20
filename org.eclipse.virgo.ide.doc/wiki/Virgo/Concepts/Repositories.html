@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>Concepts - Repositories</title>
+		<link type="text/css" rel="stylesheet" href="../../book.css"/>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">Repositories</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Pipeline.html" title="Pipeline">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="Updating-This-Document.html" title="Updating This Document">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Pipeline</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Updating This Document</td>
+			</tr>
+		</table><hr/>
+		<h1 id="Repositories">Repositories</h1>
+		<p>Virgo repositories contain artifact URLs and metadata and are indexed by the Cartesian product of artifact type, name, and version. There are three kinds of repository: 
+			<i>external</i>, 
+			<i>watched</i>, and 
+			<i>remote</i>. Repositories are passive in the sense that changes to repository content do not cause artifacts to be deployed into Virgo, refreshed, or undeployed. Repositories support queries which allow sets of artifacts satisfying certain criteria, for example with a version in a given version range, to be determined.
+		</p>
+		<h2 id="External_Repositories">External Repositories</h2>
+		<p>External repositories are created by scanning a directory which contains artifacts, possibly in nested directories. The repository configuration specifies a pattern which says which files should be treated as artifacts. After the repository is created, changes to the directory do not affect the repository content. </p>
+		<p>The Virgo kernel's default repository configuration, in &lt;tt&gt;config/org.eclipse.virgo.repository.properties&lt;/tt&gt;, &nbsp;specifies an external repository created from the &lt;tt&gt;repository/ext&lt;/tt&gt; directory. </p>
+		<h2 id="Watched_Repositories">Watched Repositories</h2>
+		<p>Watched repositories are created by scanning a directory which contains artifacts but no nested directories. All files in the directory are treated as artifacts. The directory is re-scanned periodically and the interval between re-scans is specified in the repository configuration. Changes detected by re-scanning are reflected in the repository content. Note that changing the content of a watched repository does not cause artifacts to be deployed into Virgo, refreshed, or undeployed. </p>
+		<p>The Virgo kernel's default repository configuration specifies a watched repository based on the contents of the &lt;tt&gt;repository/usr&lt;/tt&gt; directory. </p>
+		<h2 id="Remote_Repositories">Remote Repositories</h2>
+		<p>A remote repository refers to a repository hosted by a Virgo instance sometimes known as a 
+			<i>repository server</i>. The hosted repository is configured using the file &lt;tt&gt;config/org.eclipse.virgo.apps.repository.properties&lt;/tt&gt; and may be either an external or a watched repository.
+		</p>
+		<p>The remote repository is accessed by a Virgo instance sometimes known as a 
+			<i>repository client</i>. The repository client is normally a different instance of Virgo to the instance hosting the repository, but it can be the same instance which is handy for testing. The remote repository periodically downloads its content from the hosted repository. The period between downloads may be configured in the repository configuration. The remote repository also caches artifacts which have secure hashes associated with them in the hosted repository. Only bundles currently have secure hashes associated with them. The secure hash is used to determine when a cached artifact is stale and needs to be freshly downloaded.
+		</p>
+		<h2 id="Repository_Chains">Repository Chains</h2>
+		<p>The Virgo repository is configured as a 
+			<i>chain</i> of external, watched, and remote repositories. The chain is a list which is searched in the configured order. The effect of this search order is that an artifact with a given type, name, and version which appears in more than one repository in the chain is only accessed from the first repository in the chain in which it appears. Abstractly, the repository chain behaves as a single repository, but its content may mutate in quite a different way to the content of an individual external, watched, or remote repository.
+		</p><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Pipeline.html" title="Pipeline">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center">
+					<a href="Concepts.html" title="Concepts">
+						<img alt="Concepts" border="0" src="../../images/home.gif"/>
+					</a>
+				</td>
+				<td style="width: 20%" align="right">
+					<a href="Updating-This-Document.html" title="Updating This Document">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Pipeline</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Updating This Document</td>
+			</tr>
+		</table>
+	</body>
+</html>

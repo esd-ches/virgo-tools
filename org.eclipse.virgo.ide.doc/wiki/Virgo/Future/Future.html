@@ -1,0 +1,223 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>Future</title>
+		<link type="text/css" rel="stylesheet" href="../../book.css"/>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">Future</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left"></td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="Future-Features.html" title="Future Features">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top"></td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Future Features</td>
+			</tr>
+		</table><hr/>
+		<p>
+			<a href="http://wiki.eclipse.org/Category:Virgo" title="Category:Virgo" target="doc_external">Category:Virgo</a>
+			{{DEFAULTCATEGORYSORT:{{SUBPAGENAME}}}}
+		</p>
+		<p>This page summarises the Virgo plan and notes design ideas for future Virgo features. </p>
+		<h1 id="Virgo_Plan">Virgo Plan</h1>
+		<p>The following plan is subject to change and depends on how much resource is available as the project evolves. </p>
+		<h2 id="3.0.0_.28Maya.29_Release">3.0.0 (Maya) Release</h2>
+		<p>Theme: Eclipse RT integration </p>
+		<p>Schedule: July/August 2011 </p>
+		<p>Draft 
+			<a href="http://wiki.eclipse.org/Release_Notes_for_3.0.0" title="Release Notes for 3.0.0" target="doc_external">Release Notes for 3.0.0</a> 
+		</p>
+		<p>Content: </p>
+		<ul>
+			<li>Jetty support (
+				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=321726" target="doc_external">bug 321726</a>) 
+			</li>
+			<li>Use Equinox config admin instead of that of Felix (
+				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=310217" target="doc_external">bug 310217</a>) 
+			</li>
+			<li>Use Equinox log service instead of that of Felix (
+				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=310218" target="doc_external">bug 310218</a>) 
+			</li>
+			<li>Use Equinox event admin instead of that of Felix (
+				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=310219" target="doc_external">bug 310219</a>) 
+			</li>
+			<li>Upgrade Spring to 3.0.5 (
+				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=314282" target="doc_external">bug 314282</a>) 
+			</li>
+			<li>Rebase region support on OSGi framework hooks (
+				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=330776" target="doc_external">bug 330776</a>) 
+			</li>
+			<li>Tomcat 7/servlet 3.0 (
+				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=332045" target="doc_external">bug 332045)</a>
+			</li>
+			<li>Make Virgo's web behaviour conform strictly to the OSGi web spec (
+				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=326798" target="doc_external">bug 326798</a>)
+			</li>
+			<li>Support OSGi Log service (
+				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=342716" target="doc_external">bug 342716</a>)
+			</li>
+			<li>Move the Kernel to DS to remove the fixed startup order (
+				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=333474" target="doc_external">bug 333474</a>) 
+			</li>
+			<li>Allows PARs to contain plans (
+				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=335689" target="doc_external">bug 335689</a>)
+			</li>
+			<li>Remove entry/exit advice from hashCode() equals() and toString() methods (
+				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=328033" target="doc_external">bug 328033</a>)
+			</li>
+			<li>Critical bug fixes</li>
+		</ul>
+		<h3 id="Required_CQs">Required CQs</h3>
+		<p>
+			<a href="https://dev.eclipse.org/ipzilla/show_bug.cgi?id=5094" target="doc_external">5094</a> APPROVED Tomcat 7.0.12 Version: 7.0.12 
+		</p>
+		<p>
+			<a href="https://dev.eclipse.org/ipzilla/show_bug.cgi?id=5095" target="doc_external">5095</a> APPROVED Tomcat 7.0.12 Version: 7.0.12 (PB CQ5094) 
+		</p>
+		<p>
+			<a href="https://dev.eclipse.org/ipzilla/show_bug.cgi?id=5012" target="doc_external">5012</a> APPROVED Java Unified Expression Language Version: 2.2 
+		</p>
+		<p>
+			<a href="https://dev.eclipse.org/ipzilla/show_bug.cgi?id=5014" target="doc_external">5014</a> APPROVED javax.annotation Version: 1.1 
+		</p>
+		<p>
+			<a href="https://dev.eclipse.org/ipzilla/show_bug.cgi?id=5083" target="doc_external">5083</a> APPROVED Apache Felix Gogo Version: 0.8.01 
+		</p>
+		<p>
+			<a href="https://dev.eclipse.org/ipzilla/show_bug.cgi?id=5092" target="doc_external">5092</a> APPROVED org.apache.mina.core Version: 2.0.2 
+		</p>
+		<p>
+			<a href="https://dev.eclipse.org/ipzilla/show_bug.cgi?id=5091" target="doc_external">5091</a> APPROVED Apache SSHD Version: 0.5.0 
+		</p>
+		<p>
+			<a href="https://dev.eclipse.org/ipzilla/show_bug.cgi?id=4462" target="doc_external">4462</a> APPROVED javassist Version: 3.13.0.GA
+		</p>
+		<h2 id="3.5.0_.28Bondi.29_Release">3.5.0 (Bondi) Release</h2>
+		<p>Theme: p2 and tooling integration </p>
+		<p>Schedule: July 2012 </p>
+		<p>Draft 
+			<a href="http://wiki.eclipse.org/Release_Notes_for_3.5.0" title="Release Notes for 3.5.0" target="doc_external">Release Notes for 3.5.0</a> 
+		</p>
+		<p>Content: </p>
+		<ul>
+			<li>Provision Virgo with p2 (
+				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=343543" target="doc_external">bug 343543</a>) 
+			</li>
+			<li>Virgo distribution based on p2 provisioning - Virgo Nano (
+				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=364571" target="doc_external">bug 364571</a>)
+			</li>
+			<li>Upgrade from Spring DM to Gemini Blueprint (
+				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=317943" target="doc_external">bug 317943</a>) 
+			</li>
+			<li>Become a release train project (
+				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=374214" target="doc_external">bug 374214</a>)
+			</li>
+			<li>Support for Virgo IDE tooling </li>
+			<li>Critical bug fixes</li>
+		</ul>
+		<h3 id="Required_CQs_2">Required CQs</h3>
+		<p>
+			<a href="https://dev.eclipse.org/ipzilla/buglist.cgi?query_format=advanced&amp;short_desc_type=allwordssubstr&amp;short_desc=&amp;product=rt&amp;component=rt.virgo&amp;long_desc_type=substring&amp;long_desc=&amp;bug_file_loc_type=allwordssubstr&amp;bug_file_loc=&amp;keywords_type=allwords&amp;keywords=Juno&amp;emailassigned_to1=1&amp;emailtype1=substring&amp;email1=&amp;emailassigned_to2=1&amp;emailreporter2=1&amp;emailcc2=1&amp;emailtype2=substring&amp;email2=&amp;bugidtype=include&amp;bug_id=&amp;chfieldfrom=&amp;chfieldto=Now&amp;chfieldvalue=&amp;cmdtype=doit&amp;order=Reuse+same+sort+as+last+time&amp;field0-0-0=noop&amp;type0-0-0=noop&amp;value0-0-0=" target="doc_external">List of required CQs - approved</a>
+		</p>
+		<h2 id="Nice_to_Have">Nice to Have</h2>
+		<p>The following items currently do not fit in the above plans, but have been raised as desirable by one or more users:
+			<br/>
+		</p>
+		<ul>
+			<li>Admin console administration of remote Virgo instances </li>
+			<li>Multiple user regions</li>
+		</ul>
+		<h2 id="Future_Releases">Future Releases</h2>
+		<p>The following features are not currently in plan: </p>
+		<ul>
+			<li>p2 repository in the repository chain (
+				<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=309778" target="doc_external">bug 309778</a>) 
+			</li>
+			<li>Support Java enterprise APIs(EJB, CDI, JPA, JSF, Web)</li>
+			<li>Integration server </li>
+			<li>Batch server</li>
+		</ul>
+		<h2 id="Release_Branding">Release Branding</h2>
+		<p>To accommodate simultaneous releases of Virgo runtime, OSGi Web Container runtime, and Virgo tooling, we are branding each release with the name of a colour, including old releases. </p>
+		<table border="1" cellpadding="1" cellspacing="1" width="600">
+			<tr>
+				<td>+ Virgo Release Branding</td>
+			</tr>
+			<tr>
+				<td>Brand</td>
+				<td>Runtime</td>
+				<td>Web Container</td>
+				<td>Eclipse IDE Tooling</td>
+			</tr>
+			<tr>
+				<td>Fern</td>
+				<td>SpringSource dm Server 1.0</td>
+				<td>-</td>
+				<td>-</td>
+			</tr>
+			<tr>
+				<td>Emerald</td>
+				<td>SpringSource dm Server 2.0</td>
+				<td>OSGi Web Container 1.0</td>
+				<td>-</td>
+			</tr>
+			<tr>
+				<td>Cornflower</td>
+				<td>Virgo 2.1</td>
+				<td>Gemini Web 1.1</td>
+				<td>-</td>
+			</tr>
+			<tr>
+				<td>Maya</td>
+				<td>Virgo 3.0</td>
+				<td>Gemini Web 2.0</td>
+				<td>-</td>
+			</tr>
+			<tr>
+				<td>Bondi</td>
+				<td>Virgo 3.5</td>
+				<td>Gemini Web 2.1</td>
+				<td>Virgo IDE 1.0? - TBD</td>
+				<td>-</td>
+			</tr>
+			<tr>
+				<td>Sky</td>
+				<td>Virgo 3.6 or 4.0</td>
+				<td>Gemini Web 2.1 or 2.2</td>
+				<td>Virgo IDE 1.0? - TBD</td>
+			</tr>
+		</table>
+		<p>Note 1: the following "wimp list" of colours that we are steering clear of: 
+			<a href="http://www.microsoft.com/windowsazure/" target="doc_external">Azure</a>, 
+			<a href="http://www.eclipse.org/indigo/" target="doc_external">Indigo</a>.
+		</p>
+		<p>Note 2: the SpringSource dm Server releases are shade of green because of the SpringSource branding. Virgo has cornflower blue in its logo and admin console styling, so we chose shades of blue for Virgo releases.</p><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left"></td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="Future-Features.html" title="Future Features">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top"></td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Future Features</td>
+			</tr>
+		</table>
+	</body>
+</html>

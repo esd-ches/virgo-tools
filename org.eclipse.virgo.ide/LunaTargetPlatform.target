@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?><target name="Virgo Target" sequenceNumber="41">
+<locations>
+<location path="${eclipse_home}" type="Profile"/>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.virgo.bundlor.feature.group" version="1.1.0.RELEASE"/>
+<repository location="http://download.eclipse.org/virgo/release/BNDLR/1.1.0.RELEASE/updatesite"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.jst.server_adapters.ext.feature.feature.group" version="3.3.300.v20140501_1027-46FKs9oB58F6KBJl8JA8"/>
+<unit id="org.eclipse.jst.server_adapters.feature.feature.group" version="3.2.300.v20140501_1027-20Bg7w31241A29a2752"/>
+<unit id="org.eclipse.jst.common.fproj.enablement.jdt.feature.group" version="3.6.0.v201405010300-377F8N8s73573E6H6966"/>
+<unit id="org.eclipse.jst.enterprise_ui.feature.feature.group" version="3.6.0.v201405070300-7b7OIumFSK2W_CbOM9lcCU_kNlXd"/>
+<unit id="org.eclipse.jst.server_ui.feature.feature.group" version="3.4.100.v20140501_1027-7A77FPZ9xFccxQKMbwPWmPWnAQGG"/>
+<unit id="org.eclipse.wst.common.fproj.feature.group" version="3.6.0.v201405011300-377F8N8s735555393B7B"/>
+<repository location="http://download.eclipse.org/releases/luna"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.json" version="1.0.0.v201011060100"/>
+<unit id="org.apache.commons.collections.source" version="3.2.0.v2013030210310"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20140525021250/repository/"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.virgo.medic.feature.group" version="3.6.2.RELEASE"/>
+<unit id="org.eclipse.virgo.util.feature.group" version="3.6.2.RELEASE"/>
+<unit id="org.eclipse.virgo.kernel.feature.group" version="3.6.2.RELEASE"/>
+<repository location="http://download.eclipse.org/virgo/updatesite/3.6.2.RELEASE"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.libra.framework.feature.feature.group" version="0.3.1.201405141436"/>
+<unit id="org.eclipse.libra.framework.editor.feature.feature.group" version="0.3.1.201405141436"/>
+<unit id="org.eclipse.libra.warproducts.feature.feature.group" version="0.3.1.201405141436"/>
+<unit id="org.eclipse.libra.facet.feature.feature.group" version="0.3.1.201405141436"/>
+<repository location="http://download.eclipse.org/libra/milestones"/>
+</location>
+</locations>
+<launcherArgs>
+<vmArgs>-Dosgi.requiredJavaVersion=1.5 -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts -XX:MaxPermSize=256m -Xms300m -Xmx512m -Xdock:icon=../Resources/Eclipse.icns -XstartOnFirstThread -Dorg.eclipse.swt.internal.carbon.smallFonts</vmArgs>
+</launcherArgs>
+</target>

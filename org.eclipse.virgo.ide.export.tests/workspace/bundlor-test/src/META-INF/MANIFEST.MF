@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Export-Package: com.springsource;version="1.0.0",com.springsource.bar;
+ version="1.0.0"
+Bundle-Classpath: .
+Bundle-Version: 1.0.0
+Spring-Context: META-INF/spring/*.xml
+Bundle-Name: Bundlor_test Bundle
+Bundle-ManifestVersion: 2
+Import-Package: org.springframework.beans.factory.xml;version="[2.5.6.
+ A,2.6.0)"
+Bundle-SymbolicName: com.springsource.bundlor
+

@@ -1,0 +1,40 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Configuring the Web Integration Layer</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo User Guide"><link rel="up" href="ch13.html" title="Chapter&nbsp;13.&nbsp;Configuration"><link rel="prev" href="ch13s07.html" title="Configuring the Embedded Tomcat Servlet Container"><link rel="next" href="ch13s09.html" title="Configuring the Embedded Jetty Servlet Container"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch13s07.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch13s09.html">Next</a></td></tr></table><hr></div><div class="section" title="Configuring the Web Integration Layer"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="configuring-web"></a>Configuring the Web Integration Layer</h2></div></div></div><p>
+			Virgo Server for Apache Tomcat integrates an OSGi-enhanced version of the <a class="ulink" href="http://tomcat.apache.org/" target="_top">Tomcat Servlet Container</a>
+			in order to provide support for deploying Java EE WARs and OSGi <span class="emphasis"><em>Web Application Bundles</em></span>.
+		</p><p>
+			For Virgo Server for Apache Tomcat you 
+			configure the behaviour of the Web Integration Layer using the properties file called <code class="literal">org.eclipse.virgo.web.properties</code>.
+			The <code class="literal">org.eclipse.virgo.web.properties</code> file is located in the <code class="literal">$SERVER_HOME/repository/ext</code> directory. 
+		</p><p>The following table describes the properties.  </p><div class="table"><a name="configuring-web-integration-layer"></a><p class="title"><b>Table&nbsp;13.12.&nbsp;Web Integration Layer Properties</b></p><div class="table-contents"><table summary="Web Integration Layer Properties" border="1"><colgroup><col><col><col></colgroup><thead><tr><th>
+							Property
+						</th><th>
+							Description
+						</th><th>
+							Default Value
+						</th></tr></thead><tbody><tr><td>
+							<code class="literal">WABHeaders</code>
+						</td><td>
+							<p>
+								Specifies how Web Application Bundle manifest headers are processed.
+								See "Web Application Manifest Processing" in the
+								<a class="ulink" href="../../virgo-programmer-guide/html/index.html" target="_top">Programmer Guide</a> for details.
+							</p>
+							<p>
+								A value of <code class="literal">strict</code> causes VTS to interpret certain headers in strict compliance with
+								the OSGi Web Applications specification if they are not specified.
+							</p>
+							<p>
+								A value of <code class="literal">defaulted</code> causes VTS to set certain headers to default values if they are not specified.
+								This was how VTS behaved prior to version 3.
+								<span class="emphasis"><em>This value is provided as a migration aid and may not be supported in future releases.</em></span>
+								A warning event log message (WE0006W) is generated if this value is specified.
+							</p>
+							<p>
+								The Virgo Jetty Server will always operate in <code class="literal">strict</code> mode.
+							</p>
+						</td><td>
+							<code class="literal">strict</code>
+						</td></tr></tbody></table></div></div><br class="table-break"><p>
+			There is no Web Integration Layer in Virgo Jetty Server. The relevant configuration is described in
+			<a class="link" href="ch13s09.html" title="Configuring the Embedded Jetty Servlet Container">Configuring the Embedded Jetty Servlet Container</a>.
+		</p></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch13s07.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch13.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch13s09.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

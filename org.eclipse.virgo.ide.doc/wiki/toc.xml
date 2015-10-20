@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<toc topic="wiki/Virgo/Virgo.html" label="Virgo Wiki">
+	<topic label="Concepts">
+		<link toc="wiki/Virgo-Concepts-toc.xml" />
+	</topic>
+	<topic label="Frequently Asked Questions">
+		<link toc="wiki/Virgo-FAQ-toc.xml" />
+	</topic>
+	<topic label="Source">
+		<link toc="wiki/Virgo-Source-toc.xml" />
+	</topic>
+	<topic label="Build">
+		<link toc="wiki/Virgo-Build-toc.xml" />
+	</topic>
+	<topic label="Test">
+		<link toc="wiki/Virgo-Test-toc.xml" />
+	</topic>
+	<topic label="Future">
+		<link toc="wiki/Virgo-FAQ-toc.xml" />
+	</topic>
+	<topic label="Community">
+		<link toc="wiki/Virgo-Community-toc.xml" />
+	</topic>
+	<topic label="Committers">
+		<link toc="wiki/Virgo-Committers-toc.xml" />
+	</topic>
+</toc>

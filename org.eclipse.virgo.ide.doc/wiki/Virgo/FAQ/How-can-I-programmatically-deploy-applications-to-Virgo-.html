@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>FAQ - How can I programmatically deploy applications to Virgo?</title>
+		<link type="text/css" rel="stylesheet" href="../../book.css"/>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">How can I programmatically deploy applications to Virgo?</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="How-can-I-change-the-version-of-Spring-framework-in-the-user-region-.html" title="How can I change the version of Spring framework in the user region?">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="My-Web-Application-Bundle-stopped-working-when-I-moved-to-Virgo-3-x-What-happened-.html" title="My Web Application Bundle stopped working when I moved to Virgo 3.x. What happened?">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">How can I change the version of Spring framework in the user region?</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">My Web Application Bundle stopped working when I moved to Virgo 3.x. What happened?</td>
+			</tr>
+		</table><hr/>
+		<h1 id="How_can_I_programmatically_deploy_applications_to_Virgo.3F">How can I programmatically deploy applications to Virgo?</h1>
+		<p>This can be achieved using the MBeans registered by Virgo. It's best to explore them first using something like JConsole. The 
+			<a href="http://virgo-opengrok.springsource.org/xref/virgo/org.eclipse.virgo.kernel/org.eclipse.virgo.kernel.deployer/src/main/java/org/eclipse/virgo/kernel/deployer/Deployer.java" target="doc_external">deployer</a> MBean can be used to specify an artifact with a URI that should be deployed (installed and started). Prefixes "file:" and "repository:" can be used. In the case of repository a URL of the form "repository://type/name
+			<a href="/version">/version</a>" will refer to an artifact in a provisioning repository. The square brackets indicate that the trailing "/version" is optional, in which case Virgo uses the highest version available, and are not part of the URL. In the case of a bundle, "type" is "bundle" and "name" is the bundle symbolic name (and if "version" is specified, it is the bundle version). 
+		</p>
+		<p>Note that you 
+			<i>can</i> also install bundles using &lt;tt&gt;BundleContext.installBundle&lt;/tt&gt; and they will be installed in the same region as the bundle whose bundle context was used to perform the install. However, bundles installed in this way will 
+			<i>not</i> pass through the Virgo deployment pipeline and will 
+			<i>not</i> be subject to the transformations normally applied to bundles as they are deployed in Virgo.
+		</p><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="How-can-I-change-the-version-of-Spring-framework-in-the-user-region-.html" title="How can I change the version of Spring framework in the user region?">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center">
+					<a href="FAQ.html" title="FAQ">
+						<img alt="FAQ" border="0" src="../../images/home.gif"/>
+					</a>
+				</td>
+				<td style="width: 20%" align="right">
+					<a href="My-Web-Application-Bundle-stopped-working-when-I-moved-to-Virgo-3-x-What-happened-.html" title="My Web Application Bundle stopped working when I moved to Virgo 3.x. What happened?">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">How can I change the version of Spring framework in the user region?</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">My Web Application Bundle stopped working when I moved to Virgo 3.x. What happened?</td>
+			</tr>
+		</table>
+	</body>
+</html>

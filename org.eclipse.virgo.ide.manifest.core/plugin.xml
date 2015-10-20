@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<!--
+/*******************************************************************************
+ * Copyright (c) 2007, 2010 SpringSource
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     SpringSource - initial API and implementation
+ *******************************************************************************/
+-->
+<plugin>
+
+	<extension point="org.eclipse.ui.editors.annotationTypes"> 
+		<type
+        markerSeverity="0"
+        markerType="org.eclipse.virgo.ide.manifest.core.dmservermanifestproblemmarker"
+        name="org.eclipse.virgo.ide.manifest.core.dmservermanifestproblemmarker.annotation"/> 
+    </extension> 
+
+	<extension point="org.eclipse.core.resources.markers" id="dmservermanifestproblemmarker"
+		name="%manifestProblemMarker">
+		<super
+           	type="org.eclipse.core.resources.problemmarker">
+      	</super>
+		<attribute name="ruleId" />
+		<attribute name="errorId" />
+		<persistent value="true" />
+	</extension>
+	
+	
+	<extension point="org.eclipse.wst.server.core.moduleFactories">
+		<moduleFactory 
+			projects="true"
+			class="org.eclipse.virgo.ide.module.core.ServerModuleFactoryDelegate"
+			id="org.eclipse.virgo.server.modulefactory">
+			<moduleType versions="1.0" types="org.eclipse.virgo.server.bundle" />
+			<moduleType versions="1.0" types="org.eclipse.virgo.server.par" />
+			<moduleType versions="2.0" types="org.eclipse.virgo.server.plan" />
+		</moduleFactory>
+	</extension>
+    
+    <extension point="org.eclipse.wst.server.core.moduleArtifactAdapters">
+        <moduleArtifactAdapter
+            id="org.eclipse.virgo.server.moduleartifactadapter"
+            class="org.eclipse.virgo.ide.module.core.ServerModuleArtifactAdapterDelegate">
+             <enablement>
+           <with variable="selection">
+             <adapt type="org.eclipse.core.resources.IProject">
+             	<or>
+             		<test forcePluginActivation="true"
+            			property="org.eclipse.wst.common.project.facet.core.projectFacet"
+            			value="org.eclipse.virgo.server.bundle:1.0"/>
+             		<test forcePluginActivation="true"
+            			property="org.eclipse.wst.common.project.facet.core.projectFacet"
+            			value="org.eclipse.virgo.server.par:1.0"/>
+             		<test forcePluginActivation="true"
+            			property="org.eclipse.wst.common.project.facet.core.projectFacet"
+            			value="org.eclipse.virgo.server.plan:2.0"/>
+				</or>
+			 </adapt>
+           </with>
+         </enablement>
+        </moduleArtifactAdapter>
+    </extension>
+	
+</plugin>

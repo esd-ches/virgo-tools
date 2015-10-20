@@ -1,0 +1,17 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Apache ANT Quickstart</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Bundlor User Guide"><link rel="up" href="ch03.html" title="Chapter&nbsp;3.&nbsp;Quickstart"><link rel="prev" href="ch03.html" title="Chapter&nbsp;3.&nbsp;Quickstart"><link rel="next" href="ch03s03.html" title="Apache Maven Quickstart"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch03.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch03s03.html">Next</a></td></tr></table><hr></div><div class="section" title="Apache ANT Quickstart"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="quickstart.ant"></a>Apache ANT Quickstart</h2></div></div></div><p>The ANT task allows Bundlor to be run from inside any ANT based build system.</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>Define a <code class="literal">bundlor</code> namespace</p><pre class="programlisting">&lt;project name="bundlor-sample-ant"
+    xmlns:bundlor="antlib:org.eclipse.virgo.bundlor.ant"&gt;</pre></li><li class="listitem"><p>Import the <code class="literal">bundlor</code> task into your build</p><pre class="programlisting">&lt;target name="bundlor.init"&gt;
+  &lt;ivy:cachepath resolveId="bundlor.classpath" pathid="bundlor.classpath" organisation="org.eclipse.virgo.bundlor"
+                 module="org.eclipse.virgo.bundlor.ant" revision="3.5.0" conf="ant" inline="true"
+                 type="jar" log="download-only"/&gt;
+  &lt;taskdef resource="org/eclipse/virgo/bundlor/ant/antlib.xml" uri="antlib:org.eclipse.virgo.bundlor.ant"
+           classpathref="bundlor.classpath"/&gt;
+&lt;/target&gt;</pre></li><li class="listitem"><p>
+				Use the <code class="literal">bundlor</code> task. See <a class="xref" href="ch04s02.html" title="Apache ANT Usage">Apache ANT Usage</a> for details about the
+				parameters of the task.
+			</p><pre class="programlisting">
+&lt;bundlor:bundlor
+    inputPath="${basedir}/target/classes"
+    outputPath="${basedir}/target/classes"
+    bundleVersion="1.0.2.BUILD-${timestamp}"
+    manifestTemplatePath="${basedir}/template.mf"/&gt;
+    		</pre></li></ol></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch03.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch03.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch03s03.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<toc topic="wiki/Virgo/Source/Source.html" label="Source">
+	<topic href="wiki/Virgo/Source/Source.html" label="Virgo Components"></topic>
+	<topic href="wiki/Virgo/Source/Virgo-git-Repositories.html" label="Virgo git Repositories"></topic>
+	<topic href="wiki/Virgo/Source/Source-Organisation.html" label="Source Organisation"></topic>
+	<topic href="wiki/Virgo/Source/How-to-Add-new-woven-project-to-Virgo.html" label="How to Add new woven project to Virgo"></topic>
+	<topic href="wiki/Virgo/Source/How-to-Add-a-git-Repository-to-Virgo.html" label="How to Add a git Repository to Virgo"></topic>
+	<topic href="wiki/Virgo/Source/Archaeology.html" label="Archaeology"></topic>
+	<topic href="wiki/Virgo/Source/Updating-This-Document.html" label="Updating This Document"></topic>
+</toc>

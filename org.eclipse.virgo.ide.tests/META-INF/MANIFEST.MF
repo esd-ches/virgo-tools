@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Virgo IDE Integration Tests
+Bundle-SymbolicName: org.eclipse.virgo.ide.tests
+Bundle-Version: 1.0.1.qualifier
+Bundle-Vendor: Eclipse Virgo
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Require-Bundle: org.eclipse.core.filesystem,
+ org.eclipse.core.resources,
+ org.eclipse.core.runtime,
+ org.eclipse.ui,
+ org.eclipse.ui.forms,
+ org.eclipse.ui.ide,
+ org.eclipse.pde.ui,
+ org.eclipse.search,
+ org.eclipse.virgo.ide.ui,
+ org.eclipse.virgo.ide.tests.util,
+ org.eclipse.virgo.ide.runtime.core,
+ org.junit;bundle-version="4.11.0"
+Import-Package: org.junit;version="4.3.0"
+Export-Package: org.eclipse.virgo.ide.tests;x-internal:=true

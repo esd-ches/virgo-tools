@@ -1,0 +1,21 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Getting Bundlor with Maven</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Bundlor User Guide"><link rel="up" href="ch02.html" title="Chapter&nbsp;2.&nbsp;Getting Bundlor"><link rel="prev" href="ch02s02.html" title="Getting Bundlor with Ivy"><link rel="next" href="ch03.html" title="Chapter&nbsp;3.&nbsp;Quickstart"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch02s02.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch03.html">Next</a></td></tr></table><hr></div><div class="section" title="Getting Bundlor with Maven"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="getting.maven"></a>Getting Bundlor with Maven</h2></div></div></div><p>Eclipse Virgo Bundlor can be obtained from a Maven repository.</p><div class="orderedlist"><ol class="orderedlist" type="1"><li class="listitem"><p>
+				Add the Eclipse Virgo build and SpringSource Enterprise Bundle Repository resolvers to the <code class="literal">pom.xml</code> file
+			</p><pre class="programlisting">&lt;repository&gt;
+  &lt;id&gt;eclipse.virgo.build.bundles.@release.type@&lt;/id&gt;
+  &lt;name&gt;Eclipse Virgo Build&lt;/name&gt;
+  &lt;url&gt;http://build.eclipse.org/rt/virgo/maven/bundles/@release.type@&lt;/url&gt;
+&lt;/repository&gt;
+&lt;repository&gt;
+  &lt;id&gt;com.springsource.repository.bundles.external&lt;/id&gt;
+  &lt;name&gt;SpringSource Enterprise Bundle Repository - External Bundle Releases&lt;/name&gt;
+  &lt;url&gt;http://repository.springsource.com/maven/bundles/external&lt;/url&gt;
+&lt;/repository&gt;</pre></li><li class="listitem"><p>
+				Add a dependency to the <code class="literal">pom.xml</code> file
+			</p><pre class="programlisting">&lt;dependencies&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;org.eclipse.virgo.bundlor&lt;/groupId&gt;
+	&lt;artifactId&gt;org.eclipse.virgo.bundlor.maven&lt;/artifactId&gt;
+	&lt;version&gt;3.5.0&lt;/version&gt;
+	&lt;scope&gt;compile&lt;/scope&gt;
+  &lt;/dependency&gt;
+&lt;/dependencies&gt;</pre></li></ol></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch02s02.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch02.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch03.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

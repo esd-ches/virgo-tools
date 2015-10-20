@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>FAQ - Why is my required bundle with version x.y.z. not resolved?</title>
+		<link type="text/css" rel="stylesheet" href="../../book.css"/>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">Why is my required bundle with version x.y.z. not resolved?</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Why-is-there-both-a-config-and-a-configuration-directory-.html" title="Why is there both a config and a configuration directory?">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="What-s-the-difference-between-Virgo-Server-for-Apache-Tomcat-and-Virgo-Jetty-Server-.html" title="What's the difference between Virgo Server for Apache Tomcat and Virgo Jetty Server?">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Why is there both a config and a configuration directory?</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">What's the difference between Virgo Server for Apache Tomcat and Virgo Jetty Server?</td>
+			</tr>
+		</table><hr/>
+		<h1 id="Why_is_my_required_bundle_with_version_x.y.z._not_resolved.3F">Why is my required bundle with version x.y.z. not resolved?</h1>
+		<p>To specify a version in a Require-Bundle header an (OSGi standard) attribute 
+			<b>bundle-version</b> is needed.
+		</p>
+		<p>&lt;code&gt;
+			Require-Bundle: bar;bundle-version="
+			<a href="x.y.z,x.y.z">x.y.z,x.y.z</a>"
+			&lt;/code&gt;
+		</p>
+		<p>The attribute is spelled 
+			<b>bundle-version=</b> rather than 
+			<b>version=</b> as used with Import-Package. A misspelled attribute can show the following error:
+		</p>
+		<p>&lt;code&gt;</p>
+		<pre>   Resolver report:
+       A Require-Bundle could not be resolved. Caused by missing constraint in bundle &lt;foo_1.0.0&gt;
+            constraint: &lt;Require-Bundle: bar; bundle-version="0.0.0"&gt;
+</pre>
+		<p>&lt;/code&gt;</p>
+		<p>If a required bundle cannot be resolved check the spelling of the attribute as well as the location of the required bundle.</p><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Why-is-there-both-a-config-and-a-configuration-directory-.html" title="Why is there both a config and a configuration directory?">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center">
+					<a href="FAQ.html" title="FAQ">
+						<img alt="FAQ" border="0" src="../../images/home.gif"/>
+					</a>
+				</td>
+				<td style="width: 20%" align="right">
+					<a href="What-s-the-difference-between-Virgo-Server-for-Apache-Tomcat-and-Virgo-Jetty-Server-.html" title="What's the difference between Virgo Server for Apache Tomcat and Virgo Jetty Server?">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Why is there both a config and a configuration directory?</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">What's the difference between Virgo Server for Apache Tomcat and Virgo Jetty Server?</td>
+			</tr>
+		</table>
+	</body>
+</html>

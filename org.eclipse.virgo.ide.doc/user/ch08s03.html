@@ -1,0 +1,389 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Virgo Shell Command Reference</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo User Guide"><link rel="up" href="ch08.html" title="Chapter&nbsp;8.&nbsp;Equinox Console"><link rel="prev" href="ch08s02.html" title="Using Virgo Shell Commands"><link rel="next" href="ch08s04.html" title="Using the p2 for extending your Virgo installation"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch08s02.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch08s04.html">Next</a></td></tr></table><hr></div><div class="section" title="Virgo Shell Command Reference"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="admin-shell-vsh-command-reference"></a>Virgo Shell Command Reference</h2></div></div></div><p>
+	  	This section contains reference information about the Virgo shell commands
+		<a class="link" href="ch08s03.html#admin-shell-vsh-bundle-command" title="bundle Command">bundle</a>,
+		<a class="link" href="ch08s03.html#admin-shell-cl-clhas" title="clhas command">clhas</a>,
+        <a class="link" href="ch08s03.html#admin-shell-cl-clexport" title="clexport command">clexport</a>,
+        <a class="link" href="ch08s03.html#admin-shell-cl-clload" title="clload command">clload</a>,
+		<a class="link" href="ch08s03.html#admin-shell-vsh-config-command" title="config Command">config</a>,
+		<a class="link" href="ch08s03.html#admin-shell-vsh-package-command" title="packages Command">packages</a>,
+		<a class="link" href="ch08s03.html#admin-shell-vsh-par-command" title="par Command">par</a>,
+		<a class="link" href="ch08s03.html#admin-shell-vsh-plan-command" title="plan Command">plan</a>,
+		<a class="link" href="ch08s03.html#admin-shell-vsh-service-command" title="service Command">service</a>,
+		<a class="link" href="ch08s03.html#admin-shell-vsh-install-command" title="install Command">install</a>,
+		<a class="link" href="ch08s03.html#admin-shell-vsh-shutdown-command" title="shutdown Command">shutdown</a>,
+		<a class="link" href="">help</a>, and
+		<a class="link" href="">exit</a>.
+	  </p><div class="section" title="bundle Command"><div class="titlepage"><div><div><h3 class="title"><a name="admin-shell-vsh-bundle-command"></a>bundle Command</h3></div></div></div><p>Use the <code class="literal">bundle</code> command to manage the lifecycle of bundles deployed in Virgo Kernel and to gather information about deployed bundles, such as diagnostic information, header information, and so on. </p><p>The following table lists the options you can specify for this command.</p><div class="table"><a name="admin-shell-vsh-bundle-command-table"></a><p class="title"><b>Table&nbsp;8.2.&nbsp;Options of the bundle Command</b></p><div class="table-contents"><table summary="Options of the bundle Command" border="1"><colgroup><col><col></colgroup><thead><tr><th>Option </th><th>Description</th></tr></thead><tbody><tr><td>list</td><td>Displays the list of bundles that are currently installed in the current Virgo Kernel instance.  With the exception of a few kernel bundles and their services, which Virgo Kernel uses to administer the user region, none of the kernel is visible to user installed artifacts; rather, only the bundles installed in the user region are visible.
+				  <p>Each bundle is identified by an internal <code class="literal">ID</code> which you can then use with the other <code class="literal">bundle</code> commands that manage a particular bundle, such as <code class="literal">start </code><span class="emphasis"><em><code class="literal">id</code></em></span>.   The <code class="literal">list</code> command also displays the version of the bundle, along with its state, which is one of the following standard OSGi lifecycle states:</p>
+			        <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><span class="bold"><strong>Installed</strong></span>: The bundle is installed but its dependencies have not yet been resolved.</p></li><li class="listitem"><p><span class="bold"><strong>Resolved</strong></span>: The bundle is resolved and you can now start it.</p></li><li class="listitem"><p><span class="bold"><strong>Uninstalled</strong></span>: The bundle is uninstalled and you cannot use it.</p></li><li class="listitem"><p><span class="bold"><strong>Starting</strong></span>:  The bundle is in the process of starting.</p></li><li class="listitem"><p><span class="bold"><strong>Active</strong></span>: The bundle is running and you can now use it.</p></li><li class="listitem"><p><span class="bold"><strong>Stopping</strong></span>: The bundle is in the process of stopping.</p></li></ul></div>
+			     <p>Use one of the other <code class="literal">bundle</code> commands to change the state of a bundle.  For example, use the <code class="literal">bundle start </code><span class="emphasis"><em><code class="literal">id</code></em></span> command to change the state of a bundle from <code class="literal">Installed</code> to <code class="literal">Active</code>.</p>
+			   </td></tr><tr><td>examine <span class="emphasis"><em>id</em></span></td><td>Displays detailed information about the specified bundle.  Use the <code class="literal">bundle list</code> command to get the internal id of a particular bundle.
+			         <p>In addition to the information provided by the <code class="literal">bundle list</code> command (id, full name, version, and state), the <code class="literal">examine</code> command specifies whether the bundle includes a Spring application context (or is <span class="emphasis"><em>Spring Powered</em></span>) and the exact physical location of the bundle JAR file.  </p>
+				<p>The <code class="literal">examine</code> also provides the full list of packages that the bundle imports, as well as the bundles that in turn export these imported packages.  Finally, the command displays the packages that the current bundle exports, and then in turn the list of other installed bundles that are currently importing these exported packages.  </p>
+			    </td></tr><tr><td>start <span class="emphasis"><em>id</em></span></td><td>Starts the specified bundle.  Use the <code class="literal">bundle list</code> command to get the internal id of a particular bundle.
+				<p>After Virgo Kernel successfully starts the bundle, it is listed in the <code class="literal">Active</code> state. </p>
+				</td></tr><tr><td>stop <span class="emphasis"><em>id</em></span></td><td>Stops the specified bundle.  Use the <code class="literal">bundle list</code> command to get the internal id of a particular bundle.
+				  <p>When you stop a bundle, it goes from the <code class="literal">Active</code> state to the <code class="literal">Resolved</code> state, and you must re-start it if you want to use the application that the bundle contains.</p> </td></tr><tr><td>refresh <span class="emphasis"><em>id</em></span></td><td>Updates the contents of the specified bundle. Use the <code class="literal">bundle list</code> command to get the internal id of a particular bundle.  Use this command if you have changed the contents of the bundle JAR file and you want to refresh the artifact as installed in the OSGi framework.
+				</td></tr><tr><td>uninstall <span class="emphasis"><em>id</em></span></td><td>Uninstalls the specified bundle from Virgo Kernel.   Use the <code class="literal">bundle list</code> command to get the internal id of a particular bundle.
+				  <p>When the uninstall process is complete, the bundle does not show up in the list of bundles displayed by the <code class="literal">bundle list</code> command.  If you want to use the application in the bundle, you must re-install it using the <code class="literal">install</code> command.</p>
+				</td></tr><tr><td>diag <span class="emphasis"><em>id</em></span></td><td>
+								<p>
+									Provides diagnostic information about the specified bundle.
+									In particular, this command displays information about the imported packages that Virgo Kernel could not resolve.
+									Use the <code class="literal">bundle list</code> command to get the internal id of a particular bundle.
+								</p>
+								<p>
+									Note that Virgo does not install unresolvable bundles.
+									Instead is takes a state dump (for offline analysis using the web administration console) and fails the deployment.
+									So bundles are only likely to become unresolvable in Virgo after an update operation.
+								</p>
+							</td></tr><tr><td>headers <span class="emphasis"><em>id</em></span></td><td>Displays the complete list of manifest headers of the specified bundle.  Use the <code class="literal">bundle list</code> command to get the internal id of a particular bundle.
+				  <p>The manifest headers include: <code class="literal">Import-Package</code>, <code class="literal">Export-Package</code>, <code class="literal">Bundle-SymbolicName</code>, and so on.  </p>
+				</td></tr></tbody></table></div></div><br class="table-break"><p>The following examples show how to use this command.</p><p>First, use the <code class="literal">bundle list</code> command to view all the installed bundles:</p><pre class="programlisting">osgi&gt; vsh:bundle list
+
+Id   Name                                       Version                    State
+40   org.eclipse.virgo.kernel.userregionfactory 3.0.0.RELEASE             ACTIVE
+47   org.eclipse.equinox.cm                     1.0.300.v20101204         ACTIVE
+48   org.eclipse.virgo.kernel.userregion        3.0.0.RELEASE             ACTIVE
+49   org.eclipse.virgo.kernel.osgicommand       3.0.0.RELEASE             ACTIVE
+50   org.eclipse.osgi.services                  3.3.0.v20110110           ACTIVE
+51   com.springsource.org.apache.mina.core      2.0.2                     ACTIVE
+52   org.apache.felix.gogo.command              0.8.0.v201105062003       ACTIVE
+53   org.apache.felix.gogo.runtime              0.8.0.v201105062003       ACTIVE
+54   org.apache.felix.gogo.shell                0.8.0.v201107131313       ACTIVE
+55   org.eclipse.equinox.console.supportability 1.0.0.20110722-2          ACTIVE
+56   com.springsource.org.apache.sshd.core      0.5.0                     ACTIVE
+57   org.springframework.osgi.core              1.2.1                     ACTIVE
+58 S org.springframework.osgi.extender          1.2.1                     ACTIVE
+59   org.springframework.osgi.io                1.2.1                     ACTIVE
+60   org.eclipse.virgo.kernel.agent.dm          3.0.0.RELEASE             ACTIVE
+61 S org.eclipse.virgo.kernel.deployer.dm       3.0.0.RELEASE             ACTIVE
+62   org.eclipse.equinox.ds                     1.3.0.v20110124-0830      ACTIVE
+63   org.eclipse.equinox.util                   1.0.200.v20100503         ACTIVE
+64   com.springsource.org.aopalliance           1.0.0                     ACTIVE
+65   org.eclipse.virgo.kernel.dmfragment        3.0.0.RELEASE           RESOLVED
+66   org.springframework.aop                    3.0.5.RELEASE             ACTIVE
+67   org.springframework.asm                    3.0.5.RELEASE             ACTIVE
+68   org.springframework.beans                  3.0.5.RELEASE             ACTIVE
+69   org.springframework.context                3.0.5.RELEASE             ACTIVE
+70   org.springframework.core                   3.0.5.RELEASE             ACTIVE
+71   org.springframework.expression             3.0.5.RELEASE             ACTIVE
+osgi&gt; </pre><p>The following example shows how to view the headers of the <code class="literal">org.springframework.osgi.extender</code> bundle (only the first few lines are shown):</p><pre class="programlisting">osgi&gt; vsh:bundle examine 5
+
+Id:              5
+Name:            org.springframework.osgi.extender
+Version          1.2.1
+State:           ACTIVE
+Spring Powered:  true
+Bundle Location: file:&lt;... omitted ...&gt;/org.springframework.osgi.extender-1.2.1.jar/
+
+Imported Packages:
+    org.springframework.osgi.context [1.2.1, 1.2.1]
+        exported by org.springframework.osgi.core 1.2.1 [4]
+    &lt;... remainder omitted ...&gt;
+
+Exported Packages:
+    org.springframework.osgi.extender 1.2.1
+    &lt;... remainder omitted ...&gt;
+
+Published services:
+     58 org.springframework.beans.factory.xml.NamespaceHandlerResolver
+        consumed by org.springframework.osgi.extender 1.2.1 [5]
+        consumed by org.eclipse.virgo.kernel.deployer.dm 2.1.0.RELEASE [8]
+    &lt;... remainder omitted ...&gt;
+
+Consumed services:
+      1 org.osgi.service.packageadmin.PackageAdmin
+        published by org.eclipse.osgi 3.7.0.v20110224 [0]
+    &lt;... remainder omitted ...&gt;
+
+Fragments:
+    org.eclipse.virgo.kernel.dmfragment 2.1.0.RELEASE [10]
+
+osgi&gt; </pre></div><div class="section" title="config Command"><div class="titlepage"><div><div><h3 class="title"><a name="admin-shell-vsh-config-command"></a>config Command</h3></div></div></div><p>Use the <code class="literal">config</code> command to view and manage the configuration artifacts that have been installed in Virgo Kernel.  A <span class="emphasis"><em>configuration artifact</em></span> is simply a properties file that is associated with a user application that is contained in a bundle.  Using configuration artifacts, you can manage the configuration of a user application completely separately from the bundle that contains the application. </p><p>The following table lists the options you can specify for this command.</p><div class="table"><a name="admin-shell-vsh-config-command-table"></a><p class="title"><b>Table&nbsp;8.3.&nbsp;Options of the config Command</b></p><div class="table-contents"><table summary="Options of the config Command" border="1"><colgroup><col><col></colgroup><thead><tr><th>Option </th><th>Description</th></tr></thead><tbody><tr><td>list</td><td>Lists the configuration artifacts that are currently installed in Virgo Kernel.
+			          <p>The <code class="literal">list</code> option displays the full name of each installed configuration artifact, its version, and its current state.  Configuration artifacts have similar lifecycles to other artifacts, such as bundles, and so the list of states in which a configuration can be in is the same as those of bundles; see <a class="link" href="">the bundle command</a> for the list of possible states. </p>
+			        </td></tr><tr><td>examine <span class="emphasis"><em>name [version]</em></span></td><td>Displays information about the specified configuration artifact.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed.  Use the <code class="literal">config list</code> command to view all configuration artifacts and versions currently installed in Virgo Kernel.
+				<p>A configuration artifact must be active for you to examine it; if it is not currently active, use <code class="literal">config start</code> to start it and thus change its state to <code class="literal">Active</code>.</p>
+				<p>The command first displays the factory pid of the configuration artifact as well as the complete location of the bundle to which the configuration artifact is associated.   The command then lists all the properties that make up the configuration, as well as their current value. </p> </td></tr><tr><td>start <span class="emphasis"><em>name [version]</em></span></td><td>
+								<p>
+									Starts the specified configuration artifact and makes it visible to Virgo Kernel.
+									Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the 
+									configuration artifact installed (which Virgo does not currently support).
+									Use the <code class="literal">config list</code> command to view all configuration artifacts and versions currently installed in Virgo Kernel.
+								</p>
+								<p>
+									Starting the configuration sets its state to <code class="literal">Active</code>.
+								</p>
+							</td></tr><tr><td>stop <span class="emphasis"><em>name [version]</em></span></td><td>Stops the specified configuration artifact and makes it invisible to Virgo Kernel.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed (which Virgo does not currently support).  Use the <code class="literal">config list</code> command to view all configuration artifacts and versions currently installed in Virgo Kernel.
+
+				<p>Stopping the configuration sets its state to <code class="literal">Resolved</code>.</p></td></tr><tr><td>refresh <span class="emphasis"><em>name [version]</em></span></td><td>Updates the contents of the specified configuration artifact to Virgo Kernel.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed (which Virgo does not currently support).  Use the <code class="literal">config list</code> command to view all configuration artifacts and versions currently installed in Virgo Kernel.
+
+				<p>Use this command if you have changed the contents of the configuration artifact, and you want to make this information known to Virgo Kernel and the associated bundle. </p></td></tr><tr><td>uninstall <span class="emphasis"><em>name [version]</em></span></td><td>Uninstalls the specified configuration artifact and make it completely unavailable to Virgo Kernel.  Although you must specify the name of the configuration artifact, its version is optional unless you have multiple versions of the configuration artifact installed (which Virgo does not currently support).  Use the <code class="literal">config list</code> command to view all configuration artifacts and versions currently installed in Virgo Kernel.
+
+				<p>Stopping the configuration  removes it from Virgo Kernel's list of deployed artifacts and it will not show up when you perform a <code class="literal">config list</code>.</p></td></tr></tbody></table></div></div><br class="table-break"><p>The following example shows how to use this command to list the installed configuration artifacts.</p><pre class="programlisting">osgi&gt; vsh:config list
+
+Name                                      Version                          State
+org.eclipse.virgo.kernel                  0.0.0                           ACTIVE
+org.eclipse.virgo.kernel.jmxremote.access 0.0.0                           ACTIVE
+org.eclipse.virgo.kernel.userregion       0.0.0                           ACTIVE
+org.eclipse.virgo.kernel.users            0.0.0                           ACTIVE
+org.eclipse.virgo.medic                   0.0.0                           ACTIVE
+org.eclipse.virgo.repository              0.0.0                           ACTIVE
+osgi.console.ssh                          0.0.0                           ACTIVE
+osgi.console.telnet                       0.0.0                           ACTIVE
+
+osgi&gt; </pre><p>To view the properties of a configuration artifact, and their current values, use <code class="literal">config examine</code>:</p><pre class="programlisting">osgi&gt; vsh:config examine org.eclipse.virgo.repository
+
+Factory pid:     
+Bundle Location: file:plugins/org.eclipse.virgo.kernel.services-1.0.0.jar
+
+Properties:
+    chain:
+        ext,usr
+    ext.searchPattern:
+        repository/ext/{artifact}
+    ext.type:
+        external
+    service.pid:
+        org.eclipse.virgo.repository
+    usr.type:
+        watched
+    usr.watchDirectory:
+        repository/usr
+osgi&gt; </pre></div><div class="section" title="packages Command"><div class="titlepage"><div><div><h3 class="title"><a name="admin-shell-vsh-package-command"></a>packages Command</h3></div></div></div><p>Use the <code class="literal">packages</code> command to view the complete list of packages exported by all bundles installed in Virgo Kernel, as well as examine a particular exported package in more detail.</p><p>The following table lists the options you can specify for this command.</p><div class="table"><a name="admin-shell-vsh-package-command-table"></a><p class="title"><b>Table&nbsp;8.4.&nbsp;Options of the packages Command</b></p><div class="table-contents"><table summary="Options of the packages Command" border="1"><colgroup><col><col></colgroup><thead><tr><th>Option </th><th>Description</th></tr></thead><tbody><tr><td>list</td><td>Displays all the exported packages for all bundles in the uer region of Virgo Kernel.  In addition to the package name, the command displays the version of the exported package and the <code class="literal">id</code> of the bundle that contains the exported package.  You can examine the bundle by using the command <code class="literal">bundle examine </code><span class="emphasis"><em><code class="literal">id</code></em></span>.</td></tr><tr><td>examine <span class="emphasis"><em>name version</em></span></td><td>Displays details about the exported package.  You must specify both the name of the exported package and its version; use <code class="literal">packages list</code> to view the exact names and version.
+				  <p>This command provides the following additional information about the exported package:</p>
+
+				  <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>The name and version of the bundle that exports the package.  This means that the package name is explicitly listed in the bundle's <code class="literal">MANIFEST.MF</code> file as part of the <code class="literal">Export-Package</code> header.</p></li><li class="listitem"><p>Any attributes that are part of the <code class="literal">Export-Package</code>, in addition to <code class="literal">version</code>.</p></li><li class="listitem"><p>The directives that are part of the <code class="literal">Export-Package</code> header.  A typical directive is <code class="literal">uses</code>, which declares up-front constraints on a number of other packages.</p></li><li class="listitem"><p>The list of all bundles that import the package.</p></li></ul></div>
+				</td></tr></tbody></table></div></div><br class="table-break"><p>The following example shows how to list all the exported packages for all bundles installed:</p><pre class="programlisting">osgi&gt; vsh:packages list
+
+Name                                                        Version                    Providing Bundle
+javax.accessibility                                         0.0.0                      0
+javax.activation                                            0.0.0                      0
+javax.activation                                            1.1.1                      0
+&lt;... remainder omitted ...&gt;
+
+osgi&gt; </pre><p>The following example shows how to examine a particular exported package:</p><pre class="programlisting">osgi&gt; vsh:packages examine org.slf4j 1.6.1
+
+Exporter: org.eclipse.virgo.region.user 0.0.0 [1]
+
+Attributes:
+    None
+
+Directives:
+    uses:
+        org.slf4j.spi
+    x-equinox-ee:
+        -1
+    x-internal:
+        false
+
+Importer(s):
+    org.eclipse.virgo.kernel.agent.dm 2.1.0.RELEASE [7]
+        Import-Package attributes:
+            bundle-version:
+                0.0.0
+            version:
+                [1.6.1,2.0.0)
+        Import-Package directives:
+            resolution:
+                static
+    &lt;... remainder omitted ...&gt;
+
+osgi&gt; </pre></div><div class="section" title="par Command"><div class="titlepage"><div><div><h3 class="title"><a name="admin-shell-vsh-par-command"></a>par Command</h3></div></div></div><p>Use the <code class="literal">par</code> command to view all the PARs currently installed in Virgo Kernel, view details about a particular PAR and manage its lifecycle, such as starting, stopping, refreshing, and uninstalling it.</p><p>The following table lists the options you can specify for this command.</p><div class="table"><a name="admin-shell-vsh-par-command-table"></a><p class="title"><b>Table&nbsp;8.5.&nbsp;Options of the par Command</b></p><div class="table-contents"><table summary="Options of the par Command" border="1"><colgroup><col><col></colgroup><thead><tr><th>Option </th><th>Description</th></tr></thead><tbody><tr><td>list</td><td>Displays all the PARs that are currently installed in Virgo Kernel.
+			          <p>The <code class="literal">list</code> option displays the full name of each installed PAR, its version, and its current state.  PARs have similar lifecycles to other artifacts, such as bundles, and so the list of states in which a PAR can be in is the same as those of bundles; see <a class="link" href="">the bundle command</a> for the list of possible states. </p></td></tr><tr><td>examine <span class="emphasis"><em>name version</em></span></td><td>Displays information about the specified PAR; you are required to identify the PAR with both its name and its version.  Use the <code class="literal">par list</code> command to view all installed PAR files and their versions.  The command displays the following information:
+			         <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>The current state of the PAR (see <a class="link" href="ch08s03.html#admin-shell-vsh-bundle-command" title="bundle Command">the bundle command</a> for the full list of possible states).</p></li><li class="listitem"><p>Whether the PAR is <span class="emphasis"><em>scoped</em></span>.  Scoping specifies whether Virgo Kernel should deploy the members of the PAR in their own scope; when scoping is disabled, Virgo Kernel deploys the artifacts into the global scope and they are accessible for access by all other artifacts.</p></li><li class="listitem"><p>Whether the PAR is <span class="emphasis"><em>atomic</em></span>.  When a PAR is atomic, Virgo Kernel manages the lifecycle of all its member artifacts as a single entity, which means if one artifact member is started, then Virgo Kernel starts <span class="emphasis"><em>all</em></span> the PAR artifacts. If one artifact fails to start, then Virgo Kernel stops all other artifacts in the PAR.</p></li><li class="listitem"><p>The individual members, or children, of the PAR. These could be plans, bundles, configuration artifacts, and so on.</p></li></ul></div>
+			   </td></tr><tr><td>start <span class="emphasis"><em>name version</em></span></td><td>Starts the specified PAR.  You must specify both the full name of the PAR as well as the version you want to start. Use the <code class="literal">par list</code> command to get the list of PARs currently installed in Virgo Kernel.
+				<p>To start a PAR, it must have already been resolved by Virgo Kernel, or in other words, be in the <code class="literal">Resolved</code> state.  After Virgo Kernel successfully starts the PAR, it is listed in the <code class="literal">Active</code> state. </p></td></tr><tr><td>stop <span class="emphasis"><em>name version</em></span></td><td>Stops the specified PAR.  You must specify both the full name of the PAR as well as the version you want to stop. Use the <code class="literal">par list</code> command to get the list of PARs currently installed in Virgo Kernel.
+				  <p>When you stop a PAR, it goes from the <code class="literal">Active</code> state to the <code class="literal">Resolved</code> state, and you must re-start it if you want to use the application that the PAR contains.</p> </td></tr><tr><td>refresh <span class="emphasis"><em>name version</em></span></td><td>Updates the contents of the specified PAR. You must specify both the name and version of the PAR you want to refresh.  Use the <code class="literal">par list</code> command to this information.
+				<p>Use this command if you have changed the contents of the PAR file and you want to refresh the artifact as installed in the OSGi framework.</p></td></tr><tr><td>uninstall <span class="emphasis"><em>name version</em></span></td><td>Uninstalls the specified PAR. You must specify both the name and version of the PAR you want to refresh.  Use the <code class="literal">par list</code> command to this information.
+				  <p>When the uninstall process is complete, the PAR will not show up in the list of PARs displayed by the <code class="literal">par list</code> command.  If you want to use the application in the PAR, you must re-install it using the <code class="literal">install</code> command.</p></td></tr></tbody></table></div></div><br class="table-break"><p>The following example shows how to list the PARs that have been installed in Virgo Kernel:</p><pre class="programlisting">osgi&gt; vsh:par list
+
+Name                                         Version                      State
+
+org.eclipse.virgo.server.repository.hosted    2.1.0.RELEASE              ACTIVE
+
+osgi&gt; </pre><p>The following example shows how to examine a particular PAR file:</p><pre class="programlisting">osgi&gt; vsh:par examine org.eclipse.virgo.server.repository.hosted 2.1.0.RELEASE
+
+State:  ACTIVE
+Scoped: true
+Atomic: true
+
+Children:
+    bundle org.eclipse.virgo.server.repository.hosted.core 2.1.0.RELEASE
+    bundle org.eclipse.virgo.server.repository.hosted.web 2.1.0.RELEASE
+    bundle org.eclipse.virgo.server.repository.hosted-synthetic.context 2.1.0.RELEASE
+
+osgi&gt; </pre><p>Finally, the following example shows how to refresh an installed PAR file:</p><pre class="programlisting">osgi&gt; vsh:par refresh my.exciting.par 1.2.0
+
+par my.exciting.par 1.2.0 refreshed successfully
+
+osgi&gt; </pre></div><div class="section" title="plan Command"><div class="titlepage"><div><div><h3 class="title"><a name="admin-shell-vsh-plan-command"></a>plan Command</h3></div></div></div><p>Use the <code class="literal">plan</code> command to view all the plans currently installed in Virgo Kernel, view details about a particular plan and manage its lifecycle, such as starting, stopping, refreshing, and uninstalling it.</p><p>The following table lists the options you can specify for this command.</p><div class="table"><a name="admin-shell-vsh-plan-command-table"></a><p class="title"><b>Table&nbsp;8.6.&nbsp;Options of the plan Command</b></p><div class="table-contents"><table summary="Options of the plan Command" border="1"><colgroup><col><col></colgroup><thead><tr><th>Option </th><th>Description</th></tr></thead><tbody><tr><td>list</td><td>Displays all the plans that are currently installed in Virgo Kernel.
+			          <p>The <code class="literal">list</code> option displays the full name of each installed plan, its version, and its current state.  Plans have similar lifecycles to other artifacts, such as bundles, and so the list of states in which a plan can be in is the same as those of bundles; see <a class="link" href="">the bundle command</a> for the list of possible states. </p></td></tr><tr><td>examine <span class="emphasis"><em>name version</em></span></td><td>Displays information about the specified plan; you are required to identify the plan with both its name and its version.  Use the <code class="literal">plan list</code> command to view all installed plans and their versions.  The command displays the following information:
+			         <div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>The current state of the plan (see <a class="link" href="ch08s03.html#admin-shell-vsh-bundle-command" title="bundle Command">the bundle command</a> for the full list of possible states).</p></li><li class="listitem"><p>Whether the plan is <span class="emphasis"><em>scoped</em></span>.  Scoping specifies whether Virgo Kernel should deploy the members of the plan in their own scope; when scoping is disabled, Virgo Kernel deploys the artifacts into the global scope and they are accessible for access by all other artifacts.</p></li><li class="listitem"><p>Whether the plan is <span class="emphasis"><em>atomic</em></span>.  When a plan is atomic, Virgo Kernel manages the lifecycle of all its member artifacts as a single entity, which means if one artifact member is started, then Virgo Kernel starts <span class="emphasis"><em>all</em></span> the plan artifacts. If one artifact fails to start, then Virgo Kernel stops all other artifacts in the plan.</p></li><li class="listitem"><p>The individual members, or children, of the plan.  These could be other plans, PARs, bundles, configuration artifacts, and so on.</p></li></ul></div>
+			   </td></tr><tr><td>start <span class="emphasis"><em>name version</em></span></td><td>Starts the specified plan.  You must specify both the full name of the plan as well as the version you want to start. Use the <code class="literal">plan list</code> command to get the list of plans currently installed in Virgo Kernel.
+				<p>To start a plan, it must have already been resolved by Virgo Kernel, or in other words, be in the <code class="literal">Resolved</code> state.  After Virgo Kernel successfully starts the plan, it is listed in the <code class="literal">Active</code> state. </p></td></tr><tr><td>stop <span class="emphasis"><em>name version</em></span></td><td>Stops the specified plan.  You must specify both the full name of the plan as well as the version you want to stop. Use the <code class="literal">plan list</code> command to get the list of plans currently installed in Virgo Kernel.
+				  <p>When you stop a plan, it goes from the <code class="literal">Active</code> state to the <code class="literal">Resolved</code> state, and you must re-start it if you want to use the application that the plan contains.</p> </td></tr><tr><td>refresh <span class="emphasis"><em>name version</em></span></td><td>Updates the contents of the specified plan. You must specify both the name and version of the plan you want to refresh.  Use the <code class="literal">plan list</code> command to this information.
+				<p>Use this command if you have changed the contents of the plan file and you want to refresh the artifact as installed in the OSGi framework.</p></td></tr><tr><td>uninstall <span class="emphasis"><em>name version</em></span></td><td>Uninstalls the specified plan. You must specify both the name and version of the plan you want to refresh.  Use the <code class="literal">plan list</code> command to this information.
+				  <p>When the uninstall process is complete, the plan will not show up in the list of plans displayed by the <code class="literal">plan list</code> command.  If you want to use the application in the plan, you must re-install it using the <code class="literal">install</code> command.</p></td></tr></tbody></table></div></div><br class="table-break"><p>The following example shows how to list the plans that have been installed in Virgo Kernel:</p><pre class="programlisting">
+osgi&gt; vsh:plan list
+
+Name                                           Version                            State
+org.eclipse.virgo.apps.admin.plan              2.1.0                             ACTIVE
+org.eclipse.virgo.kernel.userregion.springdm   2.1.0                             ACTIVE
+org.eclipse.virgo.web                          2.1.0                             ACTIVE
+
+osgi&gt; </pre><p>The following example shows how to examine a particular plan:</p><pre class="programlisting">osgi&gt; vsh:plan examine org.eclipse.virgo.kernel.userregion.springdm 2.1.0
+
+State:  ACTIVE
+Scoped: false
+Atomic: false
+
+Children:
+    bundle org.eclipse.virgo.kernel.agent.dm 2.1.0.RELEASE
+    bundle org.springframework.osgi.io 1.2.1
+    bundle org.springframework.osgi.extender 1.2.1
+    bundle org.springframework.osgi.core 1.2.1
+    bundle org.eclipse.virgo.kernel.deployer.dm 2.1.0.RELEASE
+
+osgi&gt; </pre><p>The following example shows how to stop a currently Active plan:</p><pre class="programlisting">osgi&gt; vsh:plan stop org.eclipse.virgo.web 2.1.0
+
+plan org.eclipse.virgo.web:2.1.0 stopped successfully
+
+osgi&gt; </pre><p>The following example shows how to start a plan:</p><pre class="programlisting">osgi&gt; vsh:plan start org.eclipse.virgo.web 2.1.0
+
+plan org.eclipse.virgo.web:2.1.0 started successfully
+
+osgi&gt; </pre></div><div class="section" title="service Command"><div class="titlepage"><div><div><h3 class="title"><a name="admin-shell-vsh-service-command"></a>service Command</h3></div></div></div><p>Use the <code class="literal">service</code> command to view all the services that have been registered in the OSGi service registry of Virgo Kernel. You can also examine a specific service to discover its properties, the bundle that publishes the service, and any bundles that consume the service.</p><p>The following table lists the options you can specify for this command.</p><div class="table"><a name="admin-shell-vsh-service-command-table"></a><p class="title"><b>Table&nbsp;8.7.&nbsp;Options of the service Command</b></p><div class="table-contents"><table summary="Options of the service Command" border="1"><colgroup><col><col></colgroup><thead><tr><th>Option </th><th>Description</th></tr></thead><tbody><tr><td>list</td><td>Displays the list of services that are currently registered in the OSGi service registry of Virgo Kernel.
+				  <p>Each service is identified by an internal <code class="literal">ID</code> which you can then use with the <code class="literal">service examine</code> command to view the details about a particular service. The <code class="literal">list</code> option also displays the object class that implements the service and the internal <code class="literal">id</code> of the bundle that provides the service. </p></td></tr><tr><td>examine <span class="emphasis"><em>id</em></span></td><td>Displays detailed information about the specified service.  Use the <code class="literal">service list</code> command to get the internal id of a particular service.
+				<p>This command displays the properties of the service, such as the object class that implements the service, the name of the bundle that publishes the service and any bundles that consume the service. </p></td></tr></tbody></table></div></div><br class="table-break"><p>The following example shows how to list the services currently registered in the OSGi service registry:</p><pre class="programlisting">osgi&gt; vsh:service list
+
+Id  Object Class(es)                                            Providing Bundle
+
+1   org.osgi.service.packageadmin.PackageAdmin                                 0
+2   org.osgi.service.permissionadmin.PermissionAdmin, ...                      0
+3   org.osgi.service.startlevel.StartLevel                                     0
+4   org.eclipse.osgi.service.debug.DebugOptions                                0
+5   java.lang.ClassLoader                                                      0
+6   org.eclipse.osgi.framework.log.FrameworkLog                                0
+7   org.eclipse.osgi.framework.log.FrameworkLog                                0
+&lt;... remainder omitted ...&gt;
+
+72 org.eclipse.gemini.web.core.spi.ServletContainer                           38
+73 org.eclipse.gemini.web.core.WebContainer                                   37
+74 org.eclipse.virgo.web.core.WebApplicationRegistry                          39
+&lt;... remainder omitted ...&gt;
+
+osgi&gt; </pre><p>The following example shows how to examine a particular service:</p><pre class="programlisting">osgi&gt; vsh:service examine 73
+
+		Properties:
+		    objectClass:
+		        org.eclipse.gemini.web.core.WebContainer
+		    service.id:
+		        73
+
+		Publisher: org.eclipse.gemini.web.core 1.1.0.RELEASE [37]
+
+		Consumer(s):
+		    org.eclipse.virgo.web.core 2.1.0.RELEASE [39]
+
+		osgi&gt; </pre></div><div class="section" title="install Command"><div class="titlepage"><div><div><h3 class="title"><a name="admin-shell-vsh-install-command"></a>install Command</h3></div></div></div><p>Use the <code class="literal">install</code> command to deploy an artifact to Virgo Kernel.  The artifact can be a bundle, PAR, plan, or configuration artifact.</p><p>The <code class="literal">install</code> command takes a single parameter: the URI of the artifact you want to deploy.  For example, to deploy a bundle on the local computer, use the <code class="literal">file</code> scheme:</p><pre class="programlisting">file://full-pathname-to-artifact</pre><p>After you execute the <code class="literal">install</code> command, Virgo Kernel attempts to resolve the artifact's dependencies, and if it is successful, puts it in the <code class="literal">Resolved</code> state.  At that point, you must start the artifact to be able to actually use it. </p><p>The following example shows how to install a bundle called <code class="literal">swf-booking-mvc.war</code> located in the <code class="literal">/home/apps</code> directory of the computer on which the Equinox Console Extension is being run:</p><pre class="programlisting">osgi&gt; vsh:install file://home/apps/swf-booking-mvc.war
+...
+Artifact bundle swf-booking-mvc.war 0.0.0 installed</pre><p>
+			This command is particularly useful for installing an artifact from the Virgo repository, in which case use the <code class="literal">repository:</code> scheme:
+			</p><pre class="programlisting">repository:artifact-type/bundle-symbolic-name/bundle-version</pre><p>
+			For example:
+		</p><pre class="programlisting">osgi&gt; vsh:install repository:bundle/my.bundle/1.0
+... 
+Artifact bundle my.bundle 1.0.0 installed
+osgi&gt;</pre><p>The following example shows how to use the <code class="literal">bundle list</code> command to ensure that the bundle was indeed installed in Virgo Kernel; if you had installed a different kind of artifact, for example a plan, then you would use the appropriate command (such as <code class="literal">plan list</code>):</p><pre class="programlisting">osgi&gt; vsh:bundle list
+
+Id   Name                             Version                   State
+
+0    org.eclipse.osgi                 3.6.1.R36x_v20100806     ACTIVE
+1    org.eclipse.virgo.region.user    0.0.0                    ACTIVE
+&lt;... remainder omitted ...&gt;
+
+59   org.eclipse.virgo.server.splash   2.1.0.RELEASE           ACTIVE
+60   swf-booking-mvc.war              0.0.0                  RESOLVED
+
+osgi&gt; </pre><p>Note that the <code class="literal">swf-booking-mvc.war</code> file is in the <code class="literal">Resolved</code> state.   The following examples start the bundle, and then examine it to ensure that it is in the <code class="literal">Active</code> state:</p><pre class="programlisting">osgi&gt; vsh:bundle start 60
+
+bundle swf-booking-mvc.war:0.0.0 started successfully
+
+
+osgi&gt; vsh:bundle examine 60
+
+Id:              60
+Name:            swf-booking-mvc.war
+Version          0.0.0
+State:           ACTIVE
+Spring Powered:  true
+Bundle Location: file:&lt;... omitted ...&gt;/swf-booking-mvc.war/
+
+Imported Packages:
+    javax.crypto.interfaces [0.0.0, 0.0.0]
+        exported by org.eclipse.osgi 3.6.1.R36x_v20100806 [0]
+    org.omg.CosNaming.NamingContextPackage [0.0.0, 0.0.0]
+        exported by org.eclipse.osgi 3.6.1.R36x_v20100806 [0]
+    org.omg.DynamicAny.DynAnyFactoryPackage [0.0.0, 0.0.0]
+        exported by org.eclipse.osgi 3.6.1.R36x_v20100806 [0]
+    &lt;... remainder omitted ...&gt;
+
+osgi&gt; </pre></div><div class="section" title="shutdown Command"><div class="titlepage"><div><div><h3 class="title"><a name="admin-shell-vsh-shutdown-command"></a>shutdown Command</h3></div></div></div><p>Use the <code class="literal">shutdown</code> command to shut down the Virgo Kernel instance to which you are connected. When Virgo Kernel is shut down, the shell returns you to the operating system prompt. </p><p>The <code class="literal">shutdown</code> command does not have any options.</p><p>The following example shows how to use this command.</p><pre class="programlisting">osgi&gt; vsh:shutdown
+osgi&gt; ... 
+Connection closed by foreign host.
+prompt$</pre></div><div class="section" title="clhas command"><div class="titlepage"><div><div><h3 class="title"><a name="admin-shell-cl-clhas"></a>clhas command</h3></div></div></div><p>Use the <code class="literal">clhas</code> command to list the entries contained in the bundles deployed in Virgo and to solve class loading issues.</p><p>The command accepts as a parameter a search pattern in the form <span class="emphasis"><em>path/resource</em></span>. The resource part of the pattern can contain wildcards.</p><p>The output contains all bundles that have resources or classes matching the pattern. Since wildcards are allowed, the matching entities are listed as well.</p><p>The following examples show how to use this command.</p><p>Use the <code class="literal">clhas</code> to view all bundles that contain <code class="literal">Servlet</code> class:</p><pre class="programlisting">osgi&gt;clhas /javax/servlet/Servlet.class
+
+Bundles containing [/javax/servlet/Servlet.class]:
+  76    javax.servlet
+            /javax/servlet/Servlet.class</pre><p>Use the wildcard <code class="literal">*</code> with <code class="literal">clhas</code> to view all classes starting with <code class="literal">Servlet</code>:</p><pre class="programlisting">osgi&gt; clhas /javax/servlet/Servlet*
+
+Bundles containing [/javax/servlet/Servlet*]:
+  76    javax.servlet
+            /javax/servlet/ServletRequestAttributeEvent.class
+            /javax/servlet/ServletRequest.class
+            &lt;... remainder omitted ...&gt;
+            /javax/servlet/Servlet.class
+            &lt;... remainder omitted ...&gt;</pre><p>The <code class="literal">clhas</code> command can also be used with class name instead of resource path:</p><pre class="programlisting">osgi&gt; clhas javax.servlet.Servlet
+
+Bundles containing [javax/servlet/Servlet.class]:
+  76    javax.servlet
+            /javax/servlet/Servlet.class</pre><p>Please note that the command converts the class name to a path and appends <code class="literal">class</code> extension by default.</p><p>To search for a resource with an extension different than <code class="literal">class</code> you should use the resource path form:</p><pre class="programlisting">osgi&gt; clhas /LocalStrings.properties
+
+Bundles containing [/LocalStrings.properties]:
+  96    com.springsource.org.apache.catalina
+            /org/apache/catalina/core/LocalStrings.properties
+            /org/apache/tomcat/util/http/mapper/LocalStrings.properties
+            /org/apache/catalina/loader/LocalStrings.properties
+            &lt;... remainder omitted ...&gt;</pre><p>The following example shows how to identify a possible <code class="literal">ClassCastException</code> due to wrong packaging:</p><pre class="programlisting">osgi&gt;clhas /javax/servlet/Servlet.class
+
+Bundles containing [/javax/servlet/Servlet.class]:
+  76    javax.servlet
+            /javax/servlet/Servlet.class
+  107   myapp
+            /WEB-INF/classes/javax/servlet/Servlet.class</pre><p>It's obvious that the <code class="literal">javax.servlet</code> package should not be present in <code class="literal">myapp</code> application and its packaging has to be changed. This problem can often be seen in WAR or web bundles that package Servlet/JSP classes by accident.</p></div><div class="section" title="clexport command"><div class="titlepage"><div><div><h3 class="title"><a name="admin-shell-cl-clexport"></a>clexport command</h3></div></div></div><p>Use the <code class="literal">clexport</code> command to list the bundles that export a class or package.</p><p>The command accepts as a parameter the fully qualified class name (in the form <span class="emphasis"><em>package.class</em></span>).</p><p>The command checks to see if the provided class is actually contained in a bundle. If the class is not found in a bundle but its package is exported, then a hint <code class="literal">[class not found, package only]</code> is displayed.</p><p>The following examples show how to use this command.</p><p>Use the <code class="literal">clexport</code> to view all bundles that contain <code class="literal">Servlet</code> class:</p><pre class="programlisting">osgi&gt; clexport javax.servlet.Servlet
+
+Bundles exporting [javax.servlet.Servlet]:
+  14    com.springsource.javax.servlet</pre><p>If a bundle exports a package but does not contain the requested class, the output of the command will be similar to this:</p><pre class="programlisting">osgi&gt; clexport javax.servlet.ServletX
+
+Bundles exporting [javax.servlet.ServletX]:
+  14    com.springsource.javax.servlet     [class not found, package only]</pre></div><div class="section" title="clload command"><div class="titlepage"><div><div><h3 class="title"><a name="admin-shell-cl-clload"></a>clload command</h3></div></div></div><p>Use the <code class="literal">clload</code> command to list the bundles that can load a class or to check if a specific bundle can load a class.</p><p>The command accepts as parameters either:
+                </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>the fully qualified class name (in the form <span class="emphasis"><em>package.class</em></span>)</p></li><li class="listitem"><p>the fully qualified class name (in the form <span class="emphasis"><em>package.class</em></span>) and the symbolic name or id of the bundle that is to be tested</p></li></ul></div><p>
+            </p><p>The command lists not only the bundle that successfully loaded the class, but also the one that actually provides the class. This is visualized with hints like <code class="literal">[exported by 14 com.springsource.javax.servlet]</code>.</p><p>The following examples show how to use this command.</p><p>You can use the <code class="literal">clload</code> to view all bundles that can load <code class="literal">Servlet</code> class:</p><pre class="programlisting">osgi&gt; clload javax.servlet.Servlet
+
+Successfully loaded [javax.servlet.Servlet] from:
+  56    com.springsource.org.apache.taglibs.standard
+                [exported by 14 com.springsource.javax.servlet]
+  54    org.eclipse.virgo.apps.admin.web
+                [exported by 14 com.springsource.javax.servlet]
+  19    com.springsource.org.apache.commons.fileupload
+                [exported by 14 com.springsource.javax.servlet]
+  &lt;... remainder omitted ...&gt;</pre><p>If a bundle is to be tested, then its id can be used as a command parameter:</p><pre class="programlisting">osgi&gt; clload javax.servlet.Servlet 19
+
+Successfully loaded [javax.servlet.Servlet] using class loader from:
+  19    com.springsource.org.apache.commons.fileupload
+                [exported by 14 com.springsource.javax.servlet]</pre><p>Or the same class load test can specify the symbolic name of the bundle:</p><pre class="programlisting">osgi&gt; clload javax.servlet.Servlet com.springsource.org.apache.commons.fileupload
+
+Successfully loaded [javax.servlet.Servlet] using class loader from:
+  19    com.springsource.org.apache.commons.fileupload
+                [exported by 14 com.springsource.javax.servlet]</pre></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch08s02.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch08.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch08s04.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

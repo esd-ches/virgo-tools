@@ -1,0 +1,53 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Form Tags as a Plan</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="ch06.html" title="Chapter&nbsp;6.&nbsp;Case Study: Migrating the Form Tags Sample Application"><link rel="prev" href="ch06s06.html" title="Summary of the Form Tags Migration"><link rel="next" href="ch07.html" title="Chapter&nbsp;7.&nbsp;Working with Common Enterprise Libraries"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch06s06.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch07.html">Next</a></td></tr></table><hr></div><div class="section" title="Form Tags as a Plan"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="formtags-case-study-as-plan"></a>Form Tags as a Plan</h2></div></div></div><p>
+			Plans (see
+			<a class="xref" href="ch04s03.html" title="Creating Plans">Creating Plans</a>
+			)
+			allow us to package and deploy the Form Tags application in a more
+			flexible way.
+			Instead of packaging all the bundles of the application
+			into a single PAR file, each bundle can be placed in the repository
+			and referred to in a
+			<span class="emphasis"><em>plan</em></span>
+			.
+		</p><p>
+			The bundles to be placed in a repository in the chain (for example,
+			<code class="literal">repository/usr</code>
+			) are:
+			</p><pre class="programlisting">org.springframework.showcase.formtags.domain-2.0.0.RELEASE.jar
+org.springframework.showcase.formtags.service-2.0.0.RELEASE.jar
+org.springframework.showcase.formtags.web-2.0.0.RELEASE.war
+</pre><p>
+			which are just those files which were part of the PAR.
+		</p><p>
+			Here is the contents of a suitable plan file for the Form Tags
+			example:
+			</p><pre class="programlisting">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;plan name="formtags.plan" version="2.0.0" scoped="true" atomic="true"
+        xmlns="http://www.eclipse.org/virgo/schema/plan"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="
+		        http://www.eclipse.org/virgo/schema/plan
+		        http://www.eclipse.org/virgo/schema/plan/eclipse-virgo-plan.xsd"&gt;
+
+	&lt;artifact type="bundle" name="org.springframework.showcase.formtags.domain_par" version="[3.0,3.1)"/&gt;
+	&lt;artifact type="bundle" name="org.springframework.showcase.formtags.service_par" version="[3.0,3.1)"/&gt;
+	&lt;artifact type="bundle" name="org.springframework.showcase.formtags.web_par" version="[3.0,3.1)"/&gt;
+
+&lt;/plan&gt;</pre><p>
+			where we have chosen to use any of the artifacts in the version range
+			[2.0,2.1).
+			This plan (as a file called, for example,
+			<code class="literal">formtags.plan</code>
+			)
+			can be deployed in any of the normal ways (for example, dropped in
+			the
+			<code class="literal">pickup</code>
+			directory).
+		</p><p>
+			When the plan is deployed, the artifacts it references are
+			installed from the repository and deployed in the order given in the
+			plan file.
+			Because this plan is scoped and atomic, the collection is
+			given an application scope and is started and stopped as a single
+			unit.
+		</p></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch06s06.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch06.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch07.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

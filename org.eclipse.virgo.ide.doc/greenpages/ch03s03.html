@@ -1,0 +1,97 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Testing Highlights</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="A Guide to the GreenPages Sample"><link rel="up" href="ch03.html" title="Chapter&nbsp;3.&nbsp;GreenPages Highlights"><link rel="prev" href="ch03s02.html" title="Middle Tier Highlights"><link rel="next" href="ch03s04.html" title="Automated Build Highlights"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch03s02.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch03s04.html">Next</a></td></tr></table><hr></div><div class="section" title="Testing Highlights"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="highlights.testing"></a>Testing Highlights</h2></div></div></div><p>
+		Testing is one of the most important aspects of software development. Without testing it would be difficult
+		to determine if a piece of code worked properly, changes would have undetected consequences, and the quality
+		of the code would generally be lower.
+	</p><p>
+		There are two major categories of testing generally recognised today: unit testing 
+		and integration testing. In the context of the
+		GreenPages application, <span class="emphasis"><em>unit testing</em></span> means testing a single class in isolation from other application code.
+		This type of testing does not change at all when developing for Virgo and so the GreenPages sample does not include any unit tests.
+	</p><p>
+		In our application <span class="emphasis"><em>integration testing</em></span> means testing an application or
+		portion of an application with other code. This kind of testing does look a bit different when developing
+		for Virgo. In most cases Virgo applications are made up of small bundles that consume services through the
+		OSGi registry. The following highlights show how a single bundle and the entire GreenPages
+		application can be integration tested outside the OSGi container.
+	</p><div class="section" title="Single Bundle Integration Test"><div class="titlepage"><div><div><h3 class="title"><a name="N105B1"></a>Single Bundle Integration Test</h3></div></div></div><p>
+			One of the most common forms of integration testing is ensuring that the object relational mapping in an
+			application is working properly. This kind of testing typically uses a data access object to retrieve data
+			from a live database.
+		</p><p>
+			The <code class="classname">greenpages.jpa.JpaDirectorySpringContextTests</code> class in the
+			<code class="filename">src/test/java</code> source folder of the <code class="literal">greenpages.jpa</code> project
+			is such a test case for the <code class="classname">JpaDirectory</code> class.
+			The	class uses JUnit to run the test and tests that a directory search completes 
+			correctly. Rather than instantiate
+			this class directly in the test, the Spring Test Framework is used to instantiate and inject a
+			<code class="classname">JpaDirectory</code> bean defined in the <code class="literal">META-INF/spring/module-context.xml</code> file.
+			Spring Test Framework declarations are used to run the test with the
+			<code class="classname">SpringJunit4ClassRunner</code> and configure the test with the files
+			<code class="literal">classpath:/META-INF/spring/module-context.xml</code> and
+			<code class="literal">classpath:/META-INF/spring/test-context.xml</code>:
+</p><pre class="programlisting">@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = { "classpath:/META-INF/spring/module-context.xml",
+    "classpath:/META-INF/spring/test-context.xml" })
+@TestExecutionListeners(value = DependencyInjectionTestExecutionListener.class)
+public class JpaDirectorySpringContextTests {
+
+    @Autowired
+    private Directory directory;
+
+    @Test
+    public void search() {
+</pre><p>
+		</p><p>
+			The <code class="filename">test-context.xml</code> file in the
+			<code class="literal">src/test/resources/META-INF/spring</code> folder defines two beans: a
+			<code class="interfacename">DataSource</code> and a <code class="classname">TestDataPopulator</code>: 
+</p><pre class="programlisting">&lt;bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+      p:driverClassName="org.h2.Driver" p:url="jdbc:h2:.~/greenpages-db/greenpages"
+      p:username="greenpages" p:password="pass" init-method="createDataSource"
+      destroy-method="close" /&gt;
+
+&lt;bean class="greenpages.jpa.TestDataPopulator" init-method="populate"&gt;
+      &lt;constructor-arg ref="dataSource" /&gt;
+      &lt;constructor-arg value="file:../../db/db.sql" /&gt;
+&lt;/bean&gt;
+</pre><p>
+			These two beans	provide a test <code class="interfacename">DataSource</code> complete with test data.
+		</p></div><div class="section" title="Multi Bundle Integration Test"><div class="titlepage"><div><div><h3 class="title"><a name="N105F5"></a>Multi Bundle Integration Test</h3></div></div></div><p>
+			The single bundle integration test provides a test implementation of its <code class="interfacename">DataSource</code> dependency.
+			When integration testing, it is often a good idea to test the entire application outside of the container.
+			GreenPages includes such a test case for the
+			entire application, starting with the <code class="classname">GreenPagesController</code> class
+			and descending all the way to a database.
+			Although it would be sensible for this test case to reside in a separate test bundle,
+			one of the bundles involved is a web bundle and so it is more convenient to locate the test case in the <code class="literal">greenpages.web</code> project.
+		</p><p>
+			Since this test case will be testing the GreenPages application as a whole, it needs to depend on the bundles
+			that make up the application.
+			The <code class="filename">pom.xml</code> file for the <code class="literal">greenpages.web</code>
+			project contains a dependency declaration for the <code class="literal">greenpages.jpa</code> bundle:
+</p><pre class="programlisting">&lt;dependency&gt;
+      &lt;groupId&gt;com.springsource.dmserver&lt;/groupId&gt;
+      &lt;artifactId&gt;greenpages.jpa&lt;/artifactId&gt;
+      &lt;version&gt;${project.version}&lt;/version&gt;
+      &lt;scope&gt;test&lt;/scope&gt;
+&lt;/dependency&gt;
+</pre><p>
+			Note that the scope of the dependency is <code class="literal">test</code>.
+		</p><p>
+			The <code class="classname">GreenPagesSpringContextTests</code> class in the
+			<code class="literal">src/test/java/greenpages/web</code> folder
+			contains Spring Test Framework declarations to run the test with the
+			<code class="classname">SpringJunit4ClassRunner</code> and configure the test with the files
+			<code class="literal">classpath*:/META-INF/spring/module-context.xml</code>,
+			<code class="literal">file:src/main/webapp/WEB-INF/greenpages-servlet.xml</code>, and
+			<code class="literal">classpath:/META-INF/spring/test-context.xml</code>. Note the use of
+			<code class="literal">classpath*:</code> which causes Spring to look for files that match the specified path in all of the bundles on the classpath.
+</p><pre class="programlisting">@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {
+        "classpath*:/META-INF/spring/module-context.xml",
+        "file:src/main/webapp/WEB-INF/greenpages-servlet.xml",
+        "classpath:/META-INF/spring/test-context.xml" })
+@TestExecutionListeners(value = DependencyInjectionTestExecutionListener.class)
+public class GreenPagesSpringContextTests {
+</pre><p>
+		</p></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch03s02.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch03.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch03s04.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

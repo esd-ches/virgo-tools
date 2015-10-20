@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Bundle-Name: Virgo Server Remote Management Bundle
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: org.eclipse.virgo.ide.management.remote
+Bundle-Version: 3.5.0.qualifier
+Import-Package: org.eclipse.gemini.blueprint,
+ org.eclipse.gemini.blueprint.util,
+ org.eclipse.osgi.framework.console,
+ org.eclipse.osgi.framework.internal.core,
+ org.eclipse.osgi.service.resolver,
+ org.eclipse.osgi.util,
+ org.osgi.framework,
+ org.osgi.service.packageadmin,
+ org.osgi.util.tracker,
+ org.springframework.jmx.export,
+ org.springframework.jmx.export.annotation,
+ org.springframework.jmx.export.assembler,
+ org.springframework.jmx.export.naming,
+ org.apache.felix.service.command;status=provisional
+Bundle-Vendor: Eclipse.org - Virgo
+Export-Package: org.eclipse.virgo.ide.management.remote
+Bundle-RequiredExecutionEnvironment: J2SE-1.5

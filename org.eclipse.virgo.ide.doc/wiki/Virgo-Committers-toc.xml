@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<toc topic="wiki/Virgo/Committers/Committers.html" label="Committers">
+	<topic href="wiki/Virgo/Committers/Committers.html" label="Committers Charter"></topic>
+	<topic href="wiki/Virgo/Committers/Machine-Setup.html" label="Machine Setup">
+		<topic href="wiki/Virgo/Committers/Machine-Setup.html#Notes_for_Ubuntu_10.04" label="Notes for Ubuntu 10.04">
+			<topic href="wiki/Virgo/Committers/Machine-Setup.html#JDK" label="JDK"></topic>
+			<topic href="wiki/Virgo/Committers/Machine-Setup.html#jsch_library" label="jsch library"></topic>
+		</topic>
+	</topic>
+	<topic href="wiki/Virgo/Committers/Policies.html" label="Policies">
+		<topic href="wiki/Virgo/Committers/Policies.html#Event_Log_Message_Policy" label="Event Log Message Policy"></topic>
+	</topic>
+	<topic href="wiki/Virgo/Committers/Grokking.html" label="Grokking"></topic>
+	<topic href="wiki/Virgo/Committers/Coding.html" label="Coding">
+		<topic href="wiki/Virgo/Committers/Coding.html#Eclipse_Setup" label="Eclipse Setup"></topic>
+	</topic>
+	<topic href="wiki/Virgo/Committers/Testing.html" label="Testing"></topic>
+	<topic href="wiki/Virgo/Committers/Hudson-CI.html" label="Hudson CI"></topic>
+	<topic href="wiki/Virgo/Committers/IP-Due-Diligence.html" label="IP Due Diligence">
+		<topic href="wiki/Virgo/Committers/IP-Due-Diligence.html#Handling_Code_Contributions" label="Handling Code Contributions"></topic>
+		<topic href="wiki/Virgo/Committers/IP-Due-Diligence.html#Raising_.22works_with.22_CQs" label="Raising &quot;works with&quot; CQs"></topic>
+	</topic>
+	<topic href="wiki/Virgo/Committers/Development-process-advice.html" label="Development process advice"></topic>
+	<topic href="wiki/Virgo/Committers/Agile-Project-Management.html" label="Agile Project Management"></topic>
+	<topic href="wiki/Virgo/Committers/Logos.html" label="Logos"></topic>
+	<topic href="wiki/Virgo/Committers/Updating-This-Document.html" label="Updating This Document"></topic>
+</toc>

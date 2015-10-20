@@ -1,0 +1,21 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Scoping and Substitutable Exports</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="ch08.html" title="Chapter&nbsp;8.&nbsp;Known Issues"><link rel="prev" href="ch08s07.html" title="Hibernate Resolution Issue"><link rel="next" href="ch08s09.html" title="EclipseLink Resolution Issue"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch08s07.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch08s09.html">Next</a></td></tr></table><hr></div><div class="section" title="Scoping and Substitutable Exports"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="scoping-and-substitutable-exports"></a>Scoping and Substitutable Exports</h2></div></div></div><p>
+			The restriction described in <a class="link" href="ch04s03.html#developing-applications-plans-scoping" title="Plans and Scoping">Plans and Scoping</a> that
+			no package may be exported by more than one	bundle in a given scope can cause problems for bundles with
+			<span class="emphasis"><em>substitutable exports</em></span>. A substitutable export is a package which is exported and imported
+			by the same bundle. The OSGi framework will discard either the import or the export of the package when the
+			bundle is resolved.
+		</p><p>
+			However, if more than one bundle in a scope has a substitutable export of the same package, then Virgo will fail
+			to deploy the scoped application because the above restriction appears to be broken. Virgo could only spot that
+			the restriction was not actually being broken by second guessing the resolution behaviour of the OSGi framework,
+			something that Virgo generally avoids because of the fragility of that approach.
+		</p><p>
+			It may be possible to work around this issue by omitting one of the bundles containing the substitutable export
+			from the scoped application.
+		</p><p>
+			It may also be possible to work around this issue by moving the bundles containing the substitutable exports outside the scope,
+			although this will not give correct behaviour if the bundles' exported packages need to be available for thread
+			context class loading. 
+		</p><p>
+			See <a class="ulink" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=330643" target="_top">bug 330643</a> for an example of this issue.
+		</p></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch08s07.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch08.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch08s09.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

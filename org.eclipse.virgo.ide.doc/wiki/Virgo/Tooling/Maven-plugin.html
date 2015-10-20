@@ -1,0 +1,158 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>Tooling - Maven plugin</title>
+		<link type="text/css" rel="stylesheet" href="../../book.css"/>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">Maven plugin</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Migration.html" title="Migration">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="Importing-Virgo-Projects-into-Eclipse.html" title="Importing Virgo Projects into Eclipse">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Migration</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Importing Virgo Projects into Eclipse</td>
+			</tr>
+		</table><hr/>
+		<h1 id="Maven_plugin">Maven plugin</h1>
+		<p>To support the development of OSGi bundles for Eclipse Virgo with Maven a Maven plugin is available. This plugin is able to start/stop a local Eclipse Virgo instance. Moreover it is possible to deploy/undeploy/refresh bundles via Maven. </p>
+		<h2 id="Build">Build</h2>
+		<p>In order to use the plugin one has to download the source code from 
+			<a href="https://github.com/frieder/virgo-maven-plugin" target="doc_external">Github</a>&nbsp;and build the binary manually. This can be easily done by executing the following Maven command in the root folder of the plugin where the pom.xml file is located. 
+		</p>
+		<pre>mvn clean install
+</pre>
+		<p> 
+			Moreover to generate the documentation just execute the following Maven command (or take the one provided in the repository on Github). </p>
+		<pre>mvn clean&amp;nbsp;plugin:xdoc javadoc:javadoc jxr:jxr site
+</pre>
+		<p> </p>
+		<h2 id="Goals">Goals</h2>
+		<p>The plugin provides a set of Maven goals that allow different actions. </p>
+		<table border="1" cellpadding="0" cellspacing="0" width="800">
+			<tr>
+				<td>
+					<b>Goal</b> 
+				</td>
+				<td>
+					<b>Description</b>
+				</td>
+			</tr>
+			<tr>
+				<td>&lt;code&gt;virgo:start&lt;/code&gt; </td>
+				<td>Starts a Virgo instance by executing the provided startup script. 
+					<br/> 
+				</td>
+			</tr>
+			<tr>
+				<td>&lt;code&gt;virgo:shutdown&lt;/code&gt; </td>
+				<td>Stops a running Virgo instance.</td>
+			</tr>
+			<tr>
+				<td>&lt;code&gt;virgo:immediateShutdown&lt;/code&gt; </td>
+				<td>Stops a running Virgo instance immediately.</td>
+			</tr>
+			<tr>
+				<td>&lt;code&gt;virgo:deploy&lt;/code&gt; </td>
+				<td>Deploys an OSGi bundle to a running Virgo instance.</td>
+			</tr>
+			<tr>
+				<td>&lt;code&gt;virgo:undeploy&lt;/code&gt; </td>
+				<td>Undeploys an OSGi bundle from a running Virgo instance.</td>
+			</tr>
+			<tr>
+				<td>&lt;code&gt;virgo:refresh&lt;/code&gt; </td>
+				<td>Refreshs an already installed module on a running Virgo instance.</td>
+			</tr>
+			<tr>
+				<td>&lt;code&gt;virgo:bundleRefresh&lt;/code&gt; </td>
+				<td>Refreshs an already installed OSGi bundle on a running Virgo instance.</td>
+			</tr>
+		</table>
+		<h2 id="Simple_example_POM">Simple example POM</h2>
+		<p>Once the plugin has been build and installed in the local Maven repository it can be used within a Maven project. Following is a simple example of a pom file that uses the Maven plugin.&nbsp; </p>
+		<pre>&amp;lt;project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"&amp;gt;
+	&amp;lt;modelVersion&amp;gt;4.0.0&amp;lt;/modelVersion&amp;gt;
+	&amp;lt;groupId&amp;gt;org.example.osgi&amp;lt;/groupId&amp;gt;
+	&amp;lt;artifactId&amp;gt;test-bundle&amp;lt;/artifactId&amp;gt;
+	&amp;lt;version&amp;gt;0.0.1-SNAPSHOT&amp;lt;/version&amp;gt;
+	&amp;lt;packaging&amp;gt;bundle&amp;lt;/packaging&amp;gt;
+	&amp;lt;name&amp;gt;OSGi Test Bundle&amp;lt;/name&amp;gt;	
+	&amp;lt;properties&amp;gt;
+		&amp;lt;project.build.sourceEncoding&amp;gt;UTF-8&amp;lt;/project.build.sourceEncoding&amp;gt;
+	&amp;lt;/properties&amp;gt;
+	&amp;lt;build&amp;gt;
+		&amp;lt;plugins&amp;gt;
+			&amp;lt;plugin&amp;gt;
+				&amp;lt;groupId&amp;gt;org.apache.felix&amp;lt;/groupId&amp;gt;
+				&amp;lt;artifactId&amp;gt;maven-bundle-plugin&amp;lt;/artifactId&amp;gt;
+				&amp;lt;version&amp;gt;2.3.6&amp;lt;/version&amp;gt;
+				&amp;lt;extensions&amp;gt;true&amp;lt;/extensions&amp;gt;
+				&amp;lt;configuration&amp;gt;
+					&amp;lt;instructions&amp;gt;
+						&amp;lt;Bundle-SymbolicName&amp;gt;${project.groupId}.${project.artifactId}&amp;lt;/Bundle-SymbolicName&amp;gt;
+						&amp;lt;Bundle-Name&amp;gt;${project.name}&amp;lt;/Bundle-Name&amp;gt;
+						&amp;lt;Bundle-Version&amp;gt;${project.version}&amp;lt;/Bundle-Version&amp;gt;
+					&amp;lt;/instructions&amp;gt;
+				&amp;lt;/configuration&amp;gt;
+			&amp;lt;/plugin&amp;gt;
+			&amp;lt;plugin&amp;gt;
+				&amp;lt;groupId&amp;gt;net.flybyte.virgo&amp;lt;/groupId&amp;gt;
+				&amp;lt;artifactId&amp;gt;virgo-maven-plugin&amp;lt;/artifactId&amp;gt;
+				&amp;lt;version&amp;gt;1.0.0&amp;lt;/version&amp;gt;
+				&amp;lt;configuration&amp;gt;
+					&amp;lt;virgoRoot&amp;gt;C:/Java/virgo-tomcat-server-3.0.2.RELEASE&amp;lt;/virgoRoot&amp;gt;
+				&amp;lt;/configuration&amp;gt;
+			&amp;lt;/plugin&amp;gt;
+		&amp;lt;/plugins&amp;gt;
+	&amp;lt;/build&amp;gt;
+&amp;lt;/project&amp;gt;
+</pre>
+		<p> 
+			More examples can be found in the documentation. Following are some exemplary Maven commands.</p>
+		<pre>mvn virgo:start &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;lt;-- will start a Virgo instance
+mvn clean package virgo:deploy &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp;&amp;lt;-- will create an artifact and deploy it to Virgo
+</pre>
+		<p> </p><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Migration.html" title="Migration">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center">
+					<a href="Tooling.html" title="Tooling">
+						<img alt="Tooling" border="0" src="../../images/home.gif"/>
+					</a>
+				</td>
+				<td style="width: 20%" align="right">
+					<a href="Importing-Virgo-Projects-into-Eclipse.html" title="Importing Virgo Projects into Eclipse">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Migration</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Importing Virgo Projects into Eclipse</td>
+			</tr>
+		</table>
+	</body>
+</html>

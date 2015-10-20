@@ -1,0 +1,115 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Middle Tier Highlights</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="A Guide to the GreenPages Sample"><link rel="up" href="ch03.html" title="Chapter&nbsp;3.&nbsp;GreenPages Highlights"><link rel="prev" href="ch03.html" title="Chapter&nbsp;3.&nbsp;GreenPages Highlights"><link rel="next" href="ch03s03.html" title="Testing Highlights"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch03.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch03s03.html">Next</a></td></tr></table><hr></div><div class="section" title="Middle Tier Highlights"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="highlights.middletier"></a>Middle Tier Highlights</h2></div></div></div><p>
+		In the middle tier of GreenPages, the DataSource bundle <code class="literal">greenpages.db</code> constructs a DataSource and
+		publishes it in the service registry and the JPA bundle <code class="literal">greenpages.jpa</code> uses the datasource to define a JPA entity manager
+		which provides an object-relational	mapping between directory listings and the database.
+		The JPA bundle also uses declarative transaction management to ensure its persistence operations are performed inside transactions.
+	</p><div class="section" title="DataSource"><div class="titlepage"><div><div><h3 class="title"><a name="N104EE"></a>DataSource</h3></div></div></div><p>
+			The file <code class="filename">src/main/resources/META-INF/spring/module-context.xml</code> in the <code class="literal">greenpages.db</code> project
+			declares the Spring <span class="emphasis"><em>p-namespace</em></span>:
+</p><pre class="programlisting">&lt;beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd"
+       xmlns:p="http://www.springframework.org/schema/p"&gt;
+</pre><p>
+			which is then used to define properties of a datasource bean:
+</p><pre class="programlisting">&lt;bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" 
+      p:driverClassName="org.h2.Driver" p:url="jdbc:h2:~/greenpages-db/greenpages"
+      p:username="greenpages" p:password="pass"
+      init-method="createDataSource" destroy-method="close"/&gt;
+</pre><p>
+		</p><p>
+			The file <code class="filename">src/main/resources/META-INF/spring/osgi-context.xml</code> publishes the datasource bean as a service in the
+			service registry using Spring DM:
+</p><pre class="programlisting">&lt;osgi:service ref="dataSource" interface="javax.sql.DataSource"/&gt;
+</pre><p>
+		</p></div><div class="section" title="EntityManager"><div class="titlepage"><div><div><h3 class="title"><a name="N10513"></a>EntityManager</h3></div></div></div><p>
+			The <code class="classname">greenpages.jpa.JpaDirectory</code> class in the folder <code class="filename">src/main/java</code> of the
+			<code class="literal">greenpages.jpa</code> project uses the <code class="literal">@Repository</code> annotation to make it eligible for Spring DataAccessException translation
+			(which abstracts implementation-specific persistence exceptions to protect the application from details of the persistence implementation):
+</p><pre class="programlisting">@Repository
+final class JpaDirectory implements Directory {
+</pre><p>
+			and also declares an entity manager which will be injected by Spring:
+</p><pre class="programlisting">@PersistenceContext
+private EntityManager em;
+</pre><p>
+		</p><p>
+			The file <code class="filename">src/main/resources/META-INF/spring/module-context.xml</code> in the <code class="literal">greenpages.jpa</code> project
+			declares an entity manager factory based on EclipseLink JPA:
+</p><pre class="programlisting">&lt;bean id="entityManagerFactory"
+      class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean" 
+      p:dataSource-ref="dataSource"&gt;
+      &lt;property name="jpaVendorAdapter"&gt;
+            &lt;bean id="jpaVendorAdapter"
+                  class="org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter"
+                  p:databasePlatform="org.eclipse.persistence.platform.database.HSQLPlatform"
+                  p:showSql="true"/&gt;
+      &lt;/property&gt;
+&lt;/bean&gt;
+</pre><p>
+		</p><p>
+			The same file enables scanning for annotations, including <code class="literal">@PersistenceContext</code>:
+</p><pre class="programlisting">&lt;context:annotation-config/&gt;
+</pre><p>
+			enables load-time weaving, which is needed by the entity manager factory:
+</p><pre class="programlisting">&lt;context:load-time-weaver aspectj-weaving="on"/&gt;
+</pre><p>
+			and specifies a bean post processor to perform exception translation for <code class="literal">@Repository</code> classes:
+</p><pre class="programlisting">&lt;bean class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/&gt;
+</pre><p>
+		</p><p>
+			The file <code class="filename">src/main/resources/META-INF/persistence.xml</code> defines a persistence unit for a <code class="classname">JpaListing</code>
+			directory listing class.
+</p><pre class="programlisting">&lt;persistence xmlns="http://java.sun.com/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+             http://java.sun.com/xml/ns/persistence/persistence_1_0.xsd"
+             version="1.0"&gt;
+
+      &lt;persistence-unit name="GreenPages" transaction-type="RESOURCE_LOCAL"&gt;
+            &lt;class&gt;greenpages.jpa.JpaListing&lt;/class&gt;
+      &lt;/persistence-unit&gt;
+
+&lt;/persistence&gt;
+</pre><p>
+		</p><p>
+			The file <code class="filename">src/main/resources/META-INF/orm.xml</code> defines an entity mapping for the <code class="classname">JpaListing</code> class.
+</p><pre class="programlisting">&lt;entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm
+                 http://java.sun.com/xml/ns/persistence/orm_1_0.xsd"
+                 version="1.0"&gt;
+      &lt;package&gt;greenpages.jpa&lt;/package&gt;
+      &lt;entity class="greenpages.jpa.JpaListing" name="Listing"&gt;
+            &lt;table name="LISTING"/&gt;
+            &lt;attributes&gt;
+                  &lt;id name="listingNumber"&gt;
+                        &lt;column name="LISTING_NUMBER"/&gt;
+                        &lt;generated-value strategy="TABLE"/&gt;
+                  &lt;/id&gt;
+                  &lt;basic name="firstName"&gt;
+                        &lt;column name="FIRST_NAME"/&gt;
+                  &lt;/basic&gt;
+                  ???
+            &lt;/attributes&gt;
+      &lt;/entity&gt;
+&lt;/entity-mappings&gt;
+</pre><p>
+		</p></div><div class="section" title="Transaction Management"><div class="titlepage"><div><div><h3 class="title"><a name="N10575"></a>Transaction Management</h3></div></div></div><p>
+			The <code class="classname">greenpages.jpa.JpaDirectory</code> class in the folder <code class="filename">src/main/java</code> of the
+			<code class="literal">greenpages.jpa</code> project uses the <code class="literal">@Transactional</code> annotation to provide transaction demarcation
+			(beginning and committing a transaction around each method in this case):
+</p><pre class="programlisting">@Transactional
+???
+final class JpaDirectory implements Directory {
+</pre><p>
+		</p><p>
+			The file <code class="filename">src/main/resources/META-INF/spring/module-context.xml</code> enables AspectJ weaving for transaction demarcation:
+</p><pre class="programlisting">&lt;tx:annotation-driven mode="aspectj"/&gt;
+</pre><p>
+			and specifies that the Spring <code class="classname">JpaTransactionManager</code> should be used and associated with the entity manager factory:
+</p><pre class="programlisting">&lt;bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager"
+      p:entityManagerFactory-ref="entityManagerFactory"/&gt;
+</pre><p>
+		</p></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch03.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch03.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch03s03.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

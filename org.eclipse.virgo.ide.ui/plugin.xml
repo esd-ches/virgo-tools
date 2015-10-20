@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*******************************************************************************
+ * Copyright (c) 2007, 2010 SpringSource
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     SpringSource - initial API and implementation
+ *******************************************************************************/
+-->
+<plugin>
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <category
+      		id="org.eclipse.virgo.ide.ui.category"
+      		name="Virgo">
+      </category>
+      <wizard
+            category="org.eclipse.virgo.ide.ui.category"
+            class="org.eclipse.virgo.ide.ui.wizards.NewParProjectWizard"
+            finalPerspective="org.eclipse.virgo.ide.runtime.ui.perspective"
+            hasPages="true"
+            icon="icons/full/obj16/par_project_obj.gif"
+            id="org.eclipse.virgo.ide.ui.wizards.parProject"
+            name="PAR Project"
+            project="true">
+         <description>
+            Create a new Virgo PAR project
+         </description>
+      </wizard>  
+      <wizard
+            category="org.eclipse.virgo.ide.ui.category"
+            class="org.eclipse.virgo.ide.ui.wizards.NewBundleProjectWizard"
+            finalPerspective="org.eclipse.virgo.ide.runtime.ui.perspective"
+            hasPages="true"
+            icon="icons/full/obj16/osgi_project_obj.gif"
+            id="org.eclipse.virgo.ide.ui.wizards.osgiProject"
+            name="Bundle Project"
+            project="true">
+         <description>
+            Create a new OSGi bundle project
+         </description>
+      </wizard>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.editors">
+      <editor
+            class="org.eclipse.virgo.ide.ui.editors.BundleManifestEditor"
+            icon="icons/full/obj16/osgi_obj.gif"
+            id="org.eclipse.virgo.ide.ui.bundlemanifest"
+            name="Bundle Manifest Editor"
+            default="true"
+            contributorClass="org.eclipse.virgo.ide.ui.editors.BundleManifestEditorContributor"
+			matchingStrategy="org.eclipse.pde.internal.ui.editor.plugin.ManifestEditorMatchingStrategy">
+            <contentTypeBinding contentTypeId="org.eclipse.virgo.ide.facet.core.bundleContentType"/>
+      </editor>
+      <editor
+            class="org.eclipse.virgo.ide.ui.editors.ParManifestEditor"
+            icon="icons/full/obj16/par_obj.gif"
+            id="org.eclipse.virgo.ide.ui.parmanifest"
+            name="PAR Manifest Editor"
+            default="true"
+            contributorClass="org.eclipse.virgo.ide.ui.editors.BundleManifestEditorContributor"
+			matchingStrategy="org.eclipse.pde.internal.ui.editor.plugin.ManifestEditorMatchingStrategy">
+            <contentTypeBinding contentTypeId="org.eclipse.virgo.ide.facet.core.parContentType"/>        
+      </editor>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IProject"
+            adaptable="true"
+            id="org.eclipse.virgo.ide.ui.addBundleFacet">
+        <enablement>
+	        <adapt type="org.eclipse.core.resources.IProject">
+        		<and>
+	         		<not>
+	             		<test forcePluginActivation="true"
+	            			property="org.eclipse.wst.common.project.facet.core.projectFacet"
+	            			value="org.eclipse.virgo.server.bundle:1.0"/>
+	        	 	</not>
+	         		<not>
+	             		<test forcePluginActivation="true"
+	            			property="org.eclipse.wst.common.project.facet.core.projectFacet"
+	            			value="org.eclipse.virgo.server.par:1.0"/>
+	        	 	</not>
+	        	</and>
+	        </adapt>
+         </enablement>
+         <action
+               label="Add OSGi Bundle Project Nature"
+               class="org.eclipse.virgo.ide.ui.internal.actions.ConvertToBundleProject"
+               enablesFor="+"
+               menubarPath="org.eclipse.virgo.ide.menu/group1"
+               id="org.eclipse.virgo.ide.ui.actions.addBundleFacet">
+         </action>
+      </objectContribution>
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IProject"
+            adaptable="true"
+            id="org.eclipse.virgo.ide.ui.removeBundleFacet">
+        <enablement>
+	        <adapt type="org.eclipse.core.resources.IProject">
+         		<test forcePluginActivation="true"
+        			property="org.eclipse.wst.common.project.facet.core.projectFacet"
+        			value="org.eclipse.virgo.server.bundle:1.0"/>
+	        </adapt>
+         </enablement>
+         <action
+               label="Remove OSGi Bundle Project Nature"
+               class="org.eclipse.virgo.ide.ui.internal.actions.ConvertToBundleProject"
+               enablesFor="+"
+               menubarPath="org.eclipse.virgo.ide.menu/group1"
+               id="org.eclipse.virgo.ide.ui.actions.removeBundleFacet">
+         </action>
+      </objectContribution>
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IProject"
+            adaptable="true"
+            id="org.eclipse.virgo.ide.ui.addPlanFacet">
+        <enablement>
+	        <adapt type="org.eclipse.core.resources.IProject">
+         		<not>
+             		<test forcePluginActivation="true"
+            			property="org.eclipse.wst.common.project.facet.core.projectFacet"
+            			value="org.eclipse.virgo.server.plan:2.0"/>
+        	 	</not>
+	        </adapt>
+         </enablement>
+         <action
+               label="Add OSGi Plan Project Nature"
+               class="org.eclipse.virgo.ide.ui.internal.actions.ConvertToPlanProject"
+               enablesFor="+"
+               menubarPath="org.eclipse.virgo.ide.menu/group1"
+               id="org.eclipse.virgo.ide.ui.actions.addPlanFacet">
+         </action>
+      </objectContribution>
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IProject"
+            adaptable="true"
+            id="org.eclipse.virgo.ide.ui.removePlanFacet">
+        <enablement>
+	        <adapt type="org.eclipse.core.resources.IProject">
+         		<test forcePluginActivation="true"
+        			property="org.eclipse.wst.common.project.facet.core.projectFacet"
+        			value="org.eclipse.virgo.server.plan:2.0"/>
+	        </adapt>
+         </enablement>
+         <action
+               label="Remove OSGi Plan Project Nature"
+               class="org.eclipse.virgo.ide.ui.internal.actions.ConvertToPlanProject"
+               enablesFor="+"
+               menubarPath="org.eclipse.virgo.ide.menu/group1"
+               id="org.eclipse.virgo.ide.ui.actions.removePlanFacet">
+         </action>
+      </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="org.eclipse.virgo.ide.ui.toolsMenu"
+            objectClass="org.eclipse.core.resources.IProject">
+         <menu
+               id="org.eclipse.virgo.ide.menu"
+               label="Virgo">
+            <separator
+                  name="group0">
+            </separator>
+         </menu>
+      </objectContribution>
+   </extension>
+   
+   	<extension point="org.eclipse.wst.xml.core.catalogContributions">
+		<catalogContribution>
+			<system
+				systemId="http://www.eclipse.org/virgo/schema/plan/eclipse-virgo-plan.xsd"
+    		    uri="xsds/eclipse-virgo-plan.xsd" />
+			<public
+	        	publicId="http://www.eclipse.org/virgo/schema/plan"
+    		    uri="xsds/eclipse-virgo-plan.xsd" />
+		</catalogContribution>
+	</extension>
+   
+   	<extension point="org.eclipse.ui.editors">
+		<editor
+        class="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorPart"
+        contributorClass="org.eclipse.wst.xml.ui.internal.tabletree.XMLMultiPageEditorActionBarContributor"
+        default="true"
+        extensions="plan"
+        icon="icons/full/obj16/plan_obj.gif"
+        id="org.eclipse.virgo.ide.ui.planfileeditor"
+        name="Plan Editor"
+        symbolicFontName="org.eclipse.wst.sse.ui.textfont">
+			<contentTypeBinding
+				contentTypeId="org.eclipse.virgo.ide.facet.core.planContentType" />
+		</editor>
+	</extension>
+
+	<!-- Editor actionsets -->
+	<extension point="org.eclipse.ui.actionSetPartAssociations">
+		<actionSetPartAssociation
+			targetID="org.eclipse.ui.edit.text.actionSet.annotationNavigation">
+			<part
+				id="org.eclipse.virgo.ide.ui.planfileeditor">
+			</part>
+		</actionSetPartAssociation>
+		<actionSetPartAssociation
+			targetID="org.eclipse.ui.NavigateActionSet">
+			<part
+				id="org.eclipse.virgo.ide.ui.planfileeditor">
+			</part>
+		</actionSetPartAssociation>
+	</extension>
+	
+	<extension point="org.eclipse.wst.sse.ui.editorConfiguration">
+		<sourceViewerConfiguration
+			class="org.eclipse.wst.xml.ui.StructuredTextViewerConfigurationXML"
+			target="org.eclipse.virgo.ide.facet.core.planContentType" />
+	</extension>
+
+	<extension point="org.eclipse.wst.sse.core.modelHandler">
+		<modelHandler
+			id="org.eclipse.virgo.ide.ui.handler.planConfig"
+			default="false"
+			associatedContentTypeId="org.eclipse.virgo.ide.facet.core.planContentType"
+			class="org.eclipse.virgo.ide.ui.editors.plan.PlanModelHandler">
+		</modelHandler>
+	</extension>
+
+	<extension
+		point="org.eclipse.wst.sse.ui.adapterFactoryDescription">
+		<adapterFactoryDescription
+			class="org.eclipse.virgo.ide.ui.editors.plan.PlanAdapterFactoryProvider">
+		</adapterFactoryDescription>
+	</extension>
+	
+	
+	<extension
+        point="org.eclipse.ui.preferencePages">
+     <page
+           class="org.eclipse.virgo.ide.preferences.VirgoPreferencePage"
+           id="org.eclipse.virgo.ide.preferencePage"
+           name="Virgo">
+     </page>
+  </extension>
+ <extension
+       point="org.eclipse.ui.propertyPages">
+    <page
+          adaptable="true"
+          class="org.eclipse.virgo.ide.preferences.VirgoPreferencePage"
+          id="org.eclipse.virgo.ide.projectPropertyPage"
+          name="Virgo"
+          objectClass="org.eclipse.core.resources.IProject">
+       <filter
+             name="nature"
+             value="org.eclipse.virgo.ide.facet.core.bundlenature">
+       </filter>
+    </page>
+ </extension>
+ <extension
+       point="org.eclipse.wst.sse.ui.completionProposal">
+    <proposalComputer
+          activate="true"
+          categoryId="org.eclipse.wst.xml.ui.proposalCategory.xmlTags"
+          class="org.eclipse.virgo.ide.ui.editors.plan.PlanContentAssistProcessor"
+          id="org.eclipse.virgo.ide.ui.plan.proposals"
+          name="Plan Completion Proposals">
+       <contentType
+             id="org.eclipse.virgo.ide.facet.core.planContentType">
+       </contentType>
+    </proposalComputer>
+ </extension>
+   <extension
+      point="org.eclipse.ui.perspectives">
+   <perspective
+         class="org.eclipse.virgo.ide.internal.ui.VirgoPerspective"
+         icon="icons/full/obj16/virgo_obj.png"
+         id="org.eclipse.virgo.ide.runtime.ui.perspective"
+         name="Virgo">
+      <description>
+         The Virgo perspective provides a convenient environment for developing and working with running Virgo-based OSGi applications.
+      </description>
+   </perspective>
+</extension>
+<extension
+      point="org.eclipse.ui.perspectiveExtensions">
+   <perspectiveExtension
+         targetID="org.eclipse.virgo.ide.runtime.ui.perspective">
+        	
+        	<actionSet id="org.eclipse.debug.ui.launchActionSet"/>
+        	<actionSet id="org.eclipse.debug.ui.breakpointActionSet"/>
+         <actionSet
+               id="org.eclipse.jdt.ui.JavaActionSet">
+         </actionSet>
+   <actionSet
+         id="org.eclipse.wst.server.ui.new.actionSet">
+   </actionSet>
+                            <newWizardShortcut
+             id="org.eclipse.virgo.ide.ui.wizards.osgiProject">
+       </newWizardShortcut>
+       <newWizardShortcut
+             id="org.eclipse.virgo.ide.ui.wizards.parProject">
+       </newWizardShortcut>
+       <newWizardShortcut
+             id="org.eclipse.wst.server.ui.new.server">
+       </newWizardShortcut>
+            <newWizardShortcut id="org.eclipse.ui.wizards.new.folder"/>
+            <newWizardShortcut id="org.eclipse.ui.wizards.new.file"/>
+
+       
+            <viewShortcut id="org.eclipse.ui.navigator.ProjectExplorer"/> 
+            <viewShortcut id="org.eclipse.ui.views.ContentOutline"/> 
+            <viewShortcut id="org.eclipse.ui.views.PropertySheet"/> 
+            <viewShortcut id="org.eclipse.ui.views.ProblemView"/> 
+            <viewShortcut id="org.eclipse.wst.server.ui.ServersView"/>
+
+            <perspectiveShortcut id="org.eclipse.jdt.ui.JavaPerspective"/>
+            <view
+                  id="org.eclipse.ui.navigator.ProjectExplorer"
+                  minimized="false"
+                  ratio=".2"
+                  relationship="left"
+                  relative="org.eclipse.ui.editorss">
+            </view>
+   <view
+         id="org.eclipse.pde.runtime.LogView"
+         minimized="true"
+         ratio=".75"
+         relationship="bottom"
+         relative="org.eclipse.ui.editorss">
+   </view>
+   <view
+         id="org.eclipse.ui.views.ProblemView"
+         minimized="true"
+         relationship="stack"
+         relative="org.eclipse.pde.runtime.LogView">
+   </view>
+   <view
+         id="org.eclipse.ui.views.PropertySheet"
+         minimized="true"
+         relationship="stack"
+         relative="org.eclipse.pde.runtime.LogView">
+   </view>
+   <view
+         id="org.eclipse.search.ui.views.SearchView"
+         minimized="true"
+         relationship="stack"
+         relative="org.eclipse.pde.runtime.LogView">
+   </view>
+                  <view
+                        id="org.eclipse.virgo.ide.runtime.ui.virgoArtefacts"
+                        minimized="false"
+                        ratio=".5"
+                        relationship="bottom"
+                        relative="org.eclipse.ui.editorss">
+      </view>
+                  <view
+                        id="org.eclipse.virgo.ide.runtime.ui.virgoProperties"
+                        minimized="false"
+                        relationship="stack"
+                        relative="org.eclipse.virgo.ide.runtime.ui.virgoArtefacts">
+                  </view>
+                  <view
+                        id="org.eclipse.virgo.ide.runtime.ui.virgoLog"
+                        minimized="false"
+                        relationship="stack"
+                        relative="org.eclipse.virgo.ide.runtime.ui.virgoArtefacts">
+                  </view>
+                        <view
+                  id="org.eclipse.wst.server.ui.ServersView"
+                  minimized="false"
+                  ratio=".2"
+                  relationship="left"
+                  relative="org.eclipse.ui.editorss">
+            </view>
+                        <view
+                              id="org.eclipse.ui.views.ContentOutline"
+                              minimized="false"
+                              relationship="stack"
+                              relative="org.eclipse.wst.server.ui.ServersView">
+                        </view>
+			<view
+                  id="org.eclipse.ui.console.ConsoleView"
+                  minimized="false"
+                  relationship="stack"
+                  relative="org.eclipse.virgo.ide.runtime.ui.virgoArtefacts">
+            </view>
+   <perspectiveShortcut
+         id="org.eclipse.jst.j2ee.J2EEPerspective">
+   </perspectiveShortcut>
+   <perspectiveShortcut
+         id="org.eclipse.debug.ui.DebugPerspective">
+   </perspectiveShortcut>
+   <newWizardShortcut
+         id="org.eclipse.wst.server.ui.new.server">
+   </newWizardShortcut>
+   <viewShortcut
+         id="org.eclipse.virgo.ide.runtime.ui.virgoArtefacts">
+   </viewShortcut>
+   <viewShortcut
+         id="org.eclipse.virgo.ide.runtime.ui.virgoProperties">
+   </viewShortcut>
+   <viewShortcut
+         id="org.eclipse.virgo.ide.runtime.ui.virgoLog">
+   </viewShortcut>
+       </perspectiveExtension>
+   <perspectiveExtension
+         targetID="org.eclipse.jdt.ui.JavaPerspective">
+      <perspectiveShortcut
+            id="org.eclipse.virgo.ide.runtime.ui.perspective">
+      </perspectiveShortcut>
+   </perspectiveExtension>
+      <perspectiveExtension
+         targetID="org.eclipse.jst.j2ee.J2EEPerspective">
+      <perspectiveShortcut
+            id="org.eclipse.virgo.ide.runtime.ui.perspective">
+      </perspectiveShortcut>
+   </perspectiveExtension>
+      <perspectiveExtension
+         targetID="org.eclipse.wst.web.ui.webDevPerspective">
+      <perspectiveShortcut
+            id="org.eclipse.virgo.ide.runtime.ui.perspective">
+      </perspectiveShortcut>
+   </perspectiveExtension>
+</extension>
+<extension
+      point="org.eclipse.ui.navigator.navigatorContent">
+   <commonWizard
+         type="new"
+         wizardId="org.eclipse.virgo.ide.ui.wizards.parProject">
+      <enablement>
+      <or>
+      <with 
+            variable="selection"> 
+         <count 
+               value="0"> 
+         </count> 
+      </with>
+      <instanceof
+            value="org.eclipse.core.resources.IProject">
+      </instanceof>
+      <instanceof
+            value="org.eclipse.core.resources.IWorkspaceRoot">
+      </instanceof> 
+</or>      
+            </enablement>
+   </commonWizard>
+      <commonWizard
+         type="new"
+         wizardId="org.eclipse.virgo.ide.ui.wizards.osgiProject">
+      <enablement>
+      <or>
+      <with 
+            variable="selection"> 
+         <count 
+               value="0"> 
+         </count> 
+      </with>
+      <instanceof
+            value="org.eclipse.core.resources.IProject">
+      </instanceof>
+      <instanceof
+            value="org.eclipse.core.resources.IWorkspaceRoot">
+      </instanceof> 
+</or>      
+            </enablement>
+   </commonWizard>
+</extension>
+<extension
+      point="org.eclipse.ui.views">
+   <category
+         id="org.eclipse.virgo.ide.category"
+         name="Virgo">
+   </category>
+</extension>
+</plugin>

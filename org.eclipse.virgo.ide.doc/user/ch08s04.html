@@ -1,0 +1,89 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Using the p2 for extending your Virgo installation</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo User Guide"><link rel="up" href="ch08.html" title="Chapter&nbsp;8.&nbsp;Equinox Console"><link rel="prev" href="ch08s03.html" title="Virgo Shell Command Reference"><link rel="next" href="ch09.html" title="Chapter&nbsp;9.&nbsp;The Web Admin Console"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch08s03.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch09.html">Next</a></td></tr></table><hr></div><div class="section" title="Using the p2 for extending your Virgo installation"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="p2-commands"></a>Using the p2 for extending your Virgo installation</h2></div></div></div><div class="section" title="Extending with the p2 director"><div class="titlepage"><div><div><h3 class="title"><a name="N10F94"></a>Extending with the p2 director</h3></div></div></div><p>
+    		You can provision new features on top of your Virgo installation using the p2 director. It can be used both for initial provisioning and extending an existing installtion.
+    	</p><p>For extending an existing installation you can use these director arguments:
+    	</p><pre class="screen">-repository http://download.eclipse.org/rt/ecf/3.5.3/site.p2
+-installIU org.eclipse.ecf.remoteservice.feature.feature.group
+-destination &lt;your Virgo installation folder&gt;</pre><p>This installs the <span class="bold"><strong>latest</strong></span> version of the specified p2 feature in your Virgo installation's p2 profile.</p></div><div class="section" title="Extending via the p2 shell commands"><div class="titlepage"><div><div><h3 class="title"><a name="N10FA4"></a>Extending via the p2 shell commands</h3></div></div></div><p>Another way to achieve the same results is to use the p2 commands. The commands are available only in VN as it includes p2 by default. 
+    	</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>For the other distributions only the director is supported and the operation only extends their kernel region.</div><p>
+    	</p><p>Here's a list of the most commonly used p2 commands:</p><div class="table"><a name="p2-common-commands-table"></a><p class="title"><b>Table&nbsp;8.8.&nbsp;p2 Common Shell Commands</b></p><div class="table-contents"><table summary="p2 Common Shell Commands" border="1"><colgroup><col><col></colgroup><thead><tr><th>Command</th><th>Help</th></tr></thead><tbody><tr><td><code class="literal">provaddrepo &lt;repository URI&gt;</code></td><td>
+								Add specified URI as metadata and artifact repository. Note that if you pass a wrong URL you'll get an error saying:
+								<code class="literal">Repository not modifiable: http://wrongURL</code>. The default behavior of this command is to create an empty repository at the
+								specified location if there isn't any. That won't work for remote locations so keep in mind that if you see this you probably passed a wrong URL.
+							</td></tr><tr><td><code class="literal">provdelrepo &lt;repository URI&gt;</code></td><td>
+								Remove specified metadata and artifact repository.
+							</td></tr><tr><td><code class="literal">provinstall &lt;InstallableUnit&gt; &lt;version&gt; &lt;profileid&gt;</code></td><td>
+								Install an IU to the profileid.  If no profileid is given, installs into default profile.
+							</td></tr><tr><td><code class="literal">provremove &lt;InstallableUnit&gt; &lt;version&gt; &lt;profileid&gt;</code></td><td>
+								Uninstall an IU from the profileid.  If no profileid is given, uninstalls form default profile.
+							</td></tr><tr><td><code class="literal">provlg [&lt;repository URI&gt; &lt;iu id | *&gt; &lt;version range | *&gt;]</code></td><td>
+								Lists all IUs with group capabilities in the given repo or in all repos if URI is omitted.
+							</td></tr><tr><td><code class="literal">provliu [&lt;repository URI | *&gt; &lt;iu id | *&gt; &lt;version range | *&gt;]</code></td><td>
+								Lists the IUs that match the pattern in the given repo.  * matches all.
+							</td></tr><tr><td><code class="literal">confapply</code></td><td>
+								This is a Simple Configurator command, not a p2 one. However it is relevant because it applies dynamically, at runtime, the installed p2 features.
+								What the command does is to apply to the running OSGi framework the current content in the bundles.info file. When using the provinstall command it takes care of updateing the bundles.info file.
+							</td></tr></tbody></table></div></div><br class="table-break"><p>Here's an example showing how to install the ECF remote services but with the p2 commands this time:</p><pre class="screen">osgi&gt; provaddrepo http://download.eclipse.org/rt/ecf/3.5.3/site.p2
+
+osgi&gt; provlg
+
+org.eclipse.ecf.core.feature.group 3.5.3.v20111109-2142
+org.eclipse.ecf.core.featurepatch.feature.group 3.5.3.v20111109-2142
+org.eclipse.ecf.core.featurepatch.source.feature.group 3.5.3.v20111109-2142
+org.eclipse.ecf.core.source.feature.group 3.5.3.v20111109-2142
+org.eclipse.ecf.datashare.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.datashare.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.dnssd.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.dnssd.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.jmdns.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.jmdns.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.slp.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.slp.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.zookeeper.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.discovery.zookeeper.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.eventadmin.examples.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.eventadmin.examples.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.eventadmin.feature.feature.group 2.0.0.v20111109-2142
+org.eclipse.ecf.eventadmin.source.feature.feature.group 2.0.0.v20111109-2142
+org.eclipse.ecf.osgi.services.feature.feature.group 2.0.1.v20111109-2142
+org.eclipse.ecf.osgi.services.source.feature.feature.group 2.0.1.v20111109-2142
+org.eclipse.ecf.remoteservice.examples.feature.feature.group 1.1.0.v20111109-2142
+org.eclipse.ecf.remoteservice.examples.source.feature.feature.group 1.1.0.v20111109-2142
+org.eclipse.ecf.remoteservice.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.remoteservice.rest.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.remoteservice.rest.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.remoteservice.rosgi.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.remoteservice.rosgi.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.remoteservice.sdk.feature.feature.group 3.5.3.v20111109-2142
+org.eclipse.ecf.remoteservice.sdk.source.feature.feature.group 3.5.3.v20111109-2142
+org.eclipse.ecf.remoteservice.soap.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.remoteservice.soap.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.remoteservice.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.server.generic.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.server.generic.source.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.xmpp.feature.feature.group 1.0.0.v20111109-2142
+org.eclipse.ecf.xmpp.source.feature.feature.group 1.0.0.v20111109-2142
+
+osgi&gt; provinstall org.eclipse.ecf.remoteservice.feature.feature.group 1.0.0.v20111109-2142
+Installation complete for org.eclipse.ecf.remoteservice.feature.feature.group 1.0.0.v20111109-2142
+
+osgi&gt; confapply
+
+osgi&gt; ss
+
+"Framework is launched."
+
+
+id	State       Bundle
+0	ACTIVE      org.eclipse.osgi_3.7.1.R37x_v20110808-1106
+....
+92	RESOLVED    org.springframework.osgi.io_1.2.1
+93	RESOLVED    org.eclipse.ecf.console_1.0.0.v20111109-2142
+94	RESOLVED    org.eclipse.ecf.discovery_4.0.0.v20111109-2142
+95	RESOLVED    org.eclipse.ecf.provider_4.2.100.v20111109-2142
+96	RESOLVED    org.eclipse.ecf.provider.discovery_2.1.200.v20111109-2142
+97	RESOLVED    org.eclipse.ecf.provider.remoteservice_4.0.0.v20111109-2142
+98	RESOLVED    org.eclipse.ecf.remoteservice_6.0.200.v20111109-2142
+99	RESOLVED    org.eclipse.ecf.sharedobject_2.2.100.v20111109-2142
+100	RESOLVED    org.eclipse.equinox.concurrent_1.0.200.v20110502</pre><p>You can see that after applying the changes with <span class="emphasis"><em>confapply</em></span> the remote services bundles and their dependencies are installed in VN.</p></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch08s03.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch08.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch09.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

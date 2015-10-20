@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>Community - Contributing</title>
+		<link type="text/css" rel="stylesheet" href="../../book.css"/>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">Contributing</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Community.html" title="Community">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="Currently-Under-Discussion.html" title="Currently Under Discussion">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Community</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Currently Under Discussion</td>
+			</tr>
+		</table><hr/>
+		<h1 id="Contributing">Contributing</h1>
+		<p>Suppose you see a need to change Virgo somehow. You can start by raising this on 
+			<i>Virgo-Dev</i> or as a bug, but suppose the committers don't dive in and make the change for you. Don't take this personally - Virgo is an active project and there's always more to do than the committers have time for.
+		</p>
+		<p>That's where 
+			<i>contributors</i> come in. You may not feel very confident about changing the Virgo codebase, but the best way to learn is to do. The committers are interested in building up the Virgo community and they should help you navigate the codebase and can provide useful feedback on changes you are proposing. So file a bug, attach your code, and take it from there. But before you do, please read on to understand what makes a good contribution.
+		</p>
+		<p>
+			<b>a good contributor</b>
+		</p>
+		<ul>
+			<li>starts by reading the 
+				<a href="http://www.eclipse.org/legal/termsofuse.php" target="doc_external">Eclipse.org Terms of Use</a> before making any contribution
+			</li>
+			<li>checks out the flow chart in the 
+				<a href="http://www.eclipse.org/legal/EclipseLegalProcessPoster.pdf" target="doc_external">Eclipse Legal Process poster</a>
+			</li>
+		</ul>
+		<p>In particular…</p>
+		<ul>
+			<li>ensures that they wrote 100% of the contribution and did not copy content from elsewhere or rely on the intellectual property of others.</li>
+		</ul>
+		<p>That makes the contribution process so much simpler.</p>
+		<p>Then…</p>
+		<ul>
+			<li>attaches the code as a patch (easily created using git diff) to a Bugzilla bug (under RT/Virgo/core) so that a committer can perform the necessary due diligence checks.</li>
+		</ul>
+		<p>
+			<b>essential steps</b>
+		</p>
+		<p>In the bug the contributor (that's you) must confirm that they wrote 100% of the code contributed (in particular that none of it is copied from elsewhere), that they have the right to contribute the code to Eclipse (e.g. the employer agrees or the code is produced in personal time and contracts do not assign ownership or copyright to the employer), and that any new files contain the appropriate License header with the contributor (or the employer, as appropriate) as the copyright owner and the contributor as the "initial contributor".  (See existing files in the Virgo source code repositories for examples of the copyright and license headers.)</p>
+		<p>
+			<b>optional steps</b>
+		</p>
+		<p>See &lt;span {{#ifeq: {{BASEPAGENAME}} | Virgo/Committers | id=current |  {{#ifeq: {{{tab |  | id=current | }} }}&gt;
+			<a href="http://wiki.eclipse.org/Virgo/Committers" title="Virgo/Committers" target="doc_external">{{#if: {{{ 2|}}} | Committers | Committers }}</a>&lt;/span&gt;}|committers}} for information about coding conventions and testing which will make your contribution more easily consumed by Virgo.
+		</p>
+		<p>Contributions should include unit tests whenever possible and integration tests where appropriate. This ensures that the contributed code is well structured and can be tested, as well as avoiding the technical debt of code waiting to be tested.  The committers that handle the contribution will assess these criteria.</p>
+		<p>You should probably discuss large contributions (more than 250 lines of code and/or configuration) on the virgo-dev mailing list first so everyone knows what's going on. Small patches and additions (e.g. extra unit tests) can be made with little or no discussion. Remember that patches or enhancements can often include 'too much'. It is tempting to include unrelated changes with another idea -- simply because they are 'close by' in the code.  No-one is particularly at fault here, but if patches are ruthlessly reduced to the smallest possible units they are more likely to get in. Small is beautiful, and minimal is marvellous.</p>
+		<p>So, silly as it may seem, if you spot a single line correction (or 'improvement') while writing your 
+			<i>magnum opus</i>, please resist the urge to 'just put it in'.  If a single line bugzilla patch is raised, it can get in much more easily than a collection of changes, and is quicker and simpler for all concerned.  If the change is unrelated, or just 'independent' in the sense that it 
+			<i>could</i> be made separately without harm, then please 
+			<i>do</i> separate it. That way it won't be 'caught up' in a long discussion (and possible rejection) that has nothing to do with it.
+		</p><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Community.html" title="Community">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center">
+					<a href="Community.html" title="Community">
+						<img alt="Community" border="0" src="../../images/home.gif"/>
+					</a>
+				</td>
+				<td style="width: 20%" align="right">
+					<a href="Currently-Under-Discussion.html" title="Currently Under Discussion">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Community</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Currently Under Discussion</td>
+			</tr>
+		</table>
+	</body>
+</html>

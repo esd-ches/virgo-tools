@@ -1,0 +1,625 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.3"?>
+<!--
+/*******************************************************************************
+ * Copyright (c) 2007, 2010 SpringSource
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     SpringSource - initial API and implementation
+ *******************************************************************************/
+-->
+<plugin>
+
+	<extension point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+		<launchConfigurationTypeImage 
+			icon="icons/full/obj16/virgo_obj.png"
+			configTypeID="org.eclipse.virgo.server.launchconfig.virgo" 
+			id="org.eclipse.virgo.server.launchimage.virgo">
+		</launchConfigurationTypeImage>
+	</extension>
+
+	<extension point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+		<launchConfigurationTabGroup
+			id="org.eclipse.virgo.server.launchconfigTabGroup.virgo" 
+			type="org.eclipse.virgo.server.launchconfig.virgo"
+			class="org.eclipse.virgo.ide.runtime.internal.ui.VirgoLaunchConfigurationTabGroup">
+		</launchConfigurationTabGroup>
+	</extension>
+
+	<extension point="org.eclipse.wst.server.ui.serverImages">
+		<image 
+			id="org.eclipse.virgo.server.runtime.virgo" 
+			icon="icons/full/obj16/virgo_obj.png"
+			typeIds="org.eclipse.virgo.server.runtime.virgo" />
+		<image 
+			id="org.eclipse.virgo.server.virgo" 
+			icon="icons/full/obj16/virgo_obj.png"
+			typeIds="org.eclipse.virgo.server.virgo" />
+		<image 
+			id="org.eclipse.virgo.server.runtime.virgo.35" 
+			icon="icons/full/obj16/virgo_obj.png"
+			typeIds="org.eclipse.virgo.server.runtime.virgo.35" />
+		<image 
+			id="org.eclipse.virgo.server.virgo.35" 
+			icon="icons/full/obj16/virgo_obj.png"
+			typeIds="org.eclipse.virgo.server.virgo.35" />
+		<image 
+			id="org.eclipse.virgo.server.bundle" 
+			icon="icons/full/obj16/osgi_obj.gif"
+			typeIds="org.eclipse.virgo.server.bundle" />
+		<image 
+			id="org.eclipsevirgo.server.par" 
+			icon="icons/full/obj16/par_obj.gif"
+			typeIds="org.eclipse.virgo.server.par" />
+		<image 
+			id="org.eclipse.virgo.server.plan" 
+			icon="icons/full/obj16/plan_obj.gif"
+			typeIds="org.eclipse.virgo.server.plan" />
+	</extension>
+
+	<extension point="org.eclipse.wst.common.project.facet.ui.images">
+		<image 
+			runtime-component-type="org.eclipse.virgo.server.virgo"
+			path="icons/full/obj16/virgo_obj.png" />
+	</extension>
+
+	<extension point="org.eclipse.wst.server.ui.wizardFragments">
+		<fragment 
+			id="org.eclipse.virgo.server.runtime.virgo" 
+			typeIds="org.eclipse.virgo.server.runtime.virgo"
+			class="org.eclipse.virgo.ide.runtime.internal.ui.VirgoServerRuntimeWizardFragment" />
+		  <fragment
+		        class="org.eclipse.virgo.ide.runtime.internal.ui.VirgoServerRuntimeWizardFragment"
+		        id="org.eclipse.virgo.server.runtime.virgo.35"
+		        typeIds="org.eclipse.virgo.server.runtime.virgo.35">
+		  </fragment>
+	</extension>
+
+	<extension point="org.eclipse.wst.common.project.facet.ui.images">
+		<image 
+			facet="org.eclipse.virgo.server.bundle" 
+			path="icons/full/obj16/osgi_obj.gif" />
+		<image 
+			category="org.eclipse.virgo.server.category" 
+			path="icons/full/obj16/virgo_obj.png" />
+		<image 
+			facet="org.eclipse.virgo.server.par" 
+			path="icons/full/obj16/par_obj.gif" />
+		<image 
+			facet="org.eclipse.virgo.server.plan" 
+			path="icons/full/obj16/plan_obj.gif" />
+	</extension>
+	
+	<extension point="org.eclipse.wst.server.ui.editorPageSections">
+      <section
+         id="org.eclipse.virgo.ide.server.ui.configuration.editor.port"
+         order="0"
+         insertionId="org.eclipse.wst.server.editor.overview.right"
+         typeIds="org.eclipse.virgo.server.virgo,org.eclipse.virgo.server.virgo.35"
+         class="org.eclipse.virgo.ide.runtime.internal.ui.editor.ServerDeployEditorSection">
+      </section>
+      <section
+         id="org.eclipse.virgo.ide.server.ui.configuration.editor.taillogfiles"
+         order="20"
+         insertionId="org.eclipse.wst.server.editor.overview.right"
+         typeIds="org.eclipse.virgo.server.virgo,org.eclipse.virgo.server.virgo.35"
+         class="org.eclipse.virgo.ide.runtime.internal.ui.editor.StartupEditorSection">
+      </section>
+      <section
+         id="org.eclipse.virgo.ide.server.ui.configuration.editor.artefactorder"
+         order="10"
+         insertionId="org.eclipse.wst.server.editor.overview.right"
+         typeIds="org.eclipse.virgo.server.virgo,org.eclipse.virgo.server.virgo.35"
+         class="org.eclipse.virgo.ide.runtime.internal.ui.editor.ArtefactOrderEditorSection">
+      </section>
+      <section
+         id="org.eclipse.virgo.ide.server.ui.configuration.editor.staticresources"
+         order="15"
+         insertionId="org.eclipse.wst.server.editor.overview.left"
+         typeIds="org.eclipse.virgo.server.virgo,org.eclipse.virgo.server.virgo.35"
+         class="org.eclipse.virgo.ide.runtime.internal.ui.editor.StaticResourcesEditorSection">
+      </section>
+   </extension>
+   
+   <extension point="org.eclipse.ui.popupMenus">
+    <objectContribution
+      adaptable="true"
+      id="org.eclipse.jst.server.tomcat.ui.serveractions"
+      objectClass="org.eclipse.wst.server.ui.internal.view.servers.ModuleServer">
+      <visibility>
+        <and>
+          <objectState name="serverType" value="org.eclipse.virgo.server.virgo,org.eclipse.virgo.server.virgo.*"/>
+          <or>
+          	<objectState name="moduleType" value="jst.web"/>
+          	<objectState name="moduleType" value="org.eclipse.virgo.server.bundle"/>
+          	<objectState name="moduleType" value="org.eclipse.virgo.server.par"/>
+          </or>
+        </and>
+      </visibility>
+      <action
+            class="org.eclipse.virgo.ide.runtime.internal.ui.actions.OpenProjectManifestAction"
+            enablesFor="1"
+            icon="icons/full/obj16/file_obj.gif"
+            id="org.eclipse.virgo.ide.server.ui.openManifestAction"
+            label="Open Project Manifest">
+      </action>
+      <action
+        class="org.eclipse.virgo.ide.runtime.internal.ui.actions.RedeployBundleAction"
+        enablesFor="1"
+        id="org.eclipse.virgo.ide.server.ui.redeployAction"
+        label="Redeploy">
+      </action>
+    </objectContribution>
+    <objectContribution
+          adaptable="true"
+          id="org.eclipse.virgo.ide.runtime.ui.localBundleContribution"
+          objectClass="org.eclipse.virgo.ide.runtime.core.artefacts.LocalBundleArtefact">
+       <action
+             class="org.eclipse.virgo.ide.runtime.internal.ui.actions.OpenBundleManifestAction"
+             enablesFor="1"
+             icon="icons/full/obj16/bundle_manifest.gif"
+             id="org.eclipse.virgo.ide.runtime.ui.openBundleManifest"
+             label="Open Bundle Manifest">
+       </action>
+       <visibility>
+             <objectClass
+                   name="org.eclipse.virgo.ide.runtime.core.artefacts.LocalBundleArtefact">
+             </objectClass>
+       </visibility>
+    </objectContribution>
+  </extension>
+  
+  <extension point="org.eclipse.wst.server.ui.editorPages">
+      <page
+         id="org.eclipse.virgo.ide.server.ui.configuration.editor.repository"
+         order="20"
+         name="Repository"
+         typeIds="org.eclipse.virgo.server.virgo,org.eclipse.virgo.server.virgo.35"
+         class="org.eclipse.virgo.ide.runtime.internal.ui.editor.VirgoRepositoryBrowserEditorPage">
+      </page>
+      <page
+         id="org.eclipse.virgo.ide.server.ui.configuration.editor.bundleInformation"
+         order="30"
+         name="Bundle Overview"
+         typeIds="org.eclipse.virgo.server.virgo,org.eclipse.virgo.server.virgo.35"
+         class="org.eclipse.libra.framework.editor.ui.overview.BundleInformationEditorPage">
+      </page>
+      <page
+         id="org.eclipse.virgo.ide.server.ui.configuration.editor.bundleDependency"
+         order="40"
+         name="Bundle Dependency Graph"
+         typeIds="org.eclipse.virgo.server.virgo,org.eclipse.virgo.server.virgo.35"
+         class="org.eclipse.libra.framework.editor.ui.dependencies.BundleDependencyEditorPage">
+      </page>
+      <page
+         id="org.eclipse.virgo.ide.server.ui.configuration.editor.serverConsole"
+         order="50"
+         name="Server Console"
+         typeIds="org.eclipse.virgo.server.virgo,org.eclipse.virgo.server.virgo.35"
+         class="org.eclipse.libra.framework.editor.ui.console.ServerConsoleEditorPage">
+      </page>
+   </extension>
+
+	 <extension point="org.eclipse.ui.preferencePages">
+		<page 
+			id="org.eclipse.virgo.ide.runtime.ui.preferencePage" 
+			name="Repository Browser"
+			class="org.eclipse.virgo.ide.runtime.internal.ui.properties.RuntimePreferencePage"
+			category="org.eclipse.virgo.ide.preferencePage">
+		</page>
+	</extension>
+<extension
+        point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.eclipse.wst.server.ui.internal.editor.ServerEditor"
+            class="org.eclipse.virgo.ide.runtime.internal.ui.editor.VirgoEditorAdapterFactory">
+         <adapter
+               type="org.eclipse.ui.views.contentoutline.IContentOutlinePage">
+         </adapter>
+      </factory>
+	</extension>
+<extension
+      point="org.eclipse.ui.views">
+   <view
+         allowMultiple="true"
+         category="org.eclipse.virgo.ide.category"
+         class="org.eclipse.virgo.ide.runtime.ui.views.ArtefactCommonView"
+         icon="icons/full/obj16/virgo_obj.png"
+         id="org.eclipse.virgo.ide.runtime.ui.virgoArtefacts"
+         name="Virgo Repository"
+         restorable="true">
+      <description>
+         Displays artifacts that exist on runtimes.
+      </description>
+   </view>
+   <view
+         allowMultiple="true"
+         category="org.eclipse.virgo.ide.category"
+         class="org.eclipse.virgo.ide.runtime.ui.views.PropertiesFileCommonView"
+         icon="icons/full/obj16/virgo_obj.png"
+         id="org.eclipse.virgo.ide.runtime.ui.virgoProperties"
+         name="Virgo Properties"
+         restorable="true">
+      <description>
+         Displays properties files for runtime.
+      </description>
+   </view>
+   <view
+         allowMultiple="true"
+         category="org.eclipse.virgo.ide.category"
+         class="org.eclipse.virgo.ide.runtime.ui.views.LogFileCommonView"
+         icon="icons/full/obj16/virgo_obj.png"
+         id="org.eclipse.virgo.ide.runtime.ui.virgoLog"
+         name="Virgo Logs"
+         restorable="true">
+      <description>
+         Displays logs for runtime.
+      </description>
+   </view>
+</extension>
+
+
+<extension
+      point="org.eclipse.ui.navigator.viewer">
+   <viewer
+         viewerId="org.eclipse.virgo.ide.runtime.ui.ArtefactsBrowserView">
+   </viewer>
+   <viewerContentBinding
+         viewerId="org.eclipse.virgo.ide.runtime.ui.ArtefactsBrowserView">
+      <includes>
+         <contentExtension
+               isRoot="true"
+               pattern="org.eclipse.virgo.ide.runtime.ui.bundleContent">
+         </contentExtension>
+      </includes>
+   </viewerContentBinding>
+   <viewer
+         viewerId="org.eclipse.virgo.ide.runtime.ui.ArtefactsDetailView">
+   </viewer>
+   <viewerContentBinding
+         viewerId="org.eclipse.virgo.ide.runtime.ui.ArtefactsDetailView">
+      <includes>
+         <contentExtension
+               isRoot="true"
+               pattern="org.eclipse.virgo.ide.runtime.ui.runtimeArtefacts">
+         </contentExtension>
+         <contentExtension
+               isRoot="true"
+               pattern="org.eclipse.virgo.ide.runtime.ui.flattenedRuntimeArtefacts">
+         </contentExtension>
+         <contentExtension
+               pattern="org.eclipse.jdt.java.ui.javaContent">
+         </contentExtension>
+         <contentExtension
+               pattern="org.eclipse.virgo.ide.runtime.ui.filterLibraries">
+         </contentExtension>
+         <contentExtension
+               pattern="org.eclipse.virgo.ide.runtime.ui.filterBundles">
+         </contentExtension>
+         <actionExtension
+               pattern="org.eclipse.virgo.ide.runtime.ui.actions">
+         </actionExtension>
+         <contentExtension
+               pattern="org.eclipse.jdt.java.ui.javaContent">
+         </contentExtension>
+      </includes>
+   </viewerContentBinding>
+   <viewer
+         viewerId="org.eclipse.virgo.ide.runtime.ui.OutlineView">
+   </viewer>
+   <viewerContentBinding
+         viewerId="org.eclipse.virgo.ide.runtime.ui.OutlineView">
+      <includes>
+         <contentExtension
+               isRoot="true"
+               pattern="org.eclipse.virgo.ide.pageContent">
+         </contentExtension>
+         <contentExtension
+               pattern="org.eclipse.virgo.ide.runtime.ui.repositoryPage"/>
+      </includes>
+   </viewerContentBinding>
+   <viewerActionBinding
+         viewerId="org.eclipse.virgo.ide.runtime.ui.ArtefactsDetailView">
+      <includes>
+         <actionExtension
+               pattern="org.eclipse.virgo.ide.runtime.ui.actions">
+         </actionExtension>
+      </includes>
+   </viewerActionBinding>
+   <viewer
+         viewerId="org.eclipse.virgo.ide.runtime.ui.PropertiesView">
+         </viewer>
+   <viewerContentBinding viewerId="org.eclipse.virgo.ide.runtime.ui.PropertiesView">
+      <includes>
+         <contentExtension
+               isRoot="true"
+               pattern="org.eclipse.virgo.ide.runtime.ui.properties">
+         </contentExtension>
+         <contentExtension
+               isRoot="true"
+               pattern="org.eclipse.virgo.ide.runtime.ui.flattenedProperties">
+         </contentExtension>
+      </includes>
+      </viewerContentBinding>
+         <viewer
+         viewerId="org.eclipse.virgo.ide.runtime.ui.LogView">
+         </viewer>
+   <viewerContentBinding viewerId="org.eclipse.virgo.ide.runtime.ui.LogView">
+      <includes>
+         <contentExtension
+               isRoot="true"
+               pattern="org.eclipse.virgo.ide.runtime.ui.log">
+         </contentExtension>
+      </includes>
+      </viewerContentBinding>
+</extension>
+
+<extension
+      point="org.eclipse.ui.navigator.navigatorContent">
+   <navigatorContent
+         contentProvider="org.eclipse.virgo.ide.runtime.ui.ServerEditorPageContentProvider"
+         icon="icons/full/obj16/file_obj.gif"
+         id="org.eclipse.virgo.ide.pageContent"
+         labelProvider="org.eclipse.virgo.ide.runtime.ui.ServerEditorPageLabelProvider"
+         name="Editor Pages">
+      <triggerPoints>
+         <or>
+            <instanceof
+                  value="org.eclipse.wst.server.ui.internal.editor.ServerEditor">
+            </instanceof>
+         </or>
+      </triggerPoints>
+   </navigatorContent>
+   <navigatorContent
+         activeByDefault="true"
+         contentProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.ArtefactContainersContentProvider"
+         icon="icons/full/obj16/lib_obj.gif"
+         id="org.eclipse.virgo.ide.runtime.ui.bundleContent"
+         labelProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.SimpleBundleLabelProvider"
+         name="Artifacts">
+      <triggerPoints>
+         <or>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact"/>
+            <instanceof
+                  value="org.eclipse.wst.server.core.IServer"/>
+         </or>
+      </triggerPoints>
+      <commonSorter
+            class="org.eclipse.virgo.ide.runtime.internal.ui.sorters.ArtefactSignatureSorter"
+            id="org.eclipse.virgo.ide.simpleSorter">
+      </commonSorter>
+   </navigatorContent>
+   <navigatorContent
+         activeByDefault="true"
+         contentProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.InstalledBundlesAndLibrariesContentProvider"
+         icon="icons/full/obj16/lib_obj.gif"
+         id="org.eclipse.virgo.ide.runtime.ui.installedBundleContent"
+         labelProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.RuntimeLabelProvider"
+         name="Installed Bundles and Libraries">
+      <triggerPoints>
+         <or>
+            <instanceof
+                  value="org.eclipse.wst.server.core.IServer">
+            </instanceof>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.internal.ui.editor.RepositoryBrowserEditorPage">
+            </instanceof>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectFileContainer">
+            </instanceof>
+         </or>
+      </triggerPoints>
+      <commonSorter
+            class="org.eclipse.virgo.ide.runtime.internal.ui.sorters.ArtefactSignatureSorter"
+            id="org.eclipse.virgo.ide.bundleSorter">
+         <parentExpression>
+            <instanceof
+                  value="java.lang.Object">
+            </instanceof>
+         </parentExpression>
+      </commonSorter>
+   </navigatorContent>
+   <navigatorContent
+         activeByDefault="true"
+         contentProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.RepositoryPageContentProvider"
+         icon="icons/full/obj16/lib_obj.gif"
+         id="org.eclipse.virgo.ide.runtime.ui.repositoryPage"
+         labelProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.SimpleBundleLabelProvider"
+         name="Repository Page">
+      <triggerPoints>
+         <instanceof
+               value="org.eclipse.virgo.ide.runtime.internal.ui.editor.RepositoryBrowserEditorPage">
+         </instanceof>
+      </triggerPoints>
+      <commonSorter
+            class="org.eclipse.virgo.ide.runtime.internal.ui.sorters.ArtefactSignatureSorter"
+            id="org.eclipse.virgo.ide.artefactSignatureSorter">
+         <parentExpression>
+            <or>
+               <instanceof
+                     value="org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactSet">
+               </instanceof>
+               <instanceof
+                     value="org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer">
+               </instanceof>
+            </or>
+         </parentExpression>
+      </commonSorter>
+   </navigatorContent>
+      <navigatorContent
+         activeByDefault="false"
+         contentProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.FlattenedArtefactsContentProvider"
+         icon="icons/full/obj16/lib_obj.gif"
+         id="org.eclipse.virgo.ide.runtime.ui.flattenedRuntimeArtefacts"
+         labelProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.RuntimeLabelProvider"
+         name="Runtime Artifacts (List)">
+      <triggerPoints>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.core.IServer">
+            </instanceof>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer">
+            </instanceof>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.internal.ui.providers.LibrariesNode">
+            </instanceof>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepository">
+            </instanceof>
+      </triggerPoints>
+      <commonSorter
+            class="org.eclipse.virgo.ide.runtime.internal.ui.sorters.ArtefactSignatureSorter"
+            id="org.eclipse.virgo.ide.artefactSignatureSorter">
+         <parentExpression>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.core.artefacts.IArtefact">
+            </instanceof>
+         </parentExpression>
+      </commonSorter>
+   </navigatorContent>
+   <navigatorContent
+         activeByDefault="true"
+         contentProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.RuntimeContainersContentProvider"
+         icon="icons/full/obj16/lib_obj.gif"
+         id="org.eclipse.virgo.ide.runtime.ui.runtimeArtefacts"
+         labelProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.RuntimeLabelProvider"
+         name="Runtime Artifacts (Tree)">
+      <triggerPoints>
+         <or>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.core.IServer">
+            </instanceof>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectContainer">
+            </instanceof>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.internal.ui.providers.LibrariesNode">
+            </instanceof>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepository">
+            </instanceof>
+         </or>
+      </triggerPoints>
+      <commonSorter
+            class="org.eclipse.virgo.ide.runtime.internal.ui.sorters.ArtefactSignatureSorter"
+            id="org.eclipse.virgo.ide.bundleSorter">
+         <parentExpression>
+            <instanceof
+                  value="java.lang.Object">
+            </instanceof>
+         </parentExpression>
+      </commonSorter>
+   </navigatorContent>
+   <navigatorContent
+         activeByDefault="true"
+         contentProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.PropertiesFileContentProvider"
+         icon="icons/full/obj16/file_obj.gif"
+         id="org.eclipse.virgo.ide.runtime.ui.properties"
+         labelProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFileLabelProvider"
+         name="Properties (Tree)">
+      <triggerPoints>
+         <or>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.core.IServer">
+            </instanceof>
+         </or>
+      </triggerPoints>
+      <commonSorter
+            class="org.eclipse.virgo.ide.runtime.internal.ui.sorters.ArtefactSignatureSorter"
+            id="org.eclipse.virgo.ide.simpleSorter">
+      </commonSorter>
+   </navigatorContent>
+   <navigatorContent
+         activeByDefault="true"
+         contentProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.LogFileContentProvider"
+         icon="icons/full/obj16/file_obj.gif"
+         id="org.eclipse.virgo.ide.runtime.ui.log"
+         labelProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFileLabelProvider"
+         name="Log">
+      <triggerPoints>
+         <or>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.core.IServer">
+            </instanceof>
+         </or>
+      </triggerPoints>
+      <commonSorter
+            class="org.eclipse.virgo.ide.runtime.internal.ui.sorters.ArtefactSignatureSorter"
+            id="org.eclipse.virgo.ide.simpleSorter">
+      </commonSorter>
+   </navigatorContent>
+   <commonFilter
+         activeByDefault="false"
+         class="org.eclipse.virgo.ide.runtime.internal.ui.filters.LibraryArtefactFilter"
+         description="Filters libraries from artifacts shown."
+         id="org.eclipse.virgo.ide.runtime.ui.filterLibraries"
+         name="Libraries">
+   </commonFilter>
+   <commonFilter
+         activeByDefault="false"
+         class="org.eclipse.virgo.ide.runtime.internal.ui.filters.BundleArtefactFilter"
+         description="Filters bundles (jars and other OSGi resources) from artifacts shown."
+         id="org.eclipse.virgo.ide.runtime.ui.filterBundles"
+         name="Bundles">
+   </commonFilter>
+   <actionProvider
+         class="org.eclipse.virgo.ide.runtime.internal.ui.providers.RuntimeActionProvider"
+         id="org.eclipse.virgo.ide.runtime.ui.actions">
+      <enablement>
+         <or>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.internal.ui.projects.ProjectFileReference">
+            </instanceof>
+         </or>
+      </enablement>
+   </actionProvider>
+   <navigatorContent
+         activeByDefault="true"
+         contentProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.FlattenedPropertiesFileContentProvider"
+         icon="icons/full/obj16/file_obj.gif"
+         id="org.eclipse.virgo.ide.runtime.ui.flattenedProperties"
+         labelProvider="org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFileLabelProvider"
+         name="Properties (List)">
+      <triggerPoints>
+         <or>
+            <instanceof
+                  value="org.eclipse.virgo.ide.runtime.core.IServer">
+            </instanceof>
+         </or>
+      </triggerPoints>
+      <commonSorter
+            class="org.eclipse.virgo.ide.runtime.internal.ui.sorters.ArtefactSignatureSorter"
+            id="org.eclipse.virgo.ide.simpleSorter">
+      </commonSorter>
+   </navigatorContent>
+</extension>
+<extension
+      point="org.eclipse.core.contenttype.contentTypes">
+   <file-association
+         content-type="org.eclipse.core.runtime.text"
+         file-extensions="libd">
+   </file-association>
+</extension>
+<extension
+      point="org.eclipse.ui.decorators">
+   <decorator
+         class="org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFileLabelProvider"
+         id="org.eclipse.virgo.ide.runtime.ui.decorator1"
+         label="Server File Decorator"
+         lightweight="true"
+         state="true">
+      <enablement>
+         <and>
+            <objectClass
+                  name="org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerFile">
+            </objectClass>
+         </and>
+      </enablement>
+   </decorator>
+</extension>
+</plugin>

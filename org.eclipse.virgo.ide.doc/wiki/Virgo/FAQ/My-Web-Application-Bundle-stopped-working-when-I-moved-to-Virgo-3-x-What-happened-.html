@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>FAQ - My Web Application Bundle stopped working when I moved to Virgo 3.x. What happened?</title>
+		<link type="text/css" rel="stylesheet" href="../../book.css"/>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">My Web Application Bundle stopped working when I moved to Virgo 3.x. What happened?</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="How-can-I-programmatically-deploy-applications-to-Virgo-.html" title="How can I programmatically deploy applications to Virgo?">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="Should-I-put-Spring-XML-files-in-tt-META-INF-spring-tt-or-tt-WEB-INF-tt-.html" title="Should I put Spring XML files in &lt;tt&quot;META-INF/spring&lt;/tt&quot; or &lt;tt&quot;WEB-INF&lt;/tt&quot;?">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">How can I programmatically deploy applications to Virgo?</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Should I put Spring XML files in &lt;tt&gt;META-INF/spring&lt;/tt&gt; or &lt;tt&gt;WEB-INF&lt;/tt&gt;?</td>
+			</tr>
+		</table><hr/>
+		<h1 id="My_Web_Application_Bundle_stopped_working_when_I_moved_to_Virgo_3.x._What_happened.3F">My Web Application Bundle stopped working when I moved to Virgo 3.x. What happened?</h1>
+		<p>Virgo Server for Apache Tomcat 3.0 conforms more strictly to the OSGi web applications specification and does not apply default values to some of the manifest headers of a WAB like it used to in Virgo 2.x.</p>
+		<p>You can easily check whether this is the problem as follows.</p>
+		<p>As a migration aid, which may be removed in future releases, the previous behaviour may be re-instated by 
+			<a href="http://www.eclipse.org/virgo/documentation/virgo-documentation-3.0.0.RELEASE/docs/virgo-user-guide/html/ch11s08.html" target="doc_external">configuring</a> the Web Integration Layer to set WABHeaders=defaulted in $SERVER_HOME/repository/ext/org.eclipse.virgo.web.properties. Please note there is a 
+			<a href="http://www.eclipse.org/virgo/documentation/virgo-documentation-3.0.0.RELEASE/docs/virgo-user-guide/html/apbs07.html" target="doc_external">known issue</a> with certain WAR files which may be worked around using this migration aid.
+		</p><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="How-can-I-programmatically-deploy-applications-to-Virgo-.html" title="How can I programmatically deploy applications to Virgo?">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center">
+					<a href="FAQ.html" title="FAQ">
+						<img alt="FAQ" border="0" src="../../images/home.gif"/>
+					</a>
+				</td>
+				<td style="width: 20%" align="right">
+					<a href="Should-I-put-Spring-XML-files-in-tt-META-INF-spring-tt-or-tt-WEB-INF-tt-.html" title="Should I put Spring XML files in &lt;tt&quot;META-INF/spring&lt;/tt&quot; or &lt;tt&quot;WEB-INF&lt;/tt&quot;?">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">How can I programmatically deploy applications to Virgo?</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Should I put Spring XML files in &lt;tt&gt;META-INF/spring&lt;/tt&gt; or &lt;tt&gt;WEB-INF&lt;/tt&gt;?</td>
+			</tr>
+		</table>
+	</body>
+</html>

@@ -1,0 +1,73 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>Concepts</title>
+		<link type="text/css" rel="stylesheet" href="../../book.css"/>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">Concepts</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left"></td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="Kernel.html" title="Kernel">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top"></td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Kernel</td>
+			</tr>
+		</table><hr/>
+		<p>
+			<a href="http://wiki.eclipse.org/Category:Virgo" title="Category:Virgo" target="doc_external">Category:Virgo</a>
+			{{DEFAULTCATEGORYSORT:{{SUBPAGENAME}}}}
+		</p>
+		<pre>[[Category:Virgo]] [[Category:EclipseRT]]
+</pre>
+		<h1 id="Artifacts">Artifacts</h1>
+		<p>(aka artefacts)</p>
+		<p>Virgo supports the deployment of various types of artifact. Standard artifact types are: </p>
+		<ol>
+			<li>
+				<b>bundle</b> - an OSGi bundle;
+			</li>
+			<li>
+				<b>configuration</b> - a properties file with name of the form &lt;tt&gt;&lt;pid&gt;.properties&lt;/tt&gt; which when deployed produces a Configuration Admin dictionary with PID &lt;tt&gt;&lt;pid&gt;&lt;/tt&gt;;
+			</li>
+			<li>
+				<b>plan</b> - an XML file which refers to arbitrary other artifacts in the Virgo repository -- plans may be scoped or unscoped, as described below, and atomic or non-atomic in terms of whether the lifecycle of the plan is tied to the lifecycle of the plan's artifacts; and
+			</li>
+			<li>
+				<b>PAR</b> - a 
+				<i>'P</i>'lan 
+				<i>'AR</i>'chive which 
+				<i>contains</i> a collection of artifacts and is equivalent to a scoped, atomic 
+				<i>plan</i> referencing those artifacts (except the artifacts need not be present in the Virgo repository).
+			</li>
+		</ol>
+		<p>In addition, it is possible to add user-defined artifact types.</p><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left"></td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="Kernel.html" title="Kernel">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top"></td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Kernel</td>
+			</tr>
+		</table>
+	</body>
+</html>

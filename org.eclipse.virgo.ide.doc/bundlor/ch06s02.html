@@ -1,0 +1,32 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Using OSGi profiles with Bundlor</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Bundlor User Guide"><link rel="up" href="ch06.html" title="Chapter&nbsp;6.&nbsp;OSGi Profiles and Bundlor"><link rel="prev" href="ch06.html" title="Chapter&nbsp;6.&nbsp;OSGi Profiles and Bundlor"><link rel="next" href="ch07.html" title="Chapter&nbsp;7.&nbsp;Detecting Manifest Requirements"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch06.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch07.html">Next</a></td></tr></table><hr></div><div class="section" title="Using OSGi profiles with Bundlor"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="OSGi-profiles.using"></a>Using OSGi profiles with Bundlor</h2></div></div></div><p>
+			The first step in using OSGi profiles with Bundlor is to create a file that contains a textual
+			representation of the two properties that make up an OSGi profile:
+			<code class="literal">org.OSGi.framework.system.packages</code> and
+			<code class="literal">org.OSGi.framework.bootdelegation</code>. What you include in this file is up to you, but
+			typically you start with the OSGi profile of the OSGi runtime you are using, and then customize it to fit
+			your environment.
+		</p><p>
+			If you are using Virgo as your OSGi runtime, you can start by copying the section of the file
+			<code class="literal">$VIRGO_HOME/configuration/java6-server.profile</code> that refers to the two properties and pasting it
+			into your text file. If you are using another runtime, consult their documentation.
+		</p><p>
+			The following snippet shows a partial OSGi profile for Virgo; for clarity only a few packages are shown.
+			The example shows the format in which you should create your own OSGi profile file.
+		</p><pre class="programlisting">org.OSGi.framework.system.packages = \
+ org.eclipse.virgo.osgi.extensions.equinox.hooks,\
+ javax.accessibility,\
+ javax.activation,\
+ javax.activation;version="1.1.1",\
+ javax.activity,\
+ javax.annotation,\
+...
+
+org.OSGi.framework.bootdelegation = \
+ org.eclipse.virgo.kernel.authentication,\
+ com.sun.*,\
+ javax.xml.*,\
+...</pre><p>
+			Once you've created your OSGi profile file, the method of passing it to Bundlor depends on the front end you
+			are using to generate a manifest. For detailed information about using the various front ends, see
+			<a class="xref" href="ch04.html" title="Chapter&nbsp;4.&nbsp;Usage">Chapter&nbsp;4.&nbsp;<i>Usage</i></a>.
+		</p></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch06.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch06.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch07.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

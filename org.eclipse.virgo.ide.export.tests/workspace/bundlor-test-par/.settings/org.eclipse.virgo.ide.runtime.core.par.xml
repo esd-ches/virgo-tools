@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<org.eclipse.virgo.ide.par:Par xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:org.eclipse.virgo.ide.par="http://eclipse.org/virgo/par.ecore">
+  <bundle symbolicName="bundlor-test"/>
+</org.eclipse.virgo.ide.par:Par>

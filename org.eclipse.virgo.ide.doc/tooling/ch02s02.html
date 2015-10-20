@@ -1,0 +1,50 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>1.0.0 M4</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Tools Guide"><link rel="up" href="ch02.html" title="Chapter&nbsp;2.&nbsp;What's New"><link rel="prev" href="ch02.html" title="Chapter&nbsp;2.&nbsp;What's New"><link rel="next" href="ch03.html" title="Chapter&nbsp;3.&nbsp;Running a Virgo Runtime Environment"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch02.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch03.html">Next</a></td></tr></table><hr></div><div class="section" title="1.0.0 M4"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="1.0.0_M4"></a>1.0.0 M4</h2></div></div></div><p>We've made extensive changes throughout Virgo, focusing on quality and migration, but with a few new features
+			as well.
+		</p><div class="section" title="Improved Server Support"><div class="titlepage"><div><div><h3 class="title"><a name="Improved_Server_Support"></a>Improved Server Support</h3></div></div></div><p>Virgo now supports almost all versions and types of Virgo installs, including older versions of Virgo and
+				Tomcat, Jetty and Kernel installations. Best of all, you can now define servers using a single Server Runtime and
+				the tooling will automatically discover the appropriate server configurations. You can even change server
+				installations and versions for server runtimes without having to maintain any server setttings.
+			</p><p>
+				</p><div class="mediaobject"><img src="images/whats-new-M4-server.png"></div><p>
+			</p></div><div class="section" title="UI"><div class="titlepage"><div><div><h3 class="title"><a name="UI_2"></a>UI</h3></div></div></div><p>We've provided a number of new features aimed at improving the user experience. We've been giving more
+				transparency and leverage into what's actually happening on the server. Right now, interactions with the server
+				involve frequent shifts back and forth between the Eclipse IDE, the native file system and the command line. Our
+				ultimate goal is to have tools powerful and complete enough that you can work with the server without ever having
+				to move out of Eclipse.
+			</p><div class="section" title="Virgo Perspective"><div class="titlepage"><div><div><h4 class="title"><a name="Virgo_Perspective"></a>Virgo Perspective</h4></div></div></div><p>You can now get your own perspective on Virgo. We've organized it to support runtime exploration but it
+					should be usable for general development as well. Please give us feedback on the overall setup; we'll incorporate
+					the feedback in future releases.
+				</p><p>
+					</p><div class="mediaobject"><img src="images/whats-new-M4-perspective.png"></div><p>
+				</p></div><div class="section" title="Views"><div class="titlepage"><div><div><h4 class="title"><a name="Views_2"></a>Views</h4></div></div></div><p>When we talked to current users of the Spring Source / Virgo tools, one of the things we discovered is that
+					there were a lot of features that they wanted to have us implement that actually already existed, but in many
+					cases were buried somewhere -- in many cases on a page in the server editor. So we're providing some of the
+					information and tools that are provided in the WTP-based Server Editor as stand-alone views and enriching it. The
+					idea is provide better insight into what's happening on the server side. Some of these features involve
+					significant changes to how server resources are treated and we'd appreciate your feedback on how well they work
+					for your usage scenarios. We'll use these changes as a basis for further enhancements.
+				</p><div class="section" title="Outline View"><div class="titlepage"><div><div><h5 class="title"><a name="Outline_View"></a>Outline View</h5></div></div></div><p>As a first take at helping users find what they're looking for, we provided an outline view that gives quick
+						access to server artifacts.
+					</p><p>
+						</p><div class="mediaobject"><img src="images/whats-new-M4-outline-view.png"></div><p>
+					</p></div><div class="section" title="Artifacts View"><div class="titlepage"><div><div><h5 class="title"><a name="Artifacts_View"></a>Artifacts View</h5></div></div></div><p>A new view supports transparent access to runtime artifacts. Currently, you can view bundle jars and
+						libraries, but we'd like to support plans, pars, properties and other artifact types as well. But the real news
+						is what we've built behind this -- Virgo runtimes are now exposed as Eclipse projects, giving you full access to
+						the contents of jars, including classes. You can even use JDT tools like the Type view on Server side jar
+						contents.
+					</p><p>
+						</p><div class="mediaobject"><img src="images/whats-new-M4-artifacts-view.png"></div><p>
+					</p><p>All of the new views are supported through the Eclipse Common Navigator Framework (CNF), which means that
+						the views are highly configurable, and we've provided buttons to allow you to easily toggle on and off artifact
+						types and present the artifacts in a tree or list view so that you can see all installed jars in one place.
+					</p></div><div class="section" title="Servers View"><div class="titlepage"><div><div><h5 class="title"><a name="Servers_View"></a>Servers View</h5></div></div></div><p>And because the views are all supported through CNF, you can easily customize them. For example, currently
+						you can access all of the bundle information from the server view -- but we'll probably disable that by default
+						in the release. In any case, you can set it up anyway you want by adding or removing the content provider. Again
+						please let us know if you think of a way that we can improve the user experience for you.
+					</p><p>
+						</p><div class="mediaobject"><img src="images/whats-new-M4-servers-view.png"></div><p>
+					</p></div></div></div><div class="section" title="Documentation and Help"><div class="titlepage"><div><div><h3 class="title"><a name="Documentation_and_Help"></a>Documentation and Help</h3></div></div></div><p>The complete virgo documentation set -- including the Tooling, Programmer and User's Guide as well as the Wiki
+				pages -- is now included as Eclipse Help.
+			</p><p>
+				</p><div class="mediaobject"><img src="images/whats-new-M4-help.png"></div><p>
+			</p></div><div class="section" title="Installation Process"><div class="titlepage"><div><div><h3 class="title"><a name="Installation_Process"></a>Installation Process</h3></div></div></div><p>Virgo Tools can now be installed from a single update site location.</p></div><div class="section" title="Quality"><div class="titlepage"><div><div><h3 class="title"><a name="Quality_2"></a>Quality</h3></div></div></div><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>Extensive bug fixes and re-factorings.</p></li><li class="listitem"><p>All Remaining Spring Dependencies have been removed.</p></li><li class="listitem"><p>Updated to meet Eclipse branding, packaging build and testing standards.</p></li></ul></div></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch02.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch02.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch03.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

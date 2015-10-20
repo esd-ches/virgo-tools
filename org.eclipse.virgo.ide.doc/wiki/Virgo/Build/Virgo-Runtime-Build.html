@@ -1,0 +1,716 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>Build - Virgo Runtime Build</title>
+		<link type="text/css" rel="stylesheet" href="../../book.css"/>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">Virgo Runtime Build</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Build.html" title="Build">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="Virgo-Tooling-Builds.html" title="Virgo Tooling Builds">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Build</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Virgo Tooling Builds</td>
+			</tr>
+		</table><hr/>
+		<h1 id="Virgo_Runtime_Build">Virgo Runtime Build</h1>
+		<p>Virgo has its own build system known as "Virgo build" which is a collection of Ant/Ivy scripts. </p>
+		<h2 id="Prerequisites">Prerequisites</h2>
+		<p>Make sure you have 
+			<b>git</b>, 
+			<b>Java 6 or later</b>, and 
+			<b>ant 1.8.2 or later</b> installed. 
+		</p>
+		<p>To use any of the Ruby scripts (e.g. &lt;code&gt;update_dependencies.rb&lt;/code&gt; or &lt;code&gt;ripplor.rb&lt;/code&gt;) then you must install 
+			<i>Ruby</i>, 
+			<i>RubyGems</i> and 
+			<i>Rubygem choice</i>: 
+		</p>
+		<ol>
+			<li>To install 
+				<i>Ruby</i> use the command &lt;code&gt;sudo port install ruby&lt;/code&gt; (on Mac); 
+			</li>
+			<li>To install 
+				<i>RubyGems</i> use the command &lt;code&gt;sudo port install rb-rubygems&lt;/code&gt; (on Mac); 
+			</li>
+			<li>To install 
+				<i>Rubygem choice</i> use the command &lt;code&gt;sudo gem install choice&lt;/code&gt; (on Mac).
+			</li>
+		</ol>
+		<h2 id="Building_Virgo_Build">Building Virgo Build</h2>
+		<h3 id="Building_virgo-build-tools">Building virgo-build-tools</h3>
+		<p>Virgo Build, as of version 2.15, introduces p2 tools assembly and common targets and properties to make its consumption easy from the git repositories in the build chain. The p2 tools assembly and validation happens as part of a normal build of Virgo Build. In future other tools may be added, which is why the tools assembly carries the generic 
+			<i>virgo-build-tools</i> name. 
+		</p>
+		<p>Virgo Build isn't included in the normal build chain, so whenever there are changes to 
+			<i>virgo-build-tools</i> a manual rebuild and publish has to be executed, like so:
+		</p>
+		<pre>ant clean clean-integration test test-e2e
+</pre>
+		<p> 
+			These targets assemble and validate 
+			<i>virgo-build-tools</i>. The target 
+			<i>test-e2e</i> has a dependency to 
+			<i>package</i>, so "package" need not be specified. 
+			<i>test-e2e</i> stands for end-to-end test execution: it is all performed in ant, because there is a small risk of stumbling into cyclic dependencies if we have a reference from virgo-build to the test framework. Another benefit of testing in ant is that this target exercises the exact same p2-related Ant targets other repositories will call to publish, install and uninstall. 
+		</p>
+		<h3 id="Releasing_virgo-build-tools">Releasing virgo-build-tools</h3>
+		<p>Virgo Build is not part of the normal release process. It is executed on demand and manually. We don't need to release new version along with the other repositories if there are no changes to 
+			<i>virgo-build-tools</i>. 
+		</p>
+		<p>Releasing the tools is really simple and similar to "Releasing a single repository project" described in this page. All you have to do is:</p>
+		<p>1. Tag the latest commit:</p>
+		<pre>git tag VBT-1.1.0
+</pre>
+		<p> 
+			Use the syntax 
+			<i>VBT-x.y.z</i> for the tags.
+		</p>
+		<p>2. Update the following properties in Virgo Build's 
+			<i>build.properties</i>:
+		</p>
+		<pre>version=1.1.0
+release.type=release
+build.stamp=RELEASE
+</pre>
+		<p> 
+			When making a release the 
+			<i>version</i> stays the same - it is incremented after releasing. What's important is to update the other properties. 
+		</p>
+		<p>3. Execute the following targets:</p>
+		<pre>ant clean clean-integration clean-ivy test test-e2e publish-package-build
+</pre>
+		<p> 
+			This publishes a RELEASE version of the 
+			<i>virgo-build-tools</i> assembly to build.eclipse.org. 
+		</p>
+		<p>4. Edit "build.properties" to increment the 
+			<i>version</i>, update 
+			<i>release.type</i> properties, and remove the 
+			<i>build.stamp</i> property:
+		</p>
+		<pre>version=1.2.0
+release.type=integration
+</pre>
+		<p> 
+			5. Commit the updated version and push:</p>
+		<pre>git commit -m 'Build properties for 1.2.0 integration'
+git push origin
+</pre>
+		<p> 
+			At this point all repositories consuming the 
+			<i>virgo-build-tools</i> assembly can be updated to the newly released version. 
+		</p>
+		<h3 id="Virgo-build-tools_prerequisites">Virgo-build-tools prerequisites</h3>
+		<table border="1" cellpadding="1" cellspacing="1" width="300">
+			<tr>
+				<td>VBT released version </td>
+				<td>requires </td>
+			</tr>
+			<tr>
+				<td>1.0.0 </td>
+				<td>2.15 or higher </td>
+			</tr>
+			<tr>
+				<td>1.1.0 </td>
+				<td>2.15 or higher</td>
+			</tr>
+			<tr>
+				<td>1.2.0</td>
+				<td>2.19 or higher</td>
+			</tr>
+			<tr>
+				<td>1.2.1</td>
+				<td>2.19 or higher</td>
+			</tr>
+			<tr>
+				<td>1.3.0</td>
+				<td>2.22 or higher</td>
+			</tr>
+		</table>
+		<h2 id="Building_Individual_Repositories">Building Individual Repositories</h2>
+		<p>To build a given git repository, first clone it: </p>
+		<pre>git clone &amp;lt;repository URL&amp;gt;
+</pre>
+		<p> 
+			and then make sure that the Virgo build submodule is correctly initialised by changing directory to the cloned repository and issuing: </p>
+		<pre>git submodule update --init
+</pre>
+		<p> 
+			then change directory into the &lt;code&gt;'
+			<i>build-xxx</i>'&lt;/code&gt; directory and invoke ant with the appropriate targets, usually: 
+		</p>
+		<pre>ant clean clean-integration test
+</pre>
+		<p> 
+			This will do a fresh build and run all the unit and integration tests. It will only report "Build successful" if everything compiles cleanly and all the tests pass. The directory &lt;code&gt;'
+			<i>build-xxx/target/test-results</i>'&lt;/code&gt; contains the test results in html and xml formats. You will find the built bundles in the &lt;code&gt;'
+			<i>target/artifact</i>'&lt;/code&gt; directory of each individual project. 
+		</p>
+		<h3 id="Running_all_tests">Running all tests</h3>
+		<p>Sometimes it is useful to run all the tests even if some fail. You can do this by specifying the property &lt;code&gt;'''-Dci.build=true'''&lt;/code&gt; on the ant command, for example: </p>
+		<pre>ant -Dci.build=true clean clean-integration test
+</pre>
+		<p> 
+			This will report "Build successful" regardless of test success or failure and you will need to look at the test results to see which tests failed. </p>
+		<h3 id="Common_targets">Common targets</h3>
+		<p>&lt;code&gt;'
+			<i>ant -p</i>'&lt;/code&gt; displays commonly used targets. Use &lt;code&gt;'
+			<i>ant clean-ivy</i>'&lt;/code&gt; to delete the ivy cache (or use &lt;code&gt;'
+			<i>git clean -dfx</i>'&lt;/code&gt; to get everything back to a reset state, including ditching any changes you haven't committed). 
+		</p>
+		<p>If you simply want to compile the runtime code, you can use &lt;code&gt;'
+			<i>ant clean clean-integration jar</i>'&lt;/code&gt; but that will not compile (or run) the tests. 
+		</p>
+		<p>&lt;code&gt;'
+			<i>ant precommit</i>'&lt;/code&gt; performs more extensive checks including code coverage and "findbugs". (You will need a licence for 
+			<i>Clover</i> to perform test coverage analysis.) 
+		</p>
+		<h3 id="Exceptions_to_the_above">Exceptions to the above</h3>
+		<h4 id="Web_Server">Web Server</h4>
+		<p>Building the packaged web server is somewhat different: </p>
+		<pre>ant clean clean-integration jar package smoke-test
+</pre>
+		<p> </p>
+		<h4 id="Stand-alone_Runtime">Stand-alone Runtime</h4>
+		<p>You can also use the &lt;code&gt;'
+			<i>package</i>'&lt;/code&gt; target in the nano and kernel repositories to build a standalone runtime: 
+		</p>
+		<pre>ant clean clean-integration test package
+</pre>
+		<p> </p>
+		<h4 id="Documentation">Documentation</h4>
+		<p>For the web and pdf and other docs do: </p>
+		<pre>ant doc
+</pre>
+		<p>See also 
+			<a href="Virgo-Tooling-Builds.html#Virgo_Tooling_Builds">Virgo Tooling Builds</a>.
+		</p>
+		<h4 id="Samples">Samples</h4>
+		<p>Samples just need packaging (some of them, such as Greenpages, produce a package that requires the user to build them using Maven):</p>
+		<pre>ant clean clean-integration package
+</pre>
+		<h3 id="Publishing_Development_Builds">Publishing Development Builds</h3>
+		<p>If you want to publish development build you may use the &lt;code&gt;'
+			<i>publish-ivy</i>'&lt;/code&gt; target (except for nano -  see below): 
+		</p>
+		<pre>ant clean clean-integration test package publish-ivy -Declipse.committerId=&amp;lt;committer id&amp;gt;
+</pre>
+		<p> 
+			To use this build you need to 
+			<a href="Virgo-Runtime-Build.html#Updating_Dependencies">update the dependencies</a> of the referring project(s) with the new version you just published.
+		</p>
+		<p>If you want to publish a development build of nano, use:</p>
+		<pre>ant clean clean-integration test package publish-ivy publish-updatesite-build -Declipse.committerId=&amp;lt;committer id&amp;gt;
+</pre>
+		<h3 id="Example">Example</h3>
+		<p>For example, to build the test stubs component, issue the following commands: </p>
+		<pre>&amp;gt;git clone git://git.eclipse.org/gitroot/virgo/org.eclipse.virgo.osgi-test-stubs.git 
+&amp;gt;cd org.eclipse.virgo.osgi-test-stubs
+&amp;gt;git submodule update --init
+&amp;gt;cd build-osgi-stubs
+&amp;gt;ant clean clean-integration test
+</pre>
+		<p> 
+			After this has completed successfully, the project &lt;code&gt;'
+			<i>org.eclipse.virgo.teststubs.osgi</i>'&lt;/code&gt; contains the built binary and source jars in its &lt;code&gt;'
+			<i>target/artifacts</i>'&lt;/code&gt; directory. 
+		</p>
+		<h2 id="Configuring_p2_Publishing_for_Individual_Repositories">Configuring p2 Publishing for Individual Repositories</h2>
+		<p>Since version 2.15 Virgo Build has the capability to assemble build-tools that other repositories can use. So far these tools include only various p2 Eclipse applications. </p>
+		<p>
+			<b>To understand more about the virgo-build synergy with p2 and how we organized our products and packaging repositories look 
+				<a href="http://wiki.eclipse.org/Virgo/Committers/Process_Advice#Understanding_virgo-build.27s_synergy_with_p2" target="doc_external">here</a>.
+			</b>
+		</p>
+		<p>In order to consume these tools there is a prerequisite. You have to include two references in the project's 
+			<i>build.versions</i> file. One for the 
+			<i>virgo-build-tools</i> and one for the 
+			<i>org.eclipse.equinox.launcher</i> used to launch the tools.
+		</p>
+		<pre>org.eclipse.virgo.build.tools=1.2.1.RELEASE
+</pre>
+		<p> 
+			The next step is to fetch 
+			<i>virgo-build-tools</i>. You just need to call the predefined target for that. Here's how
+		</p>
+		<pre>&amp;lt;antcall target="fetch-unzipped-virgo-build-tools"/&amp;gt;
+</pre>
+		<p> 
+			This call fetches and unzips the 
+			<i>virgo-build-tools</i> of the specified version in the project's "${target.dir}/virgo-build-tools-${org.eclipse.virgo.build.tools}" directory. 
+		</p>
+		<p>Another way to achieve the same results is to add this ant target as a dependency to a target of your choice in which you plan to use any of the virgo-build-tools common targets. Here's how</p>
+		<pre>&amp;lt;target name="p2.publish" depends="package, fetch-unzipped-virgo-build-tools" description="Publishes bundles, features and product"&amp;gt;
+</pre>
+		<p> 
+			Here's a list of all available p2 tools targets that can be consumed</p>
+		<pre> p2.generate-inf                  Generates p2.inf-s for all feature directories inside a wrapping 'features' directory.
+ p2.install-iu                    Installs one or more IUs to a target p2 installation's profile.
+ p2.install-virgo-product         Installs a Virgo product to a desired destination. Default profile(roaming) is VIRGOProfile, the environment cofigurations are ANY.
+ p2.mirror-artifacts              Mirrors an artifact set of rootIUs from a local or remote p2 repository to a local destination. The artifacts mirror app must be ran after the metadata one.
+ p2.mirror-metadata               Mirrors a metadata set of rootIUs from a local or remote p2 repository to a local destination. The metadata mirror app must be ran first.
+ p2.publish-binary                Publishes a single zipped artifact with unzip instructions to a p2 repository.
+ p2.publish-binary-chmod          Publishes a single zipped artifact with proper unzip and permissions instructions to a p2 repository.
+ p2.publish-bundles-features      Publishes bundles and features located in separate folders in the source location to a p2 repository.
+ p2.publish-bundles-features-alt  Alternative form. Publishes bundles and features passed as separate sources.
+ p2.publish-category              Categorizes features published in a p2 repository.
+ p2.publish-product               Publishes a product to a p2 repository. The publishing uses ANY environment configurations.
+ p2.uninstall-iu                  Uninstalls one or more IUs to a target p2 installation's profile.
+ convert-p2-to-ivy                Prepares p2 repository artifacts for Ivy publishing
+</pre>
+		<p> 
+			And an example of how to use each in the project's 
+			<i>build.xml</i> file
+		</p>
+		<pre>@Since 2.22
+&amp;lt;antcall target="convert-p2-to-ivy"&amp;gt;
+  &amp;lt;param name="tools.dir" value="${package.output.dir}"/&amp;gt;
+  &amp;lt;param name="source.plugins.dir" value="${mirrored.repository.dir}/plugins"/&amp;gt;
+  &amp;lt;param name="destination" value="${converted.repository.dir}"/&amp;gt;
+  &amp;lt;param name="offset.to.virgo.build" value="../../../..virgo-build"/&amp;gt;
+  &amp;lt;param name="updated.build.versions.location" value="${converted.repository.dir}/build.versions"/&amp;gt;
+&amp;lt;/antcall&amp;gt;
+</pre>
+		<pre>@Since 2.22
+&amp;lt;antcall target="p2.mirror-metadata"&amp;gt;
+  &amp;lt;param name="tools.dir" value="${package.output.dir}"/&amp;gt;
+  &amp;lt;param name="source" value="file:${repository.dir}"/&amp;gt;
+  &amp;lt;param name="destination" value="${mirrored.repository.dir}"/&amp;gt;
+  &amp;lt;param name="roots" value="testBundle"/&amp;gt;
+&amp;lt;/antcall&amp;gt;
+</pre>
+		<pre>@Since 2.22
+&amp;lt;antcall target="p2.mirror-artifacts"&amp;gt;
+  &amp;lt;param name="tools.dir" value="${package.output.dir}"/&amp;gt;
+  &amp;lt;param name="source" value="file:${repository.dir}"/&amp;gt;
+  &amp;lt;param name="destination" value="${mirrored.repository.dir}"/&amp;gt;
+  &amp;lt;param name="roots" value="testBundle"/&amp;gt;
+&amp;lt;/antcall&amp;gt;
+</pre>
+		<pre>@Since 2.19
+&amp;lt;antcall target="p2.generate-inf"&amp;gt;
+  &amp;lt;param name="source" value="${target.dir}/assembly/features"/&amp;gt;
+&amp;lt;/antcall&amp;gt;
+</pre>
+		<pre>@Since 2.15
+&amp;lt;antcall target="p2.publish-binary"&amp;gt;
+  &amp;lt;param name="repository" value="${repository.dir}"/&amp;gt;
+  &amp;lt;param name="source" value="${resources.location}"/&amp;gt;
+&amp;lt;/antcall&amp;gt;
+</pre>
+		<p> &lt;pre&gt;@Since 2.15
+&lt;			antcall target="p2.publish-binary-chmod"&gt;</p>
+		<pre> &amp;lt;param name="repository" value="${repository.dir}"/&amp;gt;
+ &amp;lt;param name="source" value="${resources.location}"/&amp;gt;
+ &amp;lt;param name="chmod.args" value="exampleFile.sh@/exampleLocation#755"/&amp;gt;
+</pre>
+		<p>&lt;/antcall&gt;&lt;/pre&gt; 
+
+			<i>chmod.args</i> accepts values with 
+			<i>file@location#permission</i> syntax. Where 
+			<i>location</i> is the path where the file is located relative to the root of the zip. For example if you want to give permissions to a file in the zip's root, location is must be 
+			<b>/'
+				<i>. Another example is '</i>/directory/example
+			</b>.
+		</p>
+		<pre>@Since 2.15
+&amp;lt;antcall target="p2.publish-bundles-features"&amp;gt;
+  &amp;lt;param name="repository" value="${repository.dir}"/&amp;gt;
+  &amp;lt;param name="source" value="${target.dir}/assembly"/&amp;gt;
+&amp;lt;/antcall&amp;gt;
+</pre>
+		<p> &lt;pre&gt;@Since 2.16
+&lt;			antcall target="p2.publish-bundles-features-alt"&gt;</p>
+		<pre> &amp;lt;param name="repository" value="${repository.dir}"/&amp;gt;
+ &amp;lt;param name="bundles" value="${bundles.dir}"/&amp;gt;
+ &amp;lt;param name="features" value="${features.dir}"/&amp;gt;
+</pre>
+		<p>&lt;/antcall&gt;&lt;/pre&gt; &lt;pre&gt;@Since 2.15
+&lt;			antcall target="p2.publish-product"&gt;</p>
+		<pre> &amp;lt;param name="repository" value="${repository.dir}"/&amp;gt;
+ &amp;lt;param name="product.file.location" value="${p2.products.location}/example.product"/&amp;gt;
+</pre>
+		<p>&lt;/antcall&gt;&lt;/pre&gt; &lt;pre&gt;@Since 2.15
+&lt;			antcall target="p2.publish-category"&gt;</p>
+		<pre> &amp;lt;param name="repository" value="${repository.dir}"/&amp;gt;
+ &amp;lt;param name="category.file.location" value="${p2.category.dir}/category.xml"/&amp;gt;
+</pre>
+		<p>&lt;/antcall&gt;&lt;/pre&gt; &lt;pre&gt;@Since 2.15
+&lt;			antcall target="p2.install-virgo-product"&gt;</p>
+		<pre> &amp;lt;param name="repository" value="${repository.dir}"/&amp;gt;
+ &amp;lt;param name="destination" value="${package.output.dir}"/&amp;gt;
+ &amp;lt;param name="product.iu" value="example.product"/&amp;gt;
+</pre>
+		<p>&lt;/antcall&gt;&lt;/pre&gt; &lt;pre&gt;@Since 2.15
+&lt;			antcall target="p2.uninstall-iu"&gt;</p>
+		<pre> &amp;lt;param name="repository" value="${repository.dir}"/&amp;gt;
+ &amp;lt;param name="destination" value="${destination.dir}"/&amp;gt;
+ &amp;lt;param name="iu" value="exampleIU"/&amp;gt;
+</pre>
+		<p>&lt;/antcall&gt;&lt;/pre&gt; &lt;pre&gt;@Since 2.15
+&lt;			antcall target="p2.install-iu"&gt;</p>
+		<pre> &amp;lt;param name="repository" value="${repository.dir}"/&amp;gt;
+ &amp;lt;param name="destination" value="${destination.dir}"/&amp;gt;
+ &amp;lt;param name="iu" value="exampleIU"/&amp;gt;
+</pre>
+		<p>&lt;/antcall&gt;&lt;/pre&gt; 
+			A real-world example is the 
+			<i>build.xml</i> of the Nano repository found 
+			<a href="http://git.eclipse.org/c/virgo/org.eclipse.virgo.nano.git/tree/build-nano/build.xml#n15" target="doc_external">here</a>.
+		</p>
+		<h2 id="Updating_Dependencies">Updating Dependencies</h2>
+		<p>In general, dependencies are declared in files named &lt;code&gt;'
+			<i>ivy.xml</i>'&lt;/code&gt;. 
+		</p>
+		<p>Dependencies between Virgo components are a special case of this. The properties file &lt;code lang="text"&gt;'
+			<i>build.versions</i>'&lt;/code&gt; in the root directory of each git repository defines the versions of the Virgo components that the build will download. Updating any of the versions in &lt;code lang="text"&gt;'
+			<i>build.versions</i>'&lt;/code&gt; is error-prone as the same values occur in certain other files (which cannot use property substitution). To update a version in &lt;code lang="text"&gt;'
+			<i>build.versions</i>'&lt;/code&gt;, run the "update dependency" ruby script in the root folder of the git repository, for example: 
+		</p>
+		<pre>~/virgo/web-server/scripts/update-dependency.rb -v &amp;lt;variable&amp;gt; -n &amp;lt;new version&amp;gt;&amp;nbsp;
+</pre>
+		<p> 
+			where &lt;code&gt;'
+			<i>&lt;variable&gt;</i>'&lt;/code&gt; is the relevant property name in build.versions and &lt;code&gt;'
+			<i>&lt;new version&gt;</i>'&lt;/code&gt; is the replacement version. The script will report the changes it makes and may issue warnings, so pay attention to its output. 
+		</p>
+		<p>Please ensure you are running the latest version of &lt;code&gt;update-dependency&lt;/code&gt; script by updating &lt;code&gt;web-server&lt;/code&gt; git repository.</p>
+		<h3 id="Updating_Eclipse_dependencies">Updating Eclipse dependencies</h3>
+		<p>Virgo can consume artifacts from both Eclipse p2 repositories and Orbit. The Juno contribution is even required to consume the same artifacts that are present in Orbit and the other Juno-contributed p2 repositories.
+			As of version 2.22 virgo-build is capable of doing this by introducing new ant targets and a new git repository called "eclipse-mirror". 
+			Building this repository mirrors the artifacts from a specified p2 repository, adds Ivy metadata and publishes them to the Ivy repositories at build.eclipse.org. From then on it's business as usual for virgo-build.</p>
+		<p>Virgo's Eclipse dependencies are updated manually, on-demand, without this being an automatic step of a ripple or a release process.</p>
+		<p>Here's how to do it:</p>
+		<p>
+			<b>1.</b> The build.properties file in the eclipse-mirror repository contains two important properties
+		</p>
+		<pre>mirror.source - the URI to the p2 repository from which we will mirror
+mirror.ius - a coma-separated list of symbolic names that we want to mirror locally
+</pre>
+		<p>Prior triggering the update process these properties must be set with the desired values. Note the source bundles need to be described in the IU list as well if they are needed. </p>
+		<p>Here's an example of both properties:</p>
+		<pre>mirror.ius=\
+   org.eclipse.osgi,\
+   org.eclipse.osgi.source
+</pre>
+		<pre>mirror.source=http://download.eclipse.org/releases/juno
+</pre>
+		<p>Local locations are accepted as well:</p>
+		<pre>mirror.source=file:/&lt;location-to-local-p2-repo&gt;
+</pre>
+		<p>
+			<b>2.</b> Trigger ant build of the eclipse-mirror repository like this:
+		</p>
+		<pre>ant clean update-eclipse-artifacts
+</pre>
+		<p>Even if some versions are already published the process will overwrite them, so it won't fail.
+			As a result of this operation a new 
+			<i>mirrored.build.versions</i> file is generated in the repository root that contains the newly mirrored versions. In order to add them for propagation during a ripple copy the desired versions in the 
+			<i>build.versions</i> file of the 
+			<i>eclipse-mirror</i> repository.
+		</p>
+		<p>All Eclipse artifacts are published with the distinctive Ivy organisation: "org.eclipse.virgo.mirrored"</p>
+		<p>
+			<b>3.</b> Trigger a ripple or release to let the scripts propagate the updated versions upstream.
+		</p>
+		<p>
+			<b>Important:</b> 
+		</p>
+		<p>
+			<i>'- &lt;span style="color:#ff0000"&gt;The conversion from p2 to Ivy currently ignores any dependencies between bundles. Respecting these dependencies is currently under development but until then the mirrored and converted bundles and their dependencies need to be referenced explicitly.&lt;/span&gt;</i>'
+		</p>
+		<ul style="list-style: square">
+			<li>If the specified mirror.source contains more than one version of an IU all of them will be mirrored and converted which may lead to problems with the versions propagation. Use source repositories with single version, e.g. the release train repositories. Orbit usually contains more than one version, and often we are not using the latest one available so mirroring Orbit involves a manual step of choosing which version to use and deleting the others from the resulting build.versions file.</li>
+		</ul>
+		<ul style="list-style: square">
+			<li>Keep in mind the time to mirror a large number of artifacts depends on your network and how well you can connect to Eclpse servers. Usually it takes some time, so go treat yourself with a cup of coffee :-)</li>
+		</ul>
+		<h2 id="Rippling">Rippling</h2>
+		<p>Since the Virgo components form a directed, acyclic graph, changing the graph to use a new version of a specific component involves not only updating that version throughout the graph, but also updating the versions of the components which have been changed. This is the tedious process known as 
+			<i>rippling</i> and so the &lt;code&gt;'
+			<i>ripplor</i>'&lt;/code&gt; ruby script was written to automate it. Essentially, Ripplor handles the most commonly updated components and flattens the dependency graph into a linear sequence. The sequence is (at the time of writing): 
+		</p>
+		<pre>eclipse-mirror
+util
+test
+medic
+nano
+artifact-repository
+kernel
+kernel-tools
+web
+snaps
+apps
+documentation
+packaging
+</pre>
+		<p> 
+			So, for example, if you change the kernel and want to produce a package web server containing the updated kernel, you would run: </p>
+		<pre>~/virgo/web-server/scripts/ripplor/ripplor.rb -r kernel
+</pre>
+		<p> 
+			This would build and publish a new version of the kernel, update the dependency of the web layer on the newly built kernel, build and publish a new version of the web layer, update the dependency of the Virgo-supplied applications on the newly built web layer and kernel, and so on until it builds and publishes a new version of the packaged web-server. This is called 
+			<i>a ripple from kernel</i>. 
+		</p>
+		<p>Ripplor (after 13May2010) allows a ripple to be executed across a list of repositories some in &lt;code&gt;git.eclipse.org&lt;/code&gt; and some in &lt;code&gt;git.springsource.org&lt;/code&gt;, though all of them are in &lt;code&gt;git.eclipse.org&lt;/code&gt; at the time of writing. </p>
+		<p>The definitive list of repositories and the order of a ripple is stored in the &lt;code&gt;ripplor.rb&lt;/code&gt; ruby script 
+			<a href="http://wiki.eclipse.org/Ripplor_Repository_List" title="Ripplor Repository List" target="doc_external">source</a>. 
+		</p>
+		<p>Please ensure you are running the latest version of &lt;code&gt;ripplor&lt;/code&gt; script by updating &lt;code&gt;web-server&lt;/code&gt; git repository. </p>
+		<h3 id="When_should_Ripplor_be_used.3F">When should Ripplor be used?</h3>
+		<p>In general, Ripplor is used any time a change needs to be propagated up the graph of dependent repositories. There are two main cases that cause this to happen. </p>
+		<ol>
+			<li>An external dependency needs to be upgraded in all modules of Virgo </li>
+			<li>A change has been made to code in a repository (e.g. the kernel) which affects its 
+				<i>externally visible behaviour</i>. The code above (e.g. the web layer, Virgo-supplied applications, etc.) needs to be updated to see the changes.
+			</li>
+		</ol>
+		<h3 id="Usage">Usage</h3>
+		<pre>Usage: ripplor.rb [-rbvmuc]
+
+Required arguments:
+    -r, --repo=REPO                  The name of the starting repo
+
+Optional arguments:
+    -b, --virgo-build-version=VIRGO-BUILD-VERSION
+                                     The version to update Virgo Build to
+    -v, --version=VARIABLE:VERSION[,...]
+                                     Versions to substitute during the ripple
+    -m, --map=REPO-MAP               The property file containing a mapping from a repository name to a location
+                                     (defaults to ~/repository.map)
+    -u, --remote-user=REMOTE-USER    User id to use for remote repository access
+    -c, --branch=BRANCH-NAME         The branch to be rippled
+                                     (defaults to master)
+        --dry-run                    Show what would happen but do not actually do anything
+</pre>
+		<p> </p>
+		<table border="1" cellpadding="2" cellspacing="1" width="1000">
+			<tr>
+				<td>&nbsp;Option&nbsp; </td>
+				<td>Description</td>
+			</tr>
+			<tr>
+				<td>&nbsp;-r </td>
+				<td>The name of the repository you want to start the ripple at. A typical repository name is util or kernel.</td>
+			</tr>
+			<tr>
+				<td>&nbsp;-v </td>
+				<td>When updating a dependency use this flag to describe both the variable to update and the new version to update to. Can be a comma separated list if multiple dependencies need updating at the same time.</td>
+			</tr>
+			<tr>
+				<td>&nbsp;-m </td>
+				<td>The location of the repository map file (see below). By default, this file is found in ~/repository.map, but in cases where you have more than one file (one for simple ripples, one for complex ripples that happen in your working copy) you may need to pass in this value.</td>
+			</tr>
+			<tr>
+				<td>&nbsp;-u </td>
+				<td>The login name used for ssh access to the git.eclipse.org server. By default, this is the local login name.</td>
+			</tr>
+			<tr>
+				<td>&nbsp;-c </td>
+				<td>The branch to be rippled. By default, this is master.</td>
+			</tr>
+		</table>
+		<h3 id="Repository_Map">Repository Map</h3>
+		<p>By default, Ripplor checks out each repository working copy to the working directory that it was run from. If you are prepared to run Ripplor in a dedicated working directory, this is fine. However, if you run a ripple from within your development shell environment it can pollute your filesystem. To account for this, Ripplor takes a repository map file. This file tells Ripplor where to checkout a repository working copy to. The file itself is a simple mapping from a repository name to a filesystem location. &lt;source lang="text"&gt;
+			osgi-extensions = ~/dev/ripplor/osgi-extensions
+			util = ~/dev/ripplor/util
+			...
+			&lt;/source&gt; 
+			<b>
+				<i>Tip:</i>
+			</b> In the repository map file, &lt;code&gt;~&lt;/code&gt; will be expanded to the current user’s home directory. 
+		</p>
+		<h3 id="Broken_Build">Broken Build</h3>
+		<p>Ripplor 
+			<i>was</i> smart enough to restart a failed ripple. 
+		</p>
+		<p>
+			<a href="If">a ripple fails (due to test or compile failure), simply fix any problems in the working copy that Ripplor is using and restart the ripple at the same location you originally used. Ripplor will bring in any new commits since you last started the ripple and continue up the stack as done previously. This behaviour is very useful if you are rippling a breaking API change and need to fix code as the ripple moves upwards.</a> 
+		</p>
+		<h4 id="How_to_rebuild_a_broken_rippled_repository">How to rebuild a broken rippled repository</h4>
+		<p>Use the normally executed for that repository targets plus one additional -D parameter:</p>
+		<pre>
+ant -Dvirgo.deps.location=integration-repo clean clean-integration test
+</pre>
+		<p>The important part here is to add the -Dvirgo.deps.location parameter. Its default value is "ivy-cache". It is automatically set by the ruby scripts. It is also not needed during a single repository build.
+			Its purpose is to point the integration tests to the right location of the Virgo artifacts. During a ripple - the integration repo, during a single repo build - the ivy-cache.</p>
+		<p>Unfortunately this behaviour is broken, since the version updates (accumulated during the ripple and propagated up) are not correctly restored. Also, when committing the changes (to all the repositories) at the end, after a failure in the middle, not all of the rippled repositories will be committed at the end.</p>
+		<h3 id="Re-Building">Re-Building</h3>
+		<p>To re-start ripplor and fix a broken build you can use two strategies: </p>
+		<h4 id="Restart_from_lowest">Restart from lowest</h4>
+		<p>The standard solution at the moment is to push the repositories that succeeded by hand and start another ripple, with version updates that are likely to be lost inserted by hand on the ripplor command line. This is not perfect and a repeat of the ripple from the lowest point is safer. </p>
+		<p>A full ripple of all of the repositories takes an hour and a half or more, even on a high-end Mac. </p>
+		<h4 id="Safe.2FLucky_points">Safe/Lucky points</h4>
+		<p>Ripplor can be restarted from repository that contains all the version updates so far (this may be called a safe or lucky point). The repositories that contain all version updates: </p>
+		<ul>
+			<li>medic </li>
+			<li>kernel </li>
+			<li>web </li>
+			<li>web-server</li>
+		</ul>
+		<p>For example if the build broke at 
+			<b>snaps</b> you can re-start from the last successfully built safe repository. In our example this is the 
+			<b>web</b> repo. 
+		</p>
+		<h3 id="Examples">Examples</h3>
+		<p>Upgrading the version of Spring used in util and upward: </p>
+		<pre>./ripplor.rb -r util -v "org.springframework:3.1.0.RELEASE" -m ~/ripple.repository.map
+</pre>
+		<p> 
+			Rippling a breaking API change to kernel </p>
+		<pre>./ripplor.rb -r kernel -m ~/workingcopy.repository.map
+</pre>
+		<h2 id="Releasing_a_Single_Repository_Project">Releasing a Single Repository Project</h2>
+		<p>Simply follow these steps to produce a release of a product that is within a single Git repository. The aim is to have a tag of the right name pointing to the codebase at release time and to leave master or the current development branch version at the next version ready for development to continue. Only committers can produce releases. </p>
+		<p>1. Create a new branch and make sure everything is up to date and clean </p>
+		<pre>      git pull
+   git clean -f -d
+   git submodule update --init
+   git checkout -b release 
+</pre>
+		<p>2. Update the build.properties file to have the right version, have a release.type of 'release' (or 'milestone' if appropriate), and have a build.stamp with the appropriate version qualifier. For example: </p>
+		<pre>      version=1.1.0
+   release.type=release
+   build.stamp=RELEASE
+</pre>
+		<p>3. Do the build, commit the changes and then tag it with the version and release type appropriate. In order for publishing to eclipse to work you must have your ssh public key registered with the virgoBuild account. </p>
+		<pre>      cd build-xxx
+   ant clean clean-integration clean-ivy test package publish-ivy publish-maven -Declipse.committerId=gnormington
+   cd ..
+   git add .
+   git commit -m 'Build properties for the release 1.1.0.RELEASE'
+   git tag 1.1.0.RELEASE 
+</pre>
+		<p>Note: if you need to publish to p2, add the target publish-updatesite-download to the above list.</p>
+		<p>Note: if you are building bundlor, until 
+			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=384139" target="doc_external">bug 384139</a> is fixed, remember to update the version in org.eclipse.virgo.bundlor.maven/src/main/resources/META-INF/maven/plugin.xml follow these 
+			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=379061#c3" target="doc_external">instructions</a> for updating the composite p2 repository. Also, until 
+			<a href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=384138" target="doc_external">bug 384138</a> is fixed the update site needs manually relocating.
+		</p>
+		<p>4. After the tag go back to master and delete the release branch. The branch will still be available from the tag. </p>
+		<pre>      git checkout master
+   git branch -D release
+</pre>
+		<p>5. Back on master the build.properties file needs to be revved up to the following release for development to continue. Ensure the release type is still integration and that the build.stamp property is not present. Set the version to the following version of the product. </p>
+		<pre>      version=1.2.0
+   release.type=integration
+</pre>
+		<p>6. Finally add, commit and push it all back up to origin. Ensure the new tag is also pushed up. </p>
+		<pre>      git add .
+   git commit
+   git push origin
+   git push --tags
+</pre>
+		<p>&lt;span style="color:#ff0000"&gt;Once this is done the usual steps to 
+			<b>make the release available on download servers</b> and to make announcements should be followed. For Eclipse, a committer with a full shell should sftp in to download1.eclipse.org and beam the file up.&lt;/span&gt; More information available 
+			<a href="http://wiki.eclipse.org/IT_Infrastructure_Doc#Put_files_on_the_download_server.3F" target="doc_external">here</a>.
+		</p>
+		<h2 id="Releasing_a_Multi_Repository_Project">Releasing a Multi Repository Project</h2>
+		<p>This is for any release of the full Virgo Server. It makes use of the Releasolor ruby script. This is very similar to Ripplor but it also performs the steps above for a single repository to all the repositories it visits. Only committers can produce releases. </p>
+		<p>The usage instructions are: </p>
+		<pre>   Usage: releaselor.rb [-vqtnbmurcghjkd]
+Required arguments:
+  -v, --version=VERSION            The version number of the release
+  -q, --build-stamp=BUILD-STAMP    The build stamp for the release, e.g. M01, RELEASE
+  -t, --release-type=RELEASE-TYPE  The release type for the release, e.g. milestone, release
+  -n, --new-version=NEW-VERSION    The new version number to be used after the release
+</pre>
+		<p>Optional arguments: </p>
+		<pre>   -b, --virgo-build-version=VIRGO-BUILD-VERSION
+                                   The version to update Virgo Build to
+  -m, --map=REPOSITORY-MAP         The property file containing a mapping from a repository name to a location
+                                   (defaults to ~/repository.map)
+  -u, --remote-user=REMOTE-USER    User id to use for remote repository access
+                                   (defaults to local login id)
+  -r, --product-release=PRODUCT    The product to be released, kernel, web-server, virgo, full-product
+                                   (defaults to releasing all the virgo repos)
+  -c, --branch=BRANCH-NAME         The branch to be released
+                                   (defaults to master)
+  -g, --gemini-version=GEMINI-BUILD-VERSION
+                                   When producing a full-product build the Gemini version must be given
+  -h, --gemini-build-stamp=GEMINI-BUILD-STAMP
+                                   The build stamp for the Gemini Web release, e.g. M01, RELEASE
+  -j, --gemini-release-type=GEMINI-RELEASE-TYPE
+                                   The release type for the Gemini Web release, e.g. milestone, release
+  -k, --gemini-new-version=GEMINI-NEW-VERSION
+                                   The new Gemini Web version number to be used after the release
+  -d, --gemini-branch=BRANCH-NAME  The Gemini Web branch to be released
+                                   (defaults to master)
+      --dry-run                    Show what would happen but do not actually do anything
+</pre>
+		<p>
+			<br/> An example invocation for a release is: 
+		</p>
+		<pre>       ./releaselor.rb -v 2.0.1 -s RELEASE -t release -n 2.0.2 -u cfrost -r kernel
+</pre>
+		<p>This will release the Kernel only at 2.0.1 and leave the repos versioned 2.0.2 for work to continue after the release. Repos other than those needed for the kernel will not be modified. </p>
+		<p>For 3.0 release including Gemini Web at 2.0.1 you may use: </p>
+		<pre>       ./releaselor.rb -v 3.0.0 -q RELEASE -t release -n 3.0.1 -c 3.0.x -g 2.0.0 -h RELEASE -j release -k 2.0.1 -d 2.0.x -r full-product -u cfrost
+</pre>
+		<p>An example invocations for a milestone including Gemini Web is: </p>
+		<pre>       ./releaselor.rb -v 3.0.0 -q M01 -t milestone -n 3.0.0 -g 1.2.0 -h M02 -j milestone -k 1.2.0 -u cfrost -r full-product
+</pre>
+		<p>An example invocation for a release not including Gemini Web is: </p>
+		<pre>       ./releaselor.rb -v 3.0.0 -q RELEASE -t release -n 3.1.0 -u cfrost -r virgo
+</pre>
+		<p>
+			<br/> {{message|1={{#if:{{{1|}}}|'
+			<i>Publishing the Gemini Zips</i>'&lt;BR&gt;}}{{#if:{{{2|}}}|If you do a 'full-product' release, Gemini Web will also be released. There will be a manual step to publish the Gemini zips to download.eclipse.org as they need to go in a different directory than the rest of Virgo. The Zips will be built as normal and will be available from the 'build-web-container' directory.
+			}}|image=Note.png|bgcolor=#def3fe|bdcolor=#c5d7e0}} 
+		</p>
+		<p>{{message|1={{#if:{{{1|}}}|'
+			<i>Updating Plan versions</i>'&lt;BR&gt;}}{{#if:{{{2|}}}|When doing a full release there are some plan files that need manually editing.
+		</p>
+		<pre>   org.eclipse.virgokernel.userregion.springdm (Kernel repo in the build-kernel/repository/ext directory)
+   org.eclipse.virgo.apps.admin.plan (Apps repo in the org.eclipse.virgo.apps.admin/src directory)
+   org.eclipse.virgo.web (Web repo in the org.eclipse.virgo.web.tomcat/src directory)
+</pre>
+		<p>In addition, the abstract integration test in the web.test project and AdminConsoleAppTests in the system-verification-tests repository (still to be contributed at the time of writing) also need to be updated to use the new version for the tests to pass. Ideally the script that does version updating should cover this but in doing so it would no longer be generic. Ideas welcome.
+			}}|image=Note.png|bgcolor=#def3fe|bdcolor=#c5d7e0}} </p>
+		<p>
+			<a href="http://wiki.eclipse.org/Category:Virgo" title="Category:Virgo" target="doc_external">Category:Virgo</a> 
+			<a href="http://wiki.eclipse.org/Category:EclipseRT" title="Category:EclipseRT" target="doc_external">Category:EclipseRT</a>
+		</p><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Build.html" title="Build">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center">
+					<a href="Build.html" title="Build">
+						<img alt="Build" border="0" src="../../images/home.gif"/>
+					</a>
+				</td>
+				<td style="width: 20%" align="right">
+					<a href="Virgo-Tooling-Builds.html" title="Virgo Tooling Builds">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Build</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Virgo Tooling Builds</td>
+			</tr>
+		</table>
+	</body>
+</html>

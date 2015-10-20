@@ -1,0 +1,74 @@
+<?xml version='1.0' encoding='utf-8' ?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+		<title>Future - Prototypes</title>
+		<link type="text/css" rel="stylesheet" href="../../book.css"/>
+	</head>
+	<body>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<th style="width: 100%" align="center" colspan="3">Prototypes</th>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Future-Features.html" title="Future Features">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right">
+					<a href="Updating-This-Document.html" title="Updating This Document">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Future Features</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Updating This Document</td>
+			</tr>
+		</table><hr/>
+		<h1 id="Prototypes">Prototypes</h1>
+		<h2 id="Snaps">Snaps</h2>
+		<p>Snaps is a prototype also from dm Server where it was known as Slices. It aims to give you the full benefit of a dynamic and modular OSGi environment for your web applications by allowing you to spread the front end across many bundles, or Snaps. The Snaps source code is available from one of our Git repos listed on the 'Source' tab. Thanks to Patsy Phelan and Dmitry Sklyut for comments on this content. </p>
+		<p>A Snap is an OSGi Web Application Bundle that is responsible for handling requests for part of the total application. Requests are served up to each snap depending on what part of the context path the snap has registered to handle. Each Snap will be given requests by a host bundle. A Host bundle is also just a normal web application bundle with filter configured to dispatch certain requests to any registered Snaps. </p>
+		<p>&nbsp; 
+			<img border="0" src="images/Snaps.png"/> 
+		</p>
+		<p>The host will handle requests to '/app/*' while '/app/orders' and '/app/billing' will be dispatched to the relevant Snap bundle. </p>
+		<p>Snaps is different from other technologies such as Web Fragments in that it much more decoupled and takes advantage of OSGi to allow for the dynamic composition of a web app at runtime. The lifecycle of the Snap and the Host is completely decoupled. This is due to the services like approach. Web Fragments are static and much more closely coupled, they share the same classpath and the modularity it offers is only at development time. This extra decoupling means that snaps can be developed in isolation from the host application, even after the host application has be released. </p>
+		<p>
+			<a href="http://wiki.eclipse.org/Category:Virgo" title="Category:Virgo" target="doc_external">Category:Virgo</a> 
+			<a href="http://wiki.eclipse.org/Category:EclipseRT" title="Category:EclipseRT" target="doc_external">Category:EclipseRT</a>
+		</p>
+		<h2 id="OSGi_Explorer">OSGi Explorer</h2>
+		<p>See 
+			<a href="http://wiki.eclipse.org/Virgo/OSGi_Explorer" target="doc_external">OSGi Explorer</a>.
+		</p><hr/>
+		<table class="navigation" style="width: 100%;" border="0" summary="navigation">
+			<tr>
+				<td style="width: 20%" align="left">
+					<a href="Future-Features.html" title="Future Features">
+						<img alt="Previous" border="0" src="../../images/prev.gif"/>
+					</a>
+				</td>
+				<td style="width: 60%" align="center">
+					<a href="Future.html" title="Future">
+						<img alt="Future" border="0" src="../../images/home.gif"/>
+					</a>
+				</td>
+				<td style="width: 20%" align="right">
+					<a href="Updating-This-Document.html" title="Updating This Document">
+						<img alt="Next" border="0" src="../../images/next.gif"/>
+					</a>
+				</td>
+			</tr>
+			<tr>
+				<td style="width: 20%" align="left" valign="top">Future Features</td>
+				<td style="width: 60%" align="center"></td>
+				<td style="width: 20%" align="right" valign="top">Updating This Document</td>
+			</tr>
+		</table>
+	</body>
+</html>

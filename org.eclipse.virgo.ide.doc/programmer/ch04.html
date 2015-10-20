@@ -1,0 +1,72 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;4.&nbsp;Developing Applications</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="index.html" title="Virgo Programmer Guide"><link rel="prev" href="ch03s04.html" title="A Guide to Forming Bundles"><link rel="next" href="ch04s02.html" title="Creating PARs and Web Applications"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch03s04.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch04s02.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter&nbsp;4.&nbsp;Developing Applications"><div class="titlepage"><div><div><h2 class="title"><a name="developing-applications"></a>Chapter&nbsp;4.&nbsp;Developing Applications</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="ch04.html#developing-applications-bundle">Anatomy of a Bundle</a></span></dt><dt><span class="section"><a href="ch04s02.html">Creating PARs and Web Applications</a></span></dt><dd><dl><dt><span class="section"><a href="ch04s02.html#developing-applications-packaging-par">PARs</a></span></dt><dt><span class="section"><a href="ch04s02.html#developing-applications-web-application-bundles">Web Application Bundles</a></span></dt></dl></dd><dt><span class="section"><a href="ch04s03.html">Creating Plans</a></span></dt><dd><dl><dt><span class="section"><a href="ch04s03.html#developing-applications-plans-create">Creating the Plan XML File</a></span></dt><dt><span class="section"><a href="ch04s03.html#names-of-artifacts">Artifact Names</a></span></dt><dt><span class="section"><a href="ch04s03.html#passing-properties">Supplying Properties to Artifacts</a></span></dt><dt><span class="section"><a href="ch04s03.html#developing-applications-plans-use">Using the Plan</a></span></dt><dt><span class="section"><a href="ch04s03.html#developing-applications-plans-scoping">Plans and Scoping</a></span></dt></dl></dd><dt><span class="section"><a href="ch04s04.html">Creating and Using Configuration Artifacts</a></span></dt><dd><dl><dt><span class="section"><a href="ch04s04.html#developing-applications-configuration-artifacts-propfile">Creating the Properties File</a></span></dt><dt><span class="section"><a href="ch04s04.html#developing-applications-configuration-artifacts-app">Updating Your Application</a></span></dt><dt><span class="section"><a href="ch04s04.html#developing-applications-configuration-artifacts-plan">Adding the Configuration Artifact to a Plan</a></span></dt></dl></dd><dt><span class="section"><a href="ch04s05.html">Using Spring, Spring DM, and Blueprint</a></span></dt><dt><span class="section"><a href="ch04s06.html">Programmatic Access to the Servlet Context</a></span></dt><dd><dl><dt><span class="section"><a href="ch04s06.html#developing-applications-programmatic-access-web">Programmatic Access to Web Features</a></span></dt></dl></dd><dt><span class="section"><a href="ch04s07.html">Web Application Manifest Processing</a></span></dt><dt><span class="section"><a href="ch04s08.html">Working with Dependencies</a></span></dt><dd><dl><dt><span class="section"><a href="ch04s08.html#developing-applications-importing-libraries">Importing Libraries</a></span></dt><dt><span class="section"><a href="ch04s08.html#developing-applications-importing-bundles">Importing Bundles</a></span></dt><dt><span class="section"><a href="ch04s08.html#developing-applications-scoping-libraries-bundles">Scoping Bundles in an Application</a></span></dt><dt><span class="section"><a href="ch04s08.html#developing-applications-defining-libraries">Defining Libraries</a></span></dt><dt><span class="section"><a href="ch04s08.html#developing-applications-installing-dependencies">Installing Dependencies</a></span></dt></dl></dd><dt><span class="section"><a href="ch04s09.html">Application Trace</a></span></dt><dt><span class="section"><a href="ch04s10.html">Application Versioning</a></span></dt></dl></div><p>
+		Applications that take advantage of the OSGi capabilities of Virgo
+		are typically comprised of multiple bundles. Each bundle may have dependencies on
+		other bundles. Furthermore, each bundle exposes only certain packages and
+		services. In this chapter, we look at how to create bundles, import and export
+		appropriate functionality, and create artifacts to deploy web applications on the Virgo Server for Apache Tomcat. 
+	</p><div class="section" title="Anatomy of a Bundle"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="developing-applications-bundle"></a>Anatomy of a Bundle</h2></div></div></div><div class="tip" title="Tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3><p>
+				This is an abbreviated introduction to OSGi bundles. Please refer to the
+				<a class="ulink" href="http://static.springframework.org/osgi/docs/current/reference/html/" target="_top"> 
+				Spring Dynamic Modules for OSGi documentation</a> for full details.
+			</p></div><p>
+			An OSGi bundle is simply a jar file with metadata that describe
+			additional characteristics such as version and imported and exported packages.
+		</p><p>
+			A bundle exports types and publishes services to be used by other bundles:
+		</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>
+					<span class="bold"><strong>Types</strong></span>:
+					via the OSGi <code class="code">Export-Package</code> directive,
+				</p></li><li class="listitem"><p>
+					<span class="bold"><strong>Services</strong></span>:
+					via Spring-DM&rsquo;s <code class="code">&lt;service ... /&gt;</code> XML namespace element.
+				</p></li></ul></div><p>
+			A bundle may import types and services exported by other bundles:
+		</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p><span class="bold"><strong>Types</strong></span>:
+				via the OSGi <code class="code">Import-Package</code> directive,</p></li><li class="listitem"><p><span class="bold"><strong>Services</strong></span>:
+				via Spring-DM&rsquo;s <code class="code">&lt;reference ... /&gt;</code> XML namespace element.</p></li></ul></div><p>
+			Let&rsquo;s see an example from the PetClinic sample application. The following listing shows the
+			<code class="filename">MANIFEST.MF</code> file for the <code class="code">org.springframework.petclinic.infrastructure.hsqldb</code> bundle.
+		</p><pre class="programlisting">
+Manifest-Version: 1.0
+<span class="bold"><strong>Bundle-ManifestVersion</strong></span>: 2
+<span class="bold"><strong>Bundle-Name</strong></span>: PetClinic HSQL Database Infrastructure
+<span class="bold"><strong>Bundle-SymbolicName</strong></span>: org.springframework.petclinic.infrastructure.hsqldb
+<span class="bold"><strong>Bundle-Version</strong></span>: 1.0
+<span class="bold"><strong>Import-Library</strong></span>: org.springframework.spring;version="[2.5,2.6]"
+<span class="bold"><strong>Import-Bundle</strong></span>: com.springsource.org.apache.commons.dbcp;version="[1.2.2.osgi,1.2.2.osgi]",
+ com.springsource.org.hsqldb;version="[1.8.0.9,1.8.0.9]"
+<span class="bold"><strong>Import-Package</strong></span>: javax.sql
+<span class="bold"><strong>Export-Package</strong></span>: org.springframework.petclinic.infrastructure
+		</pre><p>
+			The <code class="code">org.springframework.petclinic.infrastructure.hsqldb</code> bundle expresses its dependencies on
+			the <code class="code">javax.sql</code> package, the Commons DBCP and HSQLDB bundles, and the Spring library (we will examine
+			the details of the library artifact in <a class="xref" href="ch04s08.html#developing-applications-defining-libraries" title="Defining Libraries">Defining Libraries</a>). The Commons DBCP 
+			bundle is imported at a version of exactly 1.2.2.osgi and the HSQLDB bundle is imported at a version of exactly
+			1.8.0.9. The Spring library is imported at a version between 2.5 inclusive and 2.6 exclusive.
+		</p><p>
+			Note that you do not specify the bundle that will provide the imported packages.
+			Virgo will examine the available bundles and satisfy the required dependencies. 
+		</p><p>
+			The following <code class="filename">osgi-context.xml</code> file from the PetClinic sample&rsquo;s
+			<code class="code">org.springframework.petclinic.repository.jdbc</code> bundle declares a service published by the bundle and
+			references a service published by another bundle.
+		</p><pre class="programlisting">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans:beans xmlns="http://www.springframework.org/schema/osgi"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:beans="http://www.springframework.org/schema/beans"
+    xsi:schemaLocation="http://www.springframework.org/schema/osgi  
+        http://www.springframework.org/schema/osgi/spring-osgi.xsd
+        http://www.springframework.org/schema/beans   
+        http://www.springframework.org/schema/beans/spring-beans.xsd"&gt;
+
+    &lt;service id="osgiClinic" ref="clinic" interface="org.springframework.petclinic.repository.Clinic" /&gt;
+    &lt;reference id="dataSource" interface="javax.sql.DataSource"/&gt;
+
+&lt;/beans:beans&gt;</pre><p>
+			The <code class="code">service</code> element publishes the <code class="code">clinic</code> bean
+			(a regular Spring bean declared in the <code class="filename">module-context.xml</code> file) and specifies
+			<code class="code">org.springframework.petclinic.repository.Clinic</code> as the type
+			of the published service.
+		</p><p>The <code class="code">reference</code> elements define a <code class="code">dataSource</code> bean that references
+		    a service published by another bundle with a an interface type of <code class="code">javax.sql.DataSource</code>.
+		</p></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch03s04.html">Prev</a>&nbsp;</td><td align="center" width="20%">&nbsp;</td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch04s02.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.3"?>
+<!--
+/*******************************************************************************
+ * Copyright (c) 2007, 2012 SpringSource
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ * 
+ * Contributors:
+ *     SpringSource - initial API and implementation
+ *******************************************************************************/
+-->
+<plugin>
+   
+   <extension
+         point="org.eclipse.ui.decorators">
+      <decorator
+            adaptable="true"
+            class="org.eclipse.virgo.ide.jdt.internal.ui.decoration.JdtClasspathContainerElementDecorator"
+            icon="icons/full/obj16/springsource_obj.png"
+            id="org.eclipse.virgo.ide.jdt.ui.notAccessibleJavaElementDecorator"
+            label="%notAccessibleJavaElementDecorator.label"
+            lightweight="true"
+            state="true">
+         <enablement>
+         	<or>
+            	<objectClass name="org.eclipse.jdt.core.IPackageFragment" />
+            	<objectClass name="org.eclipse.jdt.core.IPackageFragmentRoot" />
+            	<objectClass name="org.eclipse.jdt.core.IClassFile" />
+            	<objectClass name="org.eclipse.jdt.internal.ui.packageview.ClassPathContainer" />
+            </or>
+         </enablement>
+      </decorator>
+   </extension>
+   
+    <extension
+         point="org.eclipse.ui.propertyPages">
+      <page
+            id="org.eclipse.virgo.ide.jdt.ui.testSourceFolderPreferencePage"
+            name="%sourceFolderConfigurationPage.name"
+            class="org.eclipse.virgo.ide.jdt.internal.ui.properties.TestSourceFolderPreferencePage"
+            category="org.eclipse.virgo.ide.projectPropertyPage"
+            adaptable="true"
+            objectClass="org.eclipse.core.resources.IProject">
+         <filter
+               name="nature"
+               value="org.eclipse.virgo.ide.facet.core.bundlenature">
+         </filter>
+      </page>
+   </extension>
+   
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IProject"
+            adaptable="true"
+            id="org.eclipse.virgo.ide.jdt.ui.refreshClasspath">
+        <enablement>
+	        <adapt type="org.eclipse.core.resources.IProject" >
+	        	<or>
+             		<test forcePluginActivation="true"
+            			property="org.eclipse.wst.common.project.facet.core.projectFacet"
+            			value="org.eclipse.virgo.server.bundle:1.0"/>
+             		<test forcePluginActivation="true"
+            			property="org.eclipse.wst.common.project.facet.core.projectFacet"
+            			value="org.eclipse.virgo.server.par:1.0"/>
+	        	</or>
+	        </adapt>
+         </enablement>
+         <action
+               label="%refreshClasspathContainerActionLabel"
+               class="org.eclipse.virgo.ide.jdt.internal.ui.actions.RefreshServerClasspathContainerActionDelegate"
+               enablesFor="+"
+               menubarPath="org.eclipse.virgo.ide.menu/group1"
+               id="org.eclipse.virgo.ide.jdt.ui.actions.refreshServerClasspathContainer">
+         </action>
+      </objectContribution>
+      
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IResource"
+             adaptable="true"
+             id="org.eclipse.virgo.ide.jdt.ui.disableServerClasspathContainer">
+        <enablement>
+	        <and>
+	        	<adapt type="org.eclipse.core.resources.IProject" >
+             		<test forcePluginActivation="true"
+            			property="org.eclipse.wst.common.project.facet.core.projectFacet"
+            			value="org.eclipse.virgo.server.bundle:1.0"/>
+            		<test forcePluginActivation="true"
+            			property="org.eclipse.virgo.ide.jdt.serverclasspathcontainer.isEnabled" />
+	        	</adapt>
+	        </and>
+        </enablement>
+        <action
+               class="org.eclipse.virgo.ide.jdt.internal.ui.actions.EnableServerClasspathContainerActionDelegate"
+               enablesFor="+"
+               id="org.eclipse.virgo.ide.jdt.ui.actions.disableServerClasspathContainerAction"
+               label="%serverClasspathContainerActionLabel.disable"
+               menubarPath="org.eclipse.virgo.ide.menu/group1">
+         </action>
+      </objectContribution>
+      <objectContribution
+            objectClass="org.eclipse.core.resources.IResource"
+             adaptable="true"
+             id="org.eclipse.virgo.ide.jdt.ui.enableServerClasspathContainer">
+        <enablement>
+	        <and>
+	        	<adapt type="org.eclipse.core.resources.IProject" >
+             		<test forcePluginActivation="true"
+            			property="org.eclipse.wst.common.project.facet.core.projectFacet"
+            			value="org.eclipse.virgo.server.bundle:1.0"/>
+            		<not>
+            			<test forcePluginActivation="true"
+            				property="org.eclipse.virgo.ide.jdt.serverclasspathcontainer.isEnabled" />
+            		</not>
+	        	</adapt>
+	        </and>
+        </enablement>
+        <action
+               class="org.eclipse.virgo.ide.jdt.internal.ui.actions.EnableServerClasspathContainerActionDelegate"
+               enablesFor="+"
+               id="org.eclipse.virgo.ide.jdt.ui.actions.enableServerClasspathContainerAction"
+               label="%serverClasspathContainerActionLabel.enable"
+               menubarPath="org.eclipse.virgo.ide.menu/group1">
+         </action>
+      </objectContribution>
+      
+      
+   </extension>
+   
+   <extension
+         point="org.eclipse.jdt.ui.classpathContainerPage">
+      <classpathContainerPage
+            id="org.eclipse.virgo.ide.jdt.ui.classpathContainerPage"
+            name="%bundleClasspathContainerPage.name"
+            class="org.eclipse.virgo.ide.jdt.internal.ui.classpath.ServerClasspathContainerPage">
+      </classpathContainerPage>
+   </extension>
+</plugin>

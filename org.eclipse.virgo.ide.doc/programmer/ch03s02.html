@@ -1,0 +1,21 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Dependency Types</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="ch03.html" title="Chapter&nbsp;3.&nbsp;Deployment Architecture"><link rel="prev" href="ch03.html" title="Chapter&nbsp;3.&nbsp;Deployment Architecture"><link rel="next" href="ch03s03.html" title="Regions"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch03.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch03s03.html">Next</a></td></tr></table><hr></div><div class="section" title="Dependency Types"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="architecture-dependency-types"></a>Dependency Types</h2></div></div></div><p> 
+			In an OSGi environment, there are two kinds of dependencies between various bundles:
+			<span class="emphasis"><em>type</em></span> dependency and <span class="emphasis"><em>service</em></span> dependency. 
+			</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>
+						<span class="bold"><strong>Type dependency</strong></span>: A bundle may depend on a
+						type exported by another bundle thus creating a type dependency. Type
+						dependencies are managed through <code class="literal">Import-Package</code> and
+						<code class="literal">Export-Package</code> directives in the OSGi manifest. This
+						kind of dependency is similar to a JAR file using types in other JAR files
+						from the classpath. However, as we&rsquo;ve seen earlier, there are
+						significant differences. 
+					</p></li><li class="listitem"><p>
+						<span class="bold"><strong>Service dependency</strong></span>: A bundle may also
+						publish services (preferably using Spring-DM), and other bundles may consume
+						those services. If two bundles depend on the same service, both will be
+						communicating effectively to the same object. More specifically, any state
+						for that service will be shared between all the clients of that service.
+						This kind of arrangement is similar to the commonly seen client-server
+						interaction through mechanisms such as RMI or Web Services. 
+					</p></li></ul></div><p>
+		</p></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch03.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch03.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch03s03.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

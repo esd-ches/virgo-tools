@@ -1,0 +1,68 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Post-installation steps</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo User Guide"><link rel="up" href="ch04.html" title="Chapter&nbsp;4.&nbsp;Installing Virgo Server for Apache Tomcat"><link rel="prev" href="ch04s03.html" title="Installing from an update site"><link rel="next" href="ch05.html" title="Chapter&nbsp;5.&nbsp;Installing Virgo Kernel"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch04s03.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch05.html">Next</a></td></tr></table><hr></div><div class="section" title="Post-installation steps"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="installation-post"></a>Post-installation steps</h2></div></div></div><div class="section" title="Set environment variable variables"><div class="titlepage"><div><div><h3 class="title"><a name="installation-post-env"></a>Set environment variable variables</h3></div></div></div><div class="section" title="JAVA_HOME"><div class="titlepage"><div><div><h4 class="title"><a name="installation-post-env-java"></a>JAVA_HOME</h4></div></div></div><p>
+					Virgo Server for Apache Tomcat uses the <code class="literal">JAVA_HOME</code> environment variable to locate the <code class="literal">java</code>
+					executable. Configure this environment variable to point to the home directory of the Java 6 installation on your computer.
+				</p></div><div class="section" title="SERVER_HOME"><div class="titlepage"><div><div><h4 class="title"><a name="installation-post-env-server"></a>SERVER_HOME</h4></div></div></div><p>
+					As a convenience it is recommended that you create an environment variable that points
+					to the Virgo Server for Apache Tomcat installation directory. Note that the Virgo Server for Apache Tomcat does not require that
+					such an environment variable has been set. This variable may have any name of your
+					choosing. The Virgo Server for Apache Tomcat&rsquo;s documentation assumes that the variable is named
+					<code class="literal">SERVER_HOME</code>. 
+				</p></div><div class="section" title="Linux"><div class="titlepage"><div><div><h4 class="title"><a name="installation-post-env-server-linux"></a>Linux</h4></div></div></div><p>
+					Edit the <code class="literal">.profile</code> file in your home directory to
+					add the <code class="literal">SERVER_HOME</code> and <code class="literal">JAVA_HOME</code> environment variables. For
+					example, if you installed into <code class="literal">/opt</code>:
+				</p><pre class="screen">export SERVER_HOME=/opt/virgo-web-server-3.5.0/
+export JAVA_HOME=/user/java/jdk1.6.0_17
+export PATH=$JAVA_HOME/bin:$PATH</pre><p>
+				To verify the setting of <code class="literal">JAVA_HOME</code>, issue the command <code class="literal">$JAVA_HOME/bin/java -version</code> from a new terminal window
+				and ensure that the command completes successfully and reports
+				a Java version <code class="literal">1.6.</code><span class="emphasis"><em>x</em></span> (denoting Java 6) or greater.
+				</p></div><div class="section" title="Microsoft Windows"><div class="titlepage"><div><div><h4 class="title"><a name="installation-post-env-server-win"></a>Microsoft Windows</h4></div></div></div><p>
+					This section shows how to add <code class="literal">SERVER_HOME</code> as a system variable on Windows.  Follow the same procedure to add or update the <code class="literal">JAVA_HOME</code> environment variable. 
+				</p><p>
+					From the Start menu, open the Control Panel and double-click on &lsquo;System&rsquo;.
+				</p><p>	 
+					<img src="images/system-props.png">
+				</p><p>	 
+					Click the &lsquo;Advanced&rsquo; tab and select &lsquo;Environment Variables&rsquo;. Next, 
+					click the &lsquo;New&rsquo; button in the &lsquo;System Variables&rsquo; section. 
+				</p><p>	 
+					<img src="images/env-variables.png">
+				</p><p>
+					This will display the &lsquo;New System Variable&rsquo; window.  Enter 
+					<code class="literal">SERVER_HOME</code> as the &lsquo;Variable name&rsquo; and 
+					the installation directory as the &lsquo;Variable value&rsquo;. Click OK.
+				</p><p>	 
+					<img src="images/system-variable.png">
+				</p><p>
+					To verify the setting of <code class="literal">JAVA_HOME</code>, issue the command <code class="literal">"%JAVA_HOME%"\bin\java -version</code> from
+					a new command prompt and ensure that the command completes successfully and reports
+					a Java version <code class="literal">1.6.</code><span class="emphasis"><em>x</em></span> (denoting Java 6) or greater.
+				</p></div></div><div class="section" title="Microsoft Windows - Troubleshooting Security Permissions"><div class="titlepage"><div><div><h3 class="title"><a name="installation-post-env-server-win-troubleshooting"></a>Microsoft Windows - Troubleshooting Security Permissions</h3></div></div></div><p>
+				When starting Virgo Server for Apache Tomcat on some variants of Windows you might encounter a problem with file permissions. 
+				The error looks like this.
+			</p><pre class="screen">WARNING: jmxPermissions.vbs did not update the permissions of C:\virgo\configuration\org.eclipse.virgo.kernel.jmxremote.access.properties. Check the file has the correct permissions.</pre><p>
+				If VTS starts correctly (see <a class="xref" href="ch07.html" title="Chapter&nbsp;7.&nbsp;Starting and Stopping Virgo Server for Apache Tomcat">Starting and Stopping Virgo Server for Apache Tomcat</a>) you can skip this section and carry on. However to secure your 
+				installation you have to set correct permissions. To do so, go to the &lsquo;configuration&rsquo; directory of the installation
+				in Windows Explorer.
+			</p><p>
+				<img src="images/install-windows-1-FileListing.png">
+			</p><p>
+				Right click on the &lsquo;org.eclipse.virgo.kernel.jmxremote.access.properties&rsquo; file and view its properties, 
+				then select the &lsquo;Security&rsquo; tab. Remove all groups and users from the list and select &lsquo;Apply&rsquo;.
+			</p><p>
+				<img src="images/install-windows-2-SecuritySettings.png">
+			</p><p>
+				Within the security page select the &lsquo;Advanced&rsquo; options. On the &lsquo;Owner&rsquo; tab, choose the owner
+				that you are trying to run the VTS as and select &lsquo;Apply&rsquo;.
+			</p><p>
+				<img src="images/install-windows-3-AdvanceSettingsOwner.png">
+			</p><p>
+				Once this is done select &lsquo;OK&rsquo; to return to the &lsquo;Security&rsquo; tab 
+				and now add the owner to the list of groups and users that have permission to access the file.
+			</p><p>
+				<img src="images/install-windows-4-AllSetReadAndExecute.png">
+			</p><p>
+				Once all these steps are complete you can proceed to start the VTS.
+			</p><pre class="screen">C:\dev\virgo-web-server-3.5.0&gt;bin\startup.bat
+[2009-12-08 13:09:09.545] startup-tracker              &lt;KE0001I&gt; Kernel starting.</pre></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch04s03.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch04.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch05.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

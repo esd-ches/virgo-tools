@@ -1,0 +1,16 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Hibernate Resolution Issue</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="ch08.html" title="Chapter&nbsp;8.&nbsp;Known Issues"><link rel="prev" href="ch08s06.html" title="Default Web Application Bundle Headers"><link rel="next" href="ch08s08.html" title="Scoping and Substitutable Exports"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch08s06.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch08s08.html">Next</a></td></tr></table><hr></div><div class="section" title="Hibernate Resolution Issue"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="hibernate-resolution-issue"></a>Hibernate Resolution Issue</h2></div></div></div><p>
+			Applications using Hibernate 3.4.0.GA need to upgrade the JBoss Hibernate Entity manager fragment bundle to version 3.4.0.GA-A.
+			The symptoms are that the application will fail to resolve due to missing imports of packages such as <code class="literal">org.hibernate.ejb.transaction</code> 
+			and JBoss Hibernate Annotations <code class="literal">com.springsource.org.hibernate.annotations</code>.
+			See <a class="ulink" href="https://bugs.eclipse.org/bugs/show_bug.cgi?id=335174" target="_top">bug 335174</a> for details.
+		</p><p>
+			The JBoss Hibernate Entity manager fragment bundle <code class="literal">com.springsource.org.hibernate.ejb</code> v3.4.0.GA in the
+			<a class="ulink" href="http://ebr.springsource.com/repository/app/" target="_top">SpringSource Enterprise Bundle Repository</a>
+			depends on the package <code class="literal">org.slf4j</code> with a version range that excludes the version of the
+			package provided with Virgo. The net effect is that Hibernate EJB fragment bundle fails to attach to its host
+			<code class="literal">com.springsource.org.hibernate</code> and the host then does not export the packages the application
+			may need, such as <code class="literal">org.hibernate.ejb.transaction</code>.
+		</p><p>
+			An updated JBoss Hibernate Entity manager fragment and JBoss Hibernate Annotations with versions 3.4.0.GA-A which fixes this 
+			problem is available from the <a class="ulink" href="http://ebr.springsource.com/repository/app/" target="_top">SpringSource Enterprise Bundle Repository</a>.
+		</p></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch08s06.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch08.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch08s08.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

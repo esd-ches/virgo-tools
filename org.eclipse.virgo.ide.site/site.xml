@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <description url="http://www.eclipse.org/virgo">
+      IDE components for the Virgo server.
+   </description>
+   <feature url="features/org.eclipse.virgo.ide.feature_0.0.0.jar" id="org.eclipse.virgo.ide.feature" version="0.0.0">
+      <category name="Eclipse Virgo Tools"/>
+   </feature>
+   <category-def name="Eclipse Virgo Tools" label="Eclipse Virgo Tools">
+      <description>
+         The Eclipse Virgo Tools, including documentation.
+      </description>
+   </category-def>
+</site>

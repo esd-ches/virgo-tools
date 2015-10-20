@@ -1,0 +1,136 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Form Tags PAR</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Programmer Guide"><link rel="up" href="ch06.html" title="Chapter&nbsp;6.&nbsp;Case Study: Migrating the Form Tags Sample Application"><link rel="prev" href="ch06s04.html" title="Form Tags Shared Services WAR"><link rel="next" href="ch06s06.html" title="Summary of the Form Tags Migration"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch06s04.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch06s06.html">Next</a></td></tr></table><hr></div><div class="section" title="Form Tags PAR"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="formtags-case-study-par"></a>Form Tags PAR</h2></div></div></div><p>
+			The final step in the migration is that of a full blown
+			OSGi
+			application with web support. The Virgo Server for Apache Tomcat introduces a
+			new packaging and deployment format: the PAR.
+
+			A PAR is a standard JAR
+			with a "
+			<code class="literal">.par</code>
+			"
+			file extension which contains all of the modules of your
+			application (e.g., service, domain, and infrastructure bundles
+			as well
+			as a WAR for web applications) in a single deployment unit.
+			Moreover,
+			a PAR defines both a physical and logical application boundary.
+		</p><p>
+			The PAR sample is comprised of four directories, as shown below.
+		</p><p>
+			<img src="images/formtags-case-study-par-sample.png">
+		</p><p>
+			The
+			<code class="literal">formtags-par</code>
+			directory is a build project that
+			understands how to create the PAR
+			from its constituent bundles.
+		</p><div class="section" title="Granularity of the PAR"><div class="titlepage"><div><div><h3 class="title"><a name="formtags-case-study-par-granularity"></a>Granularity of the PAR</h3></div></div></div><p>
+				Achieving the appropriate level of granularity for your OSGi
+				application is more of an art than a science. It helps to look
+				at the
+				different requirements:
+				</p><div class="table"><a name="formtags-case-study-par-granularity-drivers-table"></a><p class="title"><b>Table&nbsp;6.1.&nbsp;Granularity drivers</b></p><div class="table-contents"><table summary="Granularity drivers" border="1"><colgroup><col><col></colgroup><thead><tr><th>Requirement</th><th>Description</th></tr></thead><tbody><tr><td>Domain/Technical Layering</td><td>
+									Applications can be split either by domain (i.e.,
+									by use case or
+									<span class="emphasis"><em>vertically</em></span>
+									) or
+									by their technical layers (i.e.,
+									<span class="emphasis"><em>horizontally</em></span>
+									).
+									Since the Form Tags application essentially has only
+									a single
+									use case, the bundles are split by technical layering
+									(i.e.,
+									domain, service, and web).
+								</td></tr><tr><td>Refreshability</td><td>
+									A major benefit of OSGi is that of refreshability: if one
+									bundle
+									is changed, only bundles that have a dependency upon
+									the
+									exported types need to be refreshed. This has a high impact
+									on
+									development time costs as well as production
+									costs. However,
+									this can lead to lots of smaller, fine grained
+									bundles. An
+									example of this granularity would be to
+									separate out the service
+									API and implementation into two different
+									bundles. This means
+									that a change in the implementation
+									wouldn&rsquo;t require any
+									other bundles to be refreshed.
+								</td></tr></tbody></table></div></div><p><br class="table-break">
+				Ultimately the right level of granularity will depend upon your
+				particular application and team.
+			</p></div><div class="section" title="Domain and Service Bundles"><div class="titlepage"><div><div><h3 class="title"><a name="formtags-case-study-par-domain-and-service"></a>Domain and Service Bundles</h3></div></div></div><p>
+				The service bundle is identical (except for the
+				<code class="literal">Bundle-SymbolicName</code>
+				) to that
+				in the shared-services variation of the sample.
+				The PAR has
+				also separated out the domain classes into their own bundle.
+				When
+				layering by technical considerations, it is again
+				somewhat of an
+				unofficial convention to have a
+				<code class="literal">.domain</code>
+				bundle.
+			</p></div><div class="section" title="Constructing the PAR"><div class="titlepage"><div><div><h3 class="title"><a name="formtags-case-study-par-par"></a>Constructing the PAR</h3></div></div></div><p>
+				Finally we need to construct the PAR itself.
+				The following are
+				the contents of the exploded PAR.
+			</p><p>
+				<img src="images/formtags-case-study-par-exploded.png">
+			</p><p>
+				You can see that the PAR itself doesn&rsquo;t contain any
+				resources or
+				Java classes: it simply packages together a related set
+				of bundles
+				as a single, logical unit.
+			</p><p>
+				The PAR does however, contain its own
+				<code class="literal">/META-INF/MANIFEST.MF</code>
+				.
+				</p><pre class="programlisting">
+Manifest-Version: 1.0
+Application-SymbolicName: org.springframework.showcase.formtags-par
+Application-Version: 3.0.0
+Application-Name: FormTags Showcase Application (PAR)
+</pre><p>
+				For more information on the contents of the PAR&rsquo;s
+				<code class="literal">/META-INF/MANIFEST.MF</code>
+				, please consult
+				<a class="xref" href="ch04.html" title="Chapter&nbsp;4.&nbsp;Developing Applications">Chapter&nbsp;4.&nbsp;<i>Developing Applications</i></a>
+				.
+			</p><p>
+				You can now deploy the PAR on the VTS, for
+				example by copying
+				<code class="literal">/dist/formtags-par*.par</code>
+				to the VTS&rsquo;s
+				<code class="literal">pickup</code>
+				directory.
+				You should then see console output similar to the
+				following:
+			</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p>The console output has been reformatted to fit this document.
+				</p></div><pre class="programlisting">
+[2009-07-01 15:13:43.306] fs-watcher
+	&lt;SPDE0048I&gt; Processing 'CREATED' event for file 'formtags-par-2.0.0.RELEASE.par'.
+[2009-07-01 15:13:44.060] fs-watcher
+	&lt;SPDE0010I&gt; Deployment of 'formtags-par' version '2.0.0.RELEASE' completed.
+[2009-07-01 15:13:44.068] Thread-20
+	&lt;SPWE0000I&gt; Starting web bundle '/formtags-par'.
+[2009-07-01 15:13:45.212] Thread-20
+	&lt;SPWE0001I&gt; Started web bundle '/formtags-par'.
+</pre><p>
+				Navigate to
+				<a class="ulink" href="http://localhost:8080/formtags-par" target="_top">http://localhost:8080/formtags-par</a>
+				to see the welcome page.
+			</p><div class="tip" title="Tip" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Tip</h3>
+				Note that the web application&rsquo;s context path is explicitly
+				defined via the
+				<code class="literal">Web-ContextPath</code>
+				manifest header in
+				<code class="literal">/META-INF/MANIFEST.MF</code>
+				of the Web application bundle within the PAR.
+			</div></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch06s04.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch06.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch06s06.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>
