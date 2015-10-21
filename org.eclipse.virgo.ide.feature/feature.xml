@@ -50,6 +50,7 @@
       <import plugin="org.eclipse.wst.common.modulecore"/>
       <import plugin="org.eclipse.equinox.launcher"/>
       <import plugin="org.eclipse.jface.text"/>
+      <import plugin="org.objectweb.asm"/>
    </requires>
 
    <plugin
@@ -241,13 +242,6 @@
          unpack="false"/>
 
    <plugin
-         id="ch.qos.logback.slf4j"
-         download-size="0"
-         install-size="0"
-         version="0.0.0"
-         unpack="false"/>
-
-   <plugin
          id="org.jdom"
          download-size="0"
          install-size="0"
@@ -272,6 +266,21 @@
          download-size="0"
          install-size="0"
          version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.eclipse.virgo.util.osgi.manifest"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="ch.qos.logback.slf4j"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         fragment="true"
          unpack="false"/>
 
 </feature>
