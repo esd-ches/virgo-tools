@@ -368,7 +368,8 @@ public class VirgoToolingHook {
             }
             process.waitFor();
         } catch (IOException e) {
-            logError("Grunt couldn't be executed.", e);
+            logError("Grunt couldn't be executed. Please check if grunt-cli is installed globally. If not, please run \"npm install -g grunt-cli\".",
+                e);
         } catch (InterruptedException e) {
             logError("Grunt was interrupted.", e);
         }
