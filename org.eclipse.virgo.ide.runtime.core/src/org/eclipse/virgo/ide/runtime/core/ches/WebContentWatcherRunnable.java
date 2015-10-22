@@ -28,7 +28,6 @@ public class WebContentWatcherRunnable extends AbstractFileWatcherRunnable {
         do {
             key = watchService.take();
             IProject project = keyToProject.get(key);
-            hook.scheduleRefresh(project);
             try {
                 // Minimize duplicate detection of same change.
                 Thread.sleep(100);
@@ -42,8 +41,13 @@ public class WebContentWatcherRunnable extends AbstractFileWatcherRunnable {
 
                 if (modifiedFile.isDirectory() && event.kind().equals(ENTRY_CREATE) && !modifiedFile.getName().equals(".svn")) {
                     addWatcher(modifiedFile, project);
+                    hook.scheduleRefresh(project);
                 } else {
+                    if (modifiedFile.getName().endsWith("bak___") || modifiedFile.getName().endsWith("jb_old___")) {
+                        continue; // ignore backup files
+                    }
                     VirgoToolingHook.logInfo("WebContent change detected - " + event.kind() + ": " + modifiedFile.getAbsolutePath());
+                    hook.scheduleRefresh(project);
                     hook.scheduleGrunt(project);
                 }
             }
