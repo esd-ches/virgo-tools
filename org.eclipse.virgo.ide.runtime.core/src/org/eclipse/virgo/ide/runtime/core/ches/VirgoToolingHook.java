@@ -101,7 +101,7 @@ public class VirgoToolingHook {
 
     private static final String CONSOLE_NAME = "CHES Virgo Tooling";
 
-    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
     private static MessageConsole findConsole() {
         ConsolePlugin plugin = ConsolePlugin.getDefault();
