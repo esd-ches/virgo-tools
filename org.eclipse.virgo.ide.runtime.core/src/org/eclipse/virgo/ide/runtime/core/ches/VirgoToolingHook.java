@@ -356,14 +356,15 @@ public class VirgoToolingHook {
         }
 
         try {
-            logInfo("Running grunt at " + gruntProject.getLocation() + ": grunt.cmd --projects=" + projectsString);
-            ProcessBuilder processBuilder = new ProcessBuilder("grunt.cmd", "--projects=" + projectsString);
+            logInfo("Running grunt at " + gruntProject.getLocation() + ": grunt.cmd --no-color --projects=" + projectsString);
+            ProcessBuilder processBuilder = new ProcessBuilder("grunt.cmd", "--no-color", "--projects=" + projectsString);
             processBuilder.directory(gruntProject.getLocation().toFile());
             processBuilder.redirectErrorStream();
             Process process = processBuilder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line = reader.readLine();
             while (line != null) {
+                logInfo("Grunt: " + line);
                 line = reader.readLine();
             }
             process.waitFor();
