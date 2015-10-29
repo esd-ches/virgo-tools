@@ -103,6 +103,8 @@ public class VirgoToolingHook {
 
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
+    private static final String OS = System.getProperty("os.name").toLowerCase();
+
     private static MessageConsole findConsole() {
         ConsolePlugin plugin = ConsolePlugin.getDefault();
         IConsoleManager consoleManager = plugin.getConsoleManager();
@@ -147,6 +149,18 @@ public class VirgoToolingHook {
 
     public static File getWorkspaceBase() {
         return ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile();
+    }
+
+    private static boolean isMac() {
+
+        return (OS.indexOf("mac") >= 0);
+
+    }
+
+    private static boolean isWindows() {
+
+        return (OS.indexOf("win") >= 0);
+
     }
 
     public static void logError(String message) {
@@ -280,6 +294,31 @@ public class VirgoToolingHook {
         return allProjects;
     }
 
+    private List<String> getGruntCommands(Set<IProject> projects) throws Exception {
+        String projectsString = "";
+        Iterator<IProject> projectsIterator = projects.iterator();
+        while (projectsIterator.hasNext()) {
+            projectsString += projectsIterator.next().getName();
+            if (projectsIterator.hasNext()) {
+                projectsString += ",";
+            }
+        }
+
+        List<String> commands = new ArrayList<>();
+        if (isWindows()) {
+            commands.add("cmd.exe");
+            commands.add("/c");
+        } else if (isMac()) {
+            // no extra commands required
+        } else {
+            throw new Exception("Operating System \"" + OS + "\" not supported.");
+        }
+        commands.add("grunt");
+        commands.add("--no-color");
+        commands.add("--projects=" + projectsString);
+        return commands;
+    }
+
     private IFile getPlanFile(IModule module) {
         String fileName = module.getId();
         fileName = fileName.substring(fileName.indexOf(':') + 1);
@@ -301,6 +340,18 @@ public class VirgoToolingHook {
             logError("An error occurred while extracting the version from the plan file.", e);
             return null;
         }
+    }
+
+    private void logGruntInfo(IProject gruntProject, List<String> commands) {
+        String commandString = "";
+        Iterator<String> iterator = commands.iterator();
+        while (iterator.hasNext()) {
+            commandString += iterator.next();
+            if (iterator.hasNext()) {
+                commandString += " ";
+            }
+        }
+        logInfo("Running grunt at " + gruntProject.getLocation() + ": " + commandString);
     }
 
     public List<File> lookup(File file) {
@@ -346,18 +397,10 @@ public class VirgoToolingHook {
             return;
         }
 
-        String projectsString = "";
-        Iterator<IProject> projectsIterator = projects.iterator();
-        while (projectsIterator.hasNext()) {
-            projectsString += projectsIterator.next().getName();
-            if (projectsIterator.hasNext()) {
-                projectsString += ",";
-            }
-        }
-
         try {
-            logInfo("Running grunt at " + gruntProject.getLocation() + ": grunt.cmd --no-color --projects=" + projectsString);
-            ProcessBuilder processBuilder = new ProcessBuilder("grunt.cmd", "--no-color", "--projects=" + projectsString);
+            List<String> commands = getGruntCommands(projects);
+            logGruntInfo(gruntProject, commands);
+            ProcessBuilder processBuilder = new ProcessBuilder(commands);
             processBuilder.directory(gruntProject.getLocation().toFile());
             processBuilder.redirectErrorStream();
             Process process = processBuilder.start();
@@ -373,6 +416,8 @@ public class VirgoToolingHook {
                 e);
         } catch (InterruptedException e) {
             logError("Grunt was interrupted.", e);
+        } catch (Exception e) {
+            logError("An exception occurred while executing grunt.", e);
         }
     }
 
