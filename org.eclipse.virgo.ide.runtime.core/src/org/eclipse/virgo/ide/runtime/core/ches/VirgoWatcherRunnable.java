@@ -24,6 +24,9 @@ public class VirgoWatcherRunnable extends AbstractWatchServiceRunnable {
     @Override
     protected void runInternal() throws Exception {
         File virgo = VirgoToolingHook.getVirgoBase();
+        while (!virgo.exists()) {
+            Thread.sleep(500);
+        }
         Path path = Paths.get(virgo.toURI());
         path.register(watchService, ENTRY_CREATE, ENTRY_DELETE, ENTRY_MODIFY);
         VirgoToolingHook.logInfo("Watching Virgo at: " + virgo);
