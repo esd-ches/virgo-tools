@@ -93,6 +93,7 @@ public class VirgoToolingHook {
             }
 
             Set<IProject> projects = new HashSet<>(scheduledGrunts);
+            projects.addAll(moduleToBranding.values());
             runGrunt(projects);
             scheduledGrunts.removeAll(projects);
         }
@@ -209,6 +210,8 @@ public class VirgoToolingHook {
 
     private final Map<IModule, Set<IProject>> moduleToProjects;
 
+    private final HashMap<IModule, IProject> moduleToBranding;
+
     private final HashSet<IProject> scheduledRefreshs;
 
     private final HashSet<IProject> scheduledGrunts;
@@ -223,6 +226,7 @@ public class VirgoToolingHook {
 
     public VirgoToolingHook() {
         moduleToProjects = new HashMap<>();
+        moduleToBranding = new HashMap<>();
         scheduledRefreshs = new HashSet<>();
         scheduledGrunts = new HashSet<>();
     }
@@ -240,6 +244,9 @@ public class VirgoToolingHook {
         for (IModule childModule : childModules) {
             if (childModule.getModuleType().getId().equals("jst.web")) {
                 projects.add(workspaceRoot.getProject(childModule.getName()));
+            }
+            if (childModule.getName().contains("branding")) {
+                moduleToBranding.put(module, workspaceRoot.getProject(childModule.getName()));
             }
         }
     }
@@ -279,6 +286,7 @@ public class VirgoToolingHook {
         }
 
         moduleToProjects.remove(module);
+        moduleToBranding.remove(module);
         startWatching();
     }
 
@@ -495,6 +503,7 @@ public class VirgoToolingHook {
     synchronized private void stopAll() {
         try {
             moduleToProjects.clear();
+            moduleToBranding.clear();
             stopFileWatcher();
             terminateRunnable(virgoWatcherRunnable, virgoWatcherThread);
             terminateRunnable(updateRunnable, updateThread);
