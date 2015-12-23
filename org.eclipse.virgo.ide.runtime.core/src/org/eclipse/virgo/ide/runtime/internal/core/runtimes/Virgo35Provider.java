@@ -36,7 +36,7 @@ import org.eclipse.wst.server.core.IModule;
 import org.eclipse.wst.server.core.IRuntime;
 
 /**
- * {@link IServerRuntimeProvider} for Virgo Server 3.5.0 and above.
+ * {@link IServerRuntimeProvider} for Virgo Server 3.5.x and 3.6.x.
  *
  * @author Borislav Kapukaranov
  * @author Miles Parker
@@ -49,7 +49,16 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
 
     public static final String GEMINI_CONNECTOR_BUNDLE_NAME = "org.eclipse.virgo.ide.management.remote_3.5.0.201208291630.jar"; //$NON-NLS-1$
 
-    private Virgo35Provider() {
+    protected Virgo35Provider() {
+    }
+
+    public boolean isHandlerFor(IRuntime runtime) {
+        IPath configPath = runtime.getLocation().append(getConfigurationDir());
+        File configDir = configPath.toFile();
+        if (!configDir.exists()) {
+            return false;
+        }
+        return new File(configDir, getServerProfileName()).exists();
     }
 
     /**
@@ -117,7 +126,7 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
         list.addAll(Arrays.asList(commonArguments));
 
         list.add("-Dorg.eclipse.virgo.kernel.config=" + serverHome + "/" + getConfigurationDir() + "," + serverHome + "/stage");
-        list.add("-Dosgi.java.profile=file:" + serverHome + "/" + getConfigurationDir() + "/java6-server.profile");
+        list.add("-Dosgi.java.profile=file:" + serverHome + "/" + getConfigurationDir() + "/" + getServerProfileName());
         list.add("-Declipse.ignoreApp=true");
         list.add("-Dosgi.install.area=" + serverHome);
         list.add("-Dosgi.configuration.area=" + serverHome + "/work");

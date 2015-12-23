@@ -218,7 +218,11 @@ public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
      * {@inheritDoc}
      */
     public String getProfilePath(IRuntime runtime) {
-        return runtime.getLocation().append(getProfileDir()).append("java6-server.profile").toString();
+        return runtime.getLocation().append(getProfileDir()).append(getServerProfileName()).toString();
+    }
+
+    protected String getServerProfileName() {
+        return "java6-server.profile";
     }
 
     /**
@@ -347,11 +351,7 @@ public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
         createRepositoryConfiguration(serverBehaviour, getRepositoryConfigurationFileName());
     }
 
-    public boolean isHandlerFor(IRuntime runtime) {
-        IPath configPath = runtime.getLocation().append(getConfigurationDir());
-        File configDir = configPath.toFile();
-        return configDir.exists();
-    }
+    public abstract boolean isHandlerFor(IRuntime runtime);
 
     /**
      * {@inheritDoc}
