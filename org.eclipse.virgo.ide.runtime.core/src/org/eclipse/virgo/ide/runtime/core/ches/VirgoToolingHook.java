@@ -410,7 +410,7 @@ public class VirgoToolingHook {
             logGruntInfo(gruntProject, commands);
             ProcessBuilder processBuilder = new ProcessBuilder(commands);
             processBuilder.directory(gruntProject.getLocation().toFile());
-            processBuilder.redirectErrorStream();
+            processBuilder.redirectErrorStream(true);
             Process process = processBuilder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line = reader.readLine();
