@@ -31,6 +31,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.IWorkbenchPage;
@@ -224,11 +225,16 @@ public class VirgoToolingHook {
 
     private ScheduledExecutorService runGruntExecutorService;
 
+    private final ListenerList gruntListeners;
+
     public VirgoToolingHook() {
         moduleToProjects = new HashMap<>();
         moduleToBranding = new HashMap<>();
         scheduledRefreshs = new HashSet<>();
         scheduledGrunts = new HashSet<>();
+        gruntListeners = new ListenerList();
+
+        gruntListeners.add(new GruntStatusListener());
     }
 
     private void addProjects(IModule module, IFile planFile) {
@@ -405,6 +411,10 @@ public class VirgoToolingHook {
             return;
         }
 
+        for (Object listener : gruntListeners.getListeners()) {
+            ((IGruntListener) listener).beforeRun(projects);
+        }
+
         try {
             List<String> commands = getGruntCommands(projects);
             logGruntInfo(gruntProject, commands);
@@ -426,6 +436,10 @@ public class VirgoToolingHook {
             logError("Grunt was interrupted.", e);
         } catch (Exception e) {
             logError("An exception occurred while executing grunt.", e);
+        } finally {
+            for (Object listener : gruntListeners.getListeners()) {
+                ((IGruntListener) listener).afterRun(projects);
+            }
         }
     }
 
