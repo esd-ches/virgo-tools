@@ -86,6 +86,8 @@ public class DefaultServerDeployer implements IServerDeployer {
             // behaviour.onModuleStateChange(new IModule[] { module },
             // IServer.STATE_STOPPED);
             // }
+
+            ServerCorePlugin.getVirgoToolingHook().afterDeploy(module);
         }
     }
 

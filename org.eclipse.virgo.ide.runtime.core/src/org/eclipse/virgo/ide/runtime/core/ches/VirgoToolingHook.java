@@ -6,6 +6,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -26,6 +28,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
@@ -556,6 +559,44 @@ public class VirgoToolingHook {
     public void virgoPublishFinished() {
         logInfo("Detected a publishing event of virgo - replaying updates.");
         updateRunnable.replayUpdates();
+    }
+
+    /**
+     * Copy all content which was probably not deployed as the workspace was not refreshed yet, see #5231
+     *
+     * @param module
+     */
+    public void afterDeploy(IModule module) {
+        Set<IProject> projects = moduleToProjects.get(module);
+        if (projects == null) {
+            return;
+        }
+
+        for (IProject project : projects) {
+            if (!project.getName().endsWith("branding")) {
+                continue;
+            }
+
+            IFolder cssFolder = project.getFolder("resources/css");
+            if (!cssFolder.exists()) {
+                continue;
+            }
+
+            try {
+                for (IResource child : cssFolder.members()) {
+                    if (child.getName().endsWith(".css") || child.getType() == IResource.FILE) {
+                        File source = child.getLocation().toFile();
+                        List<File> targets = lookup(source);
+                        for (File target : targets) {
+                            Files.copy(source.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                            logInfo("Copying " + source.getName() + " --> " + target.getAbsolutePath());
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                logError("Unable to copy css content", e);
+            }
+        }
     }
 
 }

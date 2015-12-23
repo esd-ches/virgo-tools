@@ -95,6 +95,9 @@ public class ServerPublishOperation extends PublishOperation {
         if (shouldRedeploy || shouldReployChild) {
             this.server.getServerDeployer().redeploy(this.modules[0]);
         }
+        for (IModule module : this.modules) {
+            ServerCorePlugin.getVirgoToolingHook().afterDeploy(module);
+        }
 
         this.server.onModulePublishStateChange(this.modules, IServer.PUBLISH_STATE_NONE);
     }
