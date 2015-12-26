@@ -82,15 +82,17 @@ public class GruntTrayIcon {
         public void run() {
             long lastTimestamp = System.currentTimeMillis();
             while (true) {
+                int sleepDuration = 5000;
                 try {
-                    Thread.sleep(5000);
+                    Thread.sleep(sleepDuration);
                 } catch (InterruptedException e) {
                     // ignore
                 }
 
                 // heuristic: if the difference is larger than 3 seconds, it is an indication that the system was
                 // restarted
-                if (System.currentTimeMillis() - lastTimestamp > 3000) {
+                long difference = System.currentTimeMillis() - lastTimestamp;
+                if (difference > sleepDuration + 3000) {
                     Display.getDefault().syncExec(new Runnable() {
 
                         public void run() {
