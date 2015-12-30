@@ -9,10 +9,11 @@
  *     GianMaria Romanato - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.virgo.ide.pde.core;
+package org.eclipse.virgo.ide.pde.core.internal;
 
-import static org.eclipse.virgo.ide.pde.core.Constants.META_INF;
-import static org.eclipse.virgo.ide.pde.core.Helper.DEBUG;
+import static org.eclipse.virgo.ide.pde.core.internal.Constants.META_INF;
+import static org.eclipse.virgo.ide.pde.core.internal.Constants.WebContent;
+import static org.eclipse.virgo.ide.pde.core.internal.Helper.DEBUG;
 
 import java.util.Map;
 
@@ -25,24 +26,38 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.osgi.util.NLS;
 
 /**
  * A custom build command that ensures that the content of META-INF is copied to the binary folder of the plug-in
- * project so that Virgo Server can find it via classpath.
+ * project so that Virgo Server can find it via class-path.
  * <p>
  * Additionally the builder parsers the MANIFEST.MF and copies to bin folder any nested JAR (Bundle-ClassPath header)
- * <p>
+ * and native libraries (Bundle-NativeCode header).
+ *
  *
  *
  */
 public class Builder extends IncrementalProjectBuilder {
 
-    private abstract class Predicate<T> {
+    private static abstract class Predicate<T> {
 
         public abstract boolean accept(T t);
+
+        public final static <T> Predicate<T> tautology() {
+            return new Predicate<T>() {
+
+                @Override
+                public boolean accept(T t) {
+                    return true;
+                }
+            };
+        }
     }
 
     public Builder() {
@@ -110,7 +125,7 @@ public class Builder extends IncrementalProjectBuilder {
 
             if (!Helper.checkLibraries(getProject())) {
                 if (DEBUG) {
-                    debug("Incremental build was requested but some classpath libraries are missing from output location, performing full build"); //$NON-NLS-1$
+                    debug("Incremental build was requested but some libraries are missing from output location, performing full build"); //$NON-NLS-1$
                 }
                 fullBuild(outputLocation, monitor);
                 return null;
@@ -127,7 +142,7 @@ public class Builder extends IncrementalProjectBuilder {
     }
 
     private void incrementalBuild(IPath outputLocation, final IResourceDelta delta, IProgressMonitor monitor) throws CoreException {
-        monitor.beginTask(Messages.Builder_IncrementalBuildMessage, 2);
+        monitor.beginTask(Messages.Builder_IncrementalBuildMessage, 3);
 
         if (delta.findMember(new Path(META_INF)) != null) {
             buildMetaInf(outputLocation, new SubProgressMonitor(monitor, 1));
@@ -135,13 +150,20 @@ public class Builder extends IncrementalProjectBuilder {
             monitor.worked(1);
         }
 
-        buildLibraries(new Predicate<String>() {
+        if (delta.findMember(new Path(Constants.WebContent)) != null) {
+            buildWebContent(outputLocation, new SubProgressMonitor(monitor, 1));
+        } else {
+            monitor.worked(1);
+        }
+
+        Predicate<String> selectChanged = new Predicate<String>() {
 
             @Override
             public boolean accept(String t) {
                 return delta.findMember(new Path(t)) != null;
             }
-        }, outputLocation, new SubProgressMonitor(monitor, 1));
+        };
+        buildLibraries(selectChanged, outputLocation, new SubProgressMonitor(monitor, 1));
         monitor.done();
     }
 
@@ -149,9 +171,10 @@ public class Builder extends IncrementalProjectBuilder {
         if (DEBUG) {
             debug("Full build, output location: " + outputLocation.toOSString()); //$NON-NLS-1$
         }
-        monitor.beginTask(Messages.Builder_FullBuildMessage, 2);
+        monitor.beginTask(Messages.Builder_FullBuildMessage, 3);
 
         buildMetaInf(outputLocation, new SubProgressMonitor(monitor, 1));
+        buildWebContent(outputLocation, new SubProgressMonitor(monitor, 1));
 
         buildLibraries(null, outputLocation, new SubProgressMonitor(monitor, 1));
 
@@ -175,12 +198,21 @@ public class Builder extends IncrementalProjectBuilder {
         monitor.done();
     }
 
+    private void buildWebContent(IPath outputLocation, IProgressMonitor monitor) throws CoreException, JavaModelException {
+        IFolder webContentFolder = getProject().getFolder(WebContent);
+        if (webContentFolder.exists()) {
+            buildFilesInFolder(monitor, webContentFolder, ResourcesPlugin.getWorkspace().getRoot().getFolder(outputLocation),
+                Predicate.<IResource> tautology(), true);
+
+        }
+    }
+
     private void buildMetaInf(IPath outputLocation, IProgressMonitor monitor) throws CoreException, JavaModelException {
         IProject project = getProject();
-        IFolder metaInf = project.getFolder(META_INF);
+        IFolder infFolder = project.getFolder(META_INF);
 
-        if (!metaInf.exists()) {
-            error("META-INF folder not found for project: " + getProject().getName()); //$NON-NLS-1$
+        if (!infFolder.exists()) {
+            error(META_INF + " folder not found for project: " + getProject().getName()); //$NON-NLS-1$
             return;
         }
 
@@ -188,39 +220,75 @@ public class Builder extends IncrementalProjectBuilder {
         if (!binFolder.exists()) {
             binFolder.create(true, true, null);
         } else {
-            binFolder.refreshLocal(IResource.DEPTH_ONE, null);
-        }
-        IFolder binaryMetaInf = binFolder.getFolder(META_INF);
-        if (!binaryMetaInf.exists()) {
-            binaryMetaInf.create(true, true, null);
-        } else {
-            binaryMetaInf.refreshLocal(IResource.DEPTH_ONE, null);
-        }
-
-        SubProgressMonitor sub = new SubProgressMonitor(monitor, 1);
-
-        IResource[] children = metaInf.members();
-        sub.beginTask(Messages.Builder_CopyMetaInfContent, children.length);
-        for (IResource iResource : children) {
-            if (!iResource.isTeamPrivateMember() && !iResource.isDerived()) {
-                IPath target = binaryMetaInf.getFullPath().append(iResource.getName());
-                IResource res = ResourcesPlugin.getWorkspace().getRoot().findMember(target);
-                if (res != null && res.exists()) {
-                    if (DEBUG) {
-                        debug(res.getFullPath().toString() + " exists, deleting"); //$NON-NLS-1$
-                    }
-                    res.refreshLocal(IResource.DEPTH_INFINITE, null);
-                    res.delete(true, null);
-                    if (DEBUG) {
-                        debug(res.getFullPath().toString() + " deleted"); //$NON-NLS-1$
-                    }
-                }
-                iResource.copy(target, true, null);
-                if (DEBUG) {
-                    debug("Copied " + iResource.getFullPath().toString() + " to " + target.toString()); //$NON-NLS-1$ //$NON-NLS-2$
-                }
+            if (!binFolder.isSynchronized(IResource.DEPTH_ONE)) {
+                binFolder.refreshLocal(IResource.DEPTH_ONE, null);
             }
-            sub.worked(1);
+        }
+        IFolder binaryInfFolder = binFolder.getFolder(META_INF);
+        if (!binaryInfFolder.exists()) {
+            binaryInfFolder.create(true, true, null);
+        } else {
+            if (!binaryInfFolder.isSynchronized(IResource.DEPTH_ONE)) {
+                binaryInfFolder.refreshLocal(IResource.DEPTH_ONE, null);
+            }
+        }
+
+        buildFilesInFolder(monitor, infFolder, binaryInfFolder, Predicate.<IResource> tautology(), false);
+        monitor.done();
+    }
+
+    private void buildFilesInFolder(IProgressMonitor monitor, IFolder from, IFolder to, Predicate<IResource> predicate, boolean merge)
+        throws CoreException {
+        IResource[] children = from.members();
+
+        SubMonitor sub = SubMonitor.convert(monitor, children.length);
+
+        sub.beginTask(NLS.bind(Messages.Builder_CopyContent, from.getName()), children.length);
+        for (IResource iResource : children) {
+            if (predicate.accept(iResource)) {
+                if (!iResource.isTeamPrivateMember() && !iResource.isDerived()) {
+                    IPath target = to.getFullPath().append(iResource.getName());
+                    IResource res = ResourcesPlugin.getWorkspace().getRoot().findMember(target);
+                    if (res != null && res.exists()) {
+                        if (DEBUG) {
+                            debug(res.getFullPath().toString() + " exists"); //$NON-NLS-1$
+                        }
+                        res.refreshLocal(IResource.DEPTH_INFINITE, null);
+
+                        if (res.getType() == IResource.FILE) {
+                            res.refreshLocal(IResource.DEPTH_ONE, null);
+                            res.delete(true, null);
+                            if (DEBUG) {
+                                debug(res.getFullPath().toString() + " deleted"); //$NON-NLS-1$
+                            }
+                            iResource.copy(target, true, null);
+                            if (DEBUG) {
+                                debug("Copied " + iResource.getFullPath().toString() + " to " + target.toString()); //$NON-NLS-1$ //$NON-NLS-2$
+                            }
+                        } else {
+                            // folder
+                            if (!merge) {
+                                res.delete(true, null);
+                                iResource.copy(target, true, null);
+                                if (DEBUG) {
+                                    debug("Copied " + iResource.getFullPath().toString() + " to " + target.toString()); //$NON-NLS-1$ //$NON-NLS-2$
+                                }
+                            } else {
+                                buildFilesInFolder(new NullProgressMonitor(), (IFolder) iResource, (IFolder) res, predicate, true);
+                                if (DEBUG) {
+                                    debug("Merged " + iResource.getFullPath().toString() + " into " + target.toString()); //$NON-NLS-1$ //$NON-NLS-2$
+                                }
+                            }
+                        }
+                    } else {
+                        iResource.copy(target, true, null);
+                        if (DEBUG) {
+                            debug("Copied " + iResource.getFullPath().toString() + " to " + target.toString()); //$NON-NLS-1$ //$NON-NLS-2$
+                        }
+                    }
+                }
+                sub.worked(1);
+            }
         }
         monitor.done();
     }

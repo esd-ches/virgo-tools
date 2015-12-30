@@ -7,6 +7,10 @@ Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.debug.core,
- org.eclipse.jdt.core
-Export-Package: org.eclipse.virgo.ide.pde.core
+ org.eclipse.jdt.core,
+ org.eclipse.pde.core,
+ org.eclipse.wst.common.project.facet.core,
+ org.eclipse.virgo.ide.facet.core
+Export-Package: org.eclipse.virgo.ide.pde.core.internal,
+ org.eclipse.virgo.ide.pde.core.internal.cmd
 Bundle-Localization: OSGI-INF/l10n/bundle

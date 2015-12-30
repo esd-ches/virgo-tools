@@ -22,9 +22,9 @@ import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
  */
 public class NewParProjectSettingsPage extends WizardNewProjectCreationPage {
 
-    private static String NEW_PROJECT_SETTINGS_TITLE = "Create a PAR project";
+    private static String NEW_PROJECT_SETTINGS_TITLE = Messages.NewParProjectSettingsPage_TITLE;
 
-    private static String NEW_PROJECT_SETTINGS_DESCRIPTION = "Enter a name and location for the PAR project.";
+    private static String NEW_PROJECT_SETTINGS_DESCRIPTION = Messages.NewParProjectSettingsPage_DESCRIPTION;
 
     private final IStructuredSelection selection;
 
@@ -38,7 +38,7 @@ public class NewParProjectSettingsPage extends WizardNewProjectCreationPage {
     @Override
     public void createControl(Composite parent) {
         super.createControl(parent);
-        createWorkingSetGroup((Composite) getControl(), this.selection, new String[] { "org.eclipse.jdt.ui.JavaWorkingSetPage" });
+        createWorkingSetGroup((Composite) getControl(), this.selection, new String[] { "org.eclipse.jdt.ui.JavaWorkingSetPage" }); //$NON-NLS-1$
         Dialog.applyDialogFont(getControl());
     }
 

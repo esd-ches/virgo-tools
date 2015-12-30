@@ -32,6 +32,7 @@
          </description>
       </wizard>  
       <wizard
+            canFinishEarly="false"
             category="org.eclipse.virgo.ide.ui.category"
             class="org.eclipse.virgo.ide.ui.wizards.NewBundleProjectWizard"
             finalPerspective="org.eclipse.virgo.ide.runtime.ui.perspective"
@@ -44,6 +45,20 @@
             Create a new OSGi bundle project
          </description>
       </wizard>
+   <wizard
+         category="org.eclipse.virgo.ide.ui.category"
+         class="org.eclipse.virgo.ide.ui.wizards.NewPDEProjectWizard"
+         finalPerspective="org.eclipse.virgo.ide.runtime.ui.perspective"
+         hasPages="true"
+         icon="icons/full/obj16/pde_project_obj.png"
+         id="org.eclipse.virgo.ide.ui.pdeprojectwizard"
+         name="%pdeProjectWizard.name"
+         project="true">
+          <description>
+            %pdeProjectWizard.desc
+         </description>
+   </wizard>
+      
    </extension>
    
    <extension
@@ -298,17 +313,20 @@
    <actionSet
          id="org.eclipse.wst.server.ui.new.actionSet">
    </actionSet>
-                            <newWizardShortcut
+       <newWizardShortcut
              id="org.eclipse.virgo.ide.ui.wizards.osgiProject">
        </newWizardShortcut>
+       <newWizardShortcut
+             id="org.eclipse.virgo.ide.ui.pdeprojectwizard">
+       </newWizardShortcut>       
        <newWizardShortcut
              id="org.eclipse.virgo.ide.ui.wizards.parProject">
        </newWizardShortcut>
        <newWizardShortcut
              id="org.eclipse.wst.server.ui.new.server">
        </newWizardShortcut>
-            <newWizardShortcut id="org.eclipse.ui.wizards.new.folder"/>
-            <newWizardShortcut id="org.eclipse.ui.wizards.new.file"/>
+       <newWizardShortcut id="org.eclipse.ui.wizards.new.folder"/>
+       <newWizardShortcut id="org.eclipse.ui.wizards.new.file"/>
 
        
             <viewShortcut id="org.eclipse.ui.navigator.ProjectExplorer"/> 
@@ -406,7 +424,7 @@
    <viewShortcut
          id="org.eclipse.virgo.ide.runtime.ui.virgoLog">
    </viewShortcut>
-       </perspectiveExtension>
+   </perspectiveExtension>
    <perspectiveExtension
          targetID="org.eclipse.jdt.ui.JavaPerspective">
       <perspectiveShortcut
@@ -468,6 +486,26 @@
 </or>      
             </enablement>
    </commonWizard>
+      <commonWizard
+         type="new"
+         wizardId="org.eclipse.virgo.ide.ui.pdeprojectwizard">
+      <enablement>
+      <or>
+      <with 
+            variable="selection"> 
+         <count 
+               value="0"> 
+         </count> 
+      </with>
+      <instanceof
+            value="org.eclipse.core.resources.IProject">
+      </instanceof>
+      <instanceof
+            value="org.eclipse.core.resources.IWorkspaceRoot">
+      </instanceof> 
+</or>      
+            </enablement>
+   </commonWizard>   
 </extension>
 <extension
       point="org.eclipse.ui.views">
@@ -475,5 +513,21 @@
          id="org.eclipse.virgo.ide.category"
          name="Virgo">
    </category>
+</extension>
+<extension
+      point="org.eclipse.pde.ui.pluginContent">
+   <wizard
+         class="org.eclipse.virgo.ide.ui.wizards.NewPDEProjectContentWizard"
+         id="org.eclipse.virgo.ide.ui.pdetemplate"
+         java="true"
+         name="Virgo"
+         pureOSGi="true"
+         rcp="false"
+         requiresActivator="false"
+         ui-content="false">
+      <description>
+         This wizard creates new PDE projects that can be deployed to a Virgo test environment.
+      </description>
+   </wizard>
 </extension>
 </plugin>

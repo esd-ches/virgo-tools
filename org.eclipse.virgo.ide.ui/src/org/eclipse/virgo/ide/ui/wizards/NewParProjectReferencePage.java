@@ -22,9 +22,9 @@ import org.eclipse.virgo.ide.facet.core.FacetUtils;
  */
 public class NewParProjectReferencePage extends WizardNewProjectReferencePage {
 
-    private static String NEW_PROJECT_REFERENCE_TITLE = "Bundle References";
+    private static String NEW_PROJECT_REFERENCE_TITLE = Messages.NewParProjectReferencePage_title;
 
-    private static String NEW_PROJECT_REFERENCE_DESCRIPTION = "Add bundles to PAR project.";
+    private static String NEW_PROJECT_REFERENCE_DESCRIPTION = Messages.NewParProjectReferencePage_desc;
 
     public NewParProjectReferencePage(String pageName) {
         super(pageName);

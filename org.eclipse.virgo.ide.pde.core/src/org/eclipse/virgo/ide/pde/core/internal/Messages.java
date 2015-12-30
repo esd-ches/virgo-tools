@@ -9,7 +9,7 @@
  *     GianMaria Romanato - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.virgo.ide.pde.core;
+package org.eclipse.virgo.ide.pde.core.internal;
 
 import org.eclipse.osgi.util.NLS;
 
@@ -18,13 +18,15 @@ import org.eclipse.osgi.util.NLS;
  */
 public class Messages extends NLS {
 
+    public static String Builder_copy_nativecode;
+
     public static String Builder_IncrementalBuildMessage;
 
     public static String Builder_FullBuildMessage;
 
     public static String Builder_copy_libraries;
 
-    public static String Builder_CopyMetaInfContent;
+    public static String Builder_CopyContent;
 
     public static String Helper_BinFolderError;
 

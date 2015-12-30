@@ -79,20 +79,20 @@ public class NewBundleInformationPage extends RuntimeConfigurationPage {
         Group propertiesGroup = new Group(container, SWT.NONE);
         propertiesGroup.setLayout(new GridLayout(3, false));
         propertiesGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        propertiesGroup.setText("Additional Properties");
+        propertiesGroup.setText(Messages.NewBundleInformationPage_Additional_Properties);
 
         this.moduleType = new Button(propertiesGroup, SWT.CHECK);
-        this.moduleType.setText("Web Application Bundle");
+        this.moduleType.setText(Messages.NewBundleInformationPage_WAB);
         this.moduleType.setSelection(false);
         this.moduleType.addSelectionListener(this.moduleTypeListener);
 
         Group classpathGroup = new Group(container, SWT.NONE);
         classpathGroup.setLayout(new GridLayout(1, false));
         classpathGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        classpathGroup.setText("Classpath Management");
+        classpathGroup.setText(Messages.NewBundleInformationPage_Classpath_Management);
 
         this.enableClasspathContainer = new Button(classpathGroup, SWT.CHECK);
-        this.enableClasspathContainer.setText("Enable Bundle Classpath Container");
+        this.enableClasspathContainer.setText(Messages.NewBundleInformationPage_enable_container);
         this.enableClasspathContainer.setSelection(true);
     }
 

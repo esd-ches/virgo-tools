@@ -9,11 +9,11 @@
  *     GianMaria Romanato - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.virgo.ide.pde.core;
+package org.eclipse.virgo.ide.pde.core.internal;
 
-import static org.eclipse.virgo.ide.pde.core.Constants.MANIFEST_MF;
-import static org.eclipse.virgo.ide.pde.core.Constants.META_INF;
-import static org.eclipse.virgo.ide.pde.core.Constants.PLUGIN_ID;
+import static org.eclipse.virgo.ide.pde.core.internal.Constants.MANIFEST_MF;
+import static org.eclipse.virgo.ide.pde.core.internal.Constants.META_INF;
+import static org.eclipse.virgo.ide.pde.core.internal.Constants.PLUGIN_ID;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,13 +38,14 @@ import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.osgi.util.ManifestElement;
+import org.osgi.framework.BundleException;
 import org.osgi.framework.FrameworkUtil;
 
 /**
  * A Helper class used by the builder.
  * <p />
  */
-class Helper {
+public class Helper {
 
     /* package */ static boolean DEBUG = "true".equals(Platform.getDebugOption(Constants.DEBUG_KEY)); //$NON-NLS-1$
 
@@ -72,7 +73,7 @@ class Helper {
     }
 
     /**
-     * tells whether a META-INF folder exists in the output location that contains a MANIFEST.MF file
+     * Tells whether a META-INF folder exists in the output location that contains a MANIFEST.MF file
      *
      * @param outputLocation
      * @return
@@ -117,6 +118,14 @@ class Helper {
     }
 
     /* package */ static java.util.List<String> getLibraryEntries(IProject project) throws CoreException {
+        java.util.List<String> toCopy = getEntries(project);
+        if (DEBUG) {
+            debug("JARS declared in manifest: " + Arrays.toString(toCopy.toArray())); //$NON-NLS-1$
+        }
+        return toCopy;
+    }
+
+    private static java.util.List<String> getEntries(IProject project) throws CoreException {
         IFolder metaInf = project.getFolder(META_INF);
         if (!metaInf.exists()) {
             return Collections.emptyList();
@@ -134,22 +143,35 @@ class Helper {
             throw new CoreException(new Status(IStatus.ERROR, PLUGIN_ID, Messages.Helper_ManifestParsingError, e));
         }
 
-        String rawValue = manifestEntries.get("Bundle-ClassPath"); //$NON-NLS-1$
         java.util.List<String> toCopy = new ArrayList<String>();
 
+        String rawValue = manifestEntries.get("Bundle-ClassPath"); //$NON-NLS-1$
         if (rawValue != null) {
             String[] classpathEntries = ManifestElement.getArrayFromList(rawValue);
             for (String classpathEntry : classpathEntries) {
                 if (".".equals(classpathEntry)) { //$NON-NLS-1$
+                    continue;
+                } else if (!classpathEntry.toLowerCase().endsWith(".jar")) {
                     continue;
                 } else {
                     toCopy.add(classpathEntry);
                 }
             }
         }
-        if (DEBUG) {
-            debug("JARS declared in manifest: " + Arrays.toString(toCopy.toArray())); //$NON-NLS-1$
+
+        rawValue = manifestEntries.get("Bundle-NativeCode"); //$NON-NLS-1$
+        if (rawValue != null) {
+            ManifestElement[] value;
+            try {
+                value = ManifestElement.parseHeader("Bundle-NativeCode", rawValue); //$NON-NLS-1$
+            } catch (BundleException e) {
+                throw new CoreException(new Status(IStatus.ERROR, PLUGIN_ID, Messages.Helper_ManifestParsingError, e));
+            }
+            for (ManifestElement manifestElement : value) {
+                toCopy.add(manifestElement.getValue());
+            }
         }
+
         return toCopy;
     }
 
@@ -254,6 +276,10 @@ class Helper {
         if (entries.isEmpty()) {
             return true;
         }
+        return checkFilesExist(project, entries);
+    }
+
+    private static boolean checkFilesExist(IProject project, List<String> entries) throws CoreException {
         IPath outputLocation = getOutputLocation(project);
         for (String string : entries) {
             if (project.getFile(string).exists()) { // iff the library really exists
@@ -267,7 +293,7 @@ class Helper {
         return true;
     }
 
-    /* package */ static void forcePDEEditor(IProject project) {
+    public static void forcePDEEditor(IProject project) {
         IFolder metaInf = project.getFolder(META_INF);
         if (metaInf.exists()) {
             IFile manifest = metaInf.getFile(MANIFEST_MF);

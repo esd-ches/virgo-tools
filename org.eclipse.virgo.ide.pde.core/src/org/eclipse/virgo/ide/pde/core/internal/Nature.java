@@ -9,7 +9,7 @@
  *     GianMaria Romanato - initial API and implementation
  *******************************************************************************/
 
-package org.eclipse.virgo.ide.pde.core;
+package org.eclipse.virgo.ide.pde.core.internal;
 
 import org.eclipse.core.resources.ICommand;
 import org.eclipse.core.resources.IProject;

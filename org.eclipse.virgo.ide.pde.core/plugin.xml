@@ -9,7 +9,7 @@
       <builder
             hasNature="true">
          <run
-               class="org.eclipse.virgo.ide.pde.core.Builder">
+               class="org.eclipse.virgo.ide.pde.core.internal.Builder">
          </run>
       </builder>
    </extension>
@@ -19,7 +19,7 @@
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run
-               class="org.eclipse.virgo.ide.pde.core.Nature">
+               class="org.eclipse.virgo.ide.pde.core.internal.Nature">
          </run>
       </runtime>
       <builder
