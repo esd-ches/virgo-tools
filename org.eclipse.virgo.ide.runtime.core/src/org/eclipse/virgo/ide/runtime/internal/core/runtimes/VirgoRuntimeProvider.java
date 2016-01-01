@@ -284,6 +284,13 @@ public abstract class VirgoRuntimeProvider implements IServerRuntimeProvider {
     /**
      * {@inheritDoc}
      */
+    public IServerCommand<DeploymentIdentity> getServerRedeployCommand(IServerBehaviour IServerBehaviour, IModule module) {
+        return getServerDeployCommand(IServerBehaviour, module);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public IServerCommand<Map<Long, IBundle>> getServerBundleAdminCommand(IServerBehaviour serverBehaviour) {
         return new JmxBundleAdminServerCommand(serverBehaviour);
     }

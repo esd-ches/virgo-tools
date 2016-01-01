@@ -132,7 +132,7 @@ public class DefaultServerDeployer implements IServerDeployer {
                     identity = executeDeployerCommand(getServerDeployCommand(module));
                 }
             } else {
-                identity = executeDeployerCommand(getServerDeployCommand(module));
+                identity = executeDeployerCommand(getServerRedeployCommand(module));
             }
         }
 
@@ -250,6 +250,10 @@ public class DefaultServerDeployer implements IServerDeployer {
 
     protected IServerCommand<DeploymentIdentity> getServerDeployCommand(IModule module) {
         return this.behaviour.getVersionHandler().getServerDeployCommand(this.behaviour, module);
+    }
+
+    protected IServerCommand<DeploymentIdentity> getServerRedeployCommand(IModule module) {
+        return this.behaviour.getVersionHandler().getServerRedeployCommand(this.behaviour, module);
     }
 
     protected IServerCommand<Boolean> getServerPingCommand() {

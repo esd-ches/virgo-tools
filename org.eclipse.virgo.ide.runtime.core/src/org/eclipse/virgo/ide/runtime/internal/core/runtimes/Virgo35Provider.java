@@ -178,15 +178,19 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
         return ServerCorePlugin.getDefault().getBundleUri(GEMINI_CONNECTOR_BUNDLE_NAME);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see
-     * org.eclipse.virgo.ide.runtime.internal.core.runtimes.VirgoRuntimeProvider#getServerDeployCommand(org.eclipse.
-     * virgo.ide.runtime.core.IServerBehaviour, org.eclipse.wst.server.core.IModule)
+    /**
+     * {@inheritDoc}
      */
     @Override
     public IServerCommand<DeploymentIdentity> getServerDeployCommand(IServerBehaviour IServerBehaviour, IModule module) {
         return new JmxServerDeployCommand(IServerBehaviour, module, true);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public IServerCommand<DeploymentIdentity> getServerRedeployCommand(IServerBehaviour IServerBehaviour, IModule module) {
+        return new JmxServerDeployCommand(IServerBehaviour, module, false);
     }
 }
