@@ -577,24 +577,37 @@ public class VirgoToolingHook {
                 continue;
             }
 
-            IFolder cssFolder = project.getFolder("resources/css");
-            if (!cssFolder.exists()) {
-                continue;
-            }
-
             try {
-                for (IResource child : cssFolder.members()) {
-                    if (child.getName().endsWith(".css") || child.getType() == IResource.FILE) {
-                        File source = child.getLocation().toFile();
-                        List<File> targets = lookup(source);
-                        for (File target : targets) {
-                            Files.copy(source.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                            logInfo("Copying " + source.getName() + " --> " + target.getAbsolutePath());
-                        }
-                    }
+                IFolder resourcesFolder = project.getFolder("resources");
+                if (!resourcesFolder.exists()) {
+                    continue;
                 }
+
+                copyCssContent(resourcesFolder);
             } catch (Exception e) {
                 logError("Unable to copy css content", e);
+            }
+        }
+    }
+
+    /**
+     * Recursively copies all css content.
+     *
+     * @param parent
+     * @throws CoreException
+     * @throws IOException
+     */
+    private void copyCssContent(IFolder parent) throws CoreException, IOException {
+        for (IResource child : parent.members()) {
+            if (child.getType() == IResource.FOLDER) {
+                copyCssContent((IFolder) child);
+            } else if (child.getName().endsWith(".css") || parent.getName().equals("css")) {
+                File source = child.getLocation().toFile();
+                List<File> targets = lookup(source);
+                for (File target : targets) {
+                    Files.copy(source.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    logInfo("Copying " + source.getName() + " --> " + target.getAbsolutePath());
+                }
             }
         }
     }
