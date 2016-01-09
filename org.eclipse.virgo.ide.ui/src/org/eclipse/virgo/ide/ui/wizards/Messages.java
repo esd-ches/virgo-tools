@@ -43,6 +43,8 @@ public class Messages extends NLS {
 
     public static String NewPDEProjectWABPage_title;
 
+    public static String NewPDEProjectWizard_title;
+
     public static String ProjectContentPageStrings_bundle_content;
 
     public static String ProjectContentPageStrings_bundle_content_desc;

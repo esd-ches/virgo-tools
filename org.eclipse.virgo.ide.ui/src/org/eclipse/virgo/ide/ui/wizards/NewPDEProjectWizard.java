@@ -35,6 +35,11 @@ import org.eclipse.virgo.ide.ui.ServerIdeUiPlugin;
  */
 public class NewPDEProjectWizard extends NewPluginProjectFromTemplateWizard {
 
+    public NewPDEProjectWizard() {
+        super();
+        setWindowTitle(Messages.NewPDEProjectWizard_title);
+    }
+
     /**
      * {@inheritDoc}
      */
