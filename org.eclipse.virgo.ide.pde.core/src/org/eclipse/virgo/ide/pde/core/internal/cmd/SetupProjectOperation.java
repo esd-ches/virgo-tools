@@ -83,8 +83,8 @@ public class SetupProjectOperation implements IWorkspaceRunnable {
      * @param service a {@link IBundleProjectService} instance
      */
     public SetupProjectOperation(IProject project, String contextRoot, IBundleProjectService service) {
-        Assert.isNotNull(project, "project cannot be null");
-        Assert.isNotNull(service, "service cannot be null");
+        Assert.isNotNull(project, "project cannot be null"); //$NON-NLS-1$
+        Assert.isNotNull(service, "service cannot be null"); //$NON-NLS-1$
         this.project = project;
         this.contextRoot = sanitizeContextRoot(contextRoot);
         this.service = service;

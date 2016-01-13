@@ -35,6 +35,7 @@ public final class Constants {
 
     // path constants
     /* package */ static final String META_INF = "META-INF"; //$NON-NLS-1$
+    /* package */ static final String OSGI_INF = "OSGI-INF"; //$NON-NLS-1$
     /* package */ static final String MANIFEST_MF = "MANIFEST.MF"; //$NON-NLS-1$
     /* package */ static final String WebContent = "WebContent"; //$NON-NLS-1$
 
