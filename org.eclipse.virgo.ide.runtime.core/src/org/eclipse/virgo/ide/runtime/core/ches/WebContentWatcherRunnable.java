@@ -39,16 +39,18 @@ public class WebContentWatcherRunnable extends AbstractFileWatcherRunnable {
                 Path modified = (Path) event.context();
                 File modifiedFile = new File(keyToFile.get(key), modified.getFileName().toString());
 
-                if (modifiedFile.isDirectory() && event.kind().equals(ENTRY_CREATE) && !modifiedFile.getName().equals(".svn")) {
+                String filename = modifiedFile.getName();
+                if (modifiedFile.isDirectory() && event.kind().equals(ENTRY_CREATE) && !filename.equals(".svn")) {
                     addWatcher(modifiedFile, project);
                     hook.scheduleRefresh(project);
                 } else {
-                    if (modifiedFile.getName().endsWith("bak___") || modifiedFile.getName().endsWith("jb_old___")) {
+                    if (filename.endsWith("bak___") || filename.endsWith("jb_old___")) {
                         continue; // ignore backup files
                     }
+
                     VirgoToolingHook.logInfo("WebContent change detected - " + event.kind() + ": " + modifiedFile.getAbsolutePath());
                     hook.scheduleRefresh(project);
-                    hook.scheduleGrunt(project);
+                    hook.scheduleGrunt(project, filename);
                 }
             }
         } while (key.reset() && !terminated);

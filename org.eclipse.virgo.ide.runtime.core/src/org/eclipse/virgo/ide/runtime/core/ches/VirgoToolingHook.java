@@ -96,10 +96,31 @@ public class VirgoToolingHook {
                 return;
             }
 
-            Set<IProject> projects = new HashSet<>(scheduledGrunts);
-            projects.addAll(moduleToBranding.values());
-            runGrunt(projects);
-            scheduledGrunts.removeAll(projects);
+            // perform css compilation only if required, #5656
+            boolean cssCompilationRequired = false;
+            Map<IProject, Set<String>> projectsToFiles = new HashMap<>(scheduledGrunts);
+            for (Set<String> files : projectsToFiles.values()) {
+                for (String file : files) {
+                    if (file.endsWith(".css") || file.endsWith(".scss")) {
+                        cssCompilationRequired = true;
+                        break;
+                    }
+                }
+
+                if (cssCompilationRequired) {
+                    break;
+                }
+            }
+
+            Set<IProject> projects = new HashSet<>();
+            projects.addAll(scheduledGrunts.keySet());
+            if (cssCompilationRequired) {
+                projects.addAll(moduleToBranding.values());
+            }
+            for (IProject project : projects) {
+                scheduledGrunts.remove(project);
+            }
+            runGrunt(projects, cssCompilationRequired);
         }
 
     }
@@ -218,7 +239,7 @@ public class VirgoToolingHook {
 
     private final HashSet<IProject> scheduledRefreshs;
 
-    private final HashSet<IProject> scheduledGrunts;
+    private final Map<IProject, Set<String>> scheduledGrunts;
 
     private ResourcesWatcherRunnable resourcesWatcherRunnable;
 
@@ -234,7 +255,7 @@ public class VirgoToolingHook {
         moduleToProjects = new HashMap<>();
         moduleToBranding = new HashMap<>();
         scheduledRefreshs = new HashSet<>();
-        scheduledGrunts = new HashSet<>();
+        scheduledGrunts = new HashMap<>();
         gruntListeners = new ListenerList();
 
         gruntListeners.add(new GruntStatusListener());
@@ -407,7 +428,13 @@ public class VirgoToolingHook {
         return matches;
     }
 
-    private void runGrunt(Set<IProject> projects) {
+    /**
+     * Runs grunt for a set of projects.
+     *
+     * @param projects the projects for which grunt should be run
+     * @param cssCompilationRequired if <code>false</code>, css compilation will be skipped
+     */
+    private void runGrunt(Set<IProject> projects, boolean cssCompilationRequired) {
         IProject gruntProject = ResourcesPlugin.getWorkspace().getRoot().getProject("at.ches.pro.web.grunt");
         if (!gruntProject.exists()) {
             logWarning("Grunt can't be executed as the project at.ches.pro.web.grunt does not exist.");
@@ -420,6 +447,10 @@ public class VirgoToolingHook {
 
         try {
             List<String> commands = getGruntCommands(projects);
+            if (!cssCompilationRequired) {
+                commands.add("--skip-css-compilation");
+            }
+
             logGruntInfo(gruntProject, commands);
             ProcessBuilder processBuilder = new ProcessBuilder(commands);
             processBuilder.directory(gruntProject.getLocation().toFile());
@@ -446,8 +477,20 @@ public class VirgoToolingHook {
         }
     }
 
-    public void scheduleGrunt(IProject project) {
-        scheduledGrunts.add(project);
+    /**
+     * Schedules a grunt run.
+     *
+     * @param project the project for which grunt should be run
+     * @param filename the name of the file that triggered the run
+     */
+    public void scheduleGrunt(IProject project, String filename) {
+        Set<String> filesForProject = scheduledGrunts.get(project);
+        if (filesForProject == null) {
+            filesForProject = new HashSet<>();
+            scheduledGrunts.put(project, filesForProject);
+        }
+
+        filesForProject.add(filename);
     }
 
     public void scheduleRefresh(IProject project) {
@@ -465,7 +508,7 @@ public class VirgoToolingHook {
             // Stop watching webcontent and resources
             stopFileWatcher();
             // Run grunt to move files from webcontent to resources
-            runGrunt(projects);
+            runGrunt(projects, true);
             // Refresh webcontent and resources folders. Unfortunately, the refresh must be run within an extra thread
             // as the operation can be blocking.
             scheduleRefresh(projects);
