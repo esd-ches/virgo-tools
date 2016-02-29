@@ -43,6 +43,7 @@
     <module>org.eclipse.virgo.ide.feature</module>
     <module>org.eclipse.virgo.ide.jdt.core</module>
     <module>org.eclipse.virgo.ide.jdt.ui</module>
+    <module>org.eclipse.virgo.ide.management.remote</module>
     <module>org.eclipse.virgo.ide.manifest.core</module>
     <module>org.eclipse.virgo.ide.par</module>
     <module>org.eclipse.virgo.ide.par.edit</module>
