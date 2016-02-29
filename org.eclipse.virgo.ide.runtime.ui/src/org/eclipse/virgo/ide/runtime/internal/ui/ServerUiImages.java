@@ -71,6 +71,8 @@ public class ServerUiImages {
 
     public static final String IMG_VIRGO_OVER = NAME_PREFIX + "virgo_over.png";
 
+    public static final String IMG_PDE_OVER = NAME_PREFIX + "pde_over.png";
+
     public static final String IMG_OBJ_BUNDLE = NAME_PREFIX + "bundle_obj.gif";
 
     public static final String IMG_OBJ_BUNDLE_SRC = NAME_PREFIX + "bundle_src_obj.gif";
@@ -98,6 +100,8 @@ public class ServerUiImages {
     public static final ImageDescriptor DESC_OBJ_VIRGO_FILE = createManaged(OBJECT, IMG_OBJ_VIRGO_FILE);
 
     public static final ImageDescriptor DESC_OBJ_VIRGO_OVER = createManaged(OVER, IMG_OBJ_VIRGO);
+
+    public static final ImageDescriptor DESC_OBJ_PDE_OVER = createManaged(OVER, IMG_PDE_OVER);
 
     public static final ImageDescriptor DESC_OBJ_PORT = createManaged(OBJECT, IMG_OBJ_PORT);
 

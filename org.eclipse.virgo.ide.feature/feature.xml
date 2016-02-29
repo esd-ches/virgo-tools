@@ -72,6 +72,13 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+         
+   <plugin
+         id="org.eclipse.virgo.ide.pde.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>         
 
    <plugin
          id="org.eclipse.virgo.ide.jdt.core"

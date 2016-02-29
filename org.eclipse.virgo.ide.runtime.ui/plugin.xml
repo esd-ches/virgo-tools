@@ -71,12 +71,11 @@
 		<fragment 
 			id="org.eclipse.virgo.server.runtime.virgo" 
 			typeIds="org.eclipse.virgo.server.runtime.virgo"
-			class="org.eclipse.virgo.ide.runtime.internal.ui.VirgoServerRuntimeWizardFragment" />
-		  <fragment
-		        class="org.eclipse.virgo.ide.runtime.internal.ui.VirgoServerRuntimeWizardFragment"
-		        id="org.eclipse.virgo.server.runtime.virgo.35"
-		        typeIds="org.eclipse.virgo.server.runtime.virgo.35">
-		  </fragment>
+			class="org.eclipse.virgo.ide.runtime.internal.ui.VirgoServerRuntimeWizardFragment" />					
+   	    <fragment
+		    class="org.eclipse.virgo.ide.runtime.internal.ui.VirgoServerRuntimeWizardFragment"
+		    id="org.eclipse.virgo.server.runtime.virgo.35"
+		    typeIds="org.eclipse.virgo.server.runtime.virgo.35" />
 	</extension>
 
 	<extension point="org.eclipse.wst.common.project.facet.ui.images">
@@ -117,8 +116,15 @@
          class="org.eclipse.virgo.ide.runtime.internal.ui.editor.ArtefactOrderEditorSection">
       </section>
       <section
-         id="org.eclipse.virgo.ide.server.ui.configuration.editor.staticresources"
+         id="org.eclipse.virgo.ide.server.ui.configuration.editor.targetplatform"
          order="15"
+         insertionId="org.eclipse.wst.server.editor.overview.left"
+         typeIds="org.eclipse.virgo.server.virgo,org.eclipse.virgo.server.virgo.35"
+         class="org.eclipse.virgo.ide.runtime.internal.ui.editor.TargetPlatformSection">
+      </section>
+      <section
+         id="org.eclipse.virgo.ide.server.ui.configuration.editor.staticresources"
+         order="20"
          insertionId="org.eclipse.wst.server.editor.overview.left"
          typeIds="org.eclipse.virgo.server.virgo,org.eclipse.virgo.server.virgo.35"
          class="org.eclipse.virgo.ide.runtime.internal.ui.editor.StaticResourcesEditorSection">
@@ -620,6 +626,41 @@
             </objectClass>
          </and>
       </enablement>
+   </decorator>
+   <decorator
+         adaptable="true"
+         icon="icons/full/over08/virgo_obj.png"
+         id="org.eclipse.virgo.ide.runtime.ui.pde.project.decorator"
+         label="%projectPDEDecorator.label"
+         lightweight="true"
+         location="TOP_LEFT"
+         state="true">
+      <enablement>
+         <and>
+            <objectClass
+                  name="org.eclipse.core.resources.IProject">
+            </objectClass>
+            <objectState
+                  name="projectNature"
+                  value="org.eclipse.virgo.ide.pde.core.nature">
+            </objectState>
+         </and>
+      </enablement>
+      <description>
+         %projectPDEDecorator.desc
+      </description>
+   </decorator>
+   <decorator
+         adaptable="true"
+         class="org.eclipse.virgo.ide.runtime.internal.ui.providers.ServerTargetPlatformDecorator"
+         id="org.eclipse.virgo.ide.runtime.ui.server.targetplatform.decorator"
+         label="%serverPDEDecorator.label"
+         lightweight="true"
+         location="TOP_LEFT"
+         state="true">
+      <description>
+         %serverPDEDecorator.desc
+      </description>
    </decorator>
 </extension>
 </plugin>

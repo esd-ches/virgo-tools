@@ -19,6 +19,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.ServerProjectManager;
+import org.eclipse.wst.server.core.ServerCore;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -90,6 +91,8 @@ public class ServerUiPlugin extends AbstractUIPlugin {
         }
         plugin.getPreferenceStore().setDefault(PREF_DOWNLOAD_MESSAGE_KEY, false);
 
+        ServerCore.addRuntimeLifecycleListener(RuntimeListener.getDefault());
+
         ServerProjectManager.getInstance().updateProjects();
     }
 
@@ -101,6 +104,7 @@ public class ServerUiPlugin extends AbstractUIPlugin {
     @Override
     public void stop(BundleContext context) throws Exception {
         plugin = null;
+        ServerCore.removeRuntimeLifecycleListener(RuntimeListener.getDefault());
         super.stop(context);
     }
 
