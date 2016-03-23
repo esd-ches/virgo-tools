@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
@@ -44,6 +45,8 @@ public class SetupProjectOperation implements IWorkspaceRunnable {
     private static final String WST_FACET_NATURE = org.eclipse.wst.common.project.facet.core.internal.FacetCorePlugin.PLUGIN_ID + ".nature"; //$NON-NLS-1$
 
     private static final String WEB_CONTENT_FOLDER = "WebContent"; //$NON-NLS-1$
+
+    private static final String WEB_INF_FOLDER = "WEB-INF"; //$NON-NLS-1$
 
     private static final String BIN_WEB_INF_CLASSES = "bin/WEB-INF/classes"; //$NON-NLS-1$
 
@@ -114,7 +117,8 @@ public class SetupProjectOperation implements IWorkspaceRunnable {
         if (contextRoot != null && contextRoot.length() > 0) {
             IPath webContentPath = configureWABClasspath(project);
 
-            createWebXML(contextRoot, webContentPath);
+            IPath WebXMLPath = webContentPath.append(WEB_INF_FOLDER);
+            createWebXML(contextRoot, WebXMLPath);
             createIndexHTML(contextRoot, webContentPath);
             createBuildProperties();
 
@@ -156,8 +160,19 @@ public class SetupProjectOperation implements IWorkspaceRunnable {
 
     private void createFileFromTemplate(String contextRoot, IPath webContentPath, String fileNane, String charset) throws CoreException {
         IFolder webContentFolder = ResourcesPlugin.getWorkspace().getRoot().getFolder(webContentPath);
-        if (!webContentFolder.exists()) {
-            webContentFolder.create(true, false, null);
+
+        java.util.List<IFolder> toBeCreated = new ArrayList<IFolder>();
+        IFolder tmp = webContentFolder;
+        while (!tmp.exists()) {
+            toBeCreated.add(0, tmp);
+            if (tmp.getParent() instanceof IFolder) {
+                tmp = (IFolder) tmp.getParent();
+            } else {
+                break;
+            }
+        }
+        for (IFolder iFolder : toBeCreated) {
+            iFolder.create(true, false, null);
         }
 
         IFile file = webContentFolder.getFile(fileNane);
