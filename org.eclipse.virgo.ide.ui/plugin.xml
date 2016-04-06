@@ -186,6 +186,21 @@
             </separator>
          </menu>
       </objectContribution>
+ 	  <objectContribution
+            objectClass="org.eclipse.core.resources.IProject"
+            adaptable="true"
+            id="org.eclipse.virgo.ide.ui.migrate.pde2virgo">
+         <action
+               label="Migrate PDE2Virgo project"
+               class="org.eclipse.virgo.ide.ui.internal.actions.ConvertPDE2VirgoProject"
+               enablesFor="+"
+               menubarPath="org.eclipse.virgo.ide.menu/group1"
+               id="org.eclipse.virgo.ide.ui.migrate.pde2virgo.action">
+	        <enablement>
+					<objectState name="nature" value="org.github.pde2virgo.PDE2VirgoNature"/>
+	         </enablement>   
+         </action>       
+       </objectContribution>
    </extension>
    
    	<extension point="org.eclipse.wst.xml.core.catalogContributions">
