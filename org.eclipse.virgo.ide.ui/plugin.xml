@@ -201,6 +201,26 @@
 	         </enablement>   
          </action>       
        </objectContribution>
+ 	  <objectContribution
+            objectClass="org.eclipse.core.resources.IProject"
+            adaptable="true"
+            id="org.eclipse.virgo.ide.ui.migrate.plugin2virgo">
+         <action
+               label="Migrate Plug-in project"
+               class="org.eclipse.virgo.ide.ui.internal.actions.ConvertPlugInProject"
+               enablesFor="+"
+               menubarPath="org.eclipse.virgo.ide.menu/group1"
+               id="org.eclipse.virgo.ide.ui.migrate.plugin2virgo.action">
+	        <enablement>
+	        	<and>
+					<objectState name="nature" value="org.eclipse.pde.PluginNature"/>
+					<not>
+						<objectState name="nature" value="org.github.pde2virgo.PDE2VirgoNature"/>
+					</not>
+				</and>
+	         </enablement>   
+         </action>       
+       </objectContribution>       
    </extension>
    
    	<extension point="org.eclipse.wst.xml.core.catalogContributions">
