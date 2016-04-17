@@ -197,9 +197,12 @@
                menubarPath="org.eclipse.virgo.ide.menu/group1"
                id="org.eclipse.virgo.ide.ui.migrate.pde2virgo.action">
 	        <enablement>
-					<objectState name="nature" value="org.github.pde2virgo.PDE2VirgoNature"/>
+				<objectState name="nature" value="org.github.pde2virgo.PDE2VirgoNature"/>
 	         </enablement>   
          </action>       
+	     <visibility>
+			<objectState name="nature" value="org.github.pde2virgo.PDE2VirgoNature"/>
+	     </visibility>          
        </objectContribution>
  	  <objectContribution
             objectClass="org.eclipse.core.resources.IProject"
@@ -217,9 +220,23 @@
 					<not>
 						<objectState name="nature" value="org.github.pde2virgo.PDE2VirgoNature"/>
 					</not>
+					<not>
+						<objectState name="nature" value="org.eclipse.virgo.ide.pde.core.nature"/>
+					</not>					
 				</and>
 	         </enablement>   
          </action>       
+	     <visibility>
+	       	<and>
+				<objectState name="nature" value="org.eclipse.pde.PluginNature"/>
+				<not>
+					<objectState name="nature" value="org.github.pde2virgo.PDE2VirgoNature"/>
+				</not>
+				<not>
+					<objectState name="nature" value="org.eclipse.virgo.ide.pde.core.nature"/>
+				</not>									
+			</and>
+	     </visibility>          
        </objectContribution>       
    </extension>
    
