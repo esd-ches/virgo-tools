@@ -5,6 +5,10 @@
 	(c) Chris Aniszczyk <caniszczyk@gmail.com>
     (c) Lawrence Mandel <lmandel@ca.ibm.com>
     (c) Peter Friese <peter.friese@itemis.com>
+    
+    This build file needs to be run using an Eclipse launch configuration
+    and selecting to use the same JVM that is running Eclipse so that it
+    will be able to load classes from the Eclipse plug-ins.
 -->
 
 
@@ -26,7 +30,7 @@
 	<taskdef name="xinclude" classname="org.eclipse.wst.xsl.core.internal.ant.XIncludeTask" />
 
 	<property name="docbook.version" value="1.76.0" />
-	<property name="fop.version" value="1.0" />
+	<property name="fop.version" value="1.1" />
 	<!--
 		Global vars
 	-->

@@ -1,0 +1,59 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Server Runtime Wizard</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Tools Guide"><link rel="up" href="ch07.html" title="Chapter&nbsp;7.&nbsp;Developing OSGi Bundles using Plug-in Development Environment (PDE)"><link rel="prev" href="ch07.html" title="Chapter&nbsp;7.&nbsp;Developing OSGi Bundles using Plug-in Development Environment (PDE)"><link rel="next" href="ch07s03.html" title="PDE Bundle projects"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch07.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch07s03.html">Next</a></td></tr></table><hr></div><div class="section" title="Server Runtime Wizard"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="runtime-wizard"></a>Server Runtime Wizard</h2></div></div></div><p>
+			After installing the Virgo Tools in Eclipse it is possible
+			to create a new Server.
+			A Server can be created from the global <span class="emphasis"><em>New</em></span> dialog, by selecting the
+			<span class="emphasis"><em>Virgo Runtime</em></span> item within the <span class="emphasis"><em>EclipseRT</em></span> category.
+			Alternatively, users can right click over the <span class="emphasis"><em>Servers</em></span> view (easily accessible from
+			the <span class="emphasis"><em>Virgo</em></span> perspective or via <span class="emphasis"><em>New -&gt; Show View -&gt; Other</em></span>) and select <span class="emphasis"><em>New</em></span> to
+			open the same wizard.
+		</p><p>
+			<img src="images/new_server_wiz_1.png">			
+		</p><p>
+			In both cases the Server wizard will appear and will ask the user
+			to select a valid Virgo installation from the local file system.
+			</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
+			The first time a Server is created in a new workspace the wizard
+			will create both a Server instance and a Server Runtime. 
+			The former corresponds to the Server where the bundles in the workspace will be deployed,
+			the latter corresponds to the runtime definition of which the former will be an instance.
+			</div><p>
+			</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
+			While it's in theory possible to create multiple runtimes and different Server instances
+			associated to them within a single workspace, only one PDE target platform can be active in a workspace at a time.			
+			As such when working with the Virgo Tools and PDE it is recommended to use one dedicated Eclipse workspace
+			for one Server runtime and one PDE Target Platform.</div><p>			
+		</p><p>
+			<img src="images/new_server_wiz_2.png">
+		</p><p>
+			To manage bundle dependencies with PDE make sure to select the check-box in the next page of the wizard:
+		</p><p>
+			<img src="images/new_server_wiz_3.png">
+		</p><p>
+			The wizard will then parse the <code class="code">org.eclipse.virgo.repository.properties</code> file and show to the
+			user the folders that will be used for setting up the PDE Target Platform definition.
+		    In this page it's possible to include additional folders before pressing <span class="emphasis"><em>Finish</em></span>.
+			The folders visible in the picture above are the default content of an unchanged <code class="code">org.eclipse.virgo.repository.properties</code> file plus the server <span class="emphasis"><em>plugins</em></span> folder
+			contained in the server home directory. In reality the <span class="emphasis"><em>plugins</em></span> folder is not a bundle repository and is not listed in the <code class="code">org.eclipse.virgo.repository.properties</code> file.
+			It contains some core components of the Virgo Runtime Environment and gets included in the Target Platform definition
+			because at runtime the contained bundles are made available to the deployed applications for dependencies resolution.  
+		</p><p>			
+			Additional folders can be added (or removed if already present in the <code class="code">org.eclipse.virgo.repository.properties</code> file). When the <span class="emphasis"><em>Finish</em></span> button
+			is pressed the wizard will create a PDE Target Platform definition and will offer to modify <code class="code">org.eclipse.virgo.repository.properties</code> to reflect any change applied by the user.
+			The newly created Target Platform will be named after the Server runtime (usually "Virgo Runtime" if not changed by the user in the previous wizard page).		
+		</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>		
+			Note that while it's safe to include additional folders, users should not remove the default folders unless they really know what they are doing.
+			</div><p>
+		</p><p>
+			It is possible to double check the content of the newly created PDE Target Platform via the Target Platform preferences page in the
+			Preferences dialog (<span class="emphasis"><em>Window -&gt; Preferences</em></span>):
+		</p><p><img src="images/virgo_target_platform.png"></p><p>
+			The target platform name must match the Server runtime name ("Virgo Runtime" in this example) for the Virgo Tools to be able to correlate
+			the two. 
+			</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>When a PDE Target platform exists for a Virgo Server instance and is named like the corresponding Virgo Runtime, the Server icon
+			is decorated in the <span class="emphasis"><em>Servers</em></span> view with a tiny plug-in icon in the top-left, as depicted below.</div><p> 		
+		</p><p><img src="images/servers_and_editor.png"></p><p>
+		As visible in the above picture, the <span class="emphasis"><em>Server editor</em></span>, which is easily accessible by double-clicking over the Virgo Runtime Environment
+		in the <span class="emphasis"><em>Server</em></span> view, provides an new section titled <span class="emphasis"><em>Target Platform</em></span> which allows reloading the
+		content of the Target Platform definition associated to the current server (useful for example when new bundles are added to the repository)
+		and allows editing the content of the current Target Platform definition by recalling the same UI of the last page of the server creation wizard.
+		</p></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch07.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch07.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch07s03.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

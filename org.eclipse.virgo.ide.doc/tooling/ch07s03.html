@@ -1,0 +1,19 @@
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>PDE Bundle projects</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Tools Guide"><link rel="up" href="ch07.html" title="Chapter&nbsp;7.&nbsp;Developing OSGi Bundles using Plug-in Development Environment (PDE)"><link rel="prev" href="ch07s02.html" title="Server Runtime Wizard"><link rel="next" href="ch07s04.html" title="Publishing"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch07s02.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch07s04.html">Next</a></td></tr></table><hr></div><div class="section" title="PDE Bundle projects"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="pde-projects"></a>PDE Bundle projects</h2></div></div></div><p>
+		Now that the Virgo Runtime Environment has been properly setup in the Eclipse workspace, including the corresponding PDE Target Platform definition,
+		it's finally possible to create new projects.
+	</p><p>The Virgo Tools require PDE Plug-in projects to be augmented with some additional features to be usable. As such, in order to create
+	a new project it is necessary to use the dedicated wizard named <span class="emphasis"><em>PDE Bundle project</em></span> located within the <span class="emphasis"><em>Virgo</em></span>
+	category:
+	</p><p><img src="images/pde_bundle_wiz.png"></p><p>
+		The above wizard is the standard PDE <span class="emphasis"><em>Plug-in project</em></span> wizard with some choices disabled or defaulted.
+		In addition to the usual pages it includes an extra page where the user can optionally specify a Web context root.
+		If a context root is specified the new project will be a Web Application bundle (WAB). If the context root is not specified
+		the new project will be a regular OSGi bundle. 
+		</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
+			The icon of Plug-in projects created for Virgo using the above wizard will be decorated with a tiny <span class="emphasis"><em>EclipseRT globe</em></span> in the top left.
+		</div><p>
+		</p><p><img src="images/new_pde_bundle.png"></p><p>			
+	</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3>
+		Once a <span class="emphasis"><em>PDE Bundle project</em></span> has been created as explained above, the developer can use the standard <span class="emphasis"><em>PDE Plug-in Editor</em></span>
+		and related tooling to work with the newly created project. Please refer to the official PDE documentation for further details.</div><p> 
+	</p></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch07s02.html">Prev</a>&nbsp;</td><td align="center" width="20%"><a accesskey="u" href="ch07.html">Up</a></td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch07s04.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>
