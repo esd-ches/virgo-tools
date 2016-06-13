@@ -17,15 +17,16 @@ import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.jface.viewers.IContentProvider;
+import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.jface.window.Window;
 import org.eclipse.pde.internal.ui.PDEPlugin;
 import org.eclipse.pde.internal.ui.PDEPluginImages;
 import org.eclipse.pde.internal.ui.PDEUIMessages;
 import org.eclipse.pde.internal.ui.editor.PDEFormPage;
-import org.eclipse.pde.internal.ui.elements.DefaultTableProvider;
 import org.eclipse.pde.internal.ui.util.SWTUtil;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.graphics.Image;
@@ -67,7 +68,13 @@ public class BundleImportLibrarySection extends AbstractImportSection {
         getTablePart().setEditable(false);
     }
 
-    class ImportLibraryContentProvider extends DefaultTableProvider {
+    class ImportLibraryContentProvider implements IStructuredContentProvider {
+
+        public void dispose() {
+        }
+
+        public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+        }
 
         public Object[] getElements(Object parent) {
             ImportLibraryHeader header = (ImportLibraryHeader) getBundle().getManifestHeader(IHeaderConstants.IMPORT_LIBRARY);

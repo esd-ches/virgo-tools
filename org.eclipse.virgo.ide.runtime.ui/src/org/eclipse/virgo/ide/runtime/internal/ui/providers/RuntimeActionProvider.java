@@ -15,14 +15,16 @@ package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.mapping.ResourceMapping;
+import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.PlatformObject;
 import org.eclipse.jface.action.GroupMarker;
 import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.action.MenuManager;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IActionBars;
 import org.eclipse.ui.actions.OpenWithMenu;
-import org.eclipse.ui.internal.navigator.AdaptabilityUtility;
 import org.eclipse.ui.internal.navigator.resources.plugin.WorkbenchNavigatorMessages;
 import org.eclipse.ui.navigator.CommonActionProvider;
 import org.eclipse.ui.navigator.ICommonActionConstants;
@@ -91,10 +93,11 @@ public class RuntimeActionProvider extends CommonActionProvider {
         Object o = ss.getFirstElement();
 
         // first try IResource
-        IAdaptable openable = (IAdaptable) AdaptabilityUtility.getAdapter(o, IResource.class);
+        Platform.getAdapterManager().getAdapter(o, IResource.class);
+        IAdaptable openable = (IAdaptable) getAdapter(o, IResource.class);
         // otherwise try ResourceMapping
         if (openable == null) {
-            openable = (IAdaptable) AdaptabilityUtility.getAdapter(o, ResourceMapping.class);
+            openable = (IAdaptable) getAdapter(o, ResourceMapping.class);
         } else if (((IResource) openable).getType() != IResource.FILE) {
             openable = null;
         }
@@ -113,4 +116,43 @@ public class RuntimeActionProvider extends CommonActionProvider {
             }
         }
     }
+
+    /**
+     * <p>
+     * Returns an adapter of the requested type (anAdapterType)
+     *
+     * @param anElement The element to adapt, which may or may not implement {@link IAdaptable}, or null
+     * @param anAdapterType The class type to return
+     * @return An adapter of the requested type or null
+     */
+    public static Object getAdapter(Object anElement, Class anAdapterType) {
+        Assert.isNotNull(anAdapterType);
+        if (anElement == null) {
+            return null;
+        }
+        if (anAdapterType.isInstance(anElement)) {
+            return anElement;
+        }
+
+        if (anElement instanceof IAdaptable) {
+            IAdaptable adaptable = (IAdaptable) anElement;
+
+            Object result = adaptable.getAdapter(anAdapterType);
+            if (result != null) {
+                // Sanity-check
+                Assert.isTrue(anAdapterType.isInstance(result));
+                return result;
+            }
+        }
+
+        if (!(anElement instanceof PlatformObject)) {
+            Object result = Platform.getAdapterManager().getAdapter(anElement, anAdapterType);
+            if (result != null) {
+                return result;
+            }
+        }
+
+        return null;
+    }
+
 }
