@@ -290,7 +290,7 @@ public class ServerModuleDelegate extends ProjectModule {
      * {@inheritDoc}
      */
     @Override
-    public IModule[] getChildModules() {
+    public synchronized IModule[] getChildModules() {
         if (FacetUtils.isParProject(getProject())) {
             Set<IModule> modules = new LinkedHashSet<IModule>();
 
