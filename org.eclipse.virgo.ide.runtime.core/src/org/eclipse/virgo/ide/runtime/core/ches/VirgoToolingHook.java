@@ -648,8 +648,8 @@ public class VirgoToolingHook {
                 File source = child.getLocation().toFile();
                 List<File> targets = lookup(source);
                 for (File target : targets) {
-                    if (!source.exists()) {
-                        continue; // make sure the resource has not been deleted meanwhile, #6902
+                    if (!source.exists() || !target.getParentFile().exists()) {
+                        continue; // make sure the resource or target have not been deleted meanwhile, #6902
                     }
 
                     Files.copy(source.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
