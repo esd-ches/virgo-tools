@@ -282,27 +282,49 @@ public class VirgoToolingHook {
     }
 
     synchronized public void beforeDeploy(IModule module) {
-        if (moduleToProjects.containsKey(module)) {
-            // The module has already been deployed.
-            return;
-        }
-        if (!FacetUtils.isPlanProject(module.getProject())) {
-            logError("Only plans are supported.");
-            return;
-        }
         IFile planFile = getPlanFile(module);
         if (planFile == null) {
-            // The deployed plan has no corresponding file --> should never happen.
-            return;
-        }
-        Version planVersion = getPlanVersion(planFile);
-        if (planVersion == null || planVersion.compareTo(Version.parseVersion("5.11.0")) < 0) {
-            logError("Only plans with a version equal or higher than 5.11.0 are supported.");
+            // the deployed plan has no corresponding file --> should never happen
             return;
         }
 
-        addProjects(module, planFile);
-        startWatching();
+        Set<IProject> projects = moduleToProjects.get(module);
+        if (projects != null) {
+            // the module has already been deployed, refresh the watched projects, #7016
+            projects.clear();
+            addProjects(module, planFile);
+            refreshWatchers(projects);
+        } else {
+            // otherwise the plan is not yet deployed --> set up the tooling
+            if (!FacetUtils.isPlanProject(module.getProject())) {
+                logError("Only plans are supported.");
+                return;
+            }
+            Version planVersion = getPlanVersion(planFile);
+            if (planVersion == null || planVersion.compareTo(Version.parseVersion("5.11.0")) < 0) {
+                logError("Only plans with a version equal or higher than 5.11.0 are supported.");
+                return;
+            }
+
+            addProjects(module, planFile);
+            startWatching();
+        }
+    }
+
+    /**
+     * Refreshes the watchers (WebContent and resources) for a given set of projects.
+     *
+     * @param projects
+     */
+    private void refreshWatchers(Set<IProject> projects) {
+        if (webContentWatcherRunnable != null) {
+            webContentWatcherRunnable.terminate();
+        }
+        if (resourcesWatcherRunnable != null) {
+            resourcesWatcherRunnable.terminate();
+        }
+
+        setupWebContentAndResourceWatchers(projects);
     }
 
     synchronized public void beforeStop() {
@@ -538,17 +560,7 @@ public class VirgoToolingHook {
                 updateThread.start();
             }
 
-            if (webContentWatcherThread == null || !webContentWatcherThread.isAlive()) {
-                webContentWatcherRunnable = new WebContentWatcherRunnable(this, projects);
-                webContentWatcherThread = new Thread(webContentWatcherRunnable, webContentWatcherRunnable.getName());
-                webContentWatcherThread.start();
-            }
-
-            if (resourcesWatcherThread == null || !resourcesWatcherThread.isAlive()) {
-                resourcesWatcherRunnable = new ResourcesWatcherRunnable(this, projects);
-                resourcesWatcherThread = new Thread(resourcesWatcherRunnable, resourcesWatcherRunnable.getName());
-                resourcesWatcherThread.start();
-            }
+            setupWebContentAndResourceWatchers(projects);
 
             if (virgoWatcherThread == null || !virgoWatcherThread.isAlive()) {
                 virgoWatcherRunnable = new VirgoWatcherRunnable(this);
@@ -557,6 +569,24 @@ public class VirgoToolingHook {
             }
         } catch (Exception e) {
             logError("Couldn't start the file watcher.", e);
+        }
+    }
+
+    /**
+     * Sets up watchers that watch for changes in the WebContent and resources folders.
+     *
+     * @param projects the projects to be watched
+     */
+    private void setupWebContentAndResourceWatchers(Set<IProject> projects) {
+        if (webContentWatcherThread == null || !webContentWatcherThread.isAlive()) {
+            webContentWatcherRunnable = new WebContentWatcherRunnable(this, projects);
+            webContentWatcherThread = new Thread(webContentWatcherRunnable, webContentWatcherRunnable.getName());
+            webContentWatcherThread.start();
+        }
+        if (resourcesWatcherThread == null || !resourcesWatcherThread.isAlive()) {
+            resourcesWatcherRunnable = new ResourcesWatcherRunnable(this, projects);
+            resourcesWatcherThread = new Thread(resourcesWatcherRunnable, resourcesWatcherRunnable.getName());
+            resourcesWatcherThread.start();
         }
     }
 

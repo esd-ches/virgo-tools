@@ -30,8 +30,8 @@ public abstract class AbstractFileWatcherRunnable extends AbstractWatchServiceRu
     public AbstractFileWatcherRunnable(Set<IProject> projects, String baseFolderName) {
         this.projects = projects;
         this.baseFolderName = baseFolderName;
-        keyToProject = new HashMap<>();
-        keyToFile = new HashMap<>();
+        this.keyToProject = new HashMap<>();
+        this.keyToFile = new HashMap<>();
     }
 
     protected void setupWatchers() throws IOException {

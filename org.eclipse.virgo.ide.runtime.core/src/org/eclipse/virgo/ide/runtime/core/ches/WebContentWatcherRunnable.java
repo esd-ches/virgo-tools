@@ -21,7 +21,7 @@ public class WebContentWatcherRunnable extends AbstractFileWatcherRunnable {
     }
 
     @Override
-    public void runInternal() throws Exception {
+    protected void runInternal() throws Exception {
         setupWatchers();
 
         WatchKey key;
