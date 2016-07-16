@@ -261,6 +261,12 @@ public class ServerPublishOperation extends PublishOperation {
                 // Delete all child modules that are not being used anymore
                 ServerModuleDelegate planModule = (ServerModuleDelegate) module.loadAdapter(ServerModuleDelegate.class, null);
                 IServer s = this.server.getServer();
+                // planModule may be null if the corresponding project in the workspace has been closed --> unable to
+                // resolve and delete unused child modules
+                if (planModule == null) {
+                    return false;
+                }
+
                 for (IModule childModule : planModule.getChildModules()) {
                     if (!ServerUtil.containsModule(s, childModule, monitor)) {
                         IPath modulePath = this.server.getModuleDeployDirectory(childModule);
