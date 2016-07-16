@@ -11,6 +11,7 @@ import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -426,8 +427,14 @@ public class VirgoToolingHook {
         }
 
         String project = parent.getParentFile().getName() + ".war";
+        File[] deployerContent = getVirgoBase().listFiles();
+        // in case deployer/s does not exist
+        if (deployerContent == null) {
+            return Collections.emptyList();
+        }
+
         List<File> matches = new ArrayList<>();
-        for (File plan : getVirgoBase().listFiles()) {
+        for (File plan : deployerContent) {
             if (!plan.isDirectory() || !plan.getName().startsWith("at.ches.pro")) {
                 continue;
             }

@@ -25,6 +25,11 @@ public class VirgoWatcherRunnable extends AbstractWatchServiceRunnable {
     protected void runInternal() throws Exception {
         File virgo = VirgoToolingHook.getVirgoBase();
         while (!virgo.exists()) {
+            // in case the deployer/s folder was deleted
+            if (terminated) {
+                return;
+            }
+
             Thread.sleep(500);
         }
         Path path = Paths.get(virgo.toURI());
