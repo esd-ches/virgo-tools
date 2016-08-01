@@ -78,6 +78,7 @@ public class ServerPublishOperation extends PublishOperation {
         boolean shouldRedeploy = false;
         List<IStatus> status = new ArrayList<IStatus>();
         if (this.modules.length == 1) {
+            ServerCorePlugin.getVirgoToolingHook().beforeDeploy(this.modules[0]);
             shouldRedeploy = publishModule(this.modules[0], status, monitor);
         }
 
