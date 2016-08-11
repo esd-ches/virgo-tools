@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.core.resources.IProject;
 
@@ -26,7 +27,11 @@ public class WebContentWatcherRunnable extends AbstractFileWatcherRunnable {
 
         WatchKey key;
         do {
-            key = watchService.take();
+            key = watchService.poll(1, TimeUnit.SECONDS);
+            if (key == null) {
+                continue;
+            }
+
             IProject project = keyToProject.get(key);
             try {
                 // Minimize duplicate detection of same change.
@@ -53,7 +58,7 @@ public class WebContentWatcherRunnable extends AbstractFileWatcherRunnable {
                     hook.scheduleGrunt(project, filename);
                 }
             }
-        } while (key.reset() && !terminated);
+        } while ((key == null || key.reset()) && !terminated);
     }
 
     @Override
