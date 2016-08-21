@@ -11,18 +11,26 @@
 
 package org.eclipse.virgo.ide.runtime.internal.core.command;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 import javax.management.openmbean.CompositeData;
 
+import org.eclipse.core.resources.IFile;
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
+import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
 import org.eclipse.virgo.ide.runtime.core.ServerUtils;
 import org.eclipse.virgo.ide.runtime.internal.core.DeploymentIdentity;
 import org.eclipse.virgo.ide.runtime.internal.core.Server;
+import org.eclipse.virgo.util.io.FileCopyUtils;
 import org.eclipse.wst.server.core.IModule;
 
 /**
@@ -31,7 +39,7 @@ import org.eclipse.wst.server.core.IModule;
  * @author Christian Dupuis
  * @since 1.0.1
  */
-public class JmxServerDeployCommand extends AbstractJmxServerDeployerCommand<CompositeData>implements IServerCommand<DeploymentIdentity> {
+public class JmxServerDeployCommand extends AbstractJmxServerDeployerCommand<CompositeData> implements IServerCommand<DeploymentIdentity> {
 
     private static final String ITEM_SYMBOLIC_NAME = "symbolicName"; //$NON-NLS-1$
 
@@ -71,6 +79,27 @@ public class JmxServerDeployCommand extends AbstractJmxServerDeployerCommand<Com
             }
         }
 
+        if (isPlan()) {
+            // plan module name is workspace-relative path
+            String path = module.getName();
+            IFile planFile = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(path));
+
+            List<IFile> files = FacetUtils.getNestedPlanFiles(planFile);
+            IPath stageDir = this.serverBehaviour.getServerDeployDirectory();
+            File stageFileDir = stageDir.toFile();
+
+            // make sure nested plans, if any, are copied to the stage dir so that
+            // they can be found
+            for (IFile iFile : files) {
+                File oldFile = new File(stageFileDir, iFile.getName());
+                if (oldFile.exists()) {
+                    oldFile.delete();
+                }
+                FileCopyUtils.copy(iFile.getLocation().toFile(), oldFile);
+            }
+
+        }
+
         CompositeData returnValue = doExecute();
         if (returnValue != null) {
             String symbolicName = (String) returnValue.get(ITEM_SYMBOLIC_NAME);
@@ -88,7 +117,7 @@ public class JmxServerDeployCommand extends AbstractJmxServerDeployerCommand<Com
     @Override
     protected Object[] getOperationArguments() {
         URI uri = null;
-        if (this.module.getModuleType().getId().equals(FacetCorePlugin.PLAN_FACET_ID)) {
+        if (isPlan()) {
             String fileName = this.module.getId();
             fileName = fileName.substring(fileName.lastIndexOf('/') + 1);
             uri = getUri(this.serverBehaviour.getModuleDeployUri(this.module).append(fileName));
@@ -96,6 +125,10 @@ public class JmxServerDeployCommand extends AbstractJmxServerDeployerCommand<Com
             uri = getUri(this.serverBehaviour.getModuleDeployUri(this.module));
         }
         return new Object[] { uri.toString(), false };
+    }
+
+    private boolean isPlan() {
+        return this.module.getModuleType().getId().equals(FacetCorePlugin.PLAN_FACET_ID);
     }
 
     /**

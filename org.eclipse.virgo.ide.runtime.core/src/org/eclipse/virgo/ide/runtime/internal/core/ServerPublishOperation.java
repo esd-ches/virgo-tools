@@ -83,6 +83,7 @@ public class ServerPublishOperation extends PublishOperation {
 
         boolean shouldReployChild = false;
         IProject project = this.modules[0].getProject();
+        // not a bundle, not a par, not a plan -> a WST Web Project
         if (!FacetUtils.isBundleProject(project) && !FacetUtils.isParProject(project)
             && ServerUtils.getServer(this.server).getChildModules(this.modules) != null && !FacetUtils.isPlanProject(project)) {
             for (IModule module : ServerUtils.getServer(this.server).getChildModules(this.modules)) {
@@ -108,42 +109,6 @@ public class ServerPublishOperation extends PublishOperation {
     public int getOrder() {
         return 0;
     }
-
-    /**
-     * Checks if the given <code>file</code> is a root node that is a known Spring namespace.
-     */
-    // private boolean checkIfSpringConfigurationFile(IFile file) {
-    // IStructuredModel model = null;
-    // try {
-    // model =
-    // StructuredModelManager.getModelManager().getExistingModelForRead(file);
-    // if (model == null) {
-    // model = StructuredModelManager.getModelManager().getModelForRead(file);
-    // }
-    // if (model != null) {
-    // IDOMDocument document = ((DOMModelImpl) model).getDocument();
-    // if (document != null && document.getDocumentElement() != null) {
-    // String namespaceUri = document.getDocumentElement().getNamespaceURI();
-    // if (NamespaceUtils.DEFAULT_NAMESPACE_URI.equals(namespaceUri)
-    // || new
-    // DelegatingNamespaceHandlerResolver(JdtUtils.getClassLoader(file.getProject(),
-    // null),
-    // null).resolve(namespaceUri) != null) {
-    // return false;
-    // }
-    // }
-    // }
-    // }
-    // catch (Exception e) {
-    // }
-    // finally {
-    // if (model != null) {
-    // model.releaseFromRead();
-    // }
-    // model = null;
-    // }
-    // return true;
-    // }
 
     /**
      * Check if resource delta only contains static resources
