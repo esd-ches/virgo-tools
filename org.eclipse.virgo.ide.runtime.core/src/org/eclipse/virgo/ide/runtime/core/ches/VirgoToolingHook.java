@@ -369,11 +369,8 @@ public class VirgoToolingHook {
         if (isWindows()) {
             commands.add("cmd.exe");
             commands.add("/c");
-        } else if (isMac()) {
-            // no extra commands required
-        } else {
-            throw new Exception("Operating System \"" + OS + "\" not supported.");
         }
+
         commands.add("grunt");
         commands.add("--no-color");
         commands.add("--projects=" + projectsString);
