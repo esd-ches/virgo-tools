@@ -11,4 +11,8 @@ public abstract class AbstractRunnable implements Runnable {
 
     abstract public String getName();
 
+    public boolean isTerminated() {
+        return terminated;
+    }
+
 }

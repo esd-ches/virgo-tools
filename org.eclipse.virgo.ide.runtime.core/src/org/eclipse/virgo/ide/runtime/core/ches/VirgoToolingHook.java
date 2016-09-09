@@ -178,12 +178,6 @@ public class VirgoToolingHook {
         return ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile();
     }
 
-    private static boolean isMac() {
-
-        return (OS.indexOf("mac") >= 0);
-
-    }
-
     private static boolean isWindows() {
 
         return (OS.indexOf("win") >= 0);
@@ -582,12 +576,13 @@ public class VirgoToolingHook {
      * @param projects the projects to be watched
      */
     private void setupWebContentAndResourceWatchers(Set<IProject> projects) {
-        if (webContentWatcherThread == null || !webContentWatcherThread.isAlive()) {
+        if (webContentWatcherRunnable == null || webContentWatcherRunnable.isTerminated()) {
             webContentWatcherRunnable = new WebContentWatcherRunnable(this, projects);
             webContentWatcherThread = new Thread(webContentWatcherRunnable, webContentWatcherRunnable.getName());
             webContentWatcherThread.start();
         }
-        if (resourcesWatcherThread == null || !resourcesWatcherThread.isAlive()) {
+
+        if (resourcesWatcherRunnable == null || resourcesWatcherRunnable.isTerminated()) {
             resourcesWatcherRunnable = new ResourcesWatcherRunnable(this, projects);
             resourcesWatcherThread = new Thread(resourcesWatcherRunnable, resourcesWatcherRunnable.getName());
             resourcesWatcherThread.start();
@@ -675,6 +670,8 @@ public class VirgoToolingHook {
      * @throws IOException
      */
     private void copyCssContent(IFolder parent) throws CoreException, IOException {
+        parent.refreshLocal(IResource.DEPTH_INFINITE, null);
+
         for (IResource child : parent.members()) {
             if (child.getType() == IResource.FOLDER) {
                 copyCssContent((IFolder) child);

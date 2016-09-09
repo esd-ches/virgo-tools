@@ -10,10 +10,12 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.WatchKey;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.eclipse.core.resources.IProject;
 
@@ -28,7 +30,8 @@ public abstract class AbstractFileWatcherRunnable extends AbstractWatchServiceRu
     protected final Map<WatchKey, File> keyToFile;
 
     public AbstractFileWatcherRunnable(Set<IProject> projects, String baseFolderName) {
-        this.projects = projects;
+        this.projects = Collections.newSetFromMap(new ConcurrentHashMap<IProject, Boolean>());
+        this.projects.addAll(projects);
         this.baseFolderName = baseFolderName;
         this.keyToProject = new HashMap<>();
         this.keyToFile = new HashMap<>();
