@@ -25,38 +25,42 @@ public class WebContentWatcherRunnable extends AbstractFileWatcherRunnable {
     protected void runInternal() throws Exception {
         setupWatchers();
 
-        WatchKey key;
+        WatchKey key = null;
         do {
-            key = watchService.poll(1, TimeUnit.SECONDS);
-            if (key == null) {
-                continue;
-            }
-
-            IProject project = keyToProject.get(key);
             try {
-                // Minimize duplicate detection of same change.
-                Thread.sleep(100);
-            } catch (Exception e) {
-                // ignore
-            }
-
-            for (WatchEvent<?> event : key.pollEvents()) {
-                Path modified = (Path) event.context();
-                File modifiedFile = new File(keyToFile.get(key), modified.getFileName().toString());
-
-                String filename = modifiedFile.getName();
-                if (modifiedFile.isDirectory() && event.kind().equals(ENTRY_CREATE) && !filename.equals(".svn")) {
-                    addWatcher(modifiedFile, project);
-                    hook.scheduleRefresh(project);
-                } else {
-                    if (filename.endsWith("bak___") || filename.endsWith("jb_old___")) {
-                        continue; // ignore backup files
-                    }
-
-                    VirgoToolingHook.logInfo("WebContent change detected - " + event.kind() + ": " + modifiedFile.getAbsolutePath());
-                    hook.scheduleRefresh(project);
-                    hook.scheduleGrunt(project, filename);
+                key = watchService.poll(1, TimeUnit.SECONDS);
+                if (key == null) {
+                    continue;
                 }
+
+                IProject project = keyToProject.get(key);
+                try {
+                    // Minimize duplicate detection of same change.
+                    Thread.sleep(100);
+                } catch (Exception e) {
+                    // ignore
+                }
+
+                for (WatchEvent<?> event : key.pollEvents()) {
+                    Path modified = (Path) event.context();
+                    File modifiedFile = new File(keyToFile.get(key), modified.getFileName().toString());
+
+                    String filename = modifiedFile.getName();
+                    if (modifiedFile.isDirectory() && event.kind().equals(ENTRY_CREATE) && !filename.equals(".svn")) {
+                        addWatcher(modifiedFile, project);
+                        hook.scheduleRefresh(project);
+                    } else {
+                        if (filename.endsWith("bak___") || filename.endsWith("jb_old___")) {
+                            continue; // ignore backup files
+                        }
+
+                        VirgoToolingHook.logInfo("WebContent change detected - " + event.kind() + ": " + modifiedFile.getAbsolutePath());
+                        hook.scheduleRefresh(project);
+                        hook.scheduleGrunt(project, filename);
+                    }
+                }
+            } catch (Exception e) {
+                VirgoToolingHook.logError("Error while watching WebContent, retrying.", e);
             }
         } while ((key == null || key.reset()) && !terminated);
     }
