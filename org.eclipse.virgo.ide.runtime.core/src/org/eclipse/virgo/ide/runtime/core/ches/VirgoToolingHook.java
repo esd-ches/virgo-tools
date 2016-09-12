@@ -665,29 +665,37 @@ public class VirgoToolingHook {
     /**
      * Recursively copies all css content.
      *
-     * @param parent
+     * @param project
      * @throws CoreException
      * @throws IOException
      */
-    private void copyCssContent(IFolder parent) throws CoreException, IOException {
-        parent.refreshLocal(IResource.DEPTH_INFINITE, null);
+    private void copyCssContent(IFolder project) throws CoreException, IOException {
+        File resourcesFolder = project.getLocation().toFile();
+        copyCssContent(resourcesFolder);
+    }
 
-        for (IResource child : parent.members()) {
-            if (child.getType() == IResource.FOLDER) {
-                copyCssContent((IFolder) child);
-            } else if (child.getName().endsWith(".css") || parent.getName().equals("css")) {
-                File source = child.getLocation().toFile();
-                List<File> targets = lookup(source);
+    /**
+     * Recursively copies all css content.
+     *
+     * @param root
+     * @throws CoreException
+     * @throws IOException
+     */
+    private void copyCssContent(File root) throws CoreException, IOException {
+        for (File child : root.listFiles()) {
+            if (child.isDirectory()) {
+                copyCssContent(child);
+            } else if (child.getName().endsWith(".css") || root.getName().equals("css")) {
+                List<File> targets = lookup(child);
                 for (File target : targets) {
-                    if (!source.exists() || !target.getParentFile().exists()) {
+                    if (!child.exists() || !target.getParentFile().exists()) {
                         continue; // make sure the resource or target have not been deleted meanwhile, #6902
                     }
 
-                    Files.copy(source.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                    logInfo("Copying " + source.getName() + " --> " + target.getAbsolutePath());
+                    Files.copy(child.toPath(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+                    logInfo("Copying " + child.getName() + " --> " + target.getAbsolutePath());
                 }
             }
         }
     }
-
 }
