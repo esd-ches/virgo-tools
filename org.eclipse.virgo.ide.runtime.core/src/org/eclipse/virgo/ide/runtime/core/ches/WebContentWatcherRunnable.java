@@ -4,6 +4,7 @@ package org.eclipse.virgo.ide.runtime.core.ches;
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
 
 import java.io.File;
+import java.nio.file.ClosedWatchServiceException;
 import java.nio.file.Path;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
@@ -59,6 +60,8 @@ public class WebContentWatcherRunnable extends AbstractFileWatcherRunnable {
                         hook.scheduleGrunt(project, filename);
                     }
                 }
+            } catch (ClosedWatchServiceException e) {
+                // the watch service may be closed from another thread while polling, ignore this exception
             } catch (Exception e) {
                 VirgoToolingHook.logError("Error while watching WebContent, retrying.", e);
             }
