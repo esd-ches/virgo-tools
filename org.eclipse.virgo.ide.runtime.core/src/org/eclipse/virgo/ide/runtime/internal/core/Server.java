@@ -158,6 +158,17 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
                     return planModule.getChildModules();
                 }
             }
+        } else if (FacetCorePlugin.PLAN_FACET_ID.equals(moduleType.getId())) {
+            /*
+             * To support nested plans now the tooling creates an IModule tree where top level plans have nested plans
+             * or bundles as children. WTP is passing back the path from the root to a given module as a parameter to
+             * this method to get the children, so here children are computed only for the last item in the list
+             * (module.length -1)
+             **/
+            ServerModuleDelegate planModule = (ServerModuleDelegate) module[module.length - 1].loadAdapter(ServerModuleDelegate.class, null);
+            if (planModule != null) {
+                return planModule.getChildModules();
+            }
         }
 
         return new IModule[0];

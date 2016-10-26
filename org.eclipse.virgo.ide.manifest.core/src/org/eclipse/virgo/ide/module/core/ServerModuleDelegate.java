@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
+ *     GianMaria Romanato - support for nested plans
  *******************************************************************************/
 
 package org.eclipse.virgo.ide.module.core;
@@ -82,11 +83,35 @@ public class ServerModuleDelegate extends ProjectModule {
 
     @Override
     public IModuleResource[] members() throws CoreException {
-        IPath moduleRelativePath = Path.EMPTY;
 
-        // Handle simple case of project being a bundle first
+        IModule module = getModule();
         final Set<IModuleResource> resources = new LinkedHashSet<IModuleResource>();
-        if (getModule().getModuleType().getId().equals(FacetCorePlugin.BUNDLE_FACET_ID)) {
+
+        /*
+         * Add recursion to collect nested elements. This method now returns as members of toplevel plans all nested
+         * plans and bundles collected via recursion.
+         *
+         * Originally it was returning only direct children and assuming they were bundles, which made it impossible for
+         * the tools to deploy nested plans.
+         *
+         * Note that when top level plans with nested plans are added to the virgo runtime, they are added as a tree of
+         * IModule objects. However, apparently WTP does not properly deal with arbitrary nesting of modules and just
+         * publishes resources for the top level modules and their direct children.
+         *
+         * As such to overcome this limitation the following code fools WTP by providing as resources of the top level
+         * plan all resources contained in nested plans and nested bundles, even if they are represented by different
+         * IModule instances in memory.
+         */
+        deepGetMembers(module, resources);
+
+        return resources.toArray(new IModuleResource[resources.size()]);
+    }
+
+    private void deepGetMembers(IModule module, final Set<IModuleResource> resources) throws CoreException, JavaModelException {
+        IPath moduleRelativePath = Path.EMPTY;
+        // Handle simple case of project being a bundle first
+
+        if (module.getModuleType().getId().equals(FacetCorePlugin.BUNDLE_FACET_ID)) {
             if (FacetUtils.hasProjectFacet(getProject(), FacetCorePlugin.WEB_FACET_ID)) {
                 IModule[] modules = ServerUtil.getModules(getProject());
                 for (IModule webModule : modules) {
@@ -99,7 +124,7 @@ public class ServerModuleDelegate extends ProjectModule {
             resources.addAll(getMembers(getProject(), moduleRelativePath));
         }
         // More complex handling of PAR and nested bundle project
-        else if (getModule().getModuleType().getId().equals(FacetCorePlugin.PAR_FACET_ID)) {
+        else if (module.getModuleType().getId().equals(FacetCorePlugin.PAR_FACET_ID)) {
 
             // Get the META-INF folder of the PAR first
             IResource metaInfFolder = getProject().findMember(BundleManifestCorePlugin.MANIFEST_FOLDER_NAME);
@@ -126,12 +151,12 @@ public class ServerModuleDelegate extends ProjectModule {
             }, IResource.DEPTH_ONE, false);
 
             // Iterate nested bundle projects
-            for (IModule module : getChildModules()) {
+            for (IModule childModule : getChildModules()) {
 
                 // Special handling of par nested wars with bundle nature
-                if (FacetUtils.hasProjectFacet(module.getProject(), FacetCorePlugin.WEB_FACET_ID)) {
-                    moduleRelativePath = new Path(module.getProject().getName() + ".war");
-                    ModuleDelegate delegate = (ModuleDelegate) module.loadAdapter(ModuleDelegate.class, null);
+                if (FacetUtils.hasProjectFacet(childModule.getProject(), FacetCorePlugin.WEB_FACET_ID)) {
+                    moduleRelativePath = new Path(childModule.getProject().getName() + ".war");
+                    ModuleDelegate delegate = (ModuleDelegate) childModule.loadAdapter(ModuleDelegate.class, null);
 
                     IModuleResource[] members = delegate.members();
                     for (IModuleResource member : members) {
@@ -143,38 +168,39 @@ public class ServerModuleDelegate extends ProjectModule {
                     }
                 }
                 // All other bundles project nested in a par
-                else if (FacetUtils.isBundleProject(module.getProject())) {
-                    String moduleFolderName = module.getProject().getName() + ".jar";
+                else if (FacetUtils.isBundleProject(childModule.getProject())) {
+                    String moduleFolderName = childModule.getProject().getName() + ".jar";
                     moduleRelativePath = new Path(moduleFolderName);
                     ModuleFolder folder = new ModuleFolder(null, moduleFolderName, Path.EMPTY);
-                    folder.setMembers(getMembers(module.getProject(), moduleRelativePath).toArray(new IModuleResource[0]));
+                    folder.setMembers(getMembers(childModule.getProject(), moduleRelativePath).toArray(new IModuleResource[0]));
                     resources.add(folder);
                 }
             }
         }
         // handling for plan projects
-        else if (getModule().getModuleType().getId().equals(FacetCorePlugin.PLAN_FACET_ID)) {
+        else if (module.getModuleType().getId().equals(FacetCorePlugin.PLAN_FACET_ID)) {
 
             // Get the plan file
-            String fileName = getModule().getId();
+            String fileName = module.getId();
             fileName = fileName.substring(fileName.indexOf(':') + 1);
             IFile file = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(fileName));
             if (!file.exists()) {
-                return resources.toArray(new IModuleResource[resources.size()]);
+                return;
             }
 
             ModuleFile planFile = new ModuleFile(file, file.getName(), moduleRelativePath);
             resources.add(planFile);
 
             // Iterate nested bundle projects
-            for (IModule module : getChildModules()) {
+            ModuleDelegate delegate0 = (ModuleDelegate) module.loadAdapter(ModuleDelegate.class, null);
+            for (IModule childModule : delegate0.getChildModules()) {
 
                 // Special handling of par nested wars with bundle nature
-                if (FacetUtils.hasProjectFacet(module.getProject(), FacetCorePlugin.WEB_FACET_ID)) {
-                    moduleRelativePath = new Path(module.getProject().getName() + ".war");
-                    ModuleDelegate delegate = (ModuleDelegate) module.loadAdapter(ModuleDelegate.class, null);
+                if (FacetUtils.hasProjectFacet(childModule.getProject(), FacetCorePlugin.WEB_FACET_ID)) {
+                    moduleRelativePath = new Path(childModule.getProject().getName() + ".war");
+                    ModuleDelegate delegate1 = (ModuleDelegate) childModule.loadAdapter(ModuleDelegate.class, null);
 
-                    IModuleResource[] members = delegate.members();
+                    IModuleResource[] members = delegate1.members();
                     for (IModuleResource member : members) {
                         if (member instanceof IModuleFile) {
                             resources.add(new ParModuleFile((IModuleFile) member, moduleRelativePath));
@@ -184,17 +210,28 @@ public class ServerModuleDelegate extends ProjectModule {
                     }
                 }
                 // All other bundles project nested in a par
-                else if (FacetUtils.isBundleProject(module.getProject())) {
-                    String moduleFolderName = module.getProject().getName() + ".jar";
+                else if (FacetUtils.isBundleProject(childModule.getProject())) {
+                    String moduleFolderName = childModule.getProject().getName() + ".jar";
                     moduleRelativePath = new Path(moduleFolderName);
                     ModuleFolder folder = new ModuleFolder(null, moduleFolderName, Path.EMPTY);
-                    folder.setMembers(getMembers(module.getProject(), moduleRelativePath).toArray(new IModuleResource[0]));
+                    folder.setMembers(getMembers(childModule.getProject(), moduleRelativePath).toArray(new IModuleResource[0]));
                     resources.add(folder);
-                } else if (FacetUtils.isParProject(module.getProject())) {
-                    moduleRelativePath = new Path(module.getProject().getName() + ".par");
-                    ModuleDelegate delegate = (ModuleDelegate) module.loadAdapter(ModuleDelegate.class, null);
+                } else if (FacetUtils.isPlanProject(childModule.getProject())) {
+                    // this new case makes sure the plan file itself is copied to the staging folder
+                    IFile file2 = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(childModule.getName()));
+                    ModuleFile mfile = new ModuleFile(file2, file2.getName(), Path.EMPTY);
+                    resources.add(mfile);
 
-                    IModuleResource[] members = delegate.members();
+                    // recursion to collect nested plans and bundles
+                    ModuleDelegate delegate3 = (ModuleDelegate) childModule.loadAdapter(ModuleDelegate.class, null);
+                    for (IModule aChild : delegate3.getChildModules()) {
+                        deepGetMembers(aChild, resources);
+                    }
+                } else if (FacetUtils.isParProject(childModule.getProject())) {
+                    moduleRelativePath = new Path(childModule.getProject().getName() + ".par");
+                    ModuleDelegate delegate2 = (ModuleDelegate) childModule.loadAdapter(ModuleDelegate.class, null);
+
+                    IModuleResource[] members = delegate2.members();
                     for (IModuleResource member : members) {
                         if (member instanceof IModuleFile) {
                             resources.add(new ParModuleFile((IModuleFile) member, moduleRelativePath));
@@ -204,9 +241,8 @@ public class ServerModuleDelegate extends ProjectModule {
                     }
                 }
             }
-        }
 
-        return resources.toArray(new IModuleResource[resources.size()]);
+        }
     }
 
     /**
@@ -474,12 +510,23 @@ public class ServerModuleDelegate extends ProjectModule {
         return true;
     }
 
-    public Set<IModule> getPlanDependencies(IFile file) {
+    private Set<IModule> getPlanDependencies(IFile file) {
         if (file == null || !file.exists()) {
             return Collections.emptySet();
         }
 
         Set<IModule> modules = new HashSet<IModule>();
+
+        /* add recursion to collect nested plans */
+        getPlanDependencies0(file, modules);
+
+        return modules;
+    }
+
+    private void getPlanDependencies0(IFile file, Set<IModule> modules) {
+        if (file == null || !file.exists()) {
+            return;
+        }
 
         try {
             DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
@@ -511,6 +558,21 @@ public class ServerModuleDelegate extends ProjectModule {
                             }
                         }
                     }
+                } else if ("plan".equals(type)) {
+                    List<IFile> nested = FacetUtils.getNestedPlanFiles(file, false);
+                    for (IFile iFile : nested) {
+                        IModule[] mmmm = ServerUtil.getModules(iFile.getProject());
+                        for (IModule iModule : mmmm) {
+                            String fileName = iModule.getId();
+                            fileName = fileName.substring(fileName.indexOf(':') + 1);
+                            IFile file2 = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(fileName));
+                            if (iFile.equals(file2)) {
+                                modules.add(iModule);
+                                break;
+                            }
+                        }
+
+                    }
                 } else if ("par".equals(type)) {
                     IProject[] projects = ResourcesPlugin.getWorkspace().getRoot().getProjects();
                     for (IProject candidate : projects) {
@@ -540,6 +602,5 @@ public class ServerModuleDelegate extends ProjectModule {
                 new Status(IStatus.ERROR, "Problem while getting plan dependencies.", BundleManifestCorePlugin.PLUGIN_ID, e));
         }
 
-        return modules;
     }
 }

@@ -14,13 +14,11 @@ package org.eclipse.virgo.ide.facet.internal.core;
 import org.osgi.framework.Version;
 
 /**
- * Represents a reference to a nested plan. Provides a proper implementation of {@link #equals(Object)} and
- * {@link #hashCode()} and can be used in collections for structural equality.
+ * Represents a reference to a bundle.
  */
-public class PlanReference extends Artifact {
+public class BundleReference extends Artifact {
 
-    public PlanReference(String name, Version version) {
+    /* package */ BundleReference(String name, Version version) {
         super(name, version);
     }
-
 }

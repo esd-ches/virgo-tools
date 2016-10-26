@@ -21,6 +21,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.eclipse.core.resources.IFile;
 import org.osgi.framework.Version;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -57,17 +58,22 @@ public final class PlanReader {
 
     private static final String XSD_SCHEMA_LANGUAGE = "http://www.w3.org/2001/XMLSchema"; //$NON-NLS-1$
 
+    private static final Object BUNDLE = "bundle"; //$NON-NLS-1$
+
     /**
      * Creates a {@link PlanDescriptor} meta-data artifact from an {@link InputStream}
      *
      * @param inputStream from which the plan is to be read
      * @return The plan descriptor (meta-data) from the input stream
      */
-    public Plan read(InputStream inputStream) {
+    public Plan read(IFile file) {
+        org.eclipse.core.runtime.Assert.isNotNull(file, "file cannot be null");
+        InputStream inputStream = null;
         try {
+            inputStream = file.getContents();
             Document doc = readDocument(inputStream);
             Element element = doc.getDocumentElement();
-            return parsePlanElement(element);
+            return parsePlanElement(file, element);
         } catch (Exception e) {
             throw new RuntimeException("Failed to read plan descriptor", e);
         } finally {
@@ -106,14 +112,14 @@ public final class PlanReader {
         return factory;
     }
 
-    private Plan parsePlanElement(Element element) {
+    private Plan parsePlanElement(IFile file, Element element) {
         String name = element.getAttribute(NAME_ATTRIBUTE);
         Version version = new Version(element.getAttribute(VERSION_ATTRIBUTE));
 
         Properties attributes = parseAttributes(element);
-        List<PlanReference> nestedPlans = parseNestedPlans(element.getElementsByTagName(ARTIFACT_ELEMENT), attributes);
+        List<Artifact> artifacts = parseNestedArtifacts(element.getElementsByTagName(ARTIFACT_ELEMENT), attributes);
 
-        return new Plan(name, version, nestedPlans);
+        return new Plan(name, version, artifacts);
     }
 
     private Properties parseAttributes(Element element) {
@@ -130,20 +136,23 @@ public final class PlanReader {
         return result;
     }
 
-    private List<PlanReference> parseNestedPlans(NodeList artifactElements, Properties attributes) {
-        List<PlanReference> refs = new ArrayList<PlanReference>();
+    private List<Artifact> parseNestedArtifacts(NodeList artifactElements, Properties attributes) {
+        List<Artifact> refs = new ArrayList<Artifact>();
         for (int i = 0; i < artifactElements.getLength(); i++) {
             Element artifactElement = (Element) artifactElements.item(i);
 
             String type = artifactElement.getAttribute(TYPE_ATTRIBUTE);
+            String name = artifactElement.getAttribute(NAME_ATTRIBUTE);
+            String versionString = artifactElement.getAttribute(VERSION_ATTRIBUTE);
+            Version version = null;
+            if (versionString != null && !versionString.isEmpty()) {
+                version = new Version(versionString);
+            }
+
             if (PLAN.equals(type)) {
-                String name = artifactElement.getAttribute(NAME_ATTRIBUTE);
-                String version = artifactElement.getAttribute(VERSION_ATTRIBUTE);
-                if (version != null && !version.isEmpty()) {
-                    refs.add(new PlanReference(name, new Version(version)));
-                } else {
-                    refs.add(new PlanReference(name, null));
-                }
+                refs.add(new PlanReference(name, version));
+            } else if (BUNDLE.equals(type)) {
+                refs.add(new BundleReference(name, version));
             }
         }
 

@@ -223,7 +223,7 @@ public class FacetUtils {
 
     /**
      * Gets all the plan files found in the given project.
-     * 
+     *
      * @param project
      * @return
      */
@@ -297,13 +297,16 @@ public class FacetUtils {
     }
 
     /**
-     * Returns the list of nested plans for a given plan file. The look only in the planFile project, unless the project
-     * is also a Java project. In such case, the project classpath is used to look for plans in required projects.
+     * Returns the list of nested plans for a given plan file, including the given plan file as the first one. The look
+     * only in the planFile project, unless the project is also a Java project. In such case, the project classpath is
+     * used to look for plans in required projects.
      *
-     * @param planFile
+     * @param planFile the plan file
+     * @param recurse whether the method should return only direct children of the file (false) or recurse and collect
+     *        all descendants (true)
      * @return
      */
-    public static List<IFile> getNestedPlanFiles(IFile planFile) {
+    public static List<IFile> getNestedPlanFiles(IFile planFile, boolean recurse) {
         if (!isPlanProject(planFile)) {
             return Collections.emptyList();
         }
@@ -312,7 +315,7 @@ public class FacetUtils {
         PlanReader reader = new PlanReader();
         Plan topLevelPlan;
         try {
-            topLevelPlan = reader.read(planFile.getContents());
+            topLevelPlan = reader.read(planFile);
         } catch (Exception e1) {
             return Collections.emptyList();
         }
@@ -351,7 +354,7 @@ public class FacetUtils {
                     // ignore self
                     if (!planFile.equals(iFile)) {
                         try {
-                            Plan p = reader.read(iFile.getContents());
+                            Plan p = reader.read(iFile);
                             PlanReference r = p.asRefence();
 
                             /*
@@ -402,7 +405,7 @@ public class FacetUtils {
                 nestedPlanFiles.add(nestedFile);
 
                 for (PlanReference aRef : nestedPlan.getNestedPlans()) {
-                    if (!alreadyProcessed.contains(aRef)) {
+                    if (recurse && !alreadyProcessed.contains(aRef)) {
                         toBeProcessed.add(aRef);
                     }
                 }

@@ -11,6 +11,7 @@
 
 package org.eclipse.virgo.ide.facet.internal.core;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.osgi.framework.Version;
@@ -22,19 +23,42 @@ import org.osgi.framework.Version;
  */
 public final class Plan extends PlanReference {
 
+    /**
+     * Gets this plan as a {@link PlanReference}. Useful for comparing this plan with a reference from another plan to
+     * identify whether such other bundle refers to this plan.
+     * 
+     * @return
+     */
     public PlanReference asRefence() {
         return new PlanReference(getName(), getVersion());
     }
 
-    private final List<PlanReference> nestedPlans;
+    private final List<Artifact> nestedArtifacts;
 
-    /* default */ Plan(String name, Version version, List<PlanReference> nestedPlans) {
+    /* default */ Plan(String name, Version version, List<Artifact> nestedArtifacts) {
         super(name, version);
-        this.nestedPlans = nestedPlans;
+        this.nestedArtifacts = nestedArtifacts;
     }
 
+    /**
+     * Returns the list of nested artifacts.
+     * @return
+     */
+    public List<Artifact> getNestedArtifacts() {
+        return nestedArtifacts;
+    }
+
+    /**
+     * A view over nested artifacts that returns plan references.
+     * @return
+     */
     public List<PlanReference> getNestedPlans() {
-        return nestedPlans;
+        List<PlanReference> refs = new ArrayList<PlanReference>();
+        for (Artifact a : nestedArtifacts) {
+            if (a instanceof PlanReference) {
+                refs.add((PlanReference) a);
+            }
+        }
+        return refs;
     }
-
 }
