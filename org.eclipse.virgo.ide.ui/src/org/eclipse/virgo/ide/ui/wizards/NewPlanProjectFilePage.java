@@ -11,8 +11,9 @@
 
 package org.eclipse.virgo.ide.ui.wizards;
 
+import org.eclipse.core.resources.IResource;
+import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.wizard.WizardPage;
 import org.eclipse.swt.SWT;
@@ -103,11 +104,12 @@ public class NewPlanProjectFilePage extends WizardPage {
         planName = null;
 
         String name = planNameText.getText();
-        IStatus status = Status.OK_STATUS;// validator.validateContextRoot(name);
 
-        if (!status.isOK()) {
+        IStatus nameStatus = ResourcesPlugin.getWorkspace().validateName(name, IResource.FILE);
+
+        if (!nameStatus.isOK()) {
+            setErrorMessage(nameStatus.getMessage());
             setPageComplete(false);
-            setErrorMessage(status.getMessage());
             return;
         }
 

@@ -14,6 +14,7 @@ package org.eclipse.virgo.ide.ui.wizards;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URI;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -21,7 +22,11 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.pde.internal.ui.wizards.NewWizard;
+import org.eclipse.ui.IEditorDescriptor;
+import org.eclipse.ui.PartInitException;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.WizardNewProjectCreationPage;
+import org.eclipse.ui.part.FileEditorInput;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.ide.facet.core.CreatePlanProjectOperation;
 import org.eclipse.virgo.ide.ui.ServerIdeUiPlugin;
@@ -84,6 +89,16 @@ public class NewPlanProjectWizard extends NewWizard {
             StatusManager.getManager().handle(s, StatusManager.LOG | StatusManager.SHOW);
         }
 
+        
+        IFile file = operation.getPlanFile();
+        if (file!=null) {
+            IEditorDescriptor editorDesc = PlatformUI.getWorkbench().getEditorRegistry().getDefaultEditor(file.getName());
+            try {
+                PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage().openEditor(new FileEditorInput(file), editorDesc.getId());
+            } catch (PartInitException e) {
+                // ignore
+            }
+        }
         return true;
     }
 

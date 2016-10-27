@@ -68,6 +68,8 @@ public class CreatePlanProjectOperation extends AbstractOperation {
 
     private final String planName;
 
+    private IFile planFile;
+
     /**
      * Creates a new instance
      *
@@ -143,7 +145,7 @@ public class CreatePlanProjectOperation extends AbstractOperation {
             if (!"plan".equals(p.getFileExtension())) {
                 p = p.addFileExtension("plan");
             }
-            IFile planFile = sourceFolder.getFile(p);
+            planFile = sourceFolder.getFile(p);
             try {
                 planFile.create(new ByteArrayInputStream(content.getBytes(UTF_8)), true, null);
             } catch (UnsupportedEncodingException e) {
@@ -154,6 +156,15 @@ public class CreatePlanProjectOperation extends AbstractOperation {
         }
 
         monitor.done();
+    }
+
+    /**
+     * Returns the plan file created by this operation, or null if no plan file has been created.
+     * 
+     * @return plan file or null
+     */
+    public IFile getPlanFile() {
+        return planFile;
     }
 
 }
