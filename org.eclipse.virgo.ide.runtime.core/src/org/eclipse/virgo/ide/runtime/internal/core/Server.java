@@ -140,7 +140,7 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
 
         IModuleType moduleType = module[0].getModuleType();
 
-        if (module.length == 1 && moduleType != null) {
+        if (module.length > 0 && moduleType != null) {
             if (FacetCorePlugin.WEB_FACET_ID.equals(moduleType.getId())) {
                 IWebModule webModule = (IWebModule) module[0].loadAdapter(IWebModule.class, null);
                 if (webModule != null) {
@@ -153,22 +153,29 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
                     return parModule.getChildModules();
                 }
             } else if (FacetCorePlugin.PLAN_FACET_ID.equals(moduleType.getId())) {
-                ServerModuleDelegate planModule = (ServerModuleDelegate) module[0].loadAdapter(ServerModuleDelegate.class, null);
+                /*
+                 * To support nested plans now the tooling creates an IModule tree where top level plans have nested
+                 * plans or bundles as children. WTP is passing back the path from the root to a given module as a
+                 * parameter to this method to get the children, so here children are computed only for the last item in
+                 * the list (module.length -1)
+                 **/
+                ServerModuleDelegate planModule = (ServerModuleDelegate) module[module.length - 1].loadAdapter(ServerModuleDelegate.class, null);
                 if (planModule != null) {
                     return planModule.getChildModules();
                 }
             }
-        } else if (FacetCorePlugin.PLAN_FACET_ID.equals(moduleType.getId())) {
-            /*
-             * To support nested plans now the tooling creates an IModule tree where top level plans have nested plans
-             * or bundles as children. WTP is passing back the path from the root to a given module as a parameter to
-             * this method to get the children, so here children are computed only for the last item in the list
-             * (module.length -1)
-             **/
-            ServerModuleDelegate planModule = (ServerModuleDelegate) module[module.length - 1].loadAdapter(ServerModuleDelegate.class, null);
-            if (planModule != null) {
-                return planModule.getChildModules();
-            }
+            // } else if (FacetCorePlugin.PLAN_FACET_ID.equals(moduleType.getId())) {
+            // /*
+            // * To support nested plans now the tooling creates an IModule tree where top level plans have nested plans
+            // * or bundles as children. WTP is passing back the path from the root to a given module as a parameter to
+            // * this method to get the children, so here children are computed only for the last item in the list
+            // * (module.length -1)planModule.getChildModules();
+            // **/
+            // ServerModuleDelegate planModule = (ServerModuleDelegate) module[module.length -
+            // 1].loadAdapter(ServerModuleDelegate.class, null);
+            // if (planModule != null) {
+            // return planModule.getChildModules();
+            // }
         }
 
         return new IModule[0];

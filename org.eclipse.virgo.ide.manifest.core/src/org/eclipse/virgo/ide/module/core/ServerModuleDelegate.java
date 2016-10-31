@@ -217,16 +217,8 @@ public class ServerModuleDelegate extends ProjectModule {
                     folder.setMembers(getMembers(childModule.getProject(), moduleRelativePath).toArray(new IModuleResource[0]));
                     resources.add(folder);
                 } else if (FacetUtils.isPlanProject(childModule.getProject())) {
-                    // this new case makes sure the plan file itself is copied to the staging folder
-                    IFile file2 = ResourcesPlugin.getWorkspace().getRoot().getFile(new Path(childModule.getName()));
-                    ModuleFile mfile = new ModuleFile(file2, file2.getName(), Path.EMPTY);
-                    resources.add(mfile);
-
-                    // recursion to collect nested plans and bundles
-                    ModuleDelegate delegate3 = (ModuleDelegate) childModule.loadAdapter(ModuleDelegate.class, null);
-                    for (IModule aChild : delegate3.getChildModules()) {
-                        deepGetMembers(aChild, resources);
-                    }
+                    // enter recursion
+                    deepGetMembers(childModule, resources);
                 } else if (FacetUtils.isParProject(childModule.getProject())) {
                     moduleRelativePath = new Path(childModule.getProject().getName() + ".par");
                     ModuleDelegate delegate2 = (ModuleDelegate) childModule.loadAdapter(ModuleDelegate.class, null);
