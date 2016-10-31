@@ -40,8 +40,8 @@ public class NewPlanProjectFilePage extends WizardPage {
 
     public NewPlanProjectFilePage() {
         super(PAGE_NAME);
-        setTitle(Messages.NewPDEProjectWABPage_title);
-        setDescription(Messages.NewPDEProjectWABPage_description);
+        setTitle(Messages.NewPlanProjectNamePage_title);
+        setDescription(Messages.NewPlanProjectNamePage_description);
     }
 
     private String planName;
