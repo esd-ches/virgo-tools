@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
+ *     GianMaria Romanato - support for nested plans
  *******************************************************************************/
 
 package org.eclipse.virgo.ide.runtime.internal.core;
@@ -53,6 +54,7 @@ import org.eclipse.wst.server.core.model.ServerDelegate;
  *
  * @author Christian Dupuis
  * @author Leo Dos Santos
+ * @author GianMaria Romanato
  * @since 1.0.0
  */
 public class Server extends ServerDelegate implements IServer, IServerWorkingCopy {
@@ -164,18 +166,6 @@ public class Server extends ServerDelegate implements IServer, IServerWorkingCop
                     return planModule.getChildModules();
                 }
             }
-            // } else if (FacetCorePlugin.PLAN_FACET_ID.equals(moduleType.getId())) {
-            // /*
-            // * To support nested plans now the tooling creates an IModule tree where top level plans have nested plans
-            // * or bundles as children. WTP is passing back the path from the root to a given module as a parameter to
-            // * this method to get the children, so here children are computed only for the last item in the list
-            // * (module.length -1)planModule.getChildModules();
-            // **/
-            // ServerModuleDelegate planModule = (ServerModuleDelegate) module[module.length -
-            // 1].loadAdapter(ServerModuleDelegate.class, null);
-            // if (planModule != null) {
-            // return planModule.getChildModules();
-            // }
         }
 
         return new IModule[0];
