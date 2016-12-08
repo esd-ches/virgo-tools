@@ -1,10 +1,17 @@
+/*******************************************************************************
+ *  Copyright (c) 2015 GianMaria Romanato
+ *  All rights reserved. This program and the accompanying materials
+ *  are made available under the terms of the Eclipse Public License v1.0
+ *  which accompanies this distribution, and is available at
+ *  http://www.eclipse.org/legal/epl-v10.html
+ *
+ *  Contributors:
+ *     GianMaria Romanato - initial API and implementation
+ *******************************************************************************/
 
 package org.eclipse.virgo.ide.pde.core.internal.cmd;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -27,6 +34,7 @@ import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.pde.core.project.IBundleProjectDescription;
 import org.eclipse.pde.core.project.IBundleProjectService;
+import org.eclipse.virgo.ide.facet.core.AbstractOperation;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.pde.core.internal.Constants;
 import org.eclipse.wst.common.project.facet.core.IFacetedProject;
@@ -40,7 +48,7 @@ import org.eclipse.wst.common.project.facet.core.ProjectFacetsManager;
  * PDE project that has been modified after initial creation.
  * <p>
  */
-public class SetupProjectOperation implements IWorkspaceRunnable {
+public class SetupProjectOperation extends AbstractOperation implements IWorkspaceRunnable {
 
     private static final String WST_FACET_NATURE = org.eclipse.wst.common.project.facet.core.internal.FacetCorePlugin.PLUGIN_ID + ".nature"; //$NON-NLS-1$
 
@@ -185,31 +193,6 @@ public class SetupProjectOperation implements IWorkspaceRunnable {
                 throw new CoreException(new Status(IStatus.ERROR, Constants.PLUGIN_ID, e.getMessage(), e));
             }
         }
-    }
-
-    private String readResourceFromClassPath(String path, String charset) throws CoreException {
-        InputStream is = getClass().getResourceAsStream(path);
-        if (is != null) {
-            try {
-                InputStreamReader r = new InputStreamReader(is, charset);
-                StringBuilder sb = new StringBuilder();
-                int c;
-                while ((c = r.read()) != -1) {
-                    sb.append((char) c);
-                }
-                return sb.toString();
-            } catch (IOException e) {
-                throw new CoreException(new Status(IStatus.ERROR, Constants.PLUGIN_ID, e.getMessage(), e));
-            } finally {
-                try {
-                    is.close();
-                } catch (IOException e) {
-                }
-            }
-        } else {
-            throw new CoreException(new Status(IStatus.ERROR, Constants.PLUGIN_ID, "Template file missing " + path)); //$NON-NLS-1$
-        }
-
     }
 
     private IPath configureWABClasspath(IProject project) throws CoreException, JavaModelException {

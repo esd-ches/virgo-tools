@@ -58,4 +58,10 @@ public interface IServerBehaviour extends IURLProvider {
 
     void onModulePublishStateChange(IModule[] modules, int publishStateNone);
 
+    /**
+     * Returns the server deploy directory. This corresponds to the stage folder created
+     * by the Virgo Tools within the Virgo home folder.
+     */
+    public IPath getServerDeployDirectory();
+
 }

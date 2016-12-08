@@ -1,3 +1,389 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Virgo Tools Guide</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Tools Guide"><link rel="next" href="ch01.html" title="Chapter&nbsp;1.&nbsp;Tooling"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%">&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch01.html">Next</a></td></tr></table><hr></div><div class="book" title="Virgo Tools Guide"><div class="titlepage"><div><div><h1 class="title"><a name="N10001"></a>Virgo Tools Guide</h1></div><div><div class="authorgroup"><div class="author"><h3 class="author"><span class="firstname">Ramnivas</span> <span class="surname">Laddad</span></h3></div><div class="author"><h3 class="author"><span class="firstname">Colin</span> <span class="surname">Yates</span></h3></div><div class="author"><h3 class="author"><span class="firstname">Sam</span> <span class="surname">Brannen</span></h3></div><div class="author"><h3 class="author"><span class="firstname">Rob</span> <span class="surname">Harrop</span></h3></div><div class="author"><h3 class="author"><span class="firstname">Christian</span> <span class="surname">Dupuis</span></h3></div><div class="author"><h3 class="author"><span class="firstname">Andy</span> <span class="surname">Wilkinson</span></h3></div><div class="author"><h3 class="author"><span class="firstname">Glyn</span> <span class="surname">Normington</span></h3></div><div class="author"><h3 class="author"><span class="firstname">Steve</span> <span class="surname">Powell</span></h3></div><div class="author"><h3 class="author"><span class="firstname">Christopher</span> <span class="surname">Frost</span></h3></div><div class="author"><h3 class="author"><span class="firstname">Miles</span> <span class="surname">Parker</span></h3></div><div class="author"><h3 class="author"><span class="firstname">Leo</span> <span class="surname">Dos Santos</span></h3></div><div class="author"><h3 class="author"><span class="firstname">GianMaria</span> <span class="surname">Romanato</span></h3></div></div></div><div><p class="releaseinfo">3.5.0</p></div><div><div class="legalnotice" title="Legal Notice"><a name="N10058"></a><p>Copyright &copy; 2012 VMware Inc.</p><p>Copyright &copy; 2016 GianMaria Romanato</p></div></div></div><hr></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="chapter"><a href="ch01.html">1. Tooling</a></span></dt><dt><span class="chapter"><a href="ch02.html">2. What's New</a></span></dt><dd><dl><dt><span class="section"><a href="ch02.html#1.5.0_Release">1.5.0 Release</a></span></dt><dd><dl><dt><span class="section"><a href="ch02.html#UI_15">UI</a></span></dt></dl></dd><dt><span class="section"><a href="ch02s02.html">1.0.0 Release</a></span></dt><dd><dl><dt><span class="section"><a href="ch02s02.html#UI">UI</a></span></dt><dt><span class="section"><a href="ch02s02.html#Quality">Quality</a></span></dt></dl></dd><dt><span class="section"><a href="ch02s03.html">1.0.0 M4</a></span></dt><dd><dl><dt><span class="section"><a href="ch02s03.html#Improved_Server_Support">Improved Server Support</a></span></dt><dt><span class="section"><a href="ch02s03.html#UI_2">UI</a></span></dt><dt><span class="section"><a href="ch02s03.html#Documentation_and_Help">Documentation and Help</a></span></dt><dt><span class="section"><a href="ch02s03.html#Installation_Process">Installation Process</a></span></dt><dt><span class="section"><a href="ch02s03.html#Quality_2">Quality</a></span></dt></dl></dd></dl></dd><dt><span class="chapter"><a href="ch03.html">3. Running a Virgo Runtime Environment</a></span></dt><dt><span class="chapter"><a href="ch04.html">4. Server Perspective and Views</a></span></dt><dd><dl><dt><span class="section"><a href="ch04.html#server-perspective">Virgo Perspective</a></span></dt><dt><span class="section"><a href="ch04s02.html">Views</a></span></dt><dd><dl><dt><span class="section"><a href="ch04s02.html#views-respository">Repository View</a></span></dt><dt><span class="section"><a href="ch04s02.html#views-properties">Properties View</a></span></dt><dt><span class="section"><a href="ch04s02.html#views-logs">Logs View</a></span></dt><dt><span class="section"><a href="ch04s02.html#views-console">Console View</a></span></dt></dl></dd><dt><span class="section"><a href="ch04s03.html">Virgo Server Projects</a></span></dt></dl></dd><dt><span class="chapter"><a href="ch05.html">5. Server Editor</a></span></dt><dd><dl><dt><span class="section"><a href="ch05.html#N10229">Overview Page</a></span></dt><dt><span class="section"><a href="ch05s02.html">Repository Page</a></span></dt><dt><span class="section"><a href="ch05s03.html">Bundle Overview Page</a></span></dt><dt><span class="section"><a href="ch05s04.html">Bundle Dependency Graph Page</a></span></dt><dt><span class="section"><a href="ch05s05.html">Server Console Page</a></span></dt></dl></dd><dt><span class="chapter"><a href="ch06.html">6. Developing OSGi Bundles</a></span></dt><dd><dl><dt><span class="section"><a href="ch06.html#tooling-developing-resolving-bundle-dependencies">Resolving Bundle Dependencies</a></span></dt><dt><span class="section"><a href="ch06s02.html">Editing the Manifest</a></span></dt></dl></dd><dt><span class="chapter"><a href="ch07.html">7. Developing OSGi Bundles using Plug-in Development Environment
-		(PDE)
-	</a></span></dt><dd><dl><dt><span class="section"><a href="ch07.html#pde_dependencies">Resolving Bundle Dependencies</a></span></dt><dt><span class="section"><a href="ch07s02.html">Server Runtime Wizard</a></span></dt><dt><span class="section"><a href="ch07s03.html">PDE Bundle projects</a></span></dt><dt><span class="section"><a href="ch07s04.html">Publishing</a></span></dt><dt><span class="section"><a href="ch07s05.html">Migration actions</a></span></dt></dl></dd><dt><span class="chapter"><a href="ch08.html">8. Developing PARs</a></span></dt><dt><span class="chapter"><a href="ch09.html">9. Deploying Applications</a></span></dt><dt><span class="chapter"><a href="ch10.html">10. Installation and Release Notes</a></span></dt><dd><dl><dt><span class="section"><a href="ch10.html#Features">Features</a></span></dt><dt><span class="section"><a href="ch10s02.html">Installation</a></span></dt><dd><dl><dt><span class="section"><a href="ch10s02.html#Install_Eclipse">Install Eclipse</a></span></dt><dt><span class="section"><a href="ch10s02.html#Install_Virgo">Install Virgo</a></span></dt><dt><span class="section"><a href="ch10s02.html#Update_Sites">Update Sites</a></span></dt></dl></dd><dt><span class="section"><a href="ch10s03.html">Known Issues</a></span></dt><dt><span class="section"><a href="ch10s04.html">Maven plugin</a></span></dt><dd><dl><dt><span class="section"><a href="ch10s04.html#Build">Build</a></span></dt><dt><span class="section"><a href="ch10s04.html#Goals">Goals</a></span></dt><dt><span class="section"><a href="ch10s04.html#Simple_example_POM">Simple example POM</a></span></dt></dl></dd><dt><span class="section"><a href="ch10s05.html">Importing Virgo Projects into Eclipse</a></span></dt><dt><span class="section"><a href="ch10s06.html">FAQ</a></span></dt></dl></dd></dl></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%">&nbsp;</td><td align="center" width="20%">&nbsp;</td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch01.html">Next</a></td></tr></table></div></body></html>
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Virgo Tools Guide</title>
+<meta content="DocBook XSL Stylesheets V1.76.0" name="generator">
+<link rel="home" href="index.html" title="Virgo Tools Guide">
+<link rel="next" href="ch01.html" title="Chapter&nbsp;1.&nbsp;Tooling">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084"
+	alink="#0000FF">
+	<div class="navheader">
+		<table summary="Navigation header" width="100%">
+			<tr>
+				<td align="left" width="20%">&nbsp;</td>
+				<th align="center" width="60%">&nbsp;</th>
+				<td align="right" width="20%">&nbsp;<a accesskey="n"
+					href="ch01.html">Next</a></td>
+			</tr>
+		</table>
+		<hr>
+	</div>
+	<div class="book" title="Virgo Tools Guide">
+		<div class="titlepage">
+			<div>
+				<div>
+					<h1 class="title">
+						<a name="N10001"></a>Virgo Tools Guide
+					</h1>
+				</div>
+				<div>
+					<div class="authorgroup">
+						<div class="author">
+							<h3 class="author">
+								<span class="firstname">Ramnivas</span> <span class="surname">Laddad</span>
+							</h3>
+						</div>
+						<div class="author">
+							<h3 class="author">
+								<span class="firstname">Colin</span> <span class="surname">Yates</span>
+							</h3>
+						</div>
+						<div class="author">
+							<h3 class="author">
+								<span class="firstname">Sam</span> <span class="surname">Brannen</span>
+							</h3>
+						</div>
+						<div class="author">
+							<h3 class="author">
+								<span class="firstname">Rob</span> <span class="surname">Harrop</span>
+							</h3>
+						</div>
+						<div class="author">
+							<h3 class="author">
+								<span class="firstname">Christian</span> <span class="surname">Dupuis</span>
+							</h3>
+						</div>
+						<div class="author">
+							<h3 class="author">
+								<span class="firstname">Andy</span> <span class="surname">Wilkinson</span>
+							</h3>
+						</div>
+						<div class="author">
+							<h3 class="author">
+								<span class="firstname">Glyn</span> <span class="surname">Normington</span>
+							</h3>
+						</div>
+						<div class="author">
+							<h3 class="author">
+								<span class="firstname">Steve</span> <span class="surname">Powell</span>
+							</h3>
+						</div>
+						<div class="author">
+							<h3 class="author">
+								<span class="firstname">Christopher</span> <span class="surname">Frost</span>
+							</h3>
+						</div>
+						<div class="author">
+							<h3 class="author">
+								<span class="firstname">Miles</span> <span class="surname">Parker</span>
+							</h3>
+						</div>
+						<div class="author">
+							<h3 class="author">
+								<span class="firstname">Leo</span> <span class="surname">Dos
+									Santos</span>
+							</h3>
+						</div>
+						<div class="author">
+							<h3 class="author">
+								<span class="firstname">GianMaria</span> <span class="surname">Romanato</span>
+							</h3>
+						</div>
+					</div>
+				</div>
+				<div>
+					<p class="releaseinfo">3.5.0</p>
+				</div>
+				<div>
+					<div class="legalnotice" title="Legal Notice">
+						<a name="N10058"></a>
+						<p>Copyright &copy; 2012 VMware Inc.</p>
+						<p>Copyright &copy; 2016 GianMaria Romanato</p>
+					</div>
+				</div>
+			</div>
+			<hr>
+		</div>
+		<div class="toc">
+			<p>
+				<b>Table of Contents</b>
+			</p>
+			<dl>
+				<dt>
+					<span class="chapter"><a href="ch01.html">1. Tooling</a></span>
+				</dt>
+				<dt>
+					<span class="chapter"><a href="ch02.html">2. What's New</a></span>
+				</dt>
+				<dd>
+					<dl>
+						<dt>
+							<span class="section"><a href="ch02.html#1.5.0_Release">1.5.0
+									Release</a></span>
+						</dt>
+						<dd>
+							<dl>
+								<dt>
+									<span class="section"><a href="ch02.html#UI_15">UI</a></span>
+								</dt>
+							</dl>
+						</dd>
+						<dt>
+							<span class="section"><a href="ch02s02.html">1.0.0
+									Release</a></span>
+						</dt>
+						<dd>
+							<dl>
+								<dt>
+									<span class="section"><a href="ch02s02.html#UI">UI</a></span>
+								</dt>
+								<dt>
+									<span class="section"><a href="ch02s02.html#Quality">Quality</a></span>
+								</dt>
+							</dl>
+						</dd>
+						<dt>
+							<span class="section"><a href="ch02s03.html">1.0.0 M4</a></span>
+						</dt>
+						<dd>
+							<dl>
+								<dt>
+									<span class="section"><a
+										href="ch02s03.html#Improved_Server_Support">Improved
+											Server Support</a></span>
+								</dt>
+								<dt>
+									<span class="section"><a href="ch02s03.html#UI_2">UI</a></span>
+								</dt>
+								<dt>
+									<span class="section"><a
+										href="ch02s03.html#Documentation_and_Help">Documentation
+											and Help</a></span>
+								</dt>
+								<dt>
+									<span class="section"><a
+										href="ch02s03.html#Installation_Process">Installation
+											Process</a></span>
+								</dt>
+								<dt>
+									<span class="section"><a href="ch02s03.html#Quality_2">Quality</a></span>
+								</dt>
+							</dl>
+						</dd>
+					</dl>
+				</dd>
+				<dt>
+					<span class="chapter"><a href="ch03.html">3. Running a
+							Virgo Runtime Environment</a></span>
+				</dt>
+				<dt>
+					<span class="chapter"><a href="ch04.html">4. Server
+							Perspective and Views</a></span>
+				</dt>
+				<dd>
+					<dl>
+						<dt>
+							<span class="section"><a
+								href="ch04.html#server-perspective">Virgo Perspective</a></span>
+						</dt>
+						<dt>
+							<span class="section"><a href="ch04s02.html">Views</a></span>
+						</dt>
+						<dd>
+							<dl>
+								<dt>
+									<span class="section"><a
+										href="ch04s02.html#views-respository">Repository View</a></span>
+								</dt>
+								<dt>
+									<span class="section"><a
+										href="ch04s02.html#views-properties">Properties View</a></span>
+								</dt>
+								<dt>
+									<span class="section"><a href="ch04s02.html#views-logs">Logs
+											View</a></span>
+								</dt>
+								<dt>
+									<span class="section"><a
+										href="ch04s02.html#views-console">Console View</a></span>
+								</dt>
+							</dl>
+						</dd>
+						<dt>
+							<span class="section"><a href="ch04s03.html">Virgo
+									Server Projects</a></span>
+						</dt>
+					</dl>
+				</dd>
+				<dt>
+					<span class="chapter"><a href="ch05.html">5. Server
+							Editor</a></span>
+				</dt>
+				<dd>
+					<dl>
+						<dt>
+							<span class="section"><a href="ch05.html#N1022F">Overview
+									Page</a></span>
+						</dt>
+						<dt>
+							<span class="section"><a href="ch05s02.html">Repository
+									Page</a></span>
+						</dt>
+						<dt>
+							<span class="section"><a href="ch05s03.html">Bundle
+									Overview Page</a></span>
+						</dt>
+						<dt>
+							<span class="section"><a href="ch05s04.html">Bundle
+									Dependency Graph Page</a></span>
+						</dt>
+						<dt>
+							<span class="section"><a href="ch05s05.html">Server
+									Console Page</a></span>
+						</dt>
+					</dl>
+				</dd>
+				<dt>
+					<span class="chapter"><a href="ch06.html">6. Developing
+							OSGi Bundles</a></span>
+				</dt>
+				<dd>
+					<dl>
+						<dt>
+							<span class="section"><a
+								href="ch06.html#tooling-developing-resolving-bundle-dependencies">Resolving
+									Bundle Dependencies</a></span>
+						</dt>
+						<dt>
+							<span class="section"><a href="ch06s02.html">Editing
+									the Manifest</a></span>
+						</dt>
+					</dl>
+				</dd>
+				<dt>
+					<span class="chapter"><a href="ch07.html">7. Developing
+							OSGi Bundles using Plug-in Development Environment (PDE) </a></span>
+				</dt>
+				<dd>
+					<dl>
+						<dt>
+							<span class="section"><a href="ch07.html#pde_dependencies">Resolving
+									Bundle Dependencies</a></span>
+						</dt>
+						<dt>
+							<span class="section"><a href="ch07s02.html">Server
+									Runtime Wizard</a></span>
+						</dt>
+						<dt>
+							<span class="section"><a href="ch07s03.html">PDE
+									Bundle projects</a></span>
+						</dt>
+						<dt>
+							<span class="section"><a href="ch07s04.html">Publishing</a></span>
+						</dt>
+						<dt>
+							<span class="section"><a href="ch07s05.html">Migration
+									actions</a></span>
+						</dt>
+					</dl>
+				</dd>
+				<dt>
+					<span class="chapter"><a href="ch08.html">8. Developing
+							Plans</a></span>
+				</dt>
+				<dd>
+					<dl>
+						<dt>
+							<span class="section"><a href="ch08.html#planBenefits">Benefit
+									of using Plan files</a></span>
+						</dt>
+						<dt>
+							<span class="section"><a href="ch08s02.html">Discovery
+									of Plan files in the workspace</a></span>
+						</dt>
+					</dl>
+				</dd>
+				<dt>
+					<span class="chapter"><a href="ch09.html">9. Developing
+							PARs</a></span>
+				</dt>
+				<dt>
+					<span class="chapter"><a href="ch10.html">10. Deploying
+							Applications</a></span>
+				</dt>
+				<dt>
+					<span class="chapter"><a href="ch11.html">11.
+							Installation and Release Notes</a></span>
+				</dt>
+				<dd>
+					<dl>
+						<dt>
+							<span class="section"><a href="ch11.html#Features">Features</a></span>
+						</dt>
+						<dt>
+							<span class="section"><a href="ch11s02.html">Installation</a></span>
+						</dt>
+						<dd>
+							<dl>
+								<dt>
+									<span class="section"><a
+										href="ch11s02.html#Install_Eclipse">Install Eclipse</a></span>
+								</dt>
+								<dt>
+									<span class="section"><a
+										href="ch11s02.html#Install_Virgo">Install Virgo</a></span>
+								</dt>
+								<dt>
+									<span class="section"><a
+										href="ch11s02.html#Update_Sites">Update Sites</a></span>
+								</dt>
+							</dl>
+						</dd>
+						<dt>
+							<span class="section"><a href="ch11s03.html">Known
+									Issues</a></span>
+						</dt>
+						<dt>
+							<span class="section"><a href="ch11s04.html">Maven
+									plugin</a></span>
+						</dt>
+						<dd>
+							<dl>
+								<dt>
+									<span class="section"><a href="ch11s04.html#Build">Build</a></span>
+								</dt>
+								<dt>
+									<span class="section"><a href="ch11s04.html#Goals">Goals</a></span>
+								</dt>
+								<dt>
+									<span class="section"><a
+										href="ch11s04.html#Simple_example_POM">Simple example POM</a></span>
+								</dt>
+							</dl>
+						</dd>
+						<dt>
+							<span class="section"><a href="ch11s05.html">Importing
+									Virgo Projects into Eclipse</a></span>
+						</dt>
+						<dt>
+							<span class="section"><a href="ch11s06.html">FAQ</a></span>
+						</dt>
+					</dl>
+				</dd>
+			</dl>
+		</div>
+	</div>
+	<div class="navfooter">
+		<hr>
+		<table summary="Navigation footer" width="100%">
+			<tr>
+				<td align="left" width="40%">&nbsp;</td>
+				<td align="center" width="20%">&nbsp;</td>
+				<td align="right" width="40%">&nbsp;<a accesskey="n"
+					href="ch01.html">Next</a></td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>

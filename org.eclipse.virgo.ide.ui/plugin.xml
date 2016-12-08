@@ -9,6 +9,7 @@
  * 
  * Contributors:
  *     SpringSource - initial API and implementation
+ *     GianMaria Romanato - new wizards and bugfixes
  *******************************************************************************/
 -->
 <plugin>
@@ -58,6 +59,20 @@
             %pdeProjectWizard.desc
          </description>
    </wizard>
+   <wizard
+         category="org.eclipse.virgo.ide.ui.category"
+         class="org.eclipse.virgo.ide.ui.wizards.NewPlanProjectWizard"
+         finalPerspective="org.eclipse.virgo.ide.runtime.ui.perspective"
+         hasPages="true"
+         icon="icons/full/obj16/par_project_obj.gif"
+         id="org.eclipse.virgo.ide.ui.planprojectwizard"
+         name="%planProjectWizard.name"
+         project="true">
+          <description>
+            %planProjectWizard.desc
+         </description>
+   </wizard>
+      
       
    </extension>
    
@@ -370,6 +385,9 @@
        </newWizardShortcut>
        <newWizardShortcut
              id="org.eclipse.virgo.ide.ui.pdeprojectwizard">
+       </newWizardShortcut>   
+       <newWizardShortcut
+             id="org.eclipse.virgo.ide.ui.planprojectwizard">
        </newWizardShortcut>       
        <newWizardShortcut
              id="org.eclipse.virgo.ide.ui.wizards.parProject">
@@ -541,6 +559,26 @@
       <commonWizard
          type="new"
          wizardId="org.eclipse.virgo.ide.ui.pdeprojectwizard">
+      <enablement>
+      <or>
+      <with 
+            variable="selection"> 
+         <count 
+               value="0"> 
+         </count> 
+      </with>
+      <instanceof
+            value="org.eclipse.core.resources.IProject">
+      </instanceof>
+      <instanceof
+            value="org.eclipse.core.resources.IWorkspaceRoot">
+      </instanceof> 
+</or>      
+            </enablement>
+   </commonWizard>   
+   <commonWizard
+         type="new"
+         wizardId="org.eclipse.virgo.ide.ui.planprojectwizard">
       <enablement>
       <or>
       <with 
