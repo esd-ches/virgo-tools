@@ -77,6 +77,8 @@ public class PDETargetPlatformWizardFragment extends WizardFragment {
      */
     @Override
     public void performFinish(IProgressMonitor monitor) throws CoreException {
-        targetPlatformComposite.performFinish(monitor);
+        if (targetPlatformComposite != null) {
+            targetPlatformComposite.performFinish(monitor);
+        }
     }
 }
