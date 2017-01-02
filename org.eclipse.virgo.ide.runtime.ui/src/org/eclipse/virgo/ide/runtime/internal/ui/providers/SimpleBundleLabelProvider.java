@@ -11,6 +11,7 @@
 
 package org.eclipse.virgo.ide.runtime.internal.ui.providers;
 
+import org.eclipse.virgo.ide.runtime.core.artefacts.ILocalArtefact;
 import org.eclipse.virgo.ide.runtime.internal.ui.projects.IServerProjectArtefact;
 
 /**
@@ -21,7 +22,12 @@ public class SimpleBundleLabelProvider extends RuntimeLabelProvider {
     @Override
     public String getText(Object element) {
         if (element instanceof IServerProjectArtefact) {
-            return ((IServerProjectArtefact) element).getArtefact().getSignature();
+
+            ILocalArtefact artefact = ((IServerProjectArtefact) element).getArtefact();
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(artefact.getSymbolicName()).append(' ').append(artefact.getVersion());
+            return sb.toString();
         }
         return super.getText(element);
     }
