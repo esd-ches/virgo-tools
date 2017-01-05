@@ -52,6 +52,7 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
     protected Virgo35Provider() {
     }
 
+    @Override
     public boolean isHandlerFor(IRuntime runtime) {
         IPath configPath = runtime.getLocation().append(getConfigurationDir());
         File configDir = configPath.toFile();
@@ -133,11 +134,21 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
         list.add("-Dssh.server.keystore=" + serverHome + "/" + getConfigurationDir() + "/hostkey.ser");
         list.add("-Djava.endorsed.dirs=\"" + serverHome + "/lib/endorsed\"");
 
+        if (isWindows10()) {
+            // Work around for Equinox 3.9 not recognizing Windows 10 as win32, which results in failure of resolution
+            // of native libraries see https://bugs.eclipse.org/bugs/show_bug.cgi?id=486353
+            list.add("-Dos.name=win32");
+        }
+
         String fwClassPath = createFWClassPath(serverHome);
 
         list.add("-Dosgi.frameworkClassPath=" + fwClassPath);
 
         return list.toArray(new String[list.size()]);
+    }
+
+    private boolean isWindows10() {
+        return System.getProperty("os.name", "").toLowerCase().contains("windows") && System.getProperty("os.version", "").startsWith("1"); //$NON-NLS-1$ //$NON-NLS-2$//$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
     }
 
     private String createFWClassPath(String serverHome) {
