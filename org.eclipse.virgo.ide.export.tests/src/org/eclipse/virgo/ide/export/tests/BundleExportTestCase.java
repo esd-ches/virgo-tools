@@ -23,11 +23,13 @@ import java.util.zip.ZipInputStream;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.ui.jarpackager.IJarExportRunnable;
+import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.virgo.ide.export.BundleExportUtils;
@@ -45,14 +47,22 @@ public class BundleExportTestCase extends VirgoIdeTestCase {
 
     @Test
     public void testExportOperation() throws InvocationTargetException, InterruptedException, IOException, CoreException {
-        IPath jarLocation = Path.fromOSString(VirgoIdeTestUtil.getWorkspaceRoot().getLocation().toFile().getCanonicalPath()).append(
+        final IPath jarLocation = Path.fromOSString(VirgoIdeTestUtil.getWorkspaceRoot().getLocation().toFile().getCanonicalPath()).append(
             "bundlor-test-1.0.0.jar");
-        IJavaProject javaProject = JavaCore.create(createPredefinedProject("bundlor-test"));
+        final IJavaProject javaProject = JavaCore.create(createPredefinedProject("bundlor-test"));
 
-        IJarExportRunnable op = BundleExportUtils.createExportOperation(javaProject, jarLocation, Display.getDefault().getActiveShell(),
-            new ArrayList<IStatus>());
-        PlatformUI.getWorkbench().getActiveWorkbenchWindow().run(true, true, op);
-        IStatus status = op.getStatus();
+        final IStatus[] statusArray = new IStatus[1];
+
+        PlatformUI.getWorkbench().getActiveWorkbenchWindow().run(true, true, new IRunnableWithProgress() {
+
+            public void run(IProgressMonitor arg0) throws InvocationTargetException, InterruptedException {
+                IJarExportRunnable op = BundleExportUtils.createExportOperation(javaProject, jarLocation, Display.getDefault().getActiveShell(),
+                    new ArrayList<IStatus>());
+                op.run(arg0);
+                statusArray[0] = op.getStatus();
+            }
+        });
+        IStatus status = statusArray[0];
         Assert.assertTrue("Expects status is OK", status.isOK());
 
         File file = new File(jarLocation.toOSString());
