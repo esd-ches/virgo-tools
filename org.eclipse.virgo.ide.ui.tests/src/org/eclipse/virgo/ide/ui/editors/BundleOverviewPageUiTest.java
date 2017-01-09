@@ -11,6 +11,9 @@
 
 package org.eclipse.virgo.ide.ui.editors;
 
+import org.eclipse.swtbot.swt.finder.finders.UIThreadRunnable;
+import org.eclipse.swtbot.swt.finder.results.VoidResult;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.virgo.ide.ui.tests.AbstractManifestUiTestCase;
 
 /**

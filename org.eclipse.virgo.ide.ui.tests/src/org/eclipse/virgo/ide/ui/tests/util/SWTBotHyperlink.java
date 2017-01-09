@@ -11,6 +11,11 @@
 
 package org.eclipse.virgo.ide.ui.tests.util;
 
+import org.eclipse.swtbot.swt.finder.ReferenceBy;
+import org.eclipse.swtbot.swt.finder.SWTBotWidget;
+import org.eclipse.swtbot.swt.finder.exceptions.WidgetNotFoundException;
+import org.eclipse.swtbot.swt.finder.widgets.AbstractSWTBot;
+import org.eclipse.swtbot.swt.finder.widgets.AbstractSWTBotControl;
 import org.eclipse.ui.forms.widgets.Hyperlink;
 import org.hamcrest.SelfDescribing;
 

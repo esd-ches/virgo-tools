@@ -11,7 +11,13 @@
 
 package org.eclipse.virgo.ide.ui.tests.util;
 
+import static org.eclipse.swtbot.swt.finder.matchers.WidgetMatcherFactory.withMnemonic;
+
 import org.eclipse.swt.widgets.Widget;
+import org.eclipse.swtbot.swt.finder.finders.PathGenerator;
+import org.eclipse.swtbot.swt.finder.matchers.AbstractMatcher;
+import org.eclipse.swtbot.swt.finder.utils.SWTUtils;
+import org.eclipse.swtbot.swt.finder.utils.TreePath;
 import org.eclipse.ui.forms.widgets.Section;
 import org.hamcrest.Description;
 import org.hamcrest.Factory;
