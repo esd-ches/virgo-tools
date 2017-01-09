@@ -636,19 +636,42 @@
          location="TOP_LEFT"
          state="true">
       <enablement>
-         <and>
-            <objectClass
-                  name="org.eclipse.core.resources.IProject">
-            </objectClass>
-            <objectState
-                  name="projectNature"
-                  value="org.eclipse.virgo.ide.pde.core.nature">
-            </objectState>
-         </and>
+	      <and>
+	         <objectClass
+	               name="org.eclipse.core.resources.IProject">
+	         </objectClass>
+	         <objectState
+	               name="projectNature"
+	               value="org.eclipse.virgo.ide.pde.core.nature">
+	         </objectState>
+	      </and>
       </enablement>
       <description>
          %projectPDEDecorator.desc
       </description>
+   </decorator>
+   <decorator
+         adaptable="true"
+         icon="icons/full/over08/plan_ovr.png"
+         id="org.eclipse.virgo.ide.runtime.ui.plan.project.decorator"
+         label="%projectPlanDecorator.label"
+         lightweight="true"
+         location="TOP_LEFT"
+         state="true">
+      <enablement>
+	         <and>
+	            <objectClass
+	                  name="org.eclipse.core.resources.IProject">
+	            </objectClass>
+	            <objectState
+	                  name="projectNature"
+	                  value="org.eclipse.virgo.ide.facet.core.plannature">
+	            </objectState>
+	         </and>	        
+      </enablement>
+      <description>
+         %projectPlanDecorator.desc
+      </description>     
    </decorator>
    <decorator
          adaptable="true"
