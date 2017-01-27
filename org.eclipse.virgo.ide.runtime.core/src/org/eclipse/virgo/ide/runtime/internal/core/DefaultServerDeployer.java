@@ -22,7 +22,6 @@ import java.util.concurrent.TimeoutException;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.virgo.ide.manifest.core.BundleManifestCorePlugin;
@@ -243,7 +242,7 @@ public class DefaultServerDeployer implements IServerDeployer {
         } catch (IOException e) {
             StatusUtil.error("Failed execution of deployer command " + serverCommand, e);
         } catch (TimeoutException e) {
-            StatusUtil.error("Failed execution of deployer command " + serverCommand, e, StatusManager.SHOW);
+            // StatusUtil.error("Failed execution of deployer command " + serverCommand, e, StatusManager.SHOW);
         }
         return null;
     }

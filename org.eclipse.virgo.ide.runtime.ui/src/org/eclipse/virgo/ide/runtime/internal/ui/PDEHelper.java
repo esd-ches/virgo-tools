@@ -34,6 +34,7 @@ import org.eclipse.core.runtime.MultiStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Status;
+import org.eclipse.jdt.launching.IVMInstall;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.pde.core.target.ITargetDefinition;
 import org.eclipse.pde.core.target.ITargetHandle;
@@ -252,7 +253,14 @@ public final class PDEHelper {
             }
             ITargetDefinition targetplatform = srv.newTarget();
             targetplatform.setName(runtime.getName());
-            targetplatform.setJREContainer(JavaRuntime.newJREContainerPath(serverRuntimeWorkingCopy.getVMInstall()));
+            IVMInstall vmInstall = serverRuntimeWorkingCopy.getVMInstall();
+            if (vmInstall == null) {
+                vmInstall = JavaRuntime.getDefaultVMInstall();
+            }
+            if (vmInstall == null) {
+                return new Status(IStatus.ERROR, ServerUiPlugin.PLUGIN_ID, "Cannot determine JDK, please check Java JRE preferences.");
+            }
+            targetplatform.setJREContainer(JavaRuntime.newJREContainerPath(vmInstall));
             ITargetLocation[] locations = new ITargetLocation[folders.size()];
             int i = 0;
 
