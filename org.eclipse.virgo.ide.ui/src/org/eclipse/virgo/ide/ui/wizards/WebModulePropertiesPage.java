@@ -56,7 +56,9 @@ public class WebModulePropertiesPage extends AbstractPropertiesPage {
     @Override
     public Map<String, String> getProperties() {
         Map<String, String> properties = new HashMap<String, String>();
-        properties.put(this.contextPathLabel.getText(), this.contextPathText.getText());
+        if (this.contextPathText != null) {
+            properties.put(this.contextPathLabel.getText(), this.contextPathText.getText());
+        }
         return properties;
     }
 
