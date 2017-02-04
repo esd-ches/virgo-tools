@@ -232,7 +232,12 @@ public class ServerProject {
             try {
                 this.project.delete(false, null);
             } catch (CoreException e) {
-                ServerProjectManager.handleException(e);
+                try {
+                    this.project.refreshLocal(IResource.DEPTH_INFINITE, null);
+                    this.project.delete(false, null);
+                } catch (CoreException e1) {
+                    ServerProjectManager.handleException(e);
+                }
             }
         }
         this.project = null;
