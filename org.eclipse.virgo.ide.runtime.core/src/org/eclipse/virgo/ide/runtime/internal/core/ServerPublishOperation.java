@@ -221,13 +221,15 @@ public class ServerPublishOperation extends PublishOperation {
 
                 // Delete all child modules that are not being used anymore
                 ServerModuleDelegate planModule = (ServerModuleDelegate) module.loadAdapter(ServerModuleDelegate.class, null);
-                IServer s = this.server.getServer();
-                for (IModule childModule : planModule.getChildModules()) {
-                    if (!ServerUtil.containsModule(s, childModule, monitor)) {
-                        IPath modulePath = this.server.getModuleDeployDirectory(childModule);
-                        File moduleFile = modulePath.toFile();
-                        if (moduleFile.exists()) {
-                            PublishUtil.deleteDirectory(moduleFile, new NullProgressMonitor());
+                if (planModule != null && planModule.getChildModules() != null) {
+                    IServer s = this.server.getServer();
+                    for (IModule childModule : planModule.getChildModules()) {
+                        if (!ServerUtil.containsModule(s, childModule, monitor)) {
+                            IPath modulePath = this.server.getModuleDeployDirectory(childModule);
+                            File moduleFile = modulePath.toFile();
+                            if (moduleFile.exists()) {
+                                PublishUtil.deleteDirectory(moduleFile, new NullProgressMonitor());
+                            }
                         }
                     }
                 }
