@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.virgo.ide.eclipse.feature"
       label="%featureName"
-      version="1.5.0.qualifier"
+      version="1.5.0.R01-RELEASE"
       provider-name="%providerName">
 
    <license url="http://www.eclipse.org/legal/epl-v10.html">

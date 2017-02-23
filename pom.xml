@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.eclipse.virgo.ide</groupId>
   <artifactId>org.eclipse.virgo.ide.parent</artifactId>
-  <version>1.5.0-SNAPSHOT</version>
+  <version>1.5.0.R01-RELEASE</version>
   <packaging>pom</packaging>
 
   <prerequisites>
@@ -12,8 +12,6 @@
   </prerequisites>  
 
   <properties>
-	<p2.qualifier>SNAPSHOT</p2.qualifier>
-
 	<archive-dir>${basedir}/target/archive</archive-dir>
 	<site-dir></site-dir>
 

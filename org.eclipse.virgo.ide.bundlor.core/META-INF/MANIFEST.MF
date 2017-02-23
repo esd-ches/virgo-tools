@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.virgo.ide.bundlor.core;singleton:=true
-Bundle-Version: 1.5.0.qualifier
+Bundle-Version: 1.5.0.R01-RELEASE
 Bundle-Activator: org.eclipse.virgo.ide.bundlor.internal.core.BundlorCorePlugin
 Bundle-Vendor: %providerName
 Require-Bundle: org.eclipse.core.runtime,

@@ -5,7 +5,7 @@
   <parent>
     <artifactId>org.eclipse.virgo.ide.parent</artifactId>
     <groupId>org.eclipse.virgo.ide</groupId>
-    <version>1.5.0-SNAPSHOT</version>
+    <version>1.5.0.R01-RELEASE</version>
   </parent>
   <artifactId>org.eclipse.virgo.ide.export.tests</artifactId>
   <packaging>eclipse-test-plugin</packaging>
