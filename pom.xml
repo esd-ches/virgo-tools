@@ -71,8 +71,8 @@
       </activation>
       <properties>
 		<pack200>/shared/common/jdk-1.5.0-22.x86_64/bin</pack200>
-		<archive-dir>/home/data/httpd/download.eclipse.org/virgo/snapshot/IDE/drops</archive-dir>
-		<site-dir>/home/data/httpd/download.eclipse.org/virgo/snapshot/IDE</site-dir>
+		<archive-dir>/home/data/httpd/download.eclipse.org/virgo/release/IDE/drops</archive-dir>
+		<site-dir>/home/data/httpd/download.eclipse.org/virgo/release/IDE</site-dir>
 		<skip-promote>false</skip-promote>
       </properties>
     </profile>
