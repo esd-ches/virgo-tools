@@ -124,7 +124,7 @@
     <repository>
       <id>virgo-snapshots</id>
       <layout>p2</layout>
-      <url>http://download.eclipse.org/virgo/updatesite/3.7.0.RELEASE/</url>
+      <url>http://download.eclipse.org/virgo/snapshots/3.7</url>
     </repository>
   </repositories>
 
