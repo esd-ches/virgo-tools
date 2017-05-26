@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.virgo.ide.runtime.core;singleton:=true
-Bundle-Version: 1.0.1.qualifier
+Bundle-Version: 1.5.1.qualifier
 Bundle-Activator: org.eclipse.virgo.ide.runtime.core.ServerCorePlugin
 Bundle-Vendor: %providerName
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
@@ -51,8 +51,7 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.libra.framework.editor.core;bundle-version="0.1.0",
  org.eclipse.libra.framework.editor.ui;bundle-version="0.1.0",
  org.eclipse.jdt.ui
-Import-Package: org.apache.commons.collections.collection,
- org.apache.commons.lang,
+Import-Package: org.apache.commons.lang,
  org.apache.commons.logging
 Export-Package: org.eclipse.virgo.ide.bundlerepository.domain,
  org.eclipse.virgo.ide.internal.utils.json,

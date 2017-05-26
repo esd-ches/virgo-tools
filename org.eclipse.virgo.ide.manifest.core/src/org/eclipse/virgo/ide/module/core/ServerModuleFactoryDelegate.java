@@ -12,11 +12,11 @@
 package org.eclipse.virgo.ide.module.core;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
@@ -24,10 +24,6 @@ import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.core.IClasspathEntry;
-import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.virgo.ide.facet.core.FacetCorePlugin;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
 import org.eclipse.wst.server.core.IModule;
@@ -75,46 +71,11 @@ public class ServerModuleFactoryDelegate extends ProjectModuleFactoryDelegate {
 
         // Every project can also be a plan project
         if (FacetUtils.isPlanProject(project)) {
-
-            // Collect output locations if java project
-            final Set<IPath> outputLocations = new HashSet<IPath>();
-            try {
-                if (FacetUtils.hasNature(project, JavaCore.NATURE_ID)) {
-                    IJavaProject je = JavaCore.create(project);
-                    try {
-                        outputLocations.add(je.getOutputLocation());
-                        for (IClasspathEntry entry : je.getRawClasspath()) {
-                            if (entry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
-                                if (entry.getOutputLocation() != null) {
-                                    outputLocations.add(entry.getOutputLocation());
-                                }
-                            }
-                        }
-                    } catch (JavaModelException e) {
-                        // safe to ignore
-                    }
-                }
-                project.accept(new IResourceVisitor() {
-
-                    public boolean visit(IResource resource) throws CoreException {
-                        if (resource instanceof IFile && resource.getName().endsWith(".plan")) {
-                            modules.add(createModule(resource.getFullPath().toString(),
-                                resource.getProject().getName() + "/" + resource.getProjectRelativePath().toString(), FacetCorePlugin.PLAN_FACET_ID,
-                                "2.0", project));
-                        } else if (resource instanceof IContainer) {
-                            IPath path = ((IContainer) resource).getFullPath();
-                            for (IPath outputLocation : outputLocations) {
-                                if (outputLocation.isPrefixOf(path)) {
-                                    return false;
-                                }
-                            }
-                            return true;
-                        }
-                        return true;
-                    }
-                });
-            } catch (CoreException e) {
-                // TODO CD log exception
+            Collection<IFile> files = FacetUtils.getPlansInPlanProject(project);
+            for (IFile resource : files) {
+                modules.add(createModule(resource.getFullPath().toString(),
+                    resource.getProject().getName() + "/" + resource.getProjectRelativePath().toString(), FacetCorePlugin.PLAN_FACET_ID, "2.0",
+                    project));
             }
         }
         return modules.toArray(new IModule[modules.size()]);

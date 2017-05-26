@@ -9,6 +9,7 @@
  * 
  * Contributors:
  *     SpringSource - initial API and implementation
+ *     GianMaria Romanato - new wizards and bugfixes
  *******************************************************************************/
 -->
 <plugin>
@@ -32,6 +33,7 @@
          </description>
       </wizard>  
       <wizard
+            canFinishEarly="false"
             category="org.eclipse.virgo.ide.ui.category"
             class="org.eclipse.virgo.ide.ui.wizards.NewBundleProjectWizard"
             finalPerspective="org.eclipse.virgo.ide.runtime.ui.perspective"
@@ -44,6 +46,34 @@
             Create a new OSGi bundle project
          </description>
       </wizard>
+   <wizard
+         category="org.eclipse.virgo.ide.ui.category"
+         class="org.eclipse.virgo.ide.ui.wizards.NewPDEProjectWizard"
+         finalPerspective="org.eclipse.virgo.ide.runtime.ui.perspective"
+         hasPages="true"
+         icon="icons/full/obj16/pde_project_obj.png"
+         id="org.eclipse.virgo.ide.ui.pdeprojectwizard"
+         name="%pdeProjectWizard.name"
+         project="true">
+          <description>
+            %pdeProjectWizard.desc
+         </description>
+   </wizard>
+   <wizard
+         category="org.eclipse.virgo.ide.ui.category"
+         class="org.eclipse.virgo.ide.ui.wizards.NewPlanProjectWizard"
+         finalPerspective="org.eclipse.virgo.ide.runtime.ui.perspective"
+         hasPages="true"
+         icon="icons/full/obj16/par_project_obj.gif"
+         id="org.eclipse.virgo.ide.ui.planprojectwizard"
+         name="%planProjectWizard.name"
+         project="true">
+          <description>
+            %planProjectWizard.desc
+         </description>
+   </wizard>
+      
+      
    </extension>
    
    <extension
@@ -171,6 +201,58 @@
             </separator>
          </menu>
       </objectContribution>
+ 	  <objectContribution
+            objectClass="org.eclipse.core.resources.IProject"
+            adaptable="true"
+            id="org.eclipse.virgo.ide.ui.migrate.pde2virgo">
+         <action
+               label="Migrate PDE2Virgo project"
+               class="org.eclipse.virgo.ide.ui.internal.actions.ConvertPDE2VirgoProject"
+               enablesFor="+"
+               menubarPath="org.eclipse.virgo.ide.menu/group1"
+               id="org.eclipse.virgo.ide.ui.migrate.pde2virgo.action">
+	        <enablement>
+				<objectState name="nature" value="org.github.pde2virgo.PDE2VirgoNature"/>
+	         </enablement>   
+         </action>       
+	     <visibility>
+			<objectState name="nature" value="org.github.pde2virgo.PDE2VirgoNature"/>
+	     </visibility>          
+       </objectContribution>
+ 	  <objectContribution
+            objectClass="org.eclipse.core.resources.IProject"
+            adaptable="true"
+            id="org.eclipse.virgo.ide.ui.migrate.plugin2virgo">
+         <action
+               label="Migrate Plug-in project"
+               class="org.eclipse.virgo.ide.ui.internal.actions.ConvertPlugInProject"
+               enablesFor="+"
+               menubarPath="org.eclipse.virgo.ide.menu/group1"
+               id="org.eclipse.virgo.ide.ui.migrate.plugin2virgo.action">
+	        <enablement>
+	        	<and>
+					<objectState name="nature" value="org.eclipse.pde.PluginNature"/>
+					<not>
+						<objectState name="nature" value="org.github.pde2virgo.PDE2VirgoNature"/>
+					</not>
+					<not>
+						<objectState name="nature" value="org.eclipse.virgo.ide.pde.core.nature"/>
+					</not>					
+				</and>
+	         </enablement>   
+         </action>       
+	     <visibility>
+	       	<and>
+				<objectState name="nature" value="org.eclipse.pde.PluginNature"/>
+				<not>
+					<objectState name="nature" value="org.github.pde2virgo.PDE2VirgoNature"/>
+				</not>
+				<not>
+					<objectState name="nature" value="org.eclipse.virgo.ide.pde.core.nature"/>
+				</not>									
+			</and>
+	     </visibility>          
+       </objectContribution>       
    </extension>
    
    	<extension point="org.eclipse.wst.xml.core.catalogContributions">
@@ -298,17 +380,23 @@
    <actionSet
          id="org.eclipse.wst.server.ui.new.actionSet">
    </actionSet>
-                            <newWizardShortcut
+       <newWizardShortcut
              id="org.eclipse.virgo.ide.ui.wizards.osgiProject">
        </newWizardShortcut>
+       <newWizardShortcut
+             id="org.eclipse.virgo.ide.ui.pdeprojectwizard">
+       </newWizardShortcut>   
+       <newWizardShortcut
+             id="org.eclipse.virgo.ide.ui.planprojectwizard">
+       </newWizardShortcut>       
        <newWizardShortcut
              id="org.eclipse.virgo.ide.ui.wizards.parProject">
        </newWizardShortcut>
        <newWizardShortcut
              id="org.eclipse.wst.server.ui.new.server">
        </newWizardShortcut>
-            <newWizardShortcut id="org.eclipse.ui.wizards.new.folder"/>
-            <newWizardShortcut id="org.eclipse.ui.wizards.new.file"/>
+       <newWizardShortcut id="org.eclipse.ui.wizards.new.folder"/>
+       <newWizardShortcut id="org.eclipse.ui.wizards.new.file"/>
 
        
             <viewShortcut id="org.eclipse.ui.navigator.ProjectExplorer"/> 
@@ -406,7 +494,7 @@
    <viewShortcut
          id="org.eclipse.virgo.ide.runtime.ui.virgoLog">
    </viewShortcut>
-       </perspectiveExtension>
+   </perspectiveExtension>
    <perspectiveExtension
          targetID="org.eclipse.jdt.ui.JavaPerspective">
       <perspectiveShortcut
@@ -468,6 +556,46 @@
 </or>      
             </enablement>
    </commonWizard>
+      <commonWizard
+         type="new"
+         wizardId="org.eclipse.virgo.ide.ui.pdeprojectwizard">
+      <enablement>
+      <or>
+      <with 
+            variable="selection"> 
+         <count 
+               value="0"> 
+         </count> 
+      </with>
+      <instanceof
+            value="org.eclipse.core.resources.IProject">
+      </instanceof>
+      <instanceof
+            value="org.eclipse.core.resources.IWorkspaceRoot">
+      </instanceof> 
+</or>      
+            </enablement>
+   </commonWizard>   
+   <commonWizard
+         type="new"
+         wizardId="org.eclipse.virgo.ide.ui.planprojectwizard">
+      <enablement>
+      <or>
+      <with 
+            variable="selection"> 
+         <count 
+               value="0"> 
+         </count> 
+      </with>
+      <instanceof
+            value="org.eclipse.core.resources.IProject">
+      </instanceof>
+      <instanceof
+            value="org.eclipse.core.resources.IWorkspaceRoot">
+      </instanceof> 
+</or>      
+            </enablement>
+   </commonWizard>   
 </extension>
 <extension
       point="org.eclipse.ui.views">
@@ -475,5 +603,21 @@
          id="org.eclipse.virgo.ide.category"
          name="Virgo">
    </category>
+</extension>
+<extension
+      point="org.eclipse.pde.ui.pluginContent">
+   <wizard
+         class="org.eclipse.virgo.ide.ui.wizards.NewPDEProjectContentWizard"
+         id="org.eclipse.virgo.ide.ui.pdetemplate"
+         java="true"
+         name="Virgo"
+         pureOSGi="true"
+         rcp="false"
+         requiresActivator="false"
+         ui-content="false">
+      <description>
+         This wizard creates new PDE projects that can be deployed to a Virgo test environment.
+      </description>
+   </wizard>
 </extension>
 </plugin>

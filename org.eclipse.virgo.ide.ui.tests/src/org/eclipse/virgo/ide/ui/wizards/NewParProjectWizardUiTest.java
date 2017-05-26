@@ -11,7 +11,12 @@
 
 package org.eclipse.virgo.ide.ui.wizards;
 
+import static org.eclipse.swtbot.swt.finder.waits.Conditions.shellCloses;
+
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.swtbot.eclipse.finder.widgets.SWTBotEditor;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotButton;
+import org.eclipse.swtbot.swt.finder.widgets.SWTBotShell;
 import org.eclipse.ui.IWorkingSet;
 import org.eclipse.ui.IWorkingSetManager;
 import org.eclipse.ui.PlatformUI;

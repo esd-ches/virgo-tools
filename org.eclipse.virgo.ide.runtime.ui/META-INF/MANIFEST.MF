@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.virgo.ide.runtime.ui;singleton:=true
-Bundle-Version: 1.0.1.qualifier
+Bundle-Version: 1.5.1.qualifier
 Bundle-Activator: org.eclipse.virgo.ide.runtime.internal.ui.ServerUiPlugin
 Bundle-Vendor: %providerName
 Require-Bundle: org.eclipse.ui,
@@ -38,7 +38,10 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.jdt.ui,
  org.eclipse.libra.framework.editor.core,
  org.eclipse.libra.framework.editor.ui,
- org.eclipse.ui.workbench.texteditor
+ org.eclipse.ui.workbench.texteditor,
+ org.eclipse.virgo.repository,
+ org.eclipse.virgo.medic,
+ org.eclipse.virgo.util.math
 Import-Package: org.apache.commons.lang,
  org.apache.commons.logging
 Bundle-RequiredExecutionEnvironment: J2SE-1.5

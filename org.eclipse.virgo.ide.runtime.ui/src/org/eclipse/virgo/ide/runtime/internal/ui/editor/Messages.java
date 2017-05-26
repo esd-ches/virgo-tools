@@ -108,6 +108,58 @@ public class Messages extends NLS {
 
     public static String ArtefactOrderEditorSection_down_button;
 
+    public static String ServerDeployEditorSection_description;
+
+	public static String ServerDeployEditorSection_invalid_port_form_error;
+
+	public static String ServerDeployEditorSection_invalid_port_save_message;
+
+	public static String ServerDeployEditorSection_invalid_timeout_form_error;
+
+	public static String ServerDeployEditorSection_invalid_timeout_save_message;
+
+	public static String ServerDeployEditorSection_port_label;
+
+	public static String ServerDeployEditorSection_timeout_label;
+
+	public static String ServerDeployEditorSection_timeout_too_small_form_error;
+
+	public static String ServerDeployEditorSection_title;
+
+	public static String StartupEditorSection_description;
+
+    public static String StartupEditorSection_maxpermsize_label;
+
+    public static String StartupEditorSection_start_with_clean_button;
+
+    public static String StartupEditorSection_tail_into_console_button;
+
+    public static String StartupEditorSection_title;
+
+    public static String StaticResourcesEditorSection_14;
+
+    public static String StaticResourcesEditorSection_add_button;
+
+    public static String StaticResourcesEditorSection_delete_button;
+
+    public static String StaticResourcesEditorSection_description;
+
+    public static String StaticResourcesEditorSection_down_button;
+
+    public static String StaticResourcesEditorSection_empty_filename_error;
+
+    public static String StaticResourcesEditorSection_invalid_path;
+
+    public static String StaticResourcesEditorSection_new_filename_dialog_message;
+
+    public static String StaticResourcesEditorSection_new_filename_dialog_title;
+
+    public static String StaticResourcesEditorSection_title;
+
+    public static String StaticResourcesEditorSection_up_button;
+
+    public static String StaticResourcesEditorSection_wildcard_too_greedy;
+
     static {
         // initialize resource bundle
         NLS.initializeMessages(BUNDLE_NAME, Messages.class);

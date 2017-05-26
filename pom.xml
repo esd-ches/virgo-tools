@@ -4,7 +4,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.eclipse.virgo.ide</groupId>
   <artifactId>org.eclipse.virgo.ide.parent</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.5.1-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <prerequisites>
@@ -12,8 +12,6 @@
   </prerequisites>  
 
   <properties>
-	<p2.qualifier>SNAPSHOT</p2.qualifier>
-
 	<archive-dir>${basedir}/target/archive</archive-dir>
 	<site-dir></site-dir>
 
@@ -39,9 +37,11 @@
     <module>org.eclipse.virgo.ide.export</module>
     <module>org.eclipse.virgo.ide.export.tests</module>
     <module>org.eclipse.virgo.ide.facet.core</module>
+    <module>org.eclipse.virgo.ide.pde.core</module>
     <module>org.eclipse.virgo.ide.feature</module>
     <module>org.eclipse.virgo.ide.jdt.core</module>
     <module>org.eclipse.virgo.ide.jdt.ui</module>
+    <module>org.eclipse.virgo.ide.management.remote</module>
     <module>org.eclipse.virgo.ide.manifest.core</module>
     <module>org.eclipse.virgo.ide.par</module>
     <module>org.eclipse.virgo.ide.par.edit</module>
@@ -94,7 +94,7 @@
 	<repository>
 	  <id>eclipse</id>
 	  <layout>p2</layout>
-	  <url>http://download.eclipse.org/releases/mars/</url>
+	  <url>http://download.eclipse.org/releases/neon/</url>
 	</repository>
 	<repository>
 	  <id>orbit</id>
@@ -124,7 +124,7 @@
     <repository>
       <id>virgo-snapshots</id>
       <layout>p2</layout>
-      <url>http://download.eclipse.org/virgo/snapshots/3.7/</url>
+      <url>http://download.eclipse.org/virgo/updatesite/3.7.0.RELEASE/</url>
     </repository>
   </repositories>
 

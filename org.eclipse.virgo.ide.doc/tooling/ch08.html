@@ -1,15 +1,35 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;8.&nbsp;Deploying Applications</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Tools Guide"><link rel="up" href="index.html" title="Virgo Tools Guide"><link rel="prev" href="ch07.html" title="Chapter&nbsp;7.&nbsp;Developing PARs"><link rel="next" href="ch09.html" title="Chapter&nbsp;9.&nbsp;Installation and Release Notes"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch07.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch09.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter&nbsp;8.&nbsp;Deploying Applications"><div class="titlepage"><div><div><h2 class="title"><a name="deploying"></a>Chapter&nbsp;8.&nbsp;Deploying Applications</h2></div></div></div><p>Currently the Tools support direct deployment of WTP Dynamic Web Projects, OSGi bundle and PAR projects to the
-		Virgo Runtime from directly within Eclipse.
-	</p><p>To deploy an application to the Virgo Runtime Environment just bring up the context menu on the configured
-		Virgo Runtime runtime in the Servers view and choose "Add or Remove Projects...". In the dialog, select
-		the desired project and add it to the list of "Configured projects".
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;8.&nbsp;Developing Plans</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Tools Guide"><link rel="up" href="index.html" title="Virgo Tools Guide"><link rel="prev" href="ch07s05.html" title="Migration actions"><link rel="next" href="ch08s02.html" title="Discovery of Plan files in the workspace"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch07s05.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch08s02.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter&nbsp;8.&nbsp;Developing Plans"><div class="titlepage"><div><div><h2 class="title"><a name="plans"></a>Chapter&nbsp;8.&nbsp;Developing Plans</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="ch08.html#planBenefits">Benefit of using Plan files</a></span></dt><dt><span class="section"><a href="ch08s02.html">Discovery of Plan files in the workspace</a></span></dt></dl></div><p>In Virgo, applications consisting of multiple bundles can be declared using one or more Plans.
 	</p><p>
-		<img src="images/tooling-deployed-application.png">
-	</p><div class="note" title="Note" style="margin-left: 0.5in; margin-right: 0.5in;"><h3 class="title">Note</h3><p> Deploying and undeploying an application from the Virgo Runtime certainly works while the
-			Virgo Runtime Environment is running, but you can also add or remove projects if the Virgo Runtime is not
-			running. </p></div><p>Once an application is deployed on the Virgo Runtime Environment the tooling support will automatically pick up any
-		change to source files -- for example, Java and XML context files -- and refresh the deployed application on the
-		Virgo Runtime.
-	</p><p>The wait time between a change and the actual refresh can be configured in the configuration editor of the
-		runtime. To bring up that editor, double-click on the configured Virgo Runtime Environment instance in the Servers view.
-	</p></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch07.html">Prev</a>&nbsp;</td><td align="center" width="20%">&nbsp;</td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch09.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>
+		To create a Plan project, right-click in the
+		<span class="emphasis"><em>Package Explorer</em></span>
+		and select
+		<span class="guimenu">New</span> &rarr; <span class="guimenuitem">Project&hellip;</span>
+		. In the dialog that opens select
+		<span class="guimenu">Virgo</span> &rarr; <span class="guimenuitem">Plan Project</span>
+		and press
+		<span class="emphasis"><em>Next</em></span>
+		:
+		</p><div class="mediaobject" align="center"><img src="images/new-plan-project.png" align="middle"></div><p>
+	</p><p>
+		In the New Plan Project dialog, enter a suitable name for the project, set the location to a suitable directory, and press
+		<span class="emphasis"><em>Next</em></span>
+	</p><p>
+		In the next wizard page, you can optionally specify a Plan name to also have a Plan file created for you by the wizard.
+	</p><p>
+		When creating additional Plan files, make sure you place them within the source folder. 
+		You can now add Plan files to the Virgo Runtime in Eclipse via the usual add/remove dialog or by means of drag and drop.
+	</p><div class="section" title="Benefit of using Plan files"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="planBenefits"></a>Benefit of using Plan files</h2></div></div></div><p>
+		Plan projects and plan files can be used as an alternative to adding individual bundles to the test environment integrated in Eclipse.
+		The main benefits of using Plan files are:
+		</p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>
+					Plan files can be more easily shared with coworkers and/or committed to a source code repository
+				</p></li><li class="listitem"><p>
+					It may be more convenient to re-order the content of a Plan file using the Eclipse text editor than editing artefact ordering in the Server Editor
+				</p></li><li class="listitem"><p>				
+					Plan files can be composed of other plan files
+				</p></li><li class="listitem"><p>
+					Items in Plan files will be picked either from the workspace or from the configured bundle repositories
+				</p></li><li class="listitem"><p>
+					Using Plan files in the test environment is more representative of the production deployment
+				</p></li></ul></div><p>
+	</p></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch07s05.html">Prev</a>&nbsp;</td><td align="center" width="20%">&nbsp;</td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch08s02.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

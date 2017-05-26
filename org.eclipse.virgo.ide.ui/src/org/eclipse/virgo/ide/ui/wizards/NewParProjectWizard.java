@@ -72,9 +72,9 @@ import org.eclipse.wst.common.project.facet.core.runtime.IRuntime;
  */
 public class NewParProjectWizard extends AbstractNewParProjectWizard implements INewWizard {
 
-    private static final String PAR_FILE_NAME = ".settings/org.eclipse.virgo.ide.runtime.core.par.xml";
+    private static final String PAR_FILE_NAME = ".settings/org.eclipse.virgo.ide.runtime.core.par.xml"; //$NON-NLS-1$
 
-    private static final String ENCODING_UTF8 = "UTF-8";
+    private static final String ENCODING_UTF8 = "UTF-8"; //$NON-NLS-1$
 
     private WizardNewProjectCreationPage mainPage;
 
@@ -88,7 +88,7 @@ public class NewParProjectWizard extends AbstractNewParProjectWizard implements 
 
     private final IDataModel model;
 
-    private final String title = "New PAR Project";
+    private final String title = Messages.NewParProjectWizard_title;
 
     protected ParPackage parPackage = ParPackage.eINSTANCE;
 
@@ -128,16 +128,16 @@ public class NewParProjectWizard extends AbstractNewParProjectWizard implements 
         try {
             getContainer().run(true, true, oper);
         } catch (InvocationTargetException e) {
-            StatusManager.getManager().handle(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Exception while adding project facets.", e));
+            StatusManager.getManager().handle(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Exception while adding project facets.", e)); //$NON-NLS-1$
         } catch (InterruptedException e) {
             StatusManager.getManager().handle(
-                new Status(IStatus.WARNING, ServerIdeUiPlugin.PLUGIN_ID, "Interruption while adding project facets.", e));
+                new Status(IStatus.WARNING, ServerIdeUiPlugin.PLUGIN_ID, "Interruption while adding project facets.", e)); //$NON-NLS-1$
         }
     }
 
     @Override
     public void addPages() {
-        this.mainPage = new NewParProjectSettingsPage("basicNewProjectPage", getSelection());
+        this.mainPage = new NewParProjectSettingsPage("basicNewProjectPage", getSelection()); //$NON-NLS-1$
         setMainPage(this.mainPage);
         addPage(this.mainPage);
 
@@ -161,7 +161,7 @@ public class NewParProjectWizard extends AbstractNewParProjectWizard implements 
 
         // only add page if there are already projects in the workspace
         if (ResourcesPlugin.getWorkspace().getRoot().getProjects().length > 0) {
-            this.referencePage = new NewParProjectReferencePage("basicReferenceProjectPage");
+            this.referencePage = new NewParProjectReferencePage("basicReferenceProjectPage"); //$NON-NLS-1$
             addPage(this.referencePage);
         }
     }
@@ -244,7 +244,7 @@ public class NewParProjectWizard extends AbstractNewParProjectWizard implements 
             getWorkbench().getWorkingSetManager().addToWorkingSets(getNewProject(), workingSets);
         }
 
-        IFile manifestFile = (IFile) getNewProject().findMember("META-INF/MANIFEST.MF");
+        IFile manifestFile = (IFile) getNewProject().findMember("META-INF/MANIFEST.MF"); //$NON-NLS-1$
         if (manifestFile != null) {
             // Select the new file resource in the current view.
             //
@@ -266,7 +266,7 @@ public class NewParProjectWizard extends AbstractNewParProjectWizard implements 
             try {
                 page.openEditor(new FileEditorInput(manifestFile), ParManifestEditor.ID_EDITOR);
             } catch (PartInitException exception) {
-                MessageDialog.openError(workbenchWindow.getShell(), "Error opening editor", exception.getMessage());
+                MessageDialog.openError(workbenchWindow.getShell(), "Error opening editor", exception.getMessage()); //$NON-NLS-1$
             }
             return true;
         }
@@ -298,7 +298,7 @@ public class NewParProjectWizard extends AbstractNewParProjectWizard implements 
 
     @Override
     protected void initializeDefaultPageImageDescriptor() {
-        setDefaultPageImageDescriptor(ServerIdeUiPlugin.getImageDescriptor("full/wizban/wizban-par.png"));
+        setDefaultPageImageDescriptor(ServerIdeUiPlugin.getImageDescriptor("full/wizban/wizban-par.png")); //$NON-NLS-1$
     }
 
 }

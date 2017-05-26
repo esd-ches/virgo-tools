@@ -28,6 +28,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.pde.core.IBaseModel;
 import org.eclipse.pde.core.plugin.IPluginLibrary;
 import org.eclipse.pde.core.plugin.IPluginModelBase;
@@ -62,7 +63,6 @@ import org.eclipse.pde.internal.ui.editor.plugin.PluginFoldingStructureProvider;
 import org.eclipse.pde.internal.ui.editor.text.ChangeAwareSourceViewerConfiguration;
 import org.eclipse.pde.internal.ui.editor.text.IColorManager;
 import org.eclipse.pde.internal.ui.editor.text.ReconcilingStrategy;
-import org.eclipse.pde.internal.ui.elements.DefaultContentProvider;
 import org.eclipse.pde.internal.ui.util.SharedLabelProvider;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.forms.editor.FormEditor;
@@ -284,7 +284,13 @@ public class SpringBundleSourcePage extends BundleSourcePage {
         return super.findRange();
     }
 
-    private class SpringBundleOutlineContentProvider extends DefaultContentProvider implements ITreeContentProvider {
+    private class SpringBundleOutlineContentProvider implements ITreeContentProvider {
+
+        public void dispose() {
+        }
+
+        public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+        }
 
         public Object[] getChildren(Object parent) {
             // Need an identifying class for label provider

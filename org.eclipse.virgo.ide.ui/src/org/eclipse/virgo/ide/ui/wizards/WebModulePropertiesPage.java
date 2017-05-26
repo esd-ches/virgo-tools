@@ -29,7 +29,7 @@ import org.eclipse.swt.widgets.Text;
  */
 public class WebModulePropertiesPage extends AbstractPropertiesPage {
 
-    protected static String ID_PAGE = "web.properties";
+    protected static String ID_PAGE = "web.properties"; //$NON-NLS-1$
 
     private Label contextPathLabel;
 
@@ -44,10 +44,10 @@ public class WebModulePropertiesPage extends AbstractPropertiesPage {
         Group propertiesGroup = new Group(container, SWT.NONE);
         propertiesGroup.setLayout(new GridLayout(3, false));
         propertiesGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-        propertiesGroup.setText("Web Module Properties");
+        propertiesGroup.setText(Messages.WebModulePropertiesPage_text);
 
         this.contextPathLabel = new Label(propertiesGroup, SWT.NONE);
-        this.contextPathLabel.setText("Web-ContextPath");
+        this.contextPathLabel.setText(Messages.WebModulePropertiesPage_context_path);
 
         this.contextPathText = new Text(propertiesGroup, SWT.BORDER | SWT.SINGLE);
         GridDataFactory.fillDefaults().align(SWT.FILL, SWT.CENTER).grab(true, false).span(2, 1).applyTo(this.contextPathText);
@@ -56,13 +56,15 @@ public class WebModulePropertiesPage extends AbstractPropertiesPage {
     @Override
     public Map<String, String> getProperties() {
         Map<String, String> properties = new HashMap<String, String>();
-        properties.put(this.contextPathLabel.getText(), this.contextPathText.getText());
+        if (this.contextPathText != null) {
+            properties.put(this.contextPathLabel.getText(), this.contextPathText.getText());
+        }
         return properties;
     }
 
     @Override
     public String getModuleType() {
-        return "Web";
+        return "Web"; //$NON-NLS-1$
     }
 
 }

@@ -21,7 +21,7 @@ import org.eclipse.swt.widgets.Composite;
  */
 public class NullPropertiesPage extends AbstractPropertiesPage {
 
-    protected static String ID_PAGE = "null.properties";
+    protected static String ID_PAGE = "null.properties"; //$NON-NLS-1$
 
     public NullPropertiesPage() {
         super(ID_PAGE);
@@ -34,7 +34,7 @@ public class NullPropertiesPage extends AbstractPropertiesPage {
 
     @Override
     public String getModuleType() {
-        return "";
+        return ""; //$NON-NLS-1$
     }
 
     @Override

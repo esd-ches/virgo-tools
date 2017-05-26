@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<!--
+/*******************************************************************************
+ *  Copyright (c) 2015 GianMaria Romanato
+ *  All rights reserved. This program and the accompanying materials
+ *  are made available under the terms of the Eclipse Public License v1.0
+ *  which accompanies this distribution, and is available at
+ *  http://www.eclipse.org/legal/epl-v10.html
+ *
+ *  Contributors:
+ *     GianMaria Romanato - initial API and implementation
+ *******************************************************************************/
+-->
+<plugin>
+
+   <extension
+         id="builder"
+         name="%pdeBuilder"
+         point="org.eclipse.core.resources.builders">
+      <builder
+            hasNature="true">
+         <run
+               class="org.eclipse.virgo.ide.pde.core.internal.Builder">
+         </run>
+      </builder>
+   </extension>
+   <extension
+         id="nature"
+         name="%pdeNature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.eclipse.virgo.ide.pde.core.internal.Nature">
+         </run>
+      </runtime>
+      <builder
+            id="org.eclipse.virgo.ide.pde.core.builder">
+      </builder>
+      <requires-nature
+            id="org.eclipse.virgo.ide.facet.core.bundlenature">
+      </requires-nature>
+      <requires-nature
+            id="org.eclipse.pde.PluginNature">
+      </requires-nature>
+   </extension>
+
+</plugin>

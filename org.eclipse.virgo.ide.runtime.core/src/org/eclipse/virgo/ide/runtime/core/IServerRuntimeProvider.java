@@ -135,6 +135,11 @@ public interface IServerRuntimeProvider {
     IServerCommand<DeploymentIdentity> getServerDeployCommand(IServerBehaviour serverBehaviour, IModule module);
 
     /**
+     * Returns the server re-deployer command.
+     */
+    IServerCommand<DeploymentIdentity> getServerRedeployCommand(IServerBehaviour serverBehaviour, IModule module);
+
+    /**
      * Returns the server refresh command.
      */
     IServerCommand<Void> getServerRefreshCommand(IServerBehaviour serverBehaviour, IModule module, String bundleSymbolicName);

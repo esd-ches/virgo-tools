@@ -1,3 +1,7 @@
+// TODO - externalize strings ""
+// grid data della tabella non funziona
+// controlli sul file name nel dialog di aggiunta
+
 /*******************************************************************************
  * Copyright (c) 2009, 2012 SpringSource, a divison of VMware, Inc.
  * All rights reserved. This program and the accompanying materials
@@ -19,6 +23,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.Path;
 import org.eclipse.jface.dialogs.IInputValidator;
 import org.eclipse.jface.dialogs.InputDialog;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -102,26 +107,25 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
 
         Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED | ExpandableComposite.TITLE_BAR
             | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
-        section.setText("Redeploy Behavior");
-        section.setDescription(
-            "Configure server redeploy and refresh behavior on changes to project resources.\n\nDefine patterns for files that should be copied into the server without redeploying the bundle or application. Spring XML configuration files be handled separately.");
-        section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
+        section.setText(Messages.StaticResourcesEditorSection_title);
+        section.setDescription(Messages.StaticResourcesEditorSection_description);
+        section.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
 
         Composite composite = toolkit.createComposite(section);
         GridLayout layout = new GridLayout();
         layout.numColumns = 2;
-        layout.marginHeight = 5;
-        layout.marginWidth = 1;
-        layout.verticalSpacing = 5;
-        layout.horizontalSpacing = 10;
         composite.setLayout(layout);
-        composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
+        composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
         toolkit.paintBordersFor(composite);
         section.setClient(composite);
 
         this.filenameTable = toolkit.createTable(composite, SWT.SINGLE | SWT.V_SCROLL | SWT.FULL_SELECTION);
-        GridData data = new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_BEGINNING);
-        data.heightHint = 130;
+        GridData data = new GridData(SWT.FILL, SWT.TOP, true, true);
+        data.heightHint = filenameTable.getItemHeight() * 5 + filenameTable.getBorderWidth() * 2;
+
+        // workaround for wrong item height in GTK3 Mars
+        data.heightHint = Math.min(150, data.heightHint);
+
         this.filenameTable.setLayoutData(data);
         this.filenamesTableViewer = new TableViewer(this.filenameTable);
         this.contentProvider = new StaticFilenamesContentProvider();
@@ -144,7 +148,7 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
         buttonComposite.setLayout(buttonLayout);
         GridDataFactory.fillDefaults().applyTo(buttonComposite);
 
-        this.addButton = toolkit.createButton(buttonComposite, "Add", SWT.PUSH);
+        this.addButton = toolkit.createButton(buttonComposite, Messages.StaticResourcesEditorSection_add_button, SWT.PUSH);
         GridDataFactory.fillDefaults().applyTo(this.addButton);
         this.addButton.addSelectionListener(new SelectionAdapter() {
 
@@ -154,12 +158,21 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
                     return;
                 }
 
-                InputDialog dialog = new InputDialog(getShell(), "New filename pattern",
-                    "Enter a new filename pattern for static resources (wildcards such as '*' and '?' are supported):", "", new IInputValidator() {
+                InputDialog dialog = new InputDialog(getShell(), Messages.StaticResourcesEditorSection_new_filename_dialog_title,
+                    Messages.StaticResourcesEditorSection_new_filename_dialog_message, "", new IInputValidator() { //$NON-NLS-1$
 
                     public String isValid(String newText) {
                         if (!StringUtils.isNotBlank(newText)) {
-                            return "Pattern can't be empty";
+                            return Messages.StaticResourcesEditorSection_empty_filename_error;
+                        }
+
+                        if ("*".equals(newText)) { //$NON-NLS-1$
+                            return Messages.StaticResourcesEditorSection_wildcard_too_greedy;
+                        }
+
+                        String replaceWildcards = newText.replaceAll("\\?", "a").replaceAll("\\*", "b"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+                        if (!Path.isValidWindowsSegment(replaceWildcards) || !Path.isValidWindowsSegment(replaceWildcards)) {
+                            return Messages.StaticResourcesEditorSection_invalid_path;
                         }
                         return null;
                     }
@@ -169,7 +182,7 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
                     List<Object> filenames = new ArrayList<Object>(
                         Arrays.asList(StaticResourcesEditorSection.this.contentProvider.getElements(StaticResourcesEditorSection.this.server)));
                     filenames.add(dialog.getValue());
-                    execute(new ModifyStaticResourcesCommand(StaticResourcesEditorSection.this.serverWorkingCopy, StringUtils.join(filenames, ",")));
+                    execute(new ModifyStaticResourcesCommand(StaticResourcesEditorSection.this.serverWorkingCopy, StringUtils.join(filenames, ","))); //$NON-NLS-1$
                     StaticResourcesEditorSection.this.filenamesTableViewer.setInput(StaticResourcesEditorSection.this.server);
                     StaticResourcesEditorSection.this.filenamesTableViewer.setSelection(new StructuredSelection(dialog.getValue()));
                     // update buttons
@@ -178,7 +191,7 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
             }
         });
 
-        this.deleteButton = toolkit.createButton(buttonComposite, "Delete", SWT.PUSH);
+        this.deleteButton = toolkit.createButton(buttonComposite, Messages.StaticResourcesEditorSection_delete_button, SWT.PUSH);
         GridDataFactory.fillDefaults().applyTo(this.deleteButton);
         this.deleteButton.addSelectionListener(new SelectionAdapter() {
 
@@ -192,14 +205,14 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
                 List<Object> filenames = new ArrayList<Object>(
                     Arrays.asList(StaticResourcesEditorSection.this.contentProvider.getElements(StaticResourcesEditorSection.this.server)));
                 filenames.remove(selectedArtefact);
-                execute(new ModifyStaticResourcesCommand(StaticResourcesEditorSection.this.serverWorkingCopy, StringUtils.join(filenames, ",")));
+                execute(new ModifyStaticResourcesCommand(StaticResourcesEditorSection.this.serverWorkingCopy, StringUtils.join(filenames, ","))); //$NON-NLS-1$
                 StaticResourcesEditorSection.this.filenamesTableViewer.setInput(StaticResourcesEditorSection.this.server);
                 // update buttons
                 StaticResourcesEditorSection.this.updating = false;
             }
         });
 
-        this.upButton = toolkit.createButton(buttonComposite, "Up", SWT.PUSH);
+        this.upButton = toolkit.createButton(buttonComposite, Messages.StaticResourcesEditorSection_up_button, SWT.PUSH);
         GridDataFactory.fillDefaults().applyTo(this.upButton);
         this.upButton.addSelectionListener(new SelectionAdapter() {
 
@@ -216,14 +229,14 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
                     return;
                 }
                 StaticResourcesEditorSection.this.updating = true;
-                execute(new ModifyStaticResourcesCommand(StaticResourcesEditorSection.this.serverWorkingCopy, StringUtils.join(modules, ",")));
+                execute(new ModifyStaticResourcesCommand(StaticResourcesEditorSection.this.serverWorkingCopy, StringUtils.join(modules, ","))); //$NON-NLS-1$
                 StaticResourcesEditorSection.this.filenamesTableViewer.setInput(StaticResourcesEditorSection.this.server);
                 updateButtons(selectedArtefact);
                 StaticResourcesEditorSection.this.updating = false;
             }
         });
 
-        this.downButton = toolkit.createButton(buttonComposite, "Down", SWT.PUSH);
+        this.downButton = toolkit.createButton(buttonComposite, Messages.StaticResourcesEditorSection_down_button, SWT.PUSH);
         GridDataFactory.fillDefaults().applyTo(this.downButton);
         this.downButton.addSelectionListener(new SelectionAdapter() {
 
@@ -240,7 +253,7 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
                     return;
                 }
                 StaticResourcesEditorSection.this.updating = true;
-                execute(new ModifyStaticResourcesCommand(StaticResourcesEditorSection.this.serverWorkingCopy, StringUtils.join(modules, ",")));
+                execute(new ModifyStaticResourcesCommand(StaticResourcesEditorSection.this.serverWorkingCopy, StringUtils.join(modules, ","))); //$NON-NLS-1$
                 StaticResourcesEditorSection.this.filenamesTableViewer.setInput(StaticResourcesEditorSection.this.server);
                 updateButtons(selectedArtefact);
                 StaticResourcesEditorSection.this.updating = false;
@@ -248,7 +261,7 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
         });
 
         FormText restoreDefault = toolkit.createFormText(composite, true);
-        restoreDefault.setText("<form><p><a href=\"exportbundle\">Restore default</a> filename pattern</p></form>", true, false);
+        restoreDefault.setText(Messages.StaticResourcesEditorSection_14, true, false);
         restoreDefault.addHyperlinkListener(new HyperlinkAdapter() {
 
             @Override
@@ -332,7 +345,7 @@ public class StaticResourcesEditorSection extends ServerEditorSection {
             if (inputElement instanceof IServer) {
                 IServer server = (IServer) inputElement;
                 IServerWorkingCopy dmServer = (IServerWorkingCopy) server.loadAdapter(IServerWorkingCopy.class, null);
-                String[] filenames = StringUtils.split(dmServer.getStaticFilenamePatterns(), ",");
+                String[] filenames = StringUtils.split(dmServer.getStaticFilenamePatterns(), ","); //$NON-NLS-1$
                 return filenames;
 
             }

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?pde version="3.8"?><target name="Virgo Target" sequenceNumber="102">
+<locations>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.libra.framework.feature.feature.group" version="0.3.1.201405141436"/>
+<unit id="org.eclipse.libra.framework.editor.feature.feature.group" version="0.3.1.201405141436"/>
+<unit id="org.eclipse.libra.warproducts.feature.feature.group" version="0.3.1.201405141436"/>
+<unit id="org.eclipse.libra.facet.feature.feature.group" version="0.3.1.201405141436"/>
+<repository location="http://download.eclipse.org/libra/milestones"/>
+</location>
+<location path="${eclipse_home}" type="Profile"/>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.virgo.medic.feature.group" version="3.6.4.RELEASE"/>
+<unit id="org.eclipse.virgo.kernel.feature.group" version="3.6.4.RELEASE"/>
+<unit id="org.eclipse.virgo.util.feature.group" version="3.6.4.RELEASE"/>
+<repository location="http://download.eclipse.org/virgo/updatesite/3.6.4.RELEASE"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.virgo.bundlor.feature.group" version="1.1.0.RELEASE"/>
+<repository location="http://download.eclipse.org/virgo/release/BNDLR/1.1.0.RELEASE/updatesite"/>
+</location>
+<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="slicer" includeSource="true" type="InstallableUnit">
+<unit id="org.eclipse.orbit.build.feature.set1.feature.group" version="1.0.0.v201505191900-FK1FQbFSRLsJSwpFNlpe5-cPz-oD"/>
+<repository location="http://download.eclipse.org/tools/orbit/downloads/drops/R20150519210750/repository/"/>
+</location>
+<location path="/home/giamma/Virgo/other_bundles" type="Directory"/>
+</locations>
+</target>

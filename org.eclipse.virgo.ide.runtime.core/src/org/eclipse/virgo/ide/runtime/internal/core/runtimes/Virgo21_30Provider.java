@@ -11,11 +11,13 @@
 
 package org.eclipse.virgo.ide.runtime.internal.core.runtimes;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator;
 import org.eclipse.virgo.ide.manifest.core.dependencies.IDependencyLocator.JavaVersion;
 import org.eclipse.virgo.ide.runtime.core.IServerBehaviour;
@@ -41,6 +43,12 @@ public class Virgo21_30Provider extends VirgoRuntimeProvider {
     private Virgo21_30Provider() {
     }
 
+    public boolean isHandlerFor(IRuntime runtime) {
+        IPath configPath = runtime.getLocation().append(getConfigurationDir());
+        File configDir = configPath.toFile();
+        return configDir.exists();
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -58,7 +66,7 @@ public class Virgo21_30Provider extends VirgoRuntimeProvider {
         list.add("-Forg.eclipse.virgo.kernel.home=\"" + serverHome + "\"");
         list.add("-Forg.eclipse.virgo.kernel.config=\"" + serverHome + "/config," + serverHome + "/stage\"");
         list.add("-Fosgi.configuration.area=\"" + serverHome + "/work/osgi/configuration\"");
-        list.add("-Fosgi.java.profile=\"file:" + serverHome + "/lib/java6-server.profile\"");
+        list.add("-Fosgi.java.profile=\"file:" + serverHome + "/lib/" + getServerProfileName() + "\"");
         list.add("-Fosgi.clean=true");
         return list.toArray(new String[list.size()]);
     }

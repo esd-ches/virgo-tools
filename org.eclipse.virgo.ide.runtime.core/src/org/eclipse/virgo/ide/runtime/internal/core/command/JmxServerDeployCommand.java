@@ -7,6 +7,7 @@
  *
  * Contributors:
  *     SpringSource, a division of VMware, Inc. - initial API and implementation
+ *     GianMaria Romanato - bug fixing
  *******************************************************************************/
 
 package org.eclipse.virgo.ide.runtime.internal.core.command;
@@ -31,7 +32,7 @@ import org.eclipse.wst.server.core.IModule;
  * @author Christian Dupuis
  * @since 1.0.1
  */
-public class JmxServerDeployCommand extends AbstractJmxServerDeployerCommand<CompositeData>implements IServerCommand<DeploymentIdentity> {
+public class JmxServerDeployCommand extends AbstractJmxServerDeployerCommand<CompositeData> implements IServerCommand<DeploymentIdentity> {
 
     private static final String ITEM_SYMBOLIC_NAME = "symbolicName"; //$NON-NLS-1$
 
@@ -88,7 +89,7 @@ public class JmxServerDeployCommand extends AbstractJmxServerDeployerCommand<Com
     @Override
     protected Object[] getOperationArguments() {
         URI uri = null;
-        if (this.module.getModuleType().getId().equals(FacetCorePlugin.PLAN_FACET_ID)) {
+        if (isPlan()) {
             String fileName = this.module.getId();
             fileName = fileName.substring(fileName.lastIndexOf('/') + 1);
             uri = getUri(this.serverBehaviour.getModuleDeployUri(this.module).append(fileName));
@@ -96,6 +97,10 @@ public class JmxServerDeployCommand extends AbstractJmxServerDeployerCommand<Com
             uri = getUri(this.serverBehaviour.getModuleDeployUri(this.module));
         }
         return new Object[] { uri.toString(), false };
+    }
+
+    private boolean isPlan() {
+        return this.module.getModuleType().getId().equals(FacetCorePlugin.PLAN_FACET_ID);
     }
 
     /**

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plan name="{0}" version="1.0.0" scoped="{1}" atomic="{2}"
+	xmlns="http://www.springsource.org/schema/dm-server/plan" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+            http://www.springsource.org/schema/dm-server/plan 
+            http://www.springsource.org/schema/dm-server/plan/springsource-dm-server-plan.xsd">
+
+	<!-- <artifact type="plan" name="my.nested.plan" /> -->
+	<!-- <artifact type="bundle" name="my.bundle.symbolic.name" /> -->
+</plan> 
+                                                          

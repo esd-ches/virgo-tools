@@ -84,7 +84,7 @@ public class NewBundleProjectWizard extends NewElementWizard implements INewWiza
 
     private final IDataModel model;
 
-    private final String title = "New Bundle Project";
+    private final String title = Messages.NewBundleProjectWizard_title;
 
     private Map<String, String> properties;
 
@@ -93,7 +93,7 @@ public class NewBundleProjectWizard extends NewElementWizard implements INewWiza
     public NewBundleProjectWizard() {
         super();
         setWindowTitle(this.title);
-        setDefaultPageImageDescriptor(ServerIdeUiPlugin.getImageDescriptor("full/wizban/wizban-bundle.png"));
+        setDefaultPageImageDescriptor(ServerIdeUiPlugin.getImageDescriptor("full/wizban/wizban-bundle.png")); //$NON-NLS-1$
         setNeedsProgressMonitor(true);
         this.bundleData = new PluginFieldData();
         this.model = DataModelFactory.createDataModel(new BundleFacetInstallDataModelProvider());
@@ -110,8 +110,8 @@ public class NewBundleProjectWizard extends NewElementWizard implements INewWiza
                 // WST 3.0 only
 
                 if (NewBundleProjectWizard.this.model.getBooleanProperty(BundleFacetInstallDataModelProvider.ENABLE_WEB_BUNDLE)) {
-                    fProject.installProjectFacet(ProjectFacetsManager.getProjectFacet("jst.java").getDefaultVersion(), null, monitor);
-                    fProject.installProjectFacet(ProjectFacetsManager.getProjectFacet(FacetCorePlugin.WEB_FACET_ID).getVersion("2.5"), null, monitor);
+                    fProject.installProjectFacet(ProjectFacetsManager.getProjectFacet("jst.java").getDefaultVersion(), null, monitor); //$NON-NLS-1$
+                    fProject.installProjectFacet(ProjectFacetsManager.getProjectFacet(FacetCorePlugin.WEB_FACET_ID).getVersion("2.5"), null, monitor); //$NON-NLS-1$
 
                     // wanna uninstall JavaScript facet, but it doesn't seem to
                     // be there yet
@@ -119,8 +119,8 @@ public class NewBundleProjectWizard extends NewElementWizard implements INewWiza
                     // .getProjectFacet(FacetCorePlugin.WEB_JS_FACET_ID).getDefaultVersion(),
                     // null, monitor);
 
-                    removeFromClasspath(project, "org.eclipse.jst.j2ee.internal.web.container", monitor);
-                    removeFromClasspath(project, "org.eclipse.jst.j2ee.internal.module.container", monitor);
+                    removeFromClasspath(project, "org.eclipse.jst.j2ee.internal.web.container", monitor); //$NON-NLS-1$
+                    removeFromClasspath(project, "org.eclipse.jst.j2ee.internal.module.container", monitor); //$NON-NLS-1$
                 }
 
                 fProject.installProjectFacet(ProjectFacetsManager.getProjectFacet(FacetCorePlugin.BUNDLE_FACET_ID).getDefaultVersion(), null,
@@ -138,10 +138,10 @@ public class NewBundleProjectWizard extends NewElementWizard implements INewWiza
         try {
             getContainer().run(true, true, oper);
         } catch (InvocationTargetException e) {
-            StatusManager.getManager().handle(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Failure opening project facets.", e));
+            StatusManager.getManager().handle(new Status(IStatus.ERROR, ServerIdeUiPlugin.PLUGIN_ID, "Failure opening project facets.", e)); //$NON-NLS-1$
         } catch (InterruptedException e) {
             StatusManager.getManager().handle(
-                new Status(IStatus.WARNING, ServerIdeUiPlugin.PLUGIN_ID, "Interruption while opening project facets.", e));
+                new Status(IStatus.WARNING, ServerIdeUiPlugin.PLUGIN_ID, "Interruption while opening project facets.", e)); //$NON-NLS-1$
         }
     }
 
@@ -260,14 +260,14 @@ public class NewBundleProjectWizard extends NewElementWizard implements INewWiza
                 }
             });
 
-            IFile manifestFile = (IFile) project.getProject().findMember("src/META-INF/MANIFEST.MF");
+            IFile manifestFile = (IFile) project.getProject().findMember("src/META-INF/MANIFEST.MF"); //$NON-NLS-1$
             if (manifestFile != null) {
                 IWorkbenchWindow workbenchWindow = getWorkbench().getActiveWorkbenchWindow();
                 IWorkbenchPage page = workbenchWindow.getActivePage();
                 try {
                     page.openEditor(new FileEditorInput(manifestFile), BundleManifestEditor.ID_EDITOR);
                 } catch (PartInitException e) {
-                    MessageDialog.openError(workbenchWindow.getShell(), "Error opening editor", e.getMessage());
+                    MessageDialog.openError(workbenchWindow.getShell(), "Error opening editor", e.getMessage()); //$NON-NLS-1$
                 }
             }
         }

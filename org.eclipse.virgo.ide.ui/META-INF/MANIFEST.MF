@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.eclipse.virgo.ide.ui;singleton:=true
-Bundle-Version: 1.0.1.qualifier
+Bundle-Version: 1.5.1.qualifier
 Bundle-Activator: org.eclipse.virgo.ide.ui.ServerIdeUiPlugin
 Bundle-Vendor: %providerName
 Require-Bundle: org.eclipse.ui,
@@ -40,7 +40,8 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.filesystem,
  org.eclipse.ltk.core.refactoring,
  org.eclipse.wst.sse.ui.infopop;bundle-version="1.0.300",
- org.eclipse.ui.navigator
+ org.eclipse.virgo.ide.pde.core,
+ org.eclipse.wst.web
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.virgo.ide.internal.ui,

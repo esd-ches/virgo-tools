@@ -1,1 +1,35 @@
-<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;9.&nbsp;Installation and Release Notes</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Tools Guide"><link rel="up" href="index.html" title="Virgo Tools Guide"><link rel="prev" href="ch08.html" title="Chapter&nbsp;8.&nbsp;Deploying Applications"><link rel="next" href="ch09s02.html" title="Installation"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch08.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch09s02.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter&nbsp;9.&nbsp;Installation and Release Notes"><div class="titlepage"><div><div><h2 class="title"><a name="N1032F"></a>Chapter&nbsp;9.&nbsp;Installation and Release Notes</h2></div></div></div><div class="toc"><p><b>Table of Contents</b></p><dl><dt><span class="section"><a href="ch09.html#Features">Features</a></span></dt><dt><span class="section"><a href="ch09s02.html">Installation</a></span></dt><dd><dl><dt><span class="section"><a href="ch09s02.html#Install_Eclipse">Install Eclipse</a></span></dt><dt><span class="section"><a href="ch09s02.html#Install_Virgo">Install Virgo</a></span></dt><dt><span class="section"><a href="ch09s02.html#Update_Sites">Update Sites</a></span></dt></dl></dd><dt><span class="section"><a href="ch09s03.html">Known Issues</a></span></dt><dt><span class="section"><a href="ch09s04.html">Migration</a></span></dt><dd><dl><dt><span class="section"><a href="ch09s04.html#From_Pre_M2_to_M4">From Pre M2 to M4</a></span></dt><dt><span class="section"><a href="ch09s04.html#From_Spring_Source_and_Virgo_2.x_Tooling">From Spring Source and Virgo 2.x Tooling</a></span></dt></dl></dd><dt><span class="section"><a href="ch09s05.html">Maven plugin</a></span></dt><dd><dl><dt><span class="section"><a href="ch09s05.html#Build">Build</a></span></dt><dt><span class="section"><a href="ch09s05.html#Goals">Goals</a></span></dt><dt><span class="section"><a href="ch09s05.html#Simple_example_POM">Simple example POM</a></span></dt></dl></dd><dt><span class="section"><a href="ch09s06.html">Importing Virgo Projects into Eclipse</a></span></dt><dt><span class="section"><a href="ch09s07.html">FAQ</a></span></dt></dl></div><div class="section" title="Features"><div class="titlepage"><div><div><h2 class="title" style="clear: both"><a name="Features"></a>Features</h2></div></div></div><p>The Virgo Tooling/IDE concept concerns the whole Virgo tooling (that was available inside SpringSource Tool Suite) being put in a separate project. The tooling supports the following: </p><div class="itemizedlist"><ul class="itemizedlist" type="disc"><li class="listitem"><p>Bundle projects </p></li><li class="listitem"><p>Par projects </p></li><li class="listitem"><p>Plan files/projects </p></li><li class="listitem"><p>Web Bundles </p></li><li class="listitem"><p>Deployment to a Virgo Server in the server view.</p></li></ul></div></div></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch08.html">Prev</a>&nbsp;</td><td align="center" width="20%">&nbsp;</td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch09s02.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>
+<html><head><META http-equiv="Content-Type" content="text/html; charset=UTF-8"><title>Chapter&nbsp;9.&nbsp;Developing PARs</title><meta content="DocBook XSL Stylesheets V1.76.0" name="generator"><link rel="home" href="index.html" title="Virgo Tools Guide"><link rel="up" href="index.html" title="Virgo Tools Guide"><link rel="prev" href="ch08s02.html" title="Discovery of Plan files in the workspace"><link rel="next" href="ch10.html" title="Chapter&nbsp;10.&nbsp;Deploying Applications"></head><body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="navheader"><table summary="Navigation header" width="100%"><tr><td align="left" width="20%"><a accesskey="p" href="ch08s02.html">Prev</a>&nbsp;</td><th align="center" width="60%">&nbsp;</th><td align="right" width="20%">&nbsp;<a accesskey="n" href="ch10.html">Next</a></td></tr></table><hr></div><div class="chapter" title="Chapter&nbsp;9.&nbsp;Developing PARs"><div class="titlepage"><div><div><h2 class="title"><a name="pars"></a>Chapter&nbsp;9.&nbsp;Developing PARs</h2></div></div></div><p>In Virgo, applications consisting of multiple bundles can be packaged as a PAR.
+	</p><p>
+		To create a PAR, right-click in the
+		<span class="emphasis"><em>Package Explorer</em></span>
+		and select
+		<span class="guimenu">New</span> &rarr; <span class="guimenuitem">Project&hellip;</span>
+		. In the dialog that opens select
+		<span class="guimenu">EclipseRT</span> &rarr; <span class="guimenuitem">PAR Project</span>
+		and press
+		<span class="emphasis"><em>Next</em></span>
+		.
+	</p><p>
+		In the New PAR Project dialog, ensure the
+		<span class="emphasis"><em>Use default location</em></span>
+		option is unchecked, enter a suitable name for the project, set the location to a suitable directory, and press
+		<span class="emphasis"><em>Next</em></span>
+		. For example, the Greenpages sample PAR project would look like this:
+		</p><div class="mediaobject" align="center"><img src="images/create-par-project.png" align="middle"></div><p>
+	</p><p>
+		In the next dialog, some of the PAR properties are pre-populated. Set the Application Name and the Version as
+		appropriate, then ensure that the
+		<span class="emphasis"><em>Target Runtime</em></span>
+		is set to
+		<span class="emphasis"><em>Virgo Web Server (Runtime) ...</em></span>
+		and press
+		<span class="emphasis"><em>Next</em></span>
+		. For example:
+		</p><div class="mediaobject" align="center"><img src="images/par-content.png" align="middle"></div><p>
+	</p><p>
+		In the next dialog, select the bundles so that they are contained in the PAR and press
+		<span class="emphasis"><em>Finish</em></span>
+		. For example:
+		</p><div class="mediaobject" align="center"><img src="images/bundle-references.png" align="middle"></div><p>
+	</p><p>The PAR project is then created.
+	</p></div><div class="navfooter"><hr><table summary="Navigation footer" width="100%"><tr><td align="left" width="40%"><a accesskey="p" href="ch08s02.html">Prev</a>&nbsp;</td><td align="center" width="20%">&nbsp;</td><td align="right" width="40%">&nbsp;<a accesskey="n" href="ch10.html">Next</a></td></tr><tr><td valign="top" align="left" width="40%">&nbsp;</td><td align="center" width="20%"><a accesskey="h" href="index.html">Home</a></td><td valign="top" align="right" width="40%">&nbsp;</td></tr></table></div></body></html>

@@ -277,6 +277,15 @@ public class InvalidRuntimeProvider implements IServerRuntimeProvider {
     }
 
     /**
+     * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getServerRedeployCommand(org.eclipse.virgo.ide.runtime.core.IServerBehaviour,
+     *      org.eclipse.wst.server.core.IModule)
+     */
+    public IServerCommand<DeploymentIdentity> getServerRedeployCommand(IServerBehaviour serverBehaviour, IModule module) {
+        handleError(serverBehaviour);
+        return null;
+    }
+
+    /**
      * @see org.eclipse.virgo.ide.runtime.core.IServerRuntimeProvider#getServerRefreshCommand(org.eclipse.virgo.ide.runtime.core.IServerBehaviour,
      *      org.eclipse.wst.server.core.IModule, java.lang.String)
      */

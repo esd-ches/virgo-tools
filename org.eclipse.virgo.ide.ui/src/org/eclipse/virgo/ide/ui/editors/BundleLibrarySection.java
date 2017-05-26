@@ -60,7 +60,6 @@ import org.eclipse.pde.internal.ui.editor.context.InputContextManager;
 import org.eclipse.pde.internal.ui.editor.plugin.BundleInputContext;
 import org.eclipse.pde.internal.ui.editor.plugin.JarSelectionValidator;
 import org.eclipse.pde.internal.ui.editor.plugin.NewRuntimeLibraryDialog;
-import org.eclipse.pde.internal.ui.elements.DefaultContentProvider;
 import org.eclipse.pde.internal.ui.parts.EditableTablePart;
 import org.eclipse.pde.internal.ui.parts.TablePart;
 import org.eclipse.pde.internal.ui.util.SWTUtil;
@@ -133,7 +132,13 @@ public class BundleLibrarySection extends TableSection implements IModelChangedL
         }
     }
 
-    class TableContentProvider extends DefaultContentProvider implements IStructuredContentProvider {
+    class TableContentProvider implements IStructuredContentProvider {
+
+        public void dispose() {
+        }
+
+        public void inputChanged(Viewer viewer, Object oldInput, Object newInput) {
+        }
 
         public Object[] getElements(Object parent) {
             return getModel().getPluginBase().getLibraries();

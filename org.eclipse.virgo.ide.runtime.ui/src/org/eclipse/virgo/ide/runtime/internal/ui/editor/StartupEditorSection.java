@@ -88,26 +88,22 @@ public class StartupEditorSection extends ServerEditorSection {
 
         Section section = toolkit.createSection(parent, ExpandableComposite.TWISTIE | ExpandableComposite.EXPANDED | ExpandableComposite.TITLE_BAR
             | Section.DESCRIPTION | ExpandableComposite.FOCUS_TITLE);
-        section.setText("Server Startup Configuration");
-        section.setDescription("Specify startup options. Changing a setting requires a server restart.");
+        section.setText(Messages.StartupEditorSection_title);
+        section.setDescription(Messages.StartupEditorSection_description);
         section.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
 
         Composite composite = toolkit.createComposite(section);
         GridLayout layout = new GridLayout();
         layout.numColumns = 2;
-        layout.marginHeight = 5;
-        layout.marginWidth = 10;
-        layout.verticalSpacing = 5;
-        layout.horizontalSpacing = 15;
         composite.setLayout(layout);
-        composite.setLayoutData(new GridData(GridData.FILL_HORIZONTAL | GridData.VERTICAL_ALIGN_FILL));
+        composite.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, false));
         toolkit.paintBordersFor(composite);
         section.setClient(composite);
 
         GridData data = new GridData(SWT.FILL, SWT.TOP, true, false);
         data.horizontalSpan = 2;
 
-        this.tailLogFiles = toolkit.createButton(composite, "Tail application trace files into Console view", SWT.CHECK);
+        this.tailLogFiles = toolkit.createButton(composite, Messages.StartupEditorSection_tail_into_console_button, SWT.CHECK);
         this.tailLogFiles.setLayoutData(data);
         this.tailLogFiles.addSelectionListener(new SelectionAdapter() {
 
@@ -123,7 +119,7 @@ public class StartupEditorSection extends ServerEditorSection {
             }
         });
 
-        this.cleanStartup = toolkit.createButton(composite, "Start server with -clean option", SWT.CHECK);
+        this.cleanStartup = toolkit.createButton(composite, Messages.StartupEditorSection_start_with_clean_button, SWT.CHECK);
         this.cleanStartup.setLayoutData(data);
         this.cleanStartup.addSelectionListener(new SelectionAdapter() {
 
@@ -141,9 +137,9 @@ public class StartupEditorSection extends ServerEditorSection {
 
         data = new GridData(SWT.FILL, SWT.CENTER, true, false);
 
-        Label maxPermSizeLabel = toolkit.createLabel(composite, "-XX:MaxPermSize=");
+        Label maxPermSizeLabel = toolkit.createLabel(composite, Messages.StartupEditorSection_maxpermsize_label);
         maxPermSizeLabel.setForeground(toolkit.getColors().getColor(IFormColors.TITLE));
-        this.maxPermSizeField = toolkit.createText(composite, "");
+        this.maxPermSizeField = toolkit.createText(composite, ""); //$NON-NLS-1$
         this.maxPermSizeField.setLayoutData(data);
         this.maxPermSizeField.addModifyListener(new ModifyListener() {
 
@@ -158,7 +154,7 @@ public class StartupEditorSection extends ServerEditorSection {
             }
         });
 
-        toolkit.createLabel(composite, "");
+        toolkit.createLabel(composite, ""); //$NON-NLS-1$
 
         initialize();
     }
