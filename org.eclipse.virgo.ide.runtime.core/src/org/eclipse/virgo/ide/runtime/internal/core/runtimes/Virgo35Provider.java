@@ -137,7 +137,7 @@ public class Virgo35Provider extends VirgoRuntimeProvider {
         if (isWindows10()) {
             // Work around for Equinox 3.9 not recognizing Windows 10 as win32, which results in failure of resolution
             // of native libraries see https://bugs.eclipse.org/bugs/show_bug.cgi?id=486353
-            list.add("-Dos.name=win32");
+            list.add("-Dos.name=\"Windows 8\"");
         }
 
         String fwClassPath = createFWClassPath(serverHome);
