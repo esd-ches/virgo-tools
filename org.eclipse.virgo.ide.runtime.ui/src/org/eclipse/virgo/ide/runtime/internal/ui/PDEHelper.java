@@ -323,7 +323,8 @@ public final class PDEHelper {
             for (File file : newFoldersSet) {
                 IPath path = new Path(file.getCanonicalPath());
                 if (virgoHome.isPrefixOf(path)) {
-                    path = path.removeFirstSegments(virgoHome.segmentCount());
+                    // setDevice to null to remove the letter from a relativized path on Windows
+                    path = path.removeFirstSegments(virgoHome.segmentCount()).setDevice(null);
                 }
                 added.put(ADDED_BY_VIRGO_TOOLS + count + REPO_TYPE, TYPE_WATCHED);
                 added.put(ADDED_BY_VIRGO_TOOLS + count + WATCH_DIRECTORY, path.toString());
