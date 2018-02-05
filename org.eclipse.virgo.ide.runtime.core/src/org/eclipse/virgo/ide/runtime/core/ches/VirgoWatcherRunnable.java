@@ -23,7 +23,7 @@ public class VirgoWatcherRunnable extends AbstractWatchServiceRunnable {
 
     @Override
     protected void runInternal() throws Exception {
-        File virgo = VirgoToolingHook.getVirgoBase();
+        File virgo = VirgoToolingHook.getVirgoBase().toFile();
         while (!virgo.exists()) {
             // in case the deployer/s folder was deleted
             if (terminated) {
@@ -44,7 +44,7 @@ public class VirgoWatcherRunnable extends AbstractWatchServiceRunnable {
             List<WatchEvent<?>> events = key.pollEvents();
             if (!events.isEmpty()) {
                 Path plan = (Path) events.get(0).context();
-                if (plan.equals("global")) {
+                if (plan.toString().equals("global")) {
                     hook.virgoPublishFinished();
                 }
             }

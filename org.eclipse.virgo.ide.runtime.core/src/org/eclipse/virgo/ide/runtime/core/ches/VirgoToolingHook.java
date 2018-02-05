@@ -28,6 +28,7 @@ import java.util.concurrent.TimeUnit;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.lang.StringUtils;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.resources.IProject;
@@ -35,6 +36,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.swt.widgets.Display;
@@ -170,18 +172,8 @@ public class VirgoToolingHook {
         return "[" + DATE_FORMAT.format(new Date()) + "]\t";
     }
 
-    public static File getVirgoBase() {
-        return new File(getWorkspaceBase(), File.separator + "virgo" + File.separator + "work" + File.separator + "deployer" + File.separator + "s");
-    }
-
-    public static File getWorkspaceBase() {
-        return ResourcesPlugin.getWorkspace().getRoot().getLocation().toFile();
-    }
-
     private static boolean isWindows() {
-
         return (OS.indexOf("win") >= 0);
-
     }
 
     public static void logError(String message) {
@@ -296,7 +288,8 @@ public class VirgoToolingHook {
                 return;
             }
             Version planVersion = getPlanVersion(planFile);
-            if (planVersion == null || planVersion.compareTo(Version.parseVersion("5.11.0")) < 0) {
+            boolean isCtmsPlan = planFile.getName().startsWith("at.ches.ctms");
+            if (!isCtmsPlan && (planVersion == null || planVersion.compareTo(Version.parseVersion("5.11.0")) < 0)) {
                 logError("Only plans with a version equal or higher than 5.11.0 are supported.");
                 return;
             }
@@ -406,27 +399,41 @@ public class VirgoToolingHook {
         logInfo("Running grunt at " + gruntProject.getLocation() + ": " + commandString);
     }
 
+    /**
+     * Locates the files within work/deployer/s/{plan}/{x}/{y} for the given file from the workspace.
+     *
+     * @param file
+     * @return
+     */
     public List<File> lookup(File file) {
         String relativePath = file.getName();
-        File parent = file.getParentFile();
-        File workspace = getWorkspaceBase();
+        File workspaceOrGitParent = null;
+        IPath workspacePath = ResourcesPlugin.getWorkspace().getRoot().getRawLocation();
+        String workspacePathAsString = workspacePath.toFile().getAbsolutePath();
+        if (file.getAbsolutePath().startsWith(workspacePathAsString)) {
+            workspaceOrGitParent = workspacePath.toFile();
+        } else {
+            workspaceOrGitParent = getVirgoBase().toFile().getParentFile();
+        }
 
-        while (!parent.equals(workspace) && !parent.getName().equals("resources")) {
+        File parent = file.getParentFile();
+        while (!parent.equals(workspaceOrGitParent) && !parent.getName().equals("resources")) {
             // do not include "resources" in the path --> resources are deployed in the root directory
             relativePath = parent.getName() + File.separator + relativePath;
             parent = parent.getParentFile();
         }
 
         String project = parent.getParentFile().getName() + ".war";
-        File[] deployerContent = getVirgoBase().listFiles();
-        // in case deployer/s does not exist
-        if (deployerContent == null) {
-            return Collections.emptyList();
+
+        IPath virgoBase = getVirgoBase();
+        IPath deployerFolder = virgoBase.append("work").append("deployer").append("s");
+        if (!deployerFolder.toFile().exists()) {
+            return Collections.emptyList(); // in case the virgo is not running, the work folder may be missing
         }
 
         List<File> matches = new ArrayList<>();
-        for (File plan : deployerContent) {
-            if (!plan.isDirectory() || !plan.getName().startsWith("at.ches.pro")) {
+        for (File plan : deployerFolder.toFile().listFiles()) {
+            if (!plan.isDirectory() || !plan.getName().startsWith("at.ches")) {
                 continue;
             }
 
@@ -448,6 +455,30 @@ public class VirgoToolingHook {
         return matches;
     }
 
+    public static IPath getVirgoBase() {
+        IProject virgoProject = ResourcesPlugin.getWorkspace().getRoot().getProject("virgo");
+        return virgoProject.getRawLocation();
+    }
+
+    /**
+     * Tries to find the project containing the grunt files.
+     *
+     * @return
+     */
+    private IProject getGruntProject() {
+        String[] gruntLocations = new String[] { "at.ches.pro.web.grunt", "at.ches.ctms.grunt" };
+        for (String potentialGruntLocation : gruntLocations) {
+            IProject gruntProject = ResourcesPlugin.getWorkspace().getRoot().getProject(potentialGruntLocation);
+            if (gruntProject.exists()) {
+                return gruntProject;
+            }
+
+        }
+
+        logWarning("Grunt can't be executed - could not find grunt in one of the following locations: " + StringUtils.join(gruntLocations, ", "));
+        return null;
+    }
+
     /**
      * Runs grunt for a set of projects.
      *
@@ -455,9 +486,8 @@ public class VirgoToolingHook {
      * @param cssCompilationRequired if <code>false</code>, css compilation will be skipped
      */
     private void runGrunt(Set<IProject> projects, boolean cssCompilationRequired) {
-        IProject gruntProject = ResourcesPlugin.getWorkspace().getRoot().getProject("at.ches.pro.web.grunt");
-        if (!gruntProject.exists()) {
-            logWarning("Grunt can't be executed as the project at.ches.pro.web.grunt does not exist.");
+        IProject gruntProject = getGruntProject();
+        if (gruntProject == null) {
             return;
         }
 
