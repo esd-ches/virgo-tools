@@ -37,14 +37,9 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.ui.IWorkbenchPage;
-import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.console.ConsolePlugin;
 import org.eclipse.ui.console.IConsole;
-import org.eclipse.ui.console.IConsoleConstants;
 import org.eclipse.ui.console.IConsoleManager;
-import org.eclipse.ui.console.IConsoleView;
 import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 import org.eclipse.virgo.ide.facet.core.FacetUtils;
@@ -147,25 +142,6 @@ public class VirgoToolingHook {
         return chesMessageConsole;
     }
 
-    private static MessageConsole getConsole() {
-        final MessageConsole console = findConsole();
-        Display.getDefault().asyncExec(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-                    String id = IConsoleConstants.ID_CONSOLE_VIEW;
-                    IConsoleView view = (IConsoleView) page.showView(id);
-                    view.display(console);
-                } catch (Exception e) {
-                    ServerCorePlugin.logError("An error occurred while selecting the virgo tooling console.", e);
-                }
-            }
-        });
-        return console;
-    }
-
     private static String getTimeStamp() {
         return "[" + DATE_FORMAT.format(new Date()) + "]\t";
     }
@@ -193,7 +169,7 @@ public class VirgoToolingHook {
         ServerCorePlugin.logError(message, e);
         logInfo(message);
         try {
-            try (PrintStream printStream = new PrintStream(getConsole().newMessageStream())) {
+            try (PrintStream printStream = new PrintStream(findConsole().newMessageStream())) {
                 e.printStackTrace(printStream);
             }
         } catch (Exception e1) {
@@ -203,7 +179,7 @@ public class VirgoToolingHook {
 
     public static void logInfo(String message) {
         try {
-            try (MessageConsoleStream messageStream = getConsole().newMessageStream()) {
+            try (MessageConsoleStream messageStream = findConsole().newMessageStream()) {
                 messageStream.println(getTimeStamp() + message);
             }
         } catch (Exception e) {
