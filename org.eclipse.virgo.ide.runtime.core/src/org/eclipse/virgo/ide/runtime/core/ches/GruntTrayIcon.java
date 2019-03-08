@@ -30,39 +30,46 @@ public class GruntTrayIcon {
 
     private static GruntTrayIcon INSTANCE;
 
+    /**
+     * Image to be shown when grunt is idle.
+     */
     private Image statusIdleImage;
 
+    /**
+     * Image to be shown when grunt is running.
+     */
     private Image statusGruntImage;
 
-    private GruntTrayIcon() {
-        Display.getDefault().syncExec(new Runnable() {
+    private Image loadImage(Display display, String imageName) {
+        try {
+            Bundle bundle = Platform.getBundle(ServerCorePlugin.PLUGIN_ID);
+            URL entry = bundle.getEntry("icons/" + imageName);
+            return new Image(display, entry.openStream());
+        } catch (IOException e) {
+            VirgoToolingHook.logError("Could not load image " + imageName, e);
+        }
 
-            public void run() {
-                Display display = Display.getDefault();
+        return null;
+    }
 
-                Image[] images = display.getActiveShell().getImages();
-                for (Image image : images) {
-                    if (statusIdleImage == null || statusIdleImage.getBounds().height < image.getBounds().height) {
-                        statusIdleImage = image;
-                    }
-                }
+    /**
+     * Initializes the images.
+     *
+     * @param shell the shell of the workbench
+     */
+    private void initializeImages(Shell shell) {
+        if (statusGruntImage != null) {
+            return;
+        }
 
-                statusGruntImage = loadImage(display, "status-grunt.png");
+        Image[] images = shell.getImages();
+        for (Image image : images) {
+            if (statusIdleImage == null || statusIdleImage.getBounds().height < image.getBounds().height) {
+                statusIdleImage = image;
             }
+        }
 
-            private Image loadImage(Display display, String imageName) {
-                Bundle bundle = Platform.getBundle(ServerCorePlugin.PLUGIN_ID);
-                URL entry = bundle.getEntry("icons/" + imageName);
-
-                try {
-                    return new Image(display, entry.openStream());
-                } catch (IOException e) {
-                    VirgoToolingHook.logError("Could not load image " + imageName, e);
-                }
-
-                return null;
-            }
-        });
+        statusGruntImage = loadImage(shell.getDisplay(), "status-grunt.png");
     }
 
     private void setIcon(final Image icon) {
@@ -71,6 +78,7 @@ public class GruntTrayIcon {
 
             public void run() {
                 Shell shell = PlatformUI.getWorkbench().getWorkbenchWindows()[0].getShell();
+                initializeImages(shell);
                 shell.setImage(icon);
             }
         });
