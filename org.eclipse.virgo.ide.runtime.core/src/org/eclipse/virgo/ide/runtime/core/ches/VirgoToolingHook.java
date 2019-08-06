@@ -220,16 +220,40 @@ public class VirgoToolingHook {
 
     private ScheduledExecutorService runGruntExecutorService;
 
-    private final ListenerList gruntListeners;
+    private final ListenerList<GruntStatusListener> gruntListeners;
+
+    /**
+     * Listeners for the deployment cycle (before deploy, after deploy, before undeploy, before stop)
+     */
+    private final ListenerList<IDeployListener> deployListeners;
 
     public VirgoToolingHook() {
         moduleToProjects = new HashMap<>();
         moduleToBranding = new HashMap<>();
         scheduledRefreshs = new HashSet<>();
         scheduledGrunts = new HashMap<>();
-        gruntListeners = new ListenerList();
+        gruntListeners = new ListenerList<>();
+        deployListeners = new ListenerList<>();
 
         gruntListeners.add(new GruntStatusListener());
+    }
+
+    /**
+     * Adds a new deploy listener that listens to the deploy life-cycle.
+     *
+     * @param listener the listener to be added
+     */
+    public void addDeployListener(IDeployListener listener) {
+        deployListeners.add(listener);
+    }
+
+    /**
+     * Remove new deploy listener.
+     *
+     * @param listener the listener to be removed
+     */
+    public void removeDeployListener(IDeployListener listener) {
+        deployListeners.remove(listener);
     }
 
     private void addProjects(IModule module, IFile planFile) {
@@ -280,6 +304,10 @@ public class VirgoToolingHook {
             addProjects(module, planFile);
             startWatching();
         }
+
+        for (IDeployListener listener : deployListeners) {
+            listener.beforeDeploy(module, projects);
+        }
     }
 
     /**
@@ -300,6 +328,10 @@ public class VirgoToolingHook {
 
     synchronized public void beforeStop() {
         stopAll();
+
+        for (IDeployListener listener : deployListeners) {
+            listener.beforeStop();
+        }
     }
 
     synchronized public void beforeUndeploy(IModule module) {
@@ -308,9 +340,14 @@ public class VirgoToolingHook {
             return;
         }
 
+        Set<IProject> projects = moduleToProjects.get(module);
         moduleToProjects.remove(module);
         moduleToBranding.remove(module);
         startWatching();
+
+        for (IDeployListener listener : deployListeners) {
+            listener.beforeUndeploy(module, projects);
+        }
     }
 
     public void enqueueUpdate(IUpdate update) {
@@ -635,6 +672,10 @@ public class VirgoToolingHook {
             } catch (Exception e) {
                 logError("Unable to copy css content", e);
             }
+        }
+
+        for (IDeployListener listener : deployListeners) {
+            listener.afterDeploy(module, projects);
         }
     }
 
