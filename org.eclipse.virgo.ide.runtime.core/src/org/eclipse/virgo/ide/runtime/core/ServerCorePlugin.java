@@ -24,7 +24,7 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.eclipse.virgo.ide.runtime.core.artefacts.ArtefactRepositoryManager;
-import org.eclipse.virgo.ide.runtime.core.ches.VirgoToolingHook;
+import org.eclipse.virgo.ide.runtime.core.ches.IVirgoToolingHook;
 import org.osgi.framework.BundleContext;
 
 /**
@@ -50,7 +50,7 @@ public class ServerCorePlugin extends AbstractUIPlugin {
 
     private BundleContext context;
 
-    private VirgoToolingHook virgoToolingHook;
+    private IVirgoToolingHook virgoToolingHook;
 
     public static final String VIRGO_SERVER_ID = "org.eclipse.virgo.server.virgo";
 
@@ -66,7 +66,6 @@ public class ServerCorePlugin extends AbstractUIPlugin {
         plugin.getPreferenceStore().setDefault(PREF_LOAD_CLASSES_KEY, false);
 
         this.artefactRepositoryManager = new ArtefactRepositoryManager();
-        this.virgoToolingHook = new VirgoToolingHook();
     }
 
     @Override
@@ -93,7 +92,11 @@ public class ServerCorePlugin extends AbstractUIPlugin {
         getDefault().savePluginPreferences();
     }
 
-    public static VirgoToolingHook getVirgoToolingHook() {
+    public static void setVirgoToolingHook(IVirgoToolingHook virgoToolingHook) {
+        getDefault().virgoToolingHook = virgoToolingHook;
+    }
+
+    public static IVirgoToolingHook getVirgoToolingHook() {
         return getDefault().virgoToolingHook;
     }
 
